@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:alert_icon="@mipmap/remind_phone01"
-            app:alert_name="来电提醒"/>
+            app:alert_name="@string/hint_menu_alert_phone"/>
 
          <TextView
              android:layout_width="1px"
@@ -31,7 +31,7 @@
              android:layout_height="match_parent"
              android:layout_weight="1"
              app:alert_icon="@mipmap/remind_mgs01"
-             app:alert_name="短信提醒"/>
+             app:alert_name="@string/hint_menu_alert_sms"/>
      </LinearLayout>
 
     <TextView
@@ -49,7 +49,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:alert_icon="@mipmap/remind_sit01"
-            app:alert_name="久坐提醒"/>
+            app:alert_name="@string/hint_menu_alert_sedentary"/>
 
         <TextView
             android:layout_width="1px"
@@ -62,7 +62,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:alert_icon="@mipmap/remind_alarm01"
-            app:alert_name="闹钟提醒"/>
+            app:alert_name="@string/hint_menu_alert_clock"/>
     </LinearLayout>
 
     <TextView
@@ -70,6 +70,35 @@
         android:layout_height="1px"
         android:background="@color/line_background"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="horizontal">
+        <com.manridy.iband.ui.items.AlertMenuItems
+            android:id="@+id/menu_lost"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:alert_icon="@mipmap/remind_antilost02"
+            app:alert_name="@string/hint_menu_alert_lost"/>
+
+        <TextView
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/line_background"/>
+
+        <com.manridy.iband.ui.items.AlertMenuItems
+            android:id="@+id/menu_app"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:alert_icon="@mipmap/remind_app02"
+            app:alert_name="@string/hint_menu_alert_app"/>
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_background"/>
     <Button
         android:id="@+id/bt_alert_more"
         android:layout_width="match_parent"
@@ -81,5 +110,6 @@
         android:background="@drawable/shape_button_alert"
         android:textColor="@color/text_hint_tint"
         android:textSize="12sp"
-        android:text="更多"/>
+        android:text="@string/hint_menu_more"
+        android:visibility="gone"/>
 </LinearLayout>

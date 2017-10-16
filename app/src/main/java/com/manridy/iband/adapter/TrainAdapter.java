@@ -70,15 +70,27 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.MyViewHolder
         }
 
         public void bindData(StepModel step) {
-            itemIcon.setImageResource(R.mipmap.train_ic02);
+            int itemRes = R.mipmap.train_run;
+            int itemText = R.string.hint_run;
+            String stepText = step.getStepNum()+(itemMin.getContext().getResources().getString(R.string.hint_unit_step));
+            if (step.getSportMode() == 1) {
+                itemRes =  R.mipmap.train_ic_bicycle;
+                itemText = R.string.hint_cycling;
+                stepText = "";
+            }else if (step.getSportMode() == 2){
+                itemRes =  R.mipmap.train_ic_swim;
+                itemText = R.string.hint_swim;
+                stepText = "";
+            }
+            itemIcon.setImageResource(itemRes);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
             String start = simpleDateFormat.format(step.getStepDate());
             String end = simpleDateFormat.format((step.getStepDate().getTime()+step.getStepTime()*60*1000));
             itemTime.setText(start+"~"+end);
-            itemType.setText(step.getStepType()==1?"跑步":"慢走");
-            itemMin.setText(step.getStepTime()+"分钟");
-            itemStep.setText(step.getStepNum()+"步");
-            itemKa.setText(step.getStepCalorie()+"千卡");
+            itemType.setText(itemText);
+            itemMin.setText(step.getStepTime()+(itemMin.getContext().getResources().getString(R.string.unit_min)));
+            itemStep.setText(stepText);
+            itemKa.setText(step.getStepCalorie()+(itemMin.getContext().getResources().getString(R.string.hint_unit_ka)));
         }
     }
 

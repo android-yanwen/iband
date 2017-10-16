@@ -56,7 +56,7 @@ public class DateDialog extends BaseDialog {
             day = time[2];
         }
         tvTitle.setText(title);
-        datePicker.setMaxDate(new Date().getTime());//设置最大时间选择不超过当前日期
+        datePicker.setMaxDate(System.currentTimeMillis());//设置最大时间选择不超过当前日期
         datePicker.init(time[0], time[1], day, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {

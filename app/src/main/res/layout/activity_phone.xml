@@ -21,10 +21,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:layout_marginBottom="17dp"
             android:textColor="#89ffffff"
             android:textSize="14sp"
-            android:text="请保持蓝牙开启，并且手环与手机保持连接"/>
+            android:text="@string/hint_title_alert_phone"/>
     </RelativeLayout>
 
     <TextView
@@ -36,7 +38,7 @@
         android:id="@+id/ai_alert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:big_name="开启来电提醒"
-        app:big_hint="手机来电时，手表会振动提醒"
+        app:big_name="@string/hint_alert_phone_open"
+        app:big_hint="@string/hint_alert_phone"
         app:big_onoff="true"/>
 </LinearLayout>

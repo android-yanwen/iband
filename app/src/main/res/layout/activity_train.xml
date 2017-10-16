@@ -15,7 +15,7 @@
             android:layout_centerInParent="true"
             android:textColor="#86ffffff"
             android:textSize="12sp"
-            android:text="2017年5月2日"/>
+            android:text=""/>
 
         <ImageView
             android:id="@+id/iv_left"

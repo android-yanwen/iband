@@ -614,7 +614,7 @@ public class BleCmd {
     public static byte[] getRunCurrent(){
         type = 0x1B;
         body = new byte[17];
-        body[0] = 1 << 3;
+        body[0] = 0x0;
         return BleProtocol.cmd(head,type,body);
     }
 
@@ -625,7 +625,7 @@ public class BleCmd {
     public static byte[] getRunHistoryData(){
         type = 0x1B;
         body = new byte[17];
-        body[0] = 1 << 2;
+        body[0] = 0x1;
         return BleProtocol.cmd(head,type,body);
     }
 
@@ -636,7 +636,7 @@ public class BleCmd {
     public static byte[] getRunHistoryNum(){
         type = 0x1B;
         body = new byte[17];
-        body[0] = 1 << 1;
+        body[0] = 0x2;
         return BleProtocol.cmd(head,type,body);
     }
 
@@ -707,6 +707,39 @@ public class BleCmd {
         type = 0x15;
         body = new byte[17];
         body[0] = (byte) onOff;
+        return BleProtocol.cmd(head,type,body);
+    }
+
+
+    /**
+     * 蓝牙恢复出厂
+     * @return
+     */
+    public static byte[] deviceReset(){
+        type = 0x0F;
+        body = new byte[17];
+        body[0] = 0x0B;
+        return BleProtocol.cmd(head,type,body);
+    }
+
+    public static byte[] setTimingHrTest(boolean onOff,int space){
+        type = 0x22;
+        body = new byte[17];
+        body[0] = 0x01;
+        body[2] = (byte) (onOff?1:0);
+        body[4] = (byte) space;
+        return BleProtocol.cmd(head,type,body);
+    }
+
+
+//    0xFC0F10V2V1V0
+    public static byte[] setDeviceStepNum(int num){
+        type = 0x0F;
+        body = new byte[17];
+        body[0] = 0x10;
+        body[1] = (byte) ((num>>16) & 0xFF);
+        body[2] = (byte) ((num>>8) & 0xFF);
+        body[3] = (byte) (num & 0xFF);
         return BleProtocol.cmd(head,type,body);
     }
 }

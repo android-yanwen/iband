@@ -28,22 +28,27 @@ import com.manridy.iband.R;
 import com.manridy.iband.view.MainActivity;
 import com.manridy.sdk.Watch;
 import com.manridy.sdk.callback.BleActionListener;
+import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleConnectCallback;
 import com.manridy.sdk.callback.BleNotifyListener;
 import com.manridy.sdk.exception.BleException;
 import com.manridy.sdk.scan.TimeMacScanCallback;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import static com.manridy.iband.common.AppGlobal.DEVICE_STATE_CONNECTED;
 import static com.manridy.iband.common.AppGlobal.DEVICE_STATE_CONNECTING;
 import static com.manridy.iband.common.AppGlobal.DEVICE_STATE_UNCONNECT;
 import static com.manridy.iband.common.EventGlobal.ACTION_BATTERY_NOTIFICATION;
+import static com.manridy.iband.common.EventGlobal.ACTION_BO_TEST;
+import static com.manridy.iband.common.EventGlobal.ACTION_BO_TESTED;
+import static com.manridy.iband.common.EventGlobal.ACTION_BP_TEST;
+import static com.manridy.iband.common.EventGlobal.ACTION_BP_TESTED;
 import static com.manridy.iband.common.EventGlobal.ACTION_CALL_END;
 import static com.manridy.iband.common.EventGlobal.ACTION_CALL_RUN;
 import static com.manridy.iband.common.EventGlobal.ACTION_CAMERA_CAPTURE;
@@ -51,8 +56,10 @@ import static com.manridy.iband.common.EventGlobal.ACTION_CAMERA_EXIT;
 import static com.manridy.iband.common.EventGlobal.ACTION_FIND_PHONE_START;
 import static com.manridy.iband.common.EventGlobal.ACTION_FIND_PHONE_STOP;
 import static com.manridy.iband.common.EventGlobal.ACTION_FIND_WATCH_STOP;
+import static com.manridy.iband.common.EventGlobal.ACTION_HEALTH_TESTED;
+import static com.manridy.iband.common.EventGlobal.ACTION_HEALTH_TEST;
+import static com.manridy.iband.common.EventGlobal.ACTION_HR_TEST;
 import static com.manridy.iband.common.EventGlobal.ACTION_HR_TESTED;
-import static com.manridy.iband.common.EventGlobal.ACTION_HR_TESTING;
 import static com.manridy.sdk.BluetoothLeManager.ACTION_DATA_AVAILABLE;
 import static com.manridy.sdk.BluetoothLeManager.ACTION_GATT_CONNECT;
 import static com.manridy.sdk.BluetoothLeManager.ACTION_GATT_DISCONNECTED;
@@ -73,12 +80,21 @@ public class BleService extends Service {
         initListener();//初始化监听器
         initBroadcast();//初始化ble广播
         initConnect(true);//初始化连接
+        EventBus.getDefault().register(this);
     }
 
     private void initListener() {
         watch.setActionListener(actionListener);//设置动作监听
         watch.setStepNotifyListener(notifyListener);//设置分段计步上报监听
         watch.setRunNotifyListener(notifyListener);//设置跑步上报监听
+    }
+
+    /**
+     * 初始化连接
+     * @param isScan 手否扫描设备
+     */
+    public void initConnect(boolean isScan){
+        initConnect(isScan,mBleConnectCallback);
     }
 
     /**
@@ -103,12 +119,12 @@ public class BleService extends Service {
     }
 
     /**
-     *
-     * @param mac
-     * @param bleConnectCallback
+     * 扫描后连接
+     * @param mac 设备mac地址
+     * @param bleConnectCallback 结果回调
      */
     private void scanAndConnect(final String mac, final BleConnectCallback bleConnectCallback){
-        watch.startScan(new TimeMacScanCallback(mac,3000) {
+        watch.startScan(new TimeMacScanCallback(mac,5000) {
             @Override
             public void onDeviceFound(boolean isFound, BluetoothDevice device) {
                 if (isFound) {
@@ -120,20 +136,10 @@ public class BleService extends Service {
         });
     }
 
-    public void initConnect(boolean isScan){
-        initConnect(isScan,new BleConnectCallback() {
-            @Override
-            public void onConnectSuccess() {
-                Log.d(TAG, "onConnectSuccess() called");
-            }
-
-            @Override
-            public void onConnectFailure(BleException exception) {
-                Log.d(TAG, "onConnectFailure() called with: exception = [" + exception.toString() + "]");
-            }
-        });
-    }
-
+    /**
+     * 显示常驻通知栏消息
+     * @param connectState 连接状态
+     */
     private void showNotification(int connectState) {
         try {
             String state = getState(connectState);
@@ -156,22 +162,33 @@ public class BleService extends Service {
         }
     }
 
-    @NonNull
-    private String getState(int connectState) {
-        String state = "手环未连接";
-        if (connectState == 1){
-            state = "手环已连接";
-        }else if (connectState == 2){
-            state = "手环连接中";
-        }
-        return state;
-    }
-
+    /**
+     * 取消显示常驻消息栏
+     */
     public void stopNotification(){
         stopForeground(true);
     }
 
-    public void initBroadcast(){
+    /**
+     * 获取连接状态对应文字显示
+     * @param connectState
+     * @return
+     */
+    @NonNull
+    private String getState(int connectState) {
+        String state = getString(R.string.hint_device_unconnect);
+        if (connectState == 1){
+            state = getString(R.string.hint_device_connected);
+        }else if (connectState == 2){
+            state = getString(R.string.hint_device_connecting);
+        }
+        return state;
+    }
+
+    /**
+     * 初始化ble过滤意图
+     */
+    private void initBroadcast(){
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_GATT_CONNECT);
         filter.addAction(ACTION_GATT_DISCONNECTED);
@@ -182,26 +199,33 @@ public class BleService extends Service {
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(bleReceiver,filter);
     }
 
+    /**
+     *
+     */
     private BroadcastReceiver bleReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            String macStr = intent.getStringExtra("BLUETOOTH_MAC");
             switch (action){
                 case ACTION_GATT_CONNECT:
-                    LogUtil.e(TAG,"蓝牙状态----蓝牙已连接");
+                    LogUtil.e(TAG,"设备地址 "+macStr+" 蓝牙状态----蓝牙已连接");
 //                    EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_CONNECT));
                     break;
                 case ACTION_GATT_RECONNECT:
-                    LogUtil.e(TAG,"蓝牙状态----蓝牙重连中");
+                    LogUtil.e(TAG,"设备地址 "+macStr+" 蓝牙状态----蓝牙重连中");
                     String mac = (String) SPUtil.get(BleService.this,AppGlobal.DATA_DEVICE_BIND_MAC,"");
                     if (mac!=null && !mac.isEmpty()) {
                         SPUtil.put(BleService.this, AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_CONNECTING);
                         showNotification(2);
                     }
                     EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_CONNECTING));
+                    if (!isConnectRun) {
+                        connectWardThread.start();
+                    }
                     break;
                 case ACTION_GATT_DISCONNECTED:
-                    LogUtil.e(TAG,"蓝牙状态----蓝牙已断开");
+                    LogUtil.e(TAG,"设备地址 "+macStr+" 蓝牙状态----蓝牙已断开");
                     String mac2 = (String) SPUtil.get(BleService.this,AppGlobal.DATA_DEVICE_BIND_MAC,"");
                     if (mac2!=null && !mac2.isEmpty()) {
                         showNotification(0);
@@ -210,10 +234,10 @@ public class BleService extends Service {
                     EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_DISCONNECT));
                     break;
                 case ACTION_SERVICES_DISCOVERED:
-                    LogUtil.e(TAG,"蓝牙状态----发现服务");
+                    LogUtil.e(TAG,"设备地址 "+macStr+" 蓝牙状态----发现服务");
                     break;
                 case ACTION_NOTIFICATION_ENABLE:
-                    LogUtil.e(TAG,"蓝牙状态----打开通知");
+                    LogUtil.e(TAG,"设备地址 "+macStr+" 蓝牙状态----打开通知");
                     showNotification(1);
                     SPUtil.put(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_CONNECTED);
                     EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_CONNECT));
@@ -249,11 +273,31 @@ public class BleService extends Service {
                     SyncAlert.getInstance(BleService.this).parseBattery(o);
                     EventBus.getDefault().post(new EventMessage(ACTION_BATTERY_NOTIFICATION));
                     break;
-                case ACTION_HR_TESTED:
-                    EventBus.getDefault().post(new EventMessage(ACTION_HR_TESTED));
+                case ACTION_HEALTH_TESTED:
+                    int healthType = (int) o;
+                    boolean[] healths = getHealthTypes(healthType);
+                    if (healths[0]) {
+                        EventBus.getDefault().post(new EventMessage(ACTION_HR_TESTED));
+                    }
+                    if (healths[1]) {
+                        EventBus.getDefault().post(new EventMessage(ACTION_BP_TESTED));
+                    }
+                    if (healths[2]) {
+                        EventBus.getDefault().post(new EventMessage(ACTION_BO_TESTED));
+                    }
                     break;
-                case ACTION_HR_TESTING:
-                    EventBus.getDefault().post(new EventMessage(ACTION_HR_TESTING));
+                case ACTION_HEALTH_TEST:
+                    int healthType2 = (int) o;
+                    boolean[] healths2 = getHealthTypes(healthType2);
+                    if (healths2[0]) {
+                        EventBus.getDefault().post(new EventMessage(ACTION_HR_TEST));
+                    }
+                    if (healths2[1]) {
+                        EventBus.getDefault().post(new EventMessage(ACTION_BP_TEST));
+                    }
+                    if (healths2[2]) {
+                        EventBus.getDefault().post(new EventMessage(ACTION_BO_TEST));
+                    }
                     break;
                 case ACTION_CALL_END:
                     end(BleService.this);
@@ -271,6 +315,14 @@ public class BleService extends Service {
             EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));
         }
     };
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(EventMessage event) {
+        if (event.getWhat() == EventGlobal.ACTION_LOCALE_CHANGED) {
+            int connectState = (int) SPUtil.get(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE,0);
+            showNotification(connectState);
+        }
+    }
 
     public void end(Context context){
         try {
@@ -316,6 +368,65 @@ public class BleService extends Service {
         }
     }
 
+    private boolean[] getHealthTypes(int healthType){
+        boolean isTestHr,isTestBp,isTestBo;
+        if (healthType == 0) {
+            isTestHr = isTestBp = isTestBo = true;
+        }else {
+            isTestHr = (healthType & 0x1) == 1;
+            isTestBp = (healthType >>1 & 0x1) == 1;
+            isTestBo = (healthType >>2 & 0x1) == 1;
+        }
+        return new boolean[]{isTestHr,isTestBp,isTestBo};
+    }
+
+    boolean isConnectRun;
+    Thread connectWardThread = new Thread(){
+        @Override
+        public void run() {
+            super.run();
+            isConnectRun = true;
+            while (isConnectRun) {
+                try {
+                    sleep(15*1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+               int connectState = (int) SPUtil.get(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
+                if (connectState != DEVICE_STATE_CONNECTED ) {
+                    initConnect(true,mBleConnectCallback);
+                    Log.d(TAG, "connectWardThread run() =================");
+                }
+                Log.d(TAG, "connectWardThread isConnectRun() =================");
+            }
+        }
+    };
+
+    BleConnectCallback mBleConnectCallback = new BleConnectCallback() {
+        @Override
+        public void onConnectSuccess() {
+            Log.d(TAG, "onConnectSuccess() called");
+        }
+
+        @Override
+        public void onConnectFailure(BleException exception) {
+            if (exception.getCode() != 1000) {
+                String mac = (String) SPUtil.get(BleService.this, AppGlobal.DATA_DEVICE_BIND_MAC,"");
+                watch.disconnect(mac, new BleCallback() {
+                    @Override
+                    public void onSuccess(Object o) {
+
+                    }
+
+                    @Override
+                    public void onFailure(BleException exception) {
+
+                    }
+                });
+            }
+            Log.d(TAG, "onConnectFailure() called with: exception = [" + exception.toString() + "]");
+        }
+    };
 
     public class LocalBinder extends Binder {
         public BleService service(){
@@ -334,6 +445,7 @@ public class BleService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
+        EventBus.getDefault().unregister(this);
         return super.onUnbind(intent);
     }
 

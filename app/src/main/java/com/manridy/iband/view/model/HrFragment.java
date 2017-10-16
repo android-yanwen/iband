@@ -24,7 +24,7 @@ import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.CircularView;
 import com.manridy.iband.ui.items.DataItems;
-import com.manridy.iband.view.HrTestActivity;
+import com.manridy.iband.view.test.TestHrTimingActivity;
 import com.manridy.iband.view.base.BaseEventFragment;
 import com.manridy.iband.view.history.HrHistoryActivity;
 import com.manridy.sdk.ble.BleCmd;
@@ -101,7 +101,7 @@ public class HrFragment extends BaseEventFragment {
                 }
                 isTestData = false;
                 curHeartList.add(curHeart);
-                EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_HR_TESTING));
+                EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_HR_TEST));
                 EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_HR));
             }
         });
@@ -109,11 +109,11 @@ public class HrFragment extends BaseEventFragment {
         btTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (btTest.getText().equals("测量")) {
+                if (btTest.getText().equals(getString(R.string.hint_test))) {
                     IbandApplication.getIntance().service.watch.sendCmd(BleCmd.setHrTest(2), new BleCallback() {
                         @Override
                         public void onSuccess(Object o) {
-                            EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_HR_TESTING));
+                            EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_HR_TEST));
                         }
 
                         @Override
@@ -137,13 +137,15 @@ public class HrFragment extends BaseEventFragment {
 
     @OnClick({R.id.iv_test, R.id.iv_history})
     public void onClick(View view) {
-        if (isFastDoubleClick()) return;
+        if (isFastDoubleClick()) {
+            return;
+        }
         switch (view.getId()) {
             case R.id.iv_history:
                 startActivity(HrHistoryActivity.class);
                 break;
             case R.id.iv_test:
-                startActivity(HrTestActivity.class);
+                startActivity(TestHrTimingActivity.class);
                 break;
         }
     }
@@ -155,12 +157,12 @@ public class HrFragment extends BaseEventFragment {
             setCircularView();
             updateChartView(lcHr, curHeartList);
             setDataItem();
-        } else if (event.getWhat() == EventGlobal.ACTION_HR_TESTING) {
-            btTest.setText("停止");
-            cvHr.setTitle("测量中").invaliDate();
+        } else if (event.getWhat() == EventGlobal.ACTION_HR_TEST) {
+            btTest.setText(R.string.hint_stop);
+            cvHr.setTitle(getString(R.string.hint_hr_testing)).invaliDate();
         } else if (event.getWhat() == EventGlobal.ACTION_HR_TESTED) {
-            btTest.setText("测量");
-            cvHr.setTitle("上次测量结果").invaliDate();
+            btTest.setText(R.string.hint_test);
+            cvHr.setTitle(getString(R.string.hint_last_hr)).invaliDate();
             isTestData = true;
             EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));
         }
@@ -274,19 +276,22 @@ public class HrFragment extends BaseEventFragment {
             tvStart.setText(start);
             tvEnd.setText(end);
         }
-        diData1.setItemData("平均心率", avgHr + "");
-        diData2.setItemData("最低心率", minHr + "");
-        diData3.setItemData("最高心率", maxHr + "");
+        diData1.setItemData(getString(R.string.hint_hr_avg), avgHr + "");
+        diData2.setItemData(getString(R.string.hint_hr_min), minHr + "");
+        diData3.setItemData(getString(R.string.hint_hr_max), maxHr + "");
     }
 
     private void setCircularView() {
-        if (curHeart == null) return;
+        if (curHeart == null) {
+            return;
+        }
         String text = curHeart.getHeartRate() + "";
         float progress = (float) ((curHeart.getHeartRate() / 220.0) * 100);
 //        cvHr.setProgressWithAnimation(progress);
         cvHr.setText(text)
                 .setProgress(progress)
                 .invaliDate();
+        cvHr.setProgressWithAnimation(progress);
     }
 
 

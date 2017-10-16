@@ -22,9 +22,11 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="17dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:textColor="#89ffffff"
             android:textSize="14sp"
-            android:text="持续一小时静坐,手环会震动提醒"/>
+            android:text="@string/hint_alert_sedentary_title"/>
     </RelativeLayout>
 
     <TextView
@@ -42,14 +44,14 @@
                 android:id="@+id/ai_onoff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:alert_names="开始久坐提醒"
+                app:alert_names="@string/hint_alert_sedentary_open"
                 app:alert_img="@mipmap/ic_off"/>
 
             <com.manridy.iband.ui.items.AlertItems
                 android:id="@+id/ai_start_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:alert_names="开始时间"
+                app:alert_names="@string/hint_alert_sedentary_time_start"
                 app:alert_text="09:00"
                 app:alert_img="@mipmap/ic_chevron_right"/>
 
@@ -57,7 +59,7 @@
                 android:id="@+id/ai_end_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:alert_names="结束时间"
+                app:alert_names="@string/hint_alert_sedentary_time_end"
                 app:alert_text="21:00"
                 app:alert_img="@mipmap/ic_chevron_right"/>
 
@@ -65,8 +67,8 @@
                 android:id="@+id/ai_nap"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:big_name="午休时间"
-                app:big_hint="12:00~14:00不进行提醒"
+                app:big_name="@string/hint_alert_sedentary_title_nap"
+                app:big_hint="@string/hint_alert_sedentary_nap"
                 app:big_onoff="false"/>
         </LinearLayout>
     </ScrollView>

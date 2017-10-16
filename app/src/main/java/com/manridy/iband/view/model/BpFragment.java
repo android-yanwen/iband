@@ -104,6 +104,7 @@ public class BpFragment extends BaseEventFragment {
                 }
                 isTestData = false;
                 curBpList.add(curBp);
+                EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_BP_TEST));
                 EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_BP));
             }
         });
@@ -116,7 +117,9 @@ public class BpFragment extends BaseEventFragment {
 
     @OnClick({R.id.iv_history})
     public void onClick(View view) {
-        if (isFastDoubleClick()) return;
+        if (isFastDoubleClick()) {
+            return;
+        }
         switch (view.getId()) {
             case R.id.iv_history:
                 Intent intent = new Intent(mContext, HrHistoryActivity.class);
@@ -132,10 +135,10 @@ public class BpFragment extends BaseEventFragment {
             setCircularView();
             updateBarChartView(bcBp, curBpList);
             setDataItem();
-        } else if (event.getWhat() == EventGlobal.ACTION_HR_TESTING) {
-            cvBp.setTitle("测量中").invaliDate();
-        } else if (event.getWhat() == EventGlobal.ACTION_HR_TESTED) {
-            cvBp.setTitle("上次测量结果").invaliDate();
+        } else if (event.getWhat() == EventGlobal.ACTION_BP_TEST) {
+            cvBp.setTitle(getString(R.string.hint_hr_testing)).invaliDate();
+        } else if (event.getWhat() == EventGlobal.ACTION_BP_TESTED) {
+            cvBp.setTitle(getString(R.string.hint_last_hr)).invaliDate();
             isTestData = true;
         }
     }
@@ -235,7 +238,9 @@ public class BpFragment extends BaseEventFragment {
     }
 
     private void setCircularView() {
-        if (curBp == null) return;
+        if (curBp == null) {
+            return;
+        }
         String text = curBp.getBpHp() + "/" + curBp.getBpLp();
         String state = curBp.getBpDate();
         float progress = (float) ((curBp.getBpLp() / 220.0) * 100);
@@ -269,9 +274,9 @@ public class BpFragment extends BaseEventFragment {
             tvStart.setText(start);
             tvEnd.setText(end);
         }
-        diData1.setItemData("时间", time);
-        diData2.setItemData("收缩压", hp + "");
-        diData3.setItemData("舒张压", lp + "");
+        diData1.setItemData(getString(R.string.hint_time), time);
+        diData2.setItemData(getString(R.string.hint_hp), hp + "");
+        diData3.setItemData(getString(R.string.hint_lp), lp + "");
     }
 
     OnChartValueSelectedListener selectedListener = new OnChartValueSelectedListener() {
@@ -299,9 +304,9 @@ public class BpFragment extends BaseEventFragment {
 
                 int hp = bpModel.getBpHp();
                 int lp = bpModel.getBpLp();
-                diData1.setItemData("时间", times);
-                diData2.setItemData("收缩压", hp + "");
-                diData3.setItemData("舒张压", lp + "");
+                diData1.setItemData(getString(R.string.hint_time), times);
+                diData2.setItemData(getString(R.string.hint_hp), hp + "");
+                diData3.setItemData(getString(R.string.hint_lp), lp + "");
             }
         }
 

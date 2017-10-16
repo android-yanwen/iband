@@ -88,7 +88,7 @@ public class HrHistoryActivity extends BaseActionActivity {
         registerEventBus();
         historyType = getIntent().getIntExtra("history_type",0);
         mCalendar =Calendar.getInstance();
-        mDateFormat = new SimpleDateFormat("yyyy年MM月");
+        mDateFormat = new SimpleDateFormat("yyyy-MM");
         historyAdapter = new HistoryAdapter(itemList);
         rvHistory.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
         rvHistory.setAdapter(historyAdapter);
@@ -103,7 +103,7 @@ public class HrHistoryActivity extends BaseActionActivity {
             public void onClick(View v) {
                 String time;
                 int[] times = new int[]{1999,07,01};
-                if (tvDate.getText().equals("本月")) {
+                if (tvDate.getText().equals(getString(R.string.hint_month_current))) {
                     time = mDateFormat.format(new Date());
                 }else {
                     time = tvDate.getText().toString();
@@ -113,13 +113,13 @@ public class HrHistoryActivity extends BaseActionActivity {
                     int month = Integer.parseInt(time.substring(6,7));
                     times = new int[]{year,month-1};
                 }
-                new DateDialog(mContext,times , "选择月份", new DateDialog.DateDialogListener() {
+                new DateDialog(mContext,times , getString(R.string.hint_select_month), new DateDialog.DateDialogListener() {
                     @Override
                     public void getTime(int year, int monthOfYear, int dayOfMonth) {
-                        String time = year +"年"+TimeUtil.zero(monthOfYear+1)+"月";
+                        String time = year + "-" + TimeUtil.zero(monthOfYear+1);
                         mCalendar.set(year, monthOfYear, dayOfMonth);
                         if (time.equals(mDateFormat.format(new Date()))) {
-                            tvDate.setText("本月");
+                            tvDate.setText(getString(R.string.hint_month_current));
                         }else {
                             tvDate.setText(time);
                         }
@@ -134,15 +134,15 @@ public class HrHistoryActivity extends BaseActionActivity {
     public void onMainEvent(EventMessage event){
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_HR_HISTORY) {
             historyAdapter.setItemList(itemList);
-            diData1.setItemData("平均心率", dataAvg +"","次/分",lineColor);
-            diData2.setItemData("最低心率",dataMin +"","次/分",lineColor);
-            diData3.setItemData("最高心率",dataMax +"","次/分",lineColor);
+            diData1.setItemData(getString(R.string.hint_hr_avg), dataAvg +"",getString(R.string.hint_unit_hr),lineColor);
+            diData2.setItemData(getString(R.string.hint_hr_min),dataMin +"",getString(R.string.hint_unit_hr),lineColor);
+            diData3.setItemData(getString(R.string.hint_hr_max),dataMax +"",getString(R.string.hint_unit_hr),lineColor);
             if (curItem !=null){
                 tvNum.setText(curItem.itemNum);
                 tvTime.setText(curItem.itemName);
             }else{
                 tvNum.setText("--");
-                tvTime.setText("--月--日 --:--");
+                tvTime.setText(getString(R.string.hint_date));
                 diData1.setItemData("--");
                 diData2.setItemData("--");
                 diData3.setItemData("--");
@@ -150,31 +150,31 @@ public class HrHistoryActivity extends BaseActionActivity {
         }else if (event.getWhat() == EventGlobal.REFRESH_VIEW_BP_HISTORY) {
             historyAdapter.setItemList(itemList);
             String time = mDateFormat.format(mCalendar.getTime());
-            diData1.setItemData("时间",time,"",lineColor);
-            diData2.setItemData("平均收缩压",dataMax +"","mmHg",lineColor);
-            diData3.setItemData("平均舒张压",dataMin +"","mmHg",lineColor);
+            diData1.setItemData(getString(R.string.hint_time),time,"",lineColor);
+            diData2.setItemData(getString(R.string.hint_hp_avg),dataMax +"","mmHg",lineColor);
+            diData3.setItemData(getString(R.string.hint_lp_avg),dataMin +"","mmHg",lineColor);
             if (curItem !=null){
                 tvNum.setText(curItem.itemNum);
                 tvTime.setText(curItem.itemName);
             }else{
                 tvNum.setText("--");
-                tvTime.setText("--月--日 --:--");
-                diData1.setItemData("--年--月");
+                tvTime.setText(getString(R.string.hint_date));
+                diData1.setItemData("--");
                 diData2.setItemData("--");
                 diData3.setItemData("--");
             }
         }else if (event.getWhat() == EventGlobal.REFRESH_VIEW_BO_HISTORY) {
             historyAdapter.setItemList(itemList);
             String str = String.format("%.1f ", boAvg);
-            diData1.setItemData("平均值",str+"","%",lineColor);
-            diData2.setItemData("最低值", boMin +"","%",lineColor);
-            diData3.setItemData("最高值", boMax +"","%",lineColor);
+            diData1.setItemData(getString(R.string.hint_avg),str+"","%",lineColor);
+            diData2.setItemData(getString(R.string.hint_min), boMin +"","%",lineColor);
+            diData3.setItemData(getString(R.string.hint_max), boMax +"","%",lineColor);
             if (curItem !=null){
                 tvNum.setText(curItem.itemNum);
                 tvTime.setText(curItem.itemName);
             }else{
                 tvNum.setText("--");
-                tvTime.setText("--月--日 --:--");
+                tvTime.setText(getString(R.string.hint_date));
                 diData1.setItemData("--");
                 diData2.setItemData("--");
                 diData3.setItemData("--");
@@ -248,13 +248,13 @@ public class HrHistoryActivity extends BaseActionActivity {
             case 0:
                 color = Color.parseColor("#ef5350");
                 lineColor = Color.parseColor("#26ef5350");
-                setTitleBar("心率记录", color);
+                setTitleBar(getString(R.string.title_hr_history), color);
                 setStatusBarColor(color);
                 break;
             case 1:
                 color = Color.parseColor("#43a047");
                 lineColor = Color.parseColor("#2643a047");
-                setTitleBar("血压记录", color);
+                setTitleBar(getString(R.string.title_bp_history), color);
                 setStatusBarColor(color);
                 ivIcon.setImageResource(R.mipmap.bloodpressure_ic02);
                 tvUnit.setText("mmHg");
@@ -262,7 +262,7 @@ public class HrHistoryActivity extends BaseActionActivity {
             case 2:
                 color = Color.parseColor("#ff4081");
                 lineColor = Color.parseColor("#26ff4081");
-                setTitleBar("血氧记录", color);
+                setTitleBar(getString(R.string.title_bo_history), color);
                 setStatusBarColor(color);
                 ivIcon.setImageResource(R.mipmap.bloodoxygen_ic02);
                 tvUnit.setText("%");

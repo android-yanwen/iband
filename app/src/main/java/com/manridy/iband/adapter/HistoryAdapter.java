@@ -56,6 +56,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         public Item() {
         }
 
+        public Item(String itemName, String itemContent, String itemNum) {
+            this.itemName = itemName;
+            this.itemContent = itemContent;
+            this.itemNum = itemNum;
+
+        }
+
         public Item(String itemName, String itemContent, String itemNum, String itemUnit) {
             this.itemName = itemName;
             this.itemContent = itemContent;
@@ -82,7 +89,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         public void bindData(Item item) {
             tvMenuName.setText(item.itemName);
             tvMenuContent.setText(item.itemContent);
-            tvMenuUnit.setText(item.itemUnit);
+            tvMenuUnit.setText(item.itemUnit.isEmpty()?tvMenuNum.getContext().getString(R.string.hint_unit_hr):item.itemUnit);
             tvMenuNum.setText(item.itemNum);
         }
     }

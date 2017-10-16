@@ -1,8 +1,10 @@
 package com.manridy.iband.view;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,12 +14,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.manridy.applib.utils.CheckUtil;
 import com.manridy.applib.utils.SPUtil;
+import com.manridy.iband.IbandApplication;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.bean.UserModel;
+import com.manridy.iband.ui.items.AlertMenuItems;
+import com.manridy.iband.view.alert.AlertMenuActivity;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.iband.view.setting.AboutActivity;
 import com.manridy.iband.view.setting.AlertActivity;
@@ -32,6 +38,7 @@ import com.manridy.iband.view.setting.UnitActivity;
 import com.manridy.iband.view.setting.ViewActivity;
 import com.manridy.iband.view.setting.WechatActivity;
 import com.manridy.iband.view.setting.WristActivity;
+import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.exception.BleException;
 
@@ -69,8 +76,8 @@ public class SettingActivity extends BaseActionActivity {
     TextView tvDeviceConnectState;
     @BindView(R.id.tv_device_battery)
     TextView tvDeviceBattery;
-    @BindView(R.id.tv_un_bind)
-    TextView tvUnBind;
+    @BindView(R.id.rl_un_bind)
+    RelativeLayout rlUnBind;
     @BindView(R.id.sv_menu)
     ScrollView svMenu;
     @BindView(R.id.rl_device)
@@ -99,6 +106,8 @@ public class SettingActivity extends BaseActionActivity {
     MenuItems menuAbout;
     @BindView(R.id.menu_wrist)
     MenuItems menuWrist;
+    @BindView(R.id.menu_reset)
+    MenuItems menuReset;
 
     private String bindName;
     private int connectState;
@@ -115,7 +124,7 @@ public class SettingActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleBar("设置");
+        setTitleBar(getString(R.string.hint_set));
         initUser();
         bindName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME, "");
         connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
@@ -159,9 +168,11 @@ public class SettingActivity extends BaseActionActivity {
             R.id.menu_alert, R.id.menu_wechat, R.id.menu_light,
             R.id.menu_unit, R.id.menu_time, R.id.menu_target,
             R.id.menu_about,R.id.rl_user_info,R.id.rl_device,
-            R.id.iv_user_icon,R.id.menu_wrist})
+            R.id.iv_user_icon,R.id.menu_wrist,R.id.menu_reset})
     public void onClick(View view) {
-        if (isFastDoubleClick()) return;
+        if (isFastDoubleClick()) {
+            return;
+        }
         switch (view.getId()) {
             case R.id.iv_user_icon:
                 startActivity(UserActivity.class);
@@ -170,6 +181,7 @@ public class SettingActivity extends BaseActionActivity {
                 startActivity(UserActivity.class);
                 break;
             case R.id.rl_device:
+                eventSend(EventGlobal.ACTION_HIDE_SIMPVIEW);
                 startActivity(DeviceActivity.class);
                 break;
             case R.id.menu_view:
@@ -185,6 +197,10 @@ public class SettingActivity extends BaseActionActivity {
                 startActivity(AlertActivity.class);
                 break;
             case R.id.menu_wechat:
+                if (!CheckUtil.isNetworkAvailable(mContext)) {
+                    showToast(getString(R.string.hint_network_available));
+                    return;
+                }
                 startActivity(WechatActivity.class);
                 break;
             case R.id.menu_light:
@@ -205,6 +221,13 @@ public class SettingActivity extends BaseActionActivity {
             case R.id.menu_wrist:
                 startActivity(WristActivity.class);
                 break;
+            case R.id.menu_reset:
+                if (connectState != 1) {
+                    showToast(getString(R.string.hintUnConnect));
+                    return;
+                }
+                showRegistDialog();
+                break;
         }
     }
 
@@ -217,51 +240,110 @@ public class SettingActivity extends BaseActionActivity {
             bindName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,"");
             showBindDevice();
         }else if (event.getWhat() == EventGlobal.STATE_DEVICE_UNBIND) {
-            tvUnBind.setVisibility(View.VISIBLE);
+            rlUnBind.setVisibility(View.VISIBLE);
         }else if (event.getWhat() == EventGlobal.STATE_DEVICE_CONNECT) {
-            tvDeviceConnectState.setText("已连接");
+            tvDeviceConnectState.setText(R.string.hint_state_connected);
             curBatteryNum = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_NUM,-1);
             curBatteryState = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_STATE,-1);
             showBattery();
             Log.d(TAG, "onEventMainThread() called with: event = [  已连接  ]");
         }else if (event.getWhat() == EventGlobal.STATE_DEVICE_DISCONNECT) {
-            tvDeviceConnectState.setText("未连接");
+            connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
+            tvDeviceConnectState.setText(R.string.hint_state_unconnect);
             tvDeviceBattery.setText("");
             Log.d(TAG, "onEventMainThread() called with: event = [  未连接  ]");
         }else if (event.getWhat() == EventGlobal.STATE_DEVICE_CONNECTING) {
-            tvDeviceConnectState.setText("连接中");
+            tvDeviceConnectState.setText(R.string.hint_state_connecting);
             tvDeviceBattery.setText("");
             Log.d(TAG, "onEventMainThread() called with: event = [  连接中  ]");
         }else if (event.getWhat() == EventGlobal.ACTION_BATTERY_NOTIFICATION){
+            connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
             curBatteryNum = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_NUM,-1);
             curBatteryState = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_STATE,-1);
             showBattery();
         }
     }
 
+    private void showRegistDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage(R.string.hint_reset_text);
+        builder.setNegativeButton(R.string.hint_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton(R.string.hint_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                IbandApplication.getIntance().service.watch.sendCmd(BleCmd.deviceReset(), new BleCallback() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        try {
+                            IbandDB.getInstance().resetAppData();
+                            removeSetting();
+                        }catch (Exception e){
+                            e.toString();
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showToast(getString(R.string.hint_reset_success));
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(BleException exception) {
+                        showToast(getString(R.string.hint_reset_failure));
+                    }
+                });
+
+            }
+        });
+        builder.create().show();
+    }
+
+    private void removeSetting() {
+        SPUtil.remove(mContext, AppGlobal.DATA_ALERT_PHONE);
+        SPUtil.remove(mContext,AppGlobal.DATA_ALERT_SMS);
+        SPUtil.remove(mContext,AppGlobal.DATA_ALERT_SEDENTARY);
+        SPUtil.remove(mContext,AppGlobal.DATA_ALERT_CLOCK);
+        SPUtil.remove(mContext,AppGlobal.DATA_ALERT_LOST);
+        SPUtil.remove(mContext,AppGlobal.DATA_ALERT_APP);
+        SPUtil.remove(mContext,AppGlobal.DATA_ALERT_WRIST);
+        SPUtil.remove(mContext,AppGlobal.DATA_SETTING_LIGHT);
+        SPUtil.remove(mContext,AppGlobal.DATA_SETTING_UNIT);
+        SPUtil.remove(mContext,AppGlobal.DATA_SETTING_UNIT_TIME);
+        SPUtil.remove(mContext,AppGlobal.DATA_SETTING_TARGET_STEP);
+        SPUtil.remove(mContext,AppGlobal.DATA_SETTING_TARGET_SLEEP);
+    }
+
+
     private void showBindDevice() {
         tvDeviceName.setText(bindName);
-        tvDeviceBindState.setText("已绑定");
-        tvUnBind.setVisibility(View.GONE);
+        tvDeviceBindState.setText(R.string.hint_state_bind);
+        rlUnBind.setVisibility(View.GONE);
 
     }
 
     private void showBattery() {
         String battery = "";
         if (curBatteryState == 1  && connectState ==1) {
-            battery = "充电中";
+            battery = getString(R.string.hint_state_charge);
         }else if(curBatteryNum != -1 && connectState ==1){
-            battery = "剩余电量:"+curBatteryNum +"%";
+            battery = getString(R.string.hint_state_battery)+curBatteryNum +"%";
         }
         tvDeviceBattery.setText(battery);
     }
 
     private void showConnectState(){
-        String state = "未连接";
+        String state = getString(R.string.hint_state_unconnect);
         if (connectState == 1) {
-            state = "已连接";
+            state = getString(R.string.hint_state_connected);
         }else if (connectState == 2){
-            state = "连接中";
+            state = getString(R.string.hint_state_connecting);
         }
         tvDeviceConnectState.setText(state);
         showBattery();

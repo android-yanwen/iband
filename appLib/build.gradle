@@ -32,5 +32,4 @@ dependencies {
     compile 'com.android.support:design:24.2.1'
     compile 'skin.support:skin-support:1.2.6'
     compile 'me.imid.swipebacklayout.lib:library:1.0.0'
-
 }

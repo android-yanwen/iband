@@ -44,7 +44,7 @@ public class PhoneActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleAndMenu("来电提醒","保存");
+        setTitleAndMenu(getString(R.string.hint_menu_alert_phone),getString(R.string.hint_save));
         onOff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_PHONE,false);
         aiAlert.setAlertCheck(onOff);
     }
@@ -55,12 +55,12 @@ public class PhoneActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 List<PermissonItem> permissonItems = new ArrayList<PermissonItem>();
-                permissonItems.add(new PermissonItem(Manifest.permission.READ_PHONE_STATE, "电话", R.mipmap.permission_ic_phone));
-                permissonItems.add(new PermissonItem(Manifest.permission.CALL_PHONE, "来电", R.mipmap.permission_ic_phone_remind));
-                permissonItems.add(new PermissonItem(Manifest.permission.READ_CONTACTS, "联系人", R.mipmap.permission_ic_contacts));
+                permissonItems.add(new PermissonItem(Manifest.permission.READ_PHONE_STATE, getString(R.string.hint_phone), R.mipmap.permission_ic_phone));
+                permissonItems.add(new PermissonItem(Manifest.permission.CALL_PHONE, getString(R.string.hint_call), R.mipmap.permission_ic_phone_remind));
+                permissonItems.add(new PermissonItem(Manifest.permission.READ_CONTACTS, getString(R.string.hint_contacts), R.mipmap.permission_ic_contacts));
                 HiPermission.create(mContext)
-                        .title("开启提醒")
-                        .msg("为了您能正常使用来电提醒，需要以下权限")
+                        .title(getString(R.string.hint_alert_open))
+                        .msg(getString(R.string.hint_permisson_phone))
                         .style(R.style.PermissionBlueStyle)
                         .permissions(permissonItems)
                         .checkMutiPermission(permissionCallback);
@@ -71,7 +71,7 @@ public class PhoneActivity extends BaseActionActivity {
             public void onClick(View v) {
                 SPUtil.put(mContext, AppGlobal.DATA_ALERT_PHONE,onOff);
                 eventSend(EventGlobal.DATA_CHANGE_MENU);
-                showToast("保存成功");
+                showToast(getString(R.string.hint_save_success));
                 finish();
             }
         });

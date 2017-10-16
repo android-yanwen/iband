@@ -92,7 +92,7 @@ public class UserActivity extends BaseActionActivity {
         unit = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_UNIT, 0);
         initUser();
         setTitleBar();
-        setTitleAndMenu("用户信息", "保存");
+        setTitleAndMenu(getString(R.string.hint_user_info), getString(R.string.hint_save));
     }
 
     private void initUser() {
@@ -106,23 +106,23 @@ public class UserActivity extends BaseActionActivity {
             mAge = curUser.getUserAge();
             mHeight = curUser.getUserHeight();
             mWeight = curUser.getUserWeight();
-            hiSex.setMenuContent(mSex == 0 ? "男" : "女");
+            hiSex.setMenuContent(mSex == 0 ? getString(R.string.hint_man) : getString(R.string.hint_woman));
             hiAge.setMenuContent(mAge);
-            if (unit == 1){
-                int height = Integer.parseInt(mHeight);
-                int weight = Integer.parseInt(mWeight);
-                String in = CheckUtil.cmToIn(height)+"";
-                String lb = CheckUtil.kgToLb(weight)+"";
-                hiHeight.setMenuUnit("(ft)");
-                hiWeight.setMenuUnit("(lb)");
-                hiHeight.setMenuContent(in);
-                hiWeight.setMenuContent(lb);
-                mHeight = in;
-                mWeight = lb;
-            }else{
-                hiHeight.setMenuContent(mHeight);
-                hiWeight.setMenuContent(mWeight);
-            }
+        }
+        if (unit == 1){
+            int height = Integer.parseInt(mHeight);
+            int weight = Integer.parseInt(mWeight);
+            String in = CheckUtil.cmToIn(height)+"";
+            String lb = CheckUtil.kgToLb(weight)+"";
+            hiHeight.setMenuUnit("(in)");
+            hiWeight.setMenuUnit("(lb)");
+            hiHeight.setMenuContent(in);
+            hiWeight.setMenuContent(lb);
+            mHeight = in;
+            mWeight = lb;
+        }else{
+            hiHeight.setMenuContent(mHeight);
+            hiWeight.setMenuContent(mWeight);
         }
         String path = (String) SPUtil.get(mContext, DATA_USER_HEAD, "");
         File file = new File(Environment.getExternalStorageDirectory() + "/iwaer" + path);
@@ -141,7 +141,7 @@ public class UserActivity extends BaseActionActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_user_icon:
-                new ListDialog(mContext, Utils.getIconData(), "选择图片", new ListDialog.ListDialogListener() {
+                new ListDialog(mContext, getIconData(), getString(R.string.hint_select_pic), new ListDialog.ListDialogListener() {
                     @Override
                     public void onItemClick(ListDialog listDialog, int position) {
                         if (position == 0) {
@@ -161,17 +161,17 @@ public class UserActivity extends BaseActionActivity {
                 }).show();
                 break;
             case R.id.hi_sex:
-                String str = mSex == 0 ? "男" : "女";
-                new NumDialog(mContext, Utils.getSexData(), str, "选择性别", new NumDialog.NumDialogListener() {
+                String str = mSex == 0 ? getString(R.string.hint_man) : getString(R.string.hint_woman);
+                new NumDialog(mContext,getSexData(), str, getString(R.string.hint_select_sex), new NumDialog.NumDialogListener() {
                     @Override
                     public void getNum(String num) {
-                        mSex = num.equals("男") ? 0 : 1;
+                        mSex = num.equals( getString(R.string.hint_man)) ? 0 : 1;
                         hiSex.setMenuContent(num);
                     }
                 }).show();
                 break;
             case R.id.hi_age:
-                new NumDialog(mContext, Utils.getAgeData(), mAge, "选择年龄", new NumDialog.NumDialogListener() {
+                new NumDialog(mContext, Utils.getAgeData(), mAge, getString(R.string.hint_select_age), new NumDialog.NumDialogListener() {
                     @Override
                     public void getNum(String num) {
                         mAge = num;
@@ -180,7 +180,7 @@ public class UserActivity extends BaseActionActivity {
                 }).show();
                 break;
             case R.id.hi_height:
-                new NumDialog(mContext, Utils.getHeightData(unit), mHeight, "选择身高", new NumDialog.NumDialogListener() {
+                new NumDialog(mContext, Utils.getHeightData(unit), mHeight, getString(R.string.hint_select_height), new NumDialog.NumDialogListener() {
                     @Override
                     public void getNum(String num) {
                         mHeight = num;
@@ -190,7 +190,7 @@ public class UserActivity extends BaseActionActivity {
                 }).show();
                 break;
             case R.id.hi_weight:
-                new NumDialog(mContext, Utils.getWeightData(unit), mWeight, "选择体重", new NumDialog.NumDialogListener() {
+                new NumDialog(mContext, Utils.getWeightData(unit), mWeight, getString(R.string.hint_select_weight), new NumDialog.NumDialogListener() {
                     @Override
                     public void getNum(String num) {
                         mWeight = num;
@@ -249,12 +249,22 @@ public class UserActivity extends BaseActionActivity {
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd_HHmmss");
                         String name = "/IMG_" + simpleDateFormat.format(new Date()) + ".jpg";
                         Utils.setPicToView(bitmap, name);
-                        SPUtil.put(mContext, DATA_USER_HEAD, name);
+                        SPUtil.put(mContext,DATA_USER_HEAD, name);
                         eventSend(EventGlobal.DATA_CHANGE_USER);
                         ivUserIcon.setImageBitmap(photo);
                     }
                     break;
             }
         }
+    }
+
+    private String[] getIconData(){
+        String[] datas = new String[]{getString(R.string.local),getString(R.string.camera),getString(R.string.hint_cancel)};
+        return datas;
+    }
+
+    private String[] getSexData(){
+        String[] datas = new String[]{getString(R.string.hint_man),getString(R.string.hint_woman)};
+        return datas;
     }
 }

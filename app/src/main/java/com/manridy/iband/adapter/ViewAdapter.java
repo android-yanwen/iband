@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.manridy.iband.R;
@@ -166,7 +167,9 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.MyViewHolder> 
     }
 
     private void ifGridLayoutManager() {
-        if (mRecyclerView == null) return;
+        if (mRecyclerView == null) {
+            return;
+        }
         final RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
         if (layoutManager instanceof GridLayoutManager) {
             final GridLayoutManager.SpanSizeLookup originalSpanSizeLookup =
@@ -195,8 +198,10 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.MyViewHolder> 
         ImageView ivViewIcon;
         @BindView(R.id.tv_view_name)
         TextView tvViewName;
+        @BindView(R.id.iv_view_onoff)
+        ImageView ivViewOnoff;
         @BindView(R.id.ll_view)
-        LinearLayout llView;
+        RelativeLayout llView;
 
         public MyViewHolder(View itemView,int viewType) {
             super(itemView);
@@ -210,9 +215,7 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.MyViewHolder> 
             ivViewIcon.setImageResource(viewModel.getViewIcon());
 
             tvViewName.setText(viewModel.getViewName());
-            Drawable mDrawable = mContext.getResources().getDrawable(viewModel.isSelect() ? R.mipmap.selection_tick_color : R.mipmap.selection_tick );
-            mDrawable.setBounds(0, 0, mDrawable.getMinimumWidth(), mDrawable.getMinimumHeight());
-            tvViewName.setCompoundDrawables(null, null, mDrawable, null);
+            ivViewOnoff.setImageResource(viewModel.isSelect()?R.mipmap.selection_tick_color : R.mipmap.round);
             llView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -221,8 +224,11 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.MyViewHolder> 
                     }
                 }
             });
-            llView.setEnabled(viewModel.isEnable());
-            tvViewName.setEnabled(viewModel.isEnable());
+            if (!viewModel.isEnable()) {
+                llView.setEnabled(false);
+                ivViewOnoff.setImageResource(R.mipmap.selection_tick);
+            }
+
          }
     }
 

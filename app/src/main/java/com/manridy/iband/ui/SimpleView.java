@@ -57,9 +57,9 @@ public class SimpleView extends DragView {
         btTest.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (btTest.getText().toString().equals("开启")) {
+                if (btTest.getText().toString().equals(getContext().getString(R.string.hint_open))) {
                     EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_BLUETOOTH_OPEN));
-                }else  if (btTest.getText().toString().equals("绑定")) {
+                }else  if (btTest.getText().toString().equals(getContext().getString(R.string.hint_action_bind))) {
                     hideFloatView();
                     try {
                         AppManage.getInstance().currentActivity().startActivity(new Intent(AppManage.getInstance().currentActivity()
@@ -67,9 +67,9 @@ public class SimpleView extends DragView {
                     }catch (Exception e){
                         e.toString();
                     }
-                }else  if (btTest.getText().toString().equals("连接")) {
+                }else  if (btTest.getText().toString().equals(getContext().getString(R.string.hint_action_connect))) {
                     EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_DEVICE_CONNECT));
-                }else if (btTest.getText().toString().equals("同步")){
+                }else if (btTest.getText().toString().equals(getContext().getString(R.string.hint_action_sync))){
                     EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));
                 }
             }

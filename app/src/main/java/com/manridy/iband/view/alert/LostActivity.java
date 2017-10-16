@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.R;
+import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.ui.items.AlertBigItems;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.sdk.ble.BleCmd;
@@ -39,7 +40,7 @@ public class LostActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleAndMenu("防丢提醒","保存");
+        setTitleAndMenu(getString(R.string.hint_menu_alert_lost),getString(R.string.hint_save));
         onOff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_LOST,false);
         aiAlert.setAlertCheck(onOff);
     }
@@ -49,16 +50,17 @@ public class LostActivity extends BaseActionActivity {
         tbMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showProgress("正在保存中...");
+                showProgress(getString(R.string.hint_saveing));
                 mIwaerApplication.service.watch.sendCmd(BleCmd.setLostDeviceAlert(onOff ? 1 : 0, 20), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         dismissProgress();
                         SPUtil.put(mContext, AppGlobal.DATA_ALERT_LOST,onOff);
+                        eventSend(EventGlobal.DATA_CHANGE_MENU);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast("保存成功");
+                                showToast(getString(R.string.hint_save_success));
                             }
                         });
                         finish();
@@ -70,7 +72,7 @@ public class LostActivity extends BaseActionActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast("保存失败");
+                                showToast(getString(R.string.hint_save_fail));
                             }
                         });
                     }

@@ -24,9 +24,9 @@
             android:layout_marginTop="20dp"
             app:cv_background_color="#26ffffff"
             app:cv_progressbar_color="#deffffff"
-            app:cv_title="上次测量结果"
+            app:cv_title="@string/hint_last_hr"
             app:cv_text="--"
-            app:cv_state="--月--日 --:--"
+            app:cv_state="@string/hint_date"
             app:cv_unit="%"
             app:cv_progress="0.5"
             app:cv_icon="@mipmap/blood_oxygen_icon01"/>
@@ -54,7 +54,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:data_type="left"
-            app:data_hint="平均值"
+            app:data_hint="@string/hint_avg"
             app:data_unit="%"
             app:data="--"/>
 
@@ -64,7 +64,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:data_type="center"
-            app:data_hint="最低值"
+            app:data_hint="@string/hint_min"
             app:data_unit="%"
             app:data="--"/>
 
@@ -74,7 +74,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:data_type="right"
-            app:data_hint="最高值"
+            app:data_hint="@string/hint_max"
             app:data_unit="%"
             app:data="--"/>
 

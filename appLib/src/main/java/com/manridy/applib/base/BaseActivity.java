@@ -80,8 +80,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements SwipeBa
     @Override
     public View findViewById(int id) {
         View v = super.findViewById(id);
-        if (v == null && mHelper != null)
+        if (v == null && mHelper != null) {
             return mHelper.findViewById(id);
+        }
         return v;
     }
 
@@ -290,4 +291,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements SwipeBa
         lastClickTime = time;
         return timeD <= 600;
     }
+
+
 }

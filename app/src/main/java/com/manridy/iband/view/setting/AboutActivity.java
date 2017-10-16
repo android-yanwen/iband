@@ -1,26 +1,20 @@
 package com.manridy.iband.view.setting;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.manridy.applib.utils.VersionUtil;
 import com.manridy.iband.IbandApplication;
-import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.ui.items.HelpItems;
-import com.manridy.iband.view.TestActivity;
+import com.manridy.iband.view.test.TestDatabaseActivity;
 import com.manridy.iband.view.base.BaseActionActivity;
-
-import java.lang.reflect.Method;
+import com.manridy.iband.view.test.TestMenuActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.android.internal.telephony.ITelephony;
 
 
 /**
@@ -48,8 +42,8 @@ public class AboutActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleBar("关于");
-        tvVersion.setText("当前版本:V"+VersionUtil.getVersionName(mContext));
+        setTitleBar(getString(R.string.hint_title_about));
+        tvVersion.setText(getString(R.string.hint_current_version)+VersionUtil.getVersionName(mContext));
     }
 
     @Override
@@ -77,7 +71,7 @@ public class AboutActivity extends BaseActionActivity {
         hiAbout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                startActivity(TestActivity.class);
+                startActivity(TestMenuActivity.class);
                 return true;
             }
         });

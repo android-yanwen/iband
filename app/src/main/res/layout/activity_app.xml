@@ -12,8 +12,8 @@
         android:id="@+id/ai_alert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:big_name="开启APP应用提醒"
-        app:big_hint="手机APP应用通知时，手表会振动提醒"
+        app:big_name="@string/hint_title_alert_app"
+        app:big_hint="@string/hint_alert_app"
         app:big_onoff="false"
         app:big_line="false"/>
 
@@ -25,7 +25,7 @@
             android:background="#10000000"
             android:textColor="@color/text_title"
             android:textSize="14sp"
-            android:text="选择需要提醒的应用APP"/>
+            android:text="@string/hint_select_alert_app"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_app"
         android:layout_width="match_parent"

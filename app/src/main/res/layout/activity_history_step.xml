@@ -20,7 +20,7 @@
         android:gravity="center"
         android:textColor="@color/color_white"
         android:textSize="18sp"
-        android:text="计步记录"/>
+        android:text="@string/hint_step_history"/>
 
     <ImageView
         android:id="@+id/tb_back"
@@ -48,9 +48,9 @@
             app:cv_progressbar_color="#deff9800"
             app:cv_text_color="#de000000"
             app:cv_hint_color="#8a000000"
-            app:cv_title="每日平均步数"
+            app:cv_title="@string/hint_step_history_avg"
             app:cv_text="--"
-            app:cv_state="--公里/--大卡"
+            app:cv_state="@string/hint_step_history_num"
             app:cv_progress="0.5"
             app:cv_icon="@mipmap/walk_walkic02"/>
 
@@ -63,7 +63,7 @@
             android:layout_marginTop="250dp"
             android:textColor="#de000000"
             android:textSize="14sp"
-            android:text="本月"/>
+            android:text="@string/hint_month_current"/>
 
     </RelativeLayout>
 
@@ -81,8 +81,8 @@
             android:layout_weight="1"
             app:line_color="#261976d2"
             app:data_type="left"
-            app:data_hint="总步数"
-            app:data_unit="步"
+            app:data_hint="@string/hint_step_history_sum"
+            app:data_unit="@string/hint_unit_step"
             app:data="--"/>
 
         <com.manridy.iband.ui.items.DataItems
@@ -92,8 +92,8 @@
             android:layout_weight="1"
             app:line_color="#261976d2"
             app:data_type="center"
-            app:data_hint="总里程"
-            app:data_unit="公里"
+            app:data_hint="@string/hint_step_history_mi"
+            app:data_unit="@string/hint_unit_mi"
             app:data="--"/>
 
         <com.manridy.iband.ui.items.DataItems
@@ -103,8 +103,8 @@
             android:layout_weight="1"
             app:line_color="#261976d2"
             app:data_type="right"
-            app:data_hint="总热量"
-            app:data_unit="千卡"
+            app:data_hint="@string/hint_step_history_ka"
+            app:data_unit="@string/hint_unit_ka"
             app:data="--"/>
 
     </LinearLayout>

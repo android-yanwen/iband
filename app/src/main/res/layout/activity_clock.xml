@@ -15,7 +15,7 @@
             android:layout_marginBottom="16dp"
             android:textColor="@color/text_title"
             android:textSize="14sp"
-            android:text="你可以设置最多三个闹钟"/>
+            android:text="@string/hint_clock"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:clock_time="08:00"
-            app:clock_hint="10小时57分钟后振动"
+            app:clock_hint=""
             app:clock_onoff="true"/>
 
     <com.manridy.iband.ui.items.ClockItems
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:clock_time="08:30"
-        app:clock_hint="6小时12分钟后振动"
+        app:clock_hint=""
         app:clock_onoff="true"/>
 
     <com.manridy.iband.ui.items.ClockItems
@@ -43,6 +43,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:clock_time="09:00"
-        app:clock_hint="7小时5分钟后振动"
+        app:clock_hint=""
         app:clock_onoff="true"/>
 </LinearLayout>

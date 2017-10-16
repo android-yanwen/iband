@@ -11,8 +11,8 @@
         android:id="@+id/ai_alert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:big_name="开启翻腕亮屏"
-        app:big_hint="抬手翻腕时亮屏"
+        app:big_name="@string/hint_alert_wrist_open"
+        app:big_hint="@string/hint_alert_wrist"
         app:big_onoff="true"/>
 
 </LinearLayout>

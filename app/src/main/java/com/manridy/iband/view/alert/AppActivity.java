@@ -15,6 +15,7 @@ import com.manridy.iband.R;
 import com.manridy.iband.adapter.AppAdapter;
 import com.manridy.iband.bean.AppModel;
 import com.manridy.iband.common.AppGlobal;
+import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.OnItemClickListener;
 import com.manridy.iband.service.NotificationService2;
 import com.manridy.iband.ui.items.AlertBigItems;
@@ -54,7 +55,7 @@ public class AppActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleAndMenu("APP提醒", "保存");
+        setTitleAndMenu(getString(R.string.title_app), getString(R.string.hint_save));
         onOff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_APP,false);
         aiAlert.setAlertCheck(onOff);
         menuList = getMenuList();
@@ -93,6 +94,7 @@ public class AppActivity extends BaseActionActivity {
                             AppAdapter.Menu menu = menuList.get(position);
                             menu.menuCheck = !menu.menuCheck;
                             mAppAdapter.notifyDataSetChanged();
+
                         }
                     }
                 });
@@ -104,7 +106,8 @@ public class AppActivity extends BaseActionActivity {
             public void onClick(View v) {
                 SPUtil.put(mContext, AppGlobal.DATA_ALERT_APP,onOff);
                 IbandDB.getInstance().saveAppList(menuList);
-                showToast("保存成功");
+                showToast(getString(R.string.hint_save_success));
+                eventSend(EventGlobal.DATA_CHANGE_MENU);
                 finish();
             }
         });
@@ -128,20 +131,21 @@ public class AppActivity extends BaseActionActivity {
 
     private List<AppAdapter.Menu> getMenuList(){
         List<AppAdapter.Menu> menuList = new ArrayList<>();
-        menuList.add(new AppAdapter.Menu(4,"微信",R.mipmap.appremind_wechat));
-        menuList.add(new AppAdapter.Menu(2,"QQ",R.mipmap.appremind_qq));
-        menuList.add(new AppAdapter.Menu(5,"WhatsApp",R.mipmap.appremind_whatsapp));
-        menuList.add(new AppAdapter.Menu(6,"Facebook",R.mipmap.appremind_facebook));
+        menuList.add(new AppAdapter.Menu(4,getString(R.string.hint_app_wechat),R.mipmap.appremind_wechat));
+        menuList.add(new AppAdapter.Menu(2,getString(R.string.hint_app_qq),R.mipmap.appremind_qq));
+        menuList.add(new AppAdapter.Menu(5,getString(R.string.hint_app_whatsapp),R.mipmap.appremind_whatsapp));
+        menuList.add(new AppAdapter.Menu(6,getString(R.string.hint_app_facebook),R.mipmap.appremind_facebook));
+        menuList.add(new AppAdapter.Menu(7,getString(R.string.hint_app_line),R.mipmap.line));
         return menuList;
     }
 
     public void OpenNotifiactionDialog(){
         PermissionView contentView = new PermissionView(this);
         List<PermissonItem> data = new ArrayList<>();
-        data.add(new PermissonItem("通知","通知",R.mipmap.permission_ic_notice));
+        data.add(new PermissonItem(getString(R.string.hint_notification),getString(R.string.hint_notification),R.mipmap.permission_ic_notice));
         contentView.setGridViewColum(data.size());
-        contentView.setTitle("开启提醒");
-        contentView.setMsg("为了您能正常使用应用提醒，需要获取通知权限");
+        contentView.setTitle(getString(R.string.hint_alert_open));
+        contentView.setMsg(getString(R.string.hint_request_alert_app));
         contentView.setGridViewAdapter(new PermissionAdapter(data));
         contentView.setStyleId(R.style.PermissionBlueStyle);
 //        contentView.setFilterColor(mFilterColor);
@@ -151,8 +155,9 @@ public class AppActivity extends BaseActionActivity {
         contentView.setBtnOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (bluetoothDialog != null && bluetoothDialog.isShowing())
+                if (bluetoothDialog != null && bluetoothDialog.isShowing()) {
                     bluetoothDialog.dismiss();
+                }
 //                Intent intent = new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                startActivityForResult(intent,10000);

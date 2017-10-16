@@ -18,6 +18,11 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.manridy.applib.utils.CheckUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.TimeUtil;
@@ -40,6 +45,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,7 +81,7 @@ public class StepFragment extends BaseEventFragment {
     List<StepModel> curSectionSteps;
     Map<Integer,StepModel> curMap = new HashMap<>();
     SimpleDateFormat hourFormat;
-
+    private Gson mGson;
     int unit;
     @Override
     public View initView(LayoutInflater inflater, @Nullable ViewGroup container) {
@@ -88,8 +94,21 @@ public class StepFragment extends BaseEventFragment {
     protected void initVariables() {
         hourFormat = new SimpleDateFormat("HH");
         unit = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_UNIT,0);
+        initGson();
         initChartView(bcStep);
         initChartAxis(bcStep);
+    }
+
+    private void initGson() {
+        GsonBuilder builder = new GsonBuilder();
+
+        // Register an adapter to manage the date types as long values
+        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+            public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                return new Date(json.getAsJsonPrimitive().getAsString());
+            }
+        });
+        mGson =  builder.create();
     }
 
     @Override
@@ -97,7 +116,7 @@ public class StepFragment extends BaseEventFragment {
         IbandApplication.getIntance().service.watch.setSportNotifyListener(new BleNotifyListener() {
             @Override
             public void onNotify(Object o) {
-                curStep = new Gson().fromJson(o.toString(),StepModel.class);
+                curStep =mGson.fromJson(o.toString(),StepModel.class);
                 SyncData.saveCurStep(curStep);
                 EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_STEP));
             }
@@ -111,7 +130,9 @@ public class StepFragment extends BaseEventFragment {
 
     @OnClick({ R.id.iv_menu,R.id.iv_history})
     public void onClick(View view) {
-        if (isFastDoubleClick()) return;
+        if (isFastDoubleClick()) {
+            return;
+        }
         switch (view.getId()) {
             case R.id.iv_history:
                 startActivity(StepHistoryActivity.class);
@@ -248,24 +269,28 @@ public class StepFragment extends BaseEventFragment {
     }
 
     private void setDataItem(){
-        if (curStep == null) return;
+        if (curStep == null) {
+            return;
+        }
         int curSteps,curMi,curKa;
         curSteps =curStep.getStepNum();
         curMi = curStep.getStepMileage();
         curKa = curStep.getStepCalorie();
-        diData1.setItemData("步数",curSteps+"");
-        String miUnit = unit == 1 ? "英里":"公里";
-        diData2.setItemData("里程",miToKm(curMi,unit),miUnit);
-        diData3.setItemData("卡路里",curKa+"");
+        diData1.setItemData(getString(R.string.hint_steps),curSteps+"");
+        String miUnit = unit == 1 ?  getString(R.string.hint_unit_inch_mi): getString(R.string.hint_unit_mi);
+        diData2.setItemData(getString(R.string.hint_mi),miToKm(curMi,unit),miUnit);
+        diData3.setItemData(getString(R.string.hint_ka),curKa+"");
     }
 
 
     private void setCircularView(){
-        if (curStep == null) return;
+        if (curStep == null) {
+            return;
+        }
         int target = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_TARGET_STEP,8000);
         String step = curStep.getStepNum()+"";
-        String miUnit = unit == 1 ? "英里":"公里";
-        String state = miToKm(curStep.getStepMileage(),unit)+miUnit+"/" +curStep.getStepCalorie()+"大卡";
+        String miUnit = unit == 1 ?  getString(R.string.hint_unit_inch_mi): getString(R.string.hint_unit_mi);
+        String state = miToKm(curStep.getStepMileage(),unit)+miUnit+"/" +curStep.getStepCalorie()+getString(R.string.hint_unit_ka);
         float progress = (curStep.getStepNum() / (float)target) * 100;
 //        cvStep.setProgressWithAnimation(progress);
         cvStep.setText(step)
@@ -284,11 +309,11 @@ public class StepFragment extends BaseEventFragment {
                     int step = stepModel.getStepNum();
                     int ka = stepModel.getStepCalorie();
                     int mi = stepModel.getStepMileage();
-                    String miUnit = unit == 1 ? "英里":"公里";
+                    String miUnit = unit == 1 ?  getString(R.string.hint_unit_inch_mi): getString(R.string.hint_unit_mi);
                     String timeTitle = TimeUtil.zero(hour)+":00~" + TimeUtil.zero(hour+1)+":00";
                     diData1.setItemData(timeTitle,step+"");
-                    diData2.setItemData("里程",miToKm(mi,unit),miUnit);
-                    diData3.setItemData("卡路里",ka+"");
+                    diData2.setItemData(getString(R.string.hint_mi),miToKm(mi,unit),miUnit);
+                    diData3.setItemData(getString(R.string.hint_ka),ka+"");
                 }
             }
 

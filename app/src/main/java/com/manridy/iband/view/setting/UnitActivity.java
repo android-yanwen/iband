@@ -47,9 +47,9 @@ public class UnitActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleAndMenu("单位设置","保存");
+        setTitleAndMenu(getString(R.string.hint_menu_unit),getString(R.string.hint_save));
         unit = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_UNIT,0);
-        selectUnit();
+        showUnit();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class UnitActivity extends BaseActionActivity {
         tvMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showProgress("正在保存中...");
+                showProgress(getString(R.string.hint_saveing));
                 mIwaerApplication.service.watch.sendCmd(BleCmd.setUnit(unit), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
@@ -67,7 +67,7 @@ public class UnitActivity extends BaseActionActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast("保存成功");
+                                showToast(getString(R.string.hint_save_success));
                             }
                         });
                         finish();
@@ -79,7 +79,7 @@ public class UnitActivity extends BaseActionActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast("保存失败");
+                                showToast(getString(R.string.hint_save_fail));
                             }
                         });
                     }
@@ -94,17 +94,20 @@ public class UnitActivity extends BaseActionActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.unit_metric:
-                unit = unit == 0 ? 1:0;
                 selectUnit();
                 break;
             case R.id.unit_inch:
-                unit = unit == 0 ? 1:0;
                 selectUnit();
                 break;
         }
     }
 
     private void selectUnit() {
+        unit = (unit == 0) ? 1:0;
+        showUnit();
+    }
+
+    private void showUnit() {
         boolean isSelect = unit == 0;
         unitMetric.selectView(isSelect);
         unitInch.selectView(!isSelect);

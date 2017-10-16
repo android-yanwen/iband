@@ -25,10 +25,10 @@
             app:cv_background_color="#26ffffff"
             app:cv_progressbar_color="#deffeb3b"
             app:cv_icon="@mipmap/all_walkicon"
-            app:cv_title="今日步数"
+            app:cv_title="@string/hint_step_today"
             app:cv_text="--"
-            app:cv_unit="步"
-            app:cv_state="--公里/--大卡"
+            app:cv_unit="@string/hint_unit_step"
+            app:cv_state="@string/hint_step_history_num"
             app:cv_progress="0.5"/>
 
         <ImageView

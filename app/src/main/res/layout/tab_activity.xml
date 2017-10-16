@@ -19,7 +19,9 @@
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:scaleType="fitCenter"
+        style="@style/ToolBarButton"
         android:src="@mipmap/ic_back"/>
 
     <TextView
@@ -37,12 +39,11 @@
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="16dp"
+        android:paddingRight="16dp"
         android:gravity="center_vertical"
         android:textColor="@color/color_white"
-        android:textSize="18sp"
-        android:text="菜单"
-        android:visibility="gone"/>
+        style="@style/ToolBarButton"
+        android:textSize="18sp"/>
 
     <ImageView
         android:id="@+id/tb_share"

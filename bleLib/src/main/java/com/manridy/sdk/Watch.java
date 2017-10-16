@@ -252,7 +252,7 @@ public class Watch extends BluetoothLeManager implements WatchApi {
 
         if (infoType == InfoType.CURRENT_INFO) {
             sendCmd(BleCmd.getSport(3),bleCallback);
-        }else if (infoType == infoType.HISTORY_INFO){
+        }else if (infoType == InfoType.HISTORY_INFO){
             sendCmd(BleCmd.getSportHistoryData(),bleCallback);
         }else if (infoType == InfoType.HISTORY_NUM){
             sendCmd(BleCmd.getSportHistoryNum(),bleCallback);

@@ -15,6 +15,7 @@ import com.manridy.iband.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * 闹钟item
@@ -23,6 +24,7 @@ import java.util.Date;
 
 public class ClockItems extends RelativeLayout {
 
+    private Context mContext;
     private TextView tvTime;
     private TextView tvHint;
     private ImageView ivImg;
@@ -31,10 +33,12 @@ public class ClockItems extends RelativeLayout {
 
     public ClockItems(Context context) {
         super(context);
+        mContext = context;
     }
 
     public ClockItems(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
         init(context, attrs);
     }
 
@@ -80,7 +84,12 @@ public class ClockItems extends RelativeLayout {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        tvHint.setText(TimeUtil.formatTime(ms)+"后振动");
+        Locale curLocale = getResources().getConfiguration().locale;
+        if (curLocale.getLanguage().equals(Locale.ENGLISH) || curLocale.toString().equals("en_US")) {
+            tvHint.setText(getContext().getString(R.string.hint_time_after)+" "+ formatTime(ms));
+        }else {
+            tvHint.setText(formatTime(ms)+getContext().getString(R.string.hint_time_after));
+        }
         return this;
     }
 
@@ -88,6 +97,37 @@ public class ClockItems extends RelativeLayout {
         ivImg.setImageResource(onOff ? R.mipmap.ic_on : R.mipmap.ic_off);
         this.onOff = onOff;
         return this;
+    }
+
+    private String formatTime(Long ms) {
+        Integer ss = 1000;
+        Integer mi = ss * 60;
+        Integer hh = mi * 60;
+        Integer dd = hh * 24;
+
+        Long day = ms / dd;
+        Long hour = (ms - day * dd) / hh;
+        Long minute = (ms - day * dd - hour * hh) / mi;
+        Long second = (ms - day * dd - hour * hh - minute * mi) / ss;
+        Long milliSecond = ms - day * dd - hour * hh - minute * mi - second * ss;
+
+        StringBuffer sb = new StringBuffer();
+        if(day > 0) {
+            sb.append(day+"天");
+        }
+        if(hour > 0) {
+            sb.append(hour+mContext.getString(R.string.hint_unit_sleep));
+        }
+        if(minute > 0) {
+            sb.append(minute+mContext.getString(R.string.unit_min));
+        }
+        if(second > 0) {
+            sb.append(second+"秒");
+        }
+        if(milliSecond > 0) {
+            sb.append(milliSecond+"毫秒");
+        }
+        return sb.toString();
     }
 
     public String getClockTime(){

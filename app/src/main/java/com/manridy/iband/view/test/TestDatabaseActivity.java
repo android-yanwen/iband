@@ -1,4 +1,4 @@
-package com.manridy.iband.view;
+package com.manridy.iband.view.test;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +17,6 @@ import com.manridy.iband.bean.BpModel;
 import com.manridy.iband.bean.HeartModel;
 import com.manridy.iband.bean.SleepModel;
 import com.manridy.iband.bean.StepModel;
-import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.view.base.BaseActionActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,7 +32,7 @@ import butterknife.ButterKnife;
  * Created by jarLiao on 17/6/13.
  */
 
-public class TestActivity extends BaseActionActivity {
+public class TestDatabaseActivity extends BaseActionActivity {
 
     @BindView(R.id.spinner)
     Spinner spinner;
@@ -44,7 +43,7 @@ public class TestActivity extends BaseActionActivity {
     StringBuffer buffer;
     @Override
     protected void initView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_test_database);
         ButterKnife.bind(this);
     }
 

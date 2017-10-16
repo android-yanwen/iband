@@ -23,7 +23,6 @@ import com.manridy.iband.ui.CircularView;
 import com.manridy.iband.ui.items.DataItems;
 import com.manridy.iband.view.base.BaseEventFragment;
 import com.manridy.iband.view.history.SleepHistoryActivity;
-import com.manridy.sdk.bean.Sleep;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -59,9 +58,8 @@ public class SleepFragment extends BaseEventFragment {
     @BindView(R.id.chart_sleep)
     ChartView chartSleep;
 
-
     List<SleepModel> curSleeps;
-    int[] colors;
+    int[] colors,selectColors;
     @BindView(R.id.tv_time_start)
     TextView tvTimeStart;
     @BindView(R.id.tv_time_end)
@@ -76,7 +74,8 @@ public class SleepFragment extends BaseEventFragment {
 
     @Override
     protected void initVariables() {
-        colors = new int[]{Color.parseColor("#8a512da8"), Color.parseColor("#8a9575cd"), Color.parseColor("#8affbc00")};
+        colors = new int[]{Color.parseColor("#8a311b92"), Color.parseColor("#614527a0"), Color.parseColor("#8affbc00")};
+        selectColors = new int[]{ Color.parseColor("#de311b92"),Color.parseColor("#ab4527a0"), Color.parseColor("#deffbc00")};
     }
 
     @Override
@@ -92,12 +91,12 @@ public class SleepFragment extends BaseEventFragment {
                 setDataItem();
             }
         });
-//        cvSleep.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
+        cvSleep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 //                IbandApplication.getIntance().service.watch.sendCmd(new byte[]{(byte) 0xfc,0x0c,0x03});
-//            }
-//        });
+            }
+        });
     }
 
     @Override
@@ -107,7 +106,9 @@ public class SleepFragment extends BaseEventFragment {
 
     @OnClick({R.id.iv_history})
     public void onClick(View view) {
-        if (isFastDoubleClick()) return;
+        if (isFastDoubleClick()) {
+            return;
+        }
         switch (view.getId()) {
             case R.id.iv_history:
                 startActivity(SleepHistoryActivity.class);
@@ -119,7 +120,7 @@ public class SleepFragment extends BaseEventFragment {
     public void onMainEvent(EventMessage event) {
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_SLEEP) {
             setCircularView();
-            chartSleep.setChartData(colors, curSleeps).invaliDate();
+            chartSleep.setChartData(colors,selectColors ,curSleeps).invaliDate();
             setDataItem();
         }
     }
@@ -163,7 +164,9 @@ public class SleepFragment extends BaseEventFragment {
     }
 
     private void setCircularView() {
-        if (curSleeps == null || curSleeps.size() == 0) return;
+        if (curSleeps == null || curSleeps.size() == 0) {
+            return;
+        }
         int target = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_TARGET_SLEEP, 8);
         int sleepSum = 0, sleepLight = 0, sleepDeep = 0;
         for (SleepModel curSleep : curSleeps) {
@@ -173,7 +176,7 @@ public class SleepFragment extends BaseEventFragment {
         sleepSum += (sleepLight + sleepDeep);
         double dou = TimeUtil.getHourDouble(sleepLight) + TimeUtil.getHourDouble(sleepDeep);
         String sum = String .format("%.1f", dou);
-        String state = "深睡" + TimeUtil.getHour(sleepDeep) + "/浅睡" + TimeUtil.getHour(sleepLight);
+        String state = getString(R.string.hint_sleep_deep) + getHour(sleepDeep) + getString(R.string.hint_sleep_light1) + getHour(sleepLight);
         float progress = (sleepSum / (float) (target * 60)) * 100;
         cvSleep.setText(sum)
                 .setState(state)
@@ -183,7 +186,9 @@ public class SleepFragment extends BaseEventFragment {
     }
 
     private void setSelectDataItem(int position) {
-        if (curSleeps == null || curSleeps.size() == 0) return;
+        if (curSleeps == null || curSleeps.size() == 0) {
+            return;
+        }
         SleepModel sleepModel = curSleeps.get(position);
         String start = sleepModel.getSleepStartTime();
         String end = sleepModel.getSleepEndTime();
@@ -192,13 +197,13 @@ public class SleepFragment extends BaseEventFragment {
         String title = "";
         if (type == 1) {
             min = sleepModel.getSleepDeep();
-            title = "深睡";
+            title = getString(R.string.hint_sleep_deep);
         }else if (type == 2){
             min = sleepModel.getSleepLight();
-            title = "浅睡";
+            title = getString(R.string.hint_sleep_light);
         }else if (type == 3){
             min = sleepModel.getSleepAwake();
-            title = "清醒";
+            title = getString(R.string.hint_sleep_awake);
         }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-DD HH:mm");
         try {
@@ -208,16 +213,18 @@ public class SleepFragment extends BaseEventFragment {
             String startTime = simpleDateFormat2.format(dateStart);
             String endTime = simpleDateFormat2.format(dateEnd);
             String m = String.format("%.1f", ((double) min / 60));
-            diData1.setItemData(title + "开始", startTime);
-            diData2.setItemData(title + "结束", endTime);
-            diData3.setItemData(title + "时长", m);
+            diData1.setItemData(title + getString(R.string.hint_start), startTime);
+            diData2.setItemData(title + getString(R.string.hint_end), endTime);
+            diData3.setItemData(title + getString(R.string.hint_times), m);
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
 
     private void setDataItem() {
-        if (curSleeps == null || curSleeps.size() == 0) return;
+        if (curSleeps == null || curSleeps.size() == 0) {
+            return;
+        }
         String start = curSleeps.get(0).getSleepStartTime();
         String end = curSleeps.get(curSleeps.size() - 1).getSleepEndTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-DD HH:mm");
@@ -229,9 +236,9 @@ public class SleepFragment extends BaseEventFragment {
             SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("HH:mm");
             String startTime = simpleDateFormat2.format(dateStart);
             String endTime = simpleDateFormat2.format(dateEnd);
-            diData1.setItemData("昨晚入睡", startTime);
-            diData2.setItemData("今天醒来", endTime);
-            diData3.setItemData("清醒时长",str,"小时");
+            diData1.setItemData(getString(R.string.hint_sleep_start), startTime);
+            diData2.setItemData(getString(R.string.hint_sleep_end), endTime);
+            diData3.setItemData(getString(R.string.hint_sleep_sober),str,getString(R.string.hint_unit_sleep));
             tvTimeStart.setText(startTime);
             tvTimeEnd.setText(endTime);
         } catch (ParseException e) {
@@ -249,5 +256,14 @@ public class SleepFragment extends BaseEventFragment {
         return awake;
     }
 
+    private String getHour(int time) {
+        String str ;
+        if (time<60) {
+            str = time + getString(R.string.unit_min);
+        }else {
+            str =  String .format("%.1f", ((double)time/60))+getString(R.string.hint_unit_sleep);
+        }
+        return str;
+    }
 
 }

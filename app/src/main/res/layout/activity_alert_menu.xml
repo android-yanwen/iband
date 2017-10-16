@@ -16,42 +16,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menus_icon="@mipmap/remind_sit02"
-        app:menus_name="久坐提醒"/>
+        app:menus_name="@string/hint_menu_alert_sedentary"/>
 
     <com.manridy.iband.ui.items.MenuItems
         android:id="@+id/menu_clock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menus_icon="@mipmap/remind_alarm02"
-        app:menus_name="闹钟提醒"/>
+        app:menus_name="@string/hint_menu_alert_clock"/>
 
     <com.manridy.iband.ui.items.MenuItems
         android:id="@+id/menu_sms"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menus_icon="@mipmap/remind_mgs02"
-        app:menus_name="短信提醒"/>
+        app:menus_name="@string/hint_menu_alert_sms"/>
 
     <com.manridy.iband.ui.items.MenuItems
         android:id="@+id/menu_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menus_icon="@mipmap/remind_phone02"
-        app:menus_name="来电提醒"/>
+        app:menus_name="@string/hint_menu_alert_phone"/>
 
     <com.manridy.iband.ui.items.MenuItems
         android:id="@+id/menu_lost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menus_icon="@mipmap/remind_antilost"
-        app:menus_name="防丢提醒"/>
+        app:menus_name="@string/hint_menu_alert_lost"/>
 
     <com.manridy.iband.ui.items.MenuItems
         android:id="@+id/menu_app"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menus_icon="@mipmap/remind_app"
-        app:menus_name="APP提醒"
+        app:menus_name="@string/hint_menu_alert_app"
         android:visibility="visible"/>
 
 

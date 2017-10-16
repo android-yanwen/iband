@@ -2,12 +2,14 @@ package com.manridy.iband.service;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Process;
 import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -58,11 +60,14 @@ public class NotificationService2 extends NotificationListenerService {
     public static final String PAGE_NAME_WX ="com.tencent.mm";
     public static final String PAGE_NAME_WHATSAPP ="com.whatsapp";
     public static final String PAGE_NAME_FACEBOOK ="com.facebook.katana";
+    public static final String PAGE_NAME_LINE ="jp.naver.line.android";
+
 
     public static final int APP_ID_QQ =2;
     public static final int APP_ID_WX =4;
     public static final int APP_ID_WHATSAPP =5;
     public static final int APP_ID_FACEBOOK =6;
+    public static final int APP_ID_LINE =7;
     /*----------------- 静态方法 -----------------*/
     public synchronized static void startNotificationService(Context context) {
         context.startService(new Intent(context, NotificationService2.class));
@@ -106,14 +111,13 @@ public class NotificationService2 extends NotificationListenerService {
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "onCreate..");
-//        toggleNotificationListenerService(this);
+//        ensureCollectorRunning();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "onStartCommand..");
-        toggleNotificationListenerService();
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Override
@@ -127,6 +131,23 @@ public class NotificationService2 extends NotificationListenerService {
     List<byte[]> cmdList = new ArrayList<>();
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
+        sendAppAlert(sbn);
+
+
+//            Log.i(TAG, "tickerText : " + notification.tickerText);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                Bundle bundle = notification.extras;
+//                for (String key : bundle.keySet()) {
+//                    Log.i(TAG, key + ": " + bundle.get(key));
+//                }
+//            }
+//
+//        if (self != null && notificationListener != null) {
+//            notificationListener.onNotificationPosted(sbn);
+//        }
+    }
+
+    private synchronized void sendAppAlert(StatusBarNotification sbn) {
         cmdFirst = true;
         String packageName = sbn.getPackageName();
         Notification notification = sbn.getNotification();
@@ -146,6 +167,8 @@ public class NotificationService2 extends NotificationListenerService {
             boolean wxAlert = map.containsKey(APP_ID_WX) && map.get(APP_ID_WX).isOnOff();
             boolean whatsAlert = map.containsKey(APP_ID_WHATSAPP) && map.get(APP_ID_WHATSAPP).isOnOff();
             boolean facebookAlert = map.containsKey(APP_ID_FACEBOOK) && map.get(APP_ID_FACEBOOK).isOnOff();
+            boolean lineAlert = map.containsKey(APP_ID_LINE) && map.get(APP_ID_LINE).isOnOff();
+
             if (isQQPackage(packageName) && qqAlert) {
                 appAlert = APP_ID_QQ;
             }else if (packageName.equals(PAGE_NAME_WX) && wxAlert){
@@ -154,25 +177,14 @@ public class NotificationService2 extends NotificationListenerService {
                 appAlert = APP_ID_WHATSAPP;
             }else if (packageName.equals(PAGE_NAME_FACEBOOK) && facebookAlert){
                 appAlert = APP_ID_FACEBOOK;
+            }else if (packageName.equals(PAGE_NAME_LINE) && lineAlert) {
+                appAlert = APP_ID_LINE;
             }
             if (appAlert != -1) {
                 infoId = infoId > 63 ? 1 : infoId++;
                 IbandApplication.getIntance().service.watch.sendCmd(BleCmd.setAppAlertName(infoId,appAlert), AppleCallback);
             }
         }
-
-
-//            Log.i(TAG, "tickerText : " + notification.tickerText);
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                Bundle bundle = notification.extras;
-//                for (String key : bundle.keySet()) {
-//                    Log.i(TAG, key + ": " + bundle.get(key));
-//                }
-//            }
-//
-//        if (self != null && notificationListener != null) {
-//            notificationListener.onNotificationPosted(sbn);
-//        }
     }
 
     private boolean isQQPackage(String packageName) {
@@ -224,6 +236,39 @@ public class NotificationService2 extends NotificationListenerService {
 
     }
 
+    private void ensureCollectorRunning() {
+        ComponentName collectorComponent = new ComponentName(this, NotificationService2.class);
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        boolean collectorRunning = false;
+        List<ActivityManager.RunningServiceInfo> runningServices = manager.getRunningServices(Integer.MAX_VALUE);
+        if (runningServices == null ) {
+            return;
+        }
+        for (ActivityManager.RunningServiceInfo service : runningServices) {
+            if (service.service.equals(collectorComponent)) {
+                if (service.pid == Process.myPid() ) {
+                    collectorRunning = true;
+                }
+            }
+        }
+        if (collectorRunning) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            requestRebind(new ComponentName(this,  NotificationService2.class));
+        }else {
+            toggleNotificationListenerService();
+        }
+    }
+
+    //重新开启NotificationMonitor
+    private void toggleNotificationListenerService() {
+        ComponentName thisComponent = new ComponentName(this,  NotificationService2.class);
+        PackageManager pm = getPackageManager();
+        pm.setComponentEnabledSetting(thisComponent, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        pm.setComponentEnabledSetting(thisComponent, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+    }
+
     public void printCurrentNotifications() {
         StatusBarNotification[] ns = getActiveNotifications();
         for (StatusBarNotification n : ns) {
@@ -242,14 +287,4 @@ public class NotificationService2 extends NotificationListenerService {
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
     }
 
-    private void toggleNotificationListenerService() {
-        Log.e(TAG,"toggleNLS");
-        PackageManager pm = getPackageManager();
-        pm.setComponentEnabledSetting(new ComponentName(this,NotificationService2.class),
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-
-        pm.setComponentEnabledSetting(new ComponentName(this,NotificationService2.class),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-
-    }
 }

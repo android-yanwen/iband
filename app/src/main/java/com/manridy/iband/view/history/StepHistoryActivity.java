@@ -78,11 +78,11 @@ public class StepHistoryActivity extends BaseActionActivity {
 
     @Override
     protected void initVariables() {
-        setTitleBar("计步记录");
+        setTitleBar(getString(R.string.hint_step_history));
         registerEventBus();
         unit = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_UNIT,0);
         mCalendar = Calendar.getInstance();
-        mDateFormat = new SimpleDateFormat("yyyy年MM月");
+        mDateFormat = new SimpleDateFormat("yyyy-MM");
         initChartView(bcHistoryStep);
         initChartAxis(bcHistoryStep);
         EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_STEP_HISTORY));
@@ -96,7 +96,7 @@ public class StepHistoryActivity extends BaseActionActivity {
             public void onClick(View v) {
                 String time;
                 int[] times = new int[]{1999,07,01};
-                if (tvMonth.getText().equals("本月")) {
+                if (tvMonth.getText().equals(getString(R.string.hint_month_current))) {
                     time = mDateFormat.format(new Date());
                 }else {
                     time = tvMonth.getText().toString();
@@ -106,13 +106,14 @@ public class StepHistoryActivity extends BaseActionActivity {
                     int month = Integer.parseInt(time.substring(6,7));
                     times = new int[]{year,month-1};
                 }
-                new DateDialog(mContext,times , "选择月份", new DateDialog.DateDialogListener() {
+
+                new DateDialog(mContext,times ,getString(R.string.hint_select_month) , new DateDialog.DateDialogListener() {
                     @Override
                     public void getTime(int year, int monthOfYear, int dayOfMonth) {
-                        String time = year +"年"+ TimeUtil.zero(monthOfYear+1)+"月";
+                        String time = year + "-" + TimeUtil.zero(monthOfYear+1);
                         mCalendar.set(year, monthOfYear, dayOfMonth);
                         if (time.equals(mDateFormat.format(new Date()))) {
-                            tvMonth.setText("本月");
+                            tvMonth.setText(getString(R.string.hint_month_current));
                         }else {
                             tvMonth.setText(time);
                         }
@@ -203,12 +204,14 @@ public class StepHistoryActivity extends BaseActionActivity {
     }
 
     private void setCircularView(){
-        if (stepList == null || stepList.size()== 0) return;
+        if (stepList == null || stepList.size()== 0) {
+            return;
+        }
         int target = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_TARGET_STEP,8000);
         stepCount = stepCount == 0 ? 1:stepCount;
         String step = stepNum/stepCount+"";
-        String miUnit = unit == 1 ? "英里":"公里";
-        String state = miToKm(stepMi/stepCount,unit)+miUnit+"/" +stepKa/stepCount+"大卡";
+        String miUnit = unit == 1 ? getString(R.string.hint_unit_inch_mi): getString(R.string.hint_unit_mi);
+        String state = miToKm(stepMi/stepCount,unit)+miUnit+"/" +stepKa/stepCount+getString(R.string.hint_unit_ka);
         float progress = (stepNum/stepCount / (float)target) * 100;
         cvHistoryStep.setText(step)
                 .setState(state)
@@ -217,10 +220,10 @@ public class StepHistoryActivity extends BaseActionActivity {
     }
 
     private void setDataItem(){
-        String miUnit = unit == 1 ? "英里":"公里";
-        diData1.setItemData("总步数",stepNum+"");
-        diData2.setItemData("总里程",miToKm(stepMi,unit),miUnit);
-        diData3.setItemData("总热量",stepKa+"");
+        String miUnit = unit == 1 ? getString(R.string.hint_unit_inch_mi): getString(R.string.hint_unit_mi);
+        diData1.setItemData(getString(R.string.hint_step_history_sum),stepNum+"");
+        diData2.setItemData(getString(R.string.hint_step_history_mi),miToKm(stepMi,unit),miUnit);
+        diData3.setItemData(getString(R.string.hint_step_history_ka),stepKa+"");
     }
 
     OnChartValueSelectedListener selectedListener = new OnChartValueSelectedListener() {
@@ -232,10 +235,10 @@ public class StepHistoryActivity extends BaseActionActivity {
                 int ka = dayBean.getDayMax();
                 int mi = dayBean.getDayMin();
                 String day = dayBean.getDay();
-                String miUnit = unit == 1 ? "英里":"公里";
+                String miUnit = unit == 1 ?getString(R.string.hint_unit_inch_mi): getString(R.string.hint_unit_mi);
                 diData1.setItemData(day,step+"");
-                diData2.setItemData("里程",miToKm(mi,unit),miUnit);
-                diData3.setItemData("卡路里",ka+"");
+                diData2.setItemData(getString(R.string.hint_mi),miToKm(mi,unit),miUnit);
+                diData3.setItemData(getString(R.string.hint_ka),ka+"");
             }
         }
 

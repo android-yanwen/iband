@@ -38,9 +38,9 @@ public class LogUtil {
     }
     public static void e(String tag, String mess) {
         if (LOGE) { Log.e(tag, mess); }
-//        print2File(tag, mess);
+        print2File(tag, mess);
     }
-    public static final String LOG_FILE_PATH = "/iwaerLog.txt";
+    public static final String LOG_FILE_PATH = "/ibandLog.txt";
     private synchronized static void print2File(final String tag, final String msg) {
         Date now = new Date();
         String date = new SimpleDateFormat("MM-dd", Locale.getDefault()).format(now);
@@ -88,9 +88,15 @@ public class LogUtil {
     }
 
     private static boolean createOrExistsFile(File file) {
-        if (file == null) return false;
-        if (file.exists()) return file.isFile();
-        if (!createOrExistsDir(file.getParentFile())) return false;
+        if (file == null) {
+            return false;
+        }
+        if (file.exists()) {
+            return file.isFile();
+        }
+        if (!createOrExistsDir(file.getParentFile())) {
+            return false;
+        }
         try {
             return file.createNewFile();
         } catch (IOException e) {
@@ -104,7 +110,9 @@ public class LogUtil {
     }
 
     private static boolean isSpace(String s) {
-        if (s == null) return true;
+        if (s == null) {
+            return true;
+        }
         for (int i = 0, len = s.length(); i < len; ++i) {
             if (!Character.isWhitespace(s.charAt(i))) {
                 return false;

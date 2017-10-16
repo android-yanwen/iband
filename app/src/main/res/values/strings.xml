@@ -1,26 +1,627 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">iband</string>
+    //关于
+    <string name="hint_title_about">about</string>
+    //当前版本
+    <string name="hint_current_version">Current Version:V</string>
+    //检查升级
+    <string name="hint_menu_update">Check for Updates</string>
+    //使用帮助
+    <string name="hint_menu_help">help</string>
+    //关于我们
+    <string name="hint_menu_about">about us</string>
+    //来电提醒
+    <string name="hint_menu_alert_phone">Call Notifications</string>
+    //短信提醒
+    <string name="hint_menu_alert_sms">Message Notifications</string>
+    //久坐提醒
+    <string name="hint_menu_alert_sedentary">Sedentary Reminder</string>
+    //闹钟提醒
+    <string name="hint_menu_alert_clock">Clock Alarms</string>
+    //更多
+    <string name="hint_menu_more">More</string>
+    //防丢提醒
+    <string name="hint_menu_alert_lost">Anti-Lost Alert</string>
+    //应用提醒
+    <string name="hint_menu_alert_app">App Reminders</string>
+    //开启APP应用提醒
+    <string name="hint_title_alert_app"> App reminders</string>
+    //手机APP应用通知时，手表会振动提醒
+    <string name="hint_alert_app">When there are notifications on apps, the watch will vibrate. </string>
+    //选择需要提醒的应用APP
+    <string name="hint_select_alert_app">Choose the apps you want to be reminded.</string>
+    //使用手表遥控拍照
+    <string name="hint_camera">Use the watch to control camera.</string>
+    //开始拍照
+    <string name="hint_camera_start">Start taking photo</string>
+    //你最多可以设置三个闹钟
+    <string name="hint_clock">You can set 3 alarms at most.</string>
+    // 固件升级
+    <string name="hint_title_ota">Firmware Upgrade</string>
+    //升级中请勿使设备远离手机
+    <string name="hint_ota">Updating now, please keep the device close to your phone.</string>
+    //正在准备升级中,请稍后...
+    <string name="hint_ota_progress">Preparing for update, please wait ...</string>
+    //升级成功
 
-    <string-array name="lights">
-        <item>0</item>
-        <item>10</item>
-        <item>20</item>
-        <item>30</item>
-        <item>40</item>
-        <item>50</item>
-        <item>60</item>
-        <item>70</item>
-        <item>80</item>
-        <item>90</item>
-        <item>100</item>
-    </string-array>
+    <string name="hint_ota_success">Successfully updated</string>
+    //确定
+    <string name="hint_ok">Yes</string>
+    //使用此功能需手环与手机保持连接
+    <string name="hint_find">Please keep the watch and phone connected.</string>
+    //查找手环
+    <string name="title_find">Search for the watch </string>
+    //如果找到手环,手环会震动和亮屏
+    <string name="hint_find_title">If the watch is found, it will vibrate.</string>
+    //上次测量结果
+    <string name="hint_last_hr">last measurement result </string>
+    //次/分
+    <string name="hint_unit_hr">times/min</string>
+    //--月--日 --:--
+    <string name="hint_date">--month--day --:--</string>
+    //本月
+    <string name="hint_month_current">Current Month</string>
+    //平均心率
+    <string name="hint_hr_avg">Avg </string>
+    //最低心率
+    <string name="hint_hr_min">Min </string>
+    //最高心率
+    <string name="hint_hr_max">Max </string>
+    //睡眠记录
+    <string name="hint_sleep_history">History</string>
+    //每日平均睡眠
+    <string name="hint_sleep_history_avg">Daily Avg Sleep</string>
+    //深睡--小时/浅睡--小时
+    <string name="hint_sleep_history_time">D-Sleep--h/L-Sleep--h</string>
+    //每日平均睡眠
+    <string name="hint_sleep_avg">Daily Avg Sleep</string>
+    //每日平均深睡
+    <string name="hint_sleep_deep_avg">Avg D-Sleep</string>
+    //每日平均浅睡
+    <string name="hint_sleep_light_avg"> Avg L-Sleep</string>
+    //小时
+    <string name="hint_unit_sleep">h</string>
+    //计步记录
+    <string name="hint_step_history">History</string>
+    //每日平均步数
+    <string name="hint_step_history_avg">Daily Avg Steps</string>
+    //--公里/--大卡
+    <string name="hint_step_history_num">--km/--cal</string>
+    //总步数
+    <string name="hint_step_history_sum">Total Steps</string>
+    //总里程
+    <string name="hint_step_history_mi">Total Miles</string>
+    //总热量
+    <string name="hint_step_history_ka">Total Calories</string>
+    //千卡
+    <string name="hint_unit_ka">kcal</string>
+    //公里
+    <string name="hint_unit_mi">km</string>
+    //步
+    <string name="hint_unit_step">steps</string>
+    //设置手表的亮度
+    <string name="hint_watch_light">Set the screen brightness of watch.</string>
+    //中
+    <string name="hint_normal">normal</string>
+    //开启防丢提醒
+    <string name="hint_alert_lost_open">Anti-lost alert</string>
+    //连接断开时，手表会振动提醒
+    <string name="hint_alert_lost">When the connection breaks, the watch will vibrate.</string>
+    //计步
+    <string name="hint_step">Step count</string>
+    //请保持蓝牙开启，并且手环与手机保持连接
+    <string name="hint_title_alert_phone">Please keep the watch and phone connected.</string>
+    //开启来电提醒
+    <string name="hint_alert_phone_open">Call notifications</string>
+    //手机来电时，手表会振动提醒
+    <string name="hint_alert_phone">When you receive calls, the watch will vibrate.</string>
+    //持续一小时静坐,手环会震动提醒
+    <string name="hint_alert_sedentary_title">If you are being sedentary for more than 1 hour, the watch will vibrate.</string>
+    //开始久坐提醒
+    <string name="hint_alert_sedentary_open">Sedentary Reminder</string>
+    //开始时间
+    <string name="hint_alert_sedentary_time_start">Start Time</string>
+    //结束时间
+    <string name="hint_alert_sedentary_time_end">End Time</string>
+    //午休时间
+    <string name="hint_alert_sedentary_title_nap">Noon Break</string>
+    //12:00~14:00不进行提醒
+    <string name="hint_alert_sedentary_nap">12:00~14:00 no reminder</string>
+    //用户信息
+    <string name="hint_user_info">User info</string>
+    //界面选择
+    <string name="hint_menu_view">Interface selection</string>
+    //遥控拍照
+    <string name="hint_menu_camera">Remote camera </string>
+    //查找手环
+    <string name="hint_menu_find">Find my watch</string>
+    //提醒功能
+    <string name="hint_menu_alert">Reminders</string>
+    //微信运动
+    <string name="hint_menu_wechat">WeRun</string>
+    //翻腕亮屏
+    <string name="hint_menu_wrist"> Smart screen </string>
+    //亮度调节
+    <string name="hint_menu_light">Brightness</string>
+    //单位设置
+    <string name="hint_menu_unit">Unit setting</string>
+    //时间格式
+    <string name="hint_menu_time">Time format</string>
+    //目标设置
+    <string name="hint_menu_target">Goal setting</string>
+    //设备连接
+    <string name="title_device_connect">Device connectivity</string>
+    //功能设置
+    <string name="title_menu">Function Settings</string>
+    //请保持蓝牙开启，并且手环与手机保持连接
+    <string name="title_alert_sms">Please keep the watch and phone connected.</string>
+    //开启短信提醒
+    <string name="hint_alert_sms_open">Message notifications</string>
+    //手机来短信时，手表会振动提醒
+    <string name="hint_alert_sms">When you receive messages, the watch will vibrate.</string>
+    //运动目标
+    <string name="hint_step_target">Exercise plan</string>
+    //每天步行
+    <string name="hint_step_everyday">daily steps</string>
+    //8000步
+    <string name="hint_init_step_target">8,000 steps</string>
+    //睡眠目标
+    <string name="hint_sleep_target">Sleep plan</string>
+    //每天睡眠
+    <string name="hint_sleep_everyday">daily sleep</string>
+    //8小时
+    <string name="hint_init_sleep_target">8 hours</string>
+    //时间单位设置
+    <string name="hint_time_set">Time unit setting</string>
+    //24小时制
+    <string name="hint_time_24">24-hour</string>
+    //12小时制
+    <string name="hint_time_12">12-hour</string>
+    //公英制单位设置
+    <string name="hint_unit_set">Metric / Imperial Unit Setting</string>
+    //公制(米/公里/千克)
+    <string name="hint_unit_metric">Metric (m/km/kg)</string>
+    //英制(英寸/英里/英镑)
+    <string name="hint_unit_inch">Imperial (inch/mile/pound)</string>
+    //软件版本
+    <string name="hint_soft_version">App Version</string>
+    //检查版本
+    <string name="hint_check_version">Check version</string>
+    //固件版本
+    <string name="hint_firm_version">Firmware Version</string>
+    //未绑定设备
+    <string name="hint_device_unbind">No device bound</string>
+    //绑定设备
+    <string name="hint_device_bind">Bind the device</string>
+    //请输入用户名
+    <string name="hint_input_user_name">Please enter user name</string>
+    //性别
+    <string name="hint_sex">Gender</string>
+    //男
+    <string name="hint_man">Male</string>
+    //年龄
+    <string name="hint_age">Age</string>
+    //(岁)
+    <string name="hint_unit_age">(years old)</string>
+    //身高
+    <string name="hint_height">Height</string>
+    //(cm)
+    <string name="hint_unit_height">(cm)</string>
+    //体重
+    <string name="hint_weight">Weight</string>
+    //(kg)
+    <string name="hint_unit_weight">(kg)</string>
+    //开启
+    <string name="hint_open">Enable</string>
+    //开启翻腕亮屏
+    <string name="hint_alert_wrist_open">Smart screen</string>
+    //抬手翻腕时亮屏
+    <string name="hint_alert_wrist"> Lift your wrist to check time and the screen will automatically brighten.</string>
+    //提醒功能
+    <string name="title_alert">Reminder functions</string>
+    //已开启
+    <string name="hint_opens">Enabled</string>
+    //未开启
+    <string name="hint_unopen">Disabled</string>
+    //未知号码
+    <string name="hint_phone_num_unknow">Unknown Number</string>
+    //应用提醒
+    <string name="title_app">App Reminders</string>
+    //保存
+    <string name="hint_save">Save</string>
+    //微信
+    <string name="hint_app_wechat">WeChat</string>
+    //QQ
+    <string name="hint_app_qq">QQ</string>
+    //WhatsApp
+    <string name="hint_app_whatsapp">WhatsApp</string>
+    //Facebook
+    <string name="hint_app_facebook">Facebook</string>
+    //通知
+    <string name="hint_notification">Notifications</string>
+    //开启提醒
+    <string name="hint_alert_open">Enable reminder</string>
+    //为了您能正常使用应用提醒，需要获取通知权限
+    <string name="hint_request_alert_app">To use App reminders normally, you should allow the notification permission request.</string>
+    //手环未连接
+    <string name="hint_device_unconnect">The watch is unconnected. </string>
+    //手环已连接
+    <string name="hint_device_connected">The watch is connected.</string>
+    //手环连接中
+    <string name="hint_device_connecting">The watch is being connected...</string>
 
+    //测量中
+    <string name="hint_hr_testing">Measuring...</string>
+    //平均值
+    <string name="hint_avg">Avg</string>
+    //最低值
+    <string name="hint_min">Min</string>
+    //最高值
+    <string name="hint_max">Max</string>
+    //时间
+    <string name="hint_time">Time</string>
+    //收缩压
+    <string name="hint_hp">SBP</string>
+    //舒张压
+    <string name="hint_lp">DBP</string>
+    //遥控拍照
+    <string name="title_camera">Remote camera</string>
+    //保存成功
+    <string name="hint_save_success">Successfully saved</string>
+    //退出拍照
+    <string name="hint_camera_exit">Exit taking photo</string>
+    //闹钟提醒
+    <string name="title_clock">Clock Alarms</string>
+    //保存失败
+    <string name="hint_save_fail"> Saving failed.</string>
+    //闹钟1
+    <string name="hint_clock1">Clock 1</string>
+    //闹钟2
+    <string name="hint_clock2">Clock 2</string>
+    //闹钟3
+    <string name="hint_clock3">Clock 3</string>
+    //后振动
+    <string name="hint_time_after">will remind in </string>
+    //设备
+    <string name="hint_device">Device</string>
+    //搜索
+    <string name="hint_search">Search</string>
+    //正在绑定设备中...
+    <string name="hint_device_binding">Binding...</string>
+    //已绑定设备
+    <string name="hint_device_binded">The device is bound.</string>
+    //解绑设备
+    <string name="hint_deivce_un_bind">Unbind the device</string>
+    //请先解绑设备
+    <string name="hint_alert_bind">Please unbind the device frist</string>
+    //搜索设备中...
+    <string name="hint_device_searching">Searching for available devices...</string>
+    //绑定成功
+    <string name="hint_bind_success">Bind successfully</string>
+    //同步设置中...
+    <string name="hint_sync_data">Syncing now...</string>
+    //解绑成功
+    <string name="hint_un_bind_success">Unbind successfully</string>
+    //绑定失败，请重新尝试
+    <string name="hint_un_bind_fail">Binding failed. Please try again.</string>
+    //手环信息错误,请重新尝试!
+    <string name="error_mac">Info error, please try again!</string>
+    //升级提醒
+    <string name="hint_update_alert">Update reminder</string>
+    //当前腕表有新版本固件，是否升级?
+    <string name="hint_update_alert_content">A new firmware version found, if upgrading？ </string>
+    //下次再说
+    <string name="hint_next">No upgrade now</string> 暂不升级
+    //立即更新
+    <string name="hint_now">Upgrade</string>
+    //查找手环中...
+    <string name="hint_device_finding">Searching...</string>
+    //取消
+    <string name="hint_cancel">Cancel</string>
+    //查找设备中...
+    <string name="hint_device_findings">Searching...</string>
+    //取消
+    <string name="hint_device_find_cancel">Cancel</string>
+    //测量
+    <string name="hint_test">Measure</string>
+    //今日睡眠
+    <string name="hint_sleep_today"> Sleep</string>
+    //昨晚入睡
+    <string name="hint_sleep_start">Falling asleep</string>入睡
+    //今天醒来
+    <string name="hint_sleep_end">Waking up</string>
+    //清醒时长
+    <string name="hint_sleep_sober">Awaking duration</string>
+    //今日步数
+    <string name="hint_step_today">Steps</string>
+    //停止
+    <string name="hint_stop">Stop</string>
+    //保存
+    <string name="hint_saveing">Save</string>
+    //拍照权限
+    <string name="hint_permission_camera">Camera Permission</string>
+    //位置信息
+    <string name="hint_permission_location">Location Info</string>
+    //存储空间
+    <string name="hint_permission_sd">Storage Space</string>
+    //待机
+    <string name="hint_view_stand">Stand-by</string>
+    //计步
+    <string name="hint_view_step">Step Count</string>
+    //运动
+    <string name="hint_view_sport">Sports</string>
+    //心率
+    <string name="hint_view_hr">HR</string>
+    //睡眠
+    <string name="hint_view_sleep">Sleep</string>
+    //关机
+    <string name="hint_view_off">Power Off</string>
+    //信息
+    <string name="hint_view_info">Info</string>
+    //查找
+    <string name="hint_view_find">Find phone</string>
+    //血压
+    <string name="hint_view_hp">BP</string>
+    //闹钟
+    <string name="hint_view_clock">Clock</string>
+    //MAC二维码
+    <string name="hint_view_mac">MAC QR Code</string>
+    //下载二维码
+    <string name="hint_view_download">Download</string>
+    //自定义二维码
+    <string name="hint_view_div">Customize</string>
+    //跑步
+    <string name="hint_view_run">Running</string>
+    //登山
+    <string name="hint_view_hill">Climbing</string>
+    //羽毛球
+    <string name="hint_view_badminton">Badminton</string>
+    //篮球
+    <string name="hint_view_basketball">Basketball</string>
+    //乒乓球
+    <string name="hint_view_pingpong">Table Tennis</string>
+    //选择图片
+    <string name="hint_select_pic">Select Pictures</string>
+    //女
+    <string name="hint_woman">Female</string>
+    //选择性别
+    <string name="hint_select_sex">Enter gender</string>
+    //选择年龄
+    <string name="hint_select_age">Enter age</string>
+    //选择身高
+    <string name="hint_select_height">Enter height</string>
+    //选择体重
+    <string name="hint_select_weight">Enter weight</string>
+    //获取升级信息失败,请重新尝试
+    <string name="error_update_fail">Access to updating information failed. Please try again</string>
+    //开始下载OTA文件
+    <string name="hint_ota_file_download">Start downloading OTA files</string>
+    //OTA文件下载成功
+    <string name="hint_ota_file_success">Successfully downloaded</string>
+    //OTA文件下载失败
+    <string name="hint_ota_file_fail">Download failed. </string>
+    //您已经是最新版了
+    <string name="hint_ota_newest">Already the latest version</string>
+    //测量过程中请使手表与手机保持连接
+    <string name="title_test">In measurement, please keep the watch and phone connected.</string>
+    //同步成功
+    <string name="hint_sync_success">Successfully synced</string>
+    //同步失败
+    <string name="hint_sync_fail">Sync failed!</string>
+    //实时测量
+    <string name="hint_hr_current_test">Real time measurement</string>
+    //选择需要在设备上显示的界面
+    <string name="hint_view_select">Select the interface to be displayed on the device.</string>
+    //选择月份
+    <string name="hint_select_month">Select month</string>
+    //月
+    <string name="hint_month">month</string>
+    //年
+    <string name="hint_year">year</string>
+    //平均收缩压
+    <string name="hint_hp_avg">Avg SBP</string>
+    //平均舒张压
+    <string name="hint_lp_avg">Avg DBP</string>
+    //心率记录
+    <string name="title_hr_history">History</string>
+    //血压记录
+    <string name="title_bp_history">History</string>
+    //血氧记录
+    <string name="title_bo_history">History</string>
+    //中
+    <string name="hint_centre">normal</string>
+    //低
+    <string name="hint_low">low</string>
+    //高
+    <string name="hint_high">high</string>
+    //上次同步
+    <string name="hint_sync_last">Last sync</string>
+    //同步完成
+    <string name="hint_sync_ok">Sync completed.</string>
+    //同步失败
+    <string name="hint_sync_no">Sync failed.</string>
+    //正在同步
+    <string name="hint_syncing">Syncing...</string>
+    //设备连接中
+    <string name="hint_connecting">Device is being connected...</string>
+    //设备连接成功
+    <string name="hint_connect_success">Successfully connected</string>
+    //设备未绑定
+    <string name="hint_un_bind">Device has not been bound yet. </string>
+    //设备未找到
+    <string name="hint_un_find">Devices not found</string>
+    //设备连接失败
+    <string name="hint_connect_fail">Failed to connect</string>
+    //设备已连接
+    <string name="hint_connected">Device is connected</string>
+    //绑定
+    <string name="hint_bind">Bind</string>
+    //血氧
+    <string name="hint_view_bo">SpO2</string>
+    //设备已断开
+    <string name="hint_un_connect">Device is disconnected.</string>
+    //查找手机
+    <string name="hint_find_phone">Find phone</string>
+    //设备正在查找手机...
+    <string name="hint_finding_phone">A device is searching for your phone...</string>
+    //检测手环在
+    <string name="hint_alert_lost1">Detect the watch </string>
+    //与手机断开连接,可能丢失!
+    <string name="hint_alert_lost2">Disconnecting from phone and the watch may be lost!</string>
+    //我知道了
+    <string name="hint_alert_ok">Got it</string>
+    //不再提醒
+    <string name="hint_alert_cancel">Never remind</string>
+    //蓝牙
+    <string name="hint_bluetooth">Bluetooth</string>
+    //开启蓝牙
+    <string name="hint_bluetooth_open">Enable bluetooth</string>
+    //为了您能正常使用iband，需要打开蓝牙
+    <string name="hint_bluetooth_open_alert">Please turn on Bluetooth.</string>
+    //连接失败，请重新尝试！
+    <string name="error_connect_fail"> Failed to connect. Try again please.</string>
+    //升级失败
+    <string name="error_ota_fail">Update failed.</string>
+    //已完成
+    <string name="hint_ota_completed">Done</string>
+    //为了您能正常使用来电提醒，需要以下权限
+    <string name="hint_permisson_phone">To use call notifications normally, you should allow the following request.</string>
+    //电话
+    <string name="hint_phone">Phone</string>
+    //来电
+    <string name="hint_call">Call</string>
+    //联系人
+    <string name="hint_contacts">Contacts</string>
+    //开始时间不能晚于结束时间
+    <string name="error_start_after">Start time cannot be later than end time.</string>
+    //结束时间不能早于结束时间
+    <string name="error_end_before">End time cannot be earlier than start time.</string>
+    //请设置至少一小时
+    <string name="error_time_space">Please set at least one hour.</string>
+    //设置
+    <string name="hint_set">Settings</string>
+    //已连接
+    <string name="hint_state_connected">Connected</string>
+    //未连接
+    <string name="hint_state_unconnect">Unconnected</string>
+    //连接中
+    <string name="hint_state_connecting">Connecting...</string>
+    //已绑定
+    <string name="hint_state_bind">bound</string>
+    //充电中
+    <string name="hint_state_charge">Charging...</string>
+    //剩余电量:
+    <string name="hint_state_battery">Remaining Battery Capacity:</string>
+    //跑步
+    <string name="hint_run">Running</string>
+    //慢走
+    <string name="hint_stay">Walking</string>
+    //分钟
+    <string name="unit_min">min</string>
+    //训练
+    <string name="hint_tarin">Train</string>
+    //到顶了,请重新选择！
+    <string name="hint_day_max">It’s already the top.Please reselect!</string>
+    //选择日期
+    <string name="hint_select_day">Select date</string>
+    //英里
+    <string name="hint_unit_inch_mi">miles</string>
+    //里程
+    <string name="hint_mi">Mileage</string>
+    //卡路里
+    <string name="hint_ka">Calorie</string>
+    //步数
+    <string name="hint_steps">Step</string>
+    //短信
+    <string name="hint_sms">messages</string>
+    //为了您能正常使用短信提醒，需要以下权限
+    <string name="hint_request_sms_alert">To use message notifications normally, you should allow the following request.</string>
+    //深睡
+    <string name="hint_sleep_deep">D-Sleep</string>
+    //浅睡
+    <string name="hint_sleep_light">L-Sleep</string>
+    ///浅睡
+    <string name="hint_sleep_light1">/L-Sleep</string>
+    //清醒
+    <string name="hint_sleep_awake">Awake</string>
+    //开始
+    <string name="hint_start">Start</string>
+    //结束
+    <string name="hint_end">End</string>
+    //时长
+    <string name="hint_times">Duration</string>
+    //绑定
+    <string name="hint_action_bind">Bind</string>
+    //连接
+    <string name="hint_action_connect">Connect</string>
+    //同步
+    <string name="hint_action_sync">sync</string>
+    //--------------------------新增微信运动-----------------------------
+    //微信运动
+    <string name="hint_wechat_sport">WeRun</string>
+    //加入微信运动，和小伙伴一起PK吧!
+    <string name="hint_join_wechat">Join WeRun, comparing your steps to those of your friends!</string>
+    //绑定微信运动的步骤
+    <string name="title_wechat">Steps for linking WeRun</string>
+    //1.打开微信运动 - 设置
+    <string name="hint_wechat_1">1.Click“WeRun”- Setting</string>
+    //2.数据来源-添加数据来源-深圳曼瑞德科技
+    <string name="hint_wechat_2">2.Record Fitness Data-Add data source-深圳曼瑞德科技</string>
+    //3.成功添加后返回微信运动排行榜查看数据
+    <string name="hint_wechat_3">3.If successfully adding, you can view the data on WeRun rankings. </string>
+    //打开微信
+    <string name="hint_wechat_open">Click WeChat</string>
+    //使用微信运动功能，手表需要先激活
+    <string name="hint_wechart_alert">Before WeRun is enabled, the watch need to be activated.</string>
+    //激活
+    <string name="hint_activate">activate</string>
+    //设备正在激活，请稍等
+    <string name="hint_activateing">The device is being activated, please wait...</string>
+    //请先安装微信应用
+    <string name="error_not_install">Please install WeChat first</string>
+    //激活成功
+    <string name="hint_install_success">Successfully activated</string>
+    //--------------------------新增恢复出厂-----------------------------
+    //Line
+    <string name="hint_app_line">Line</string>
+    //骑行
+    <string name="hint_cycling">cycling</string>
+    //绑定新设备
+    <string name="hint_bind_new_device">Bind a new device</string>
+    //本地相册
+    <string name="local">local albums</string>
+    //相机拍照
+    <string name="camera">Take photos</string>
+    //恢复出厂
+    <string name="hint_reset">Restore factory defaults</string>
+    //此操作将会清除APP和设备上的所有数据，不可恢复，是否清除?
+    <string name="hint_reset_text">All data on the app and device will be deleted. This action is irreversible. Sure to restore？</string>
+    //请确认设备已连接
+    <string name="hintUnConnect">Make sure the device is connected</string>
+    //恢复成功,请重启app
+    <string name="hint_reset_success">Restore successfully.Please restart your app.</string>
+    //恢复失败
+    <string name="hint_reset_failure">Failed to restore.</string>
+    //相册
+    <string name="hint_photo">albums</string>
+    //设备状态查询中,请稍等...
+    <string name="hint_wechat_query">Checking...</string>
+    //网络异常，请检查网络后重试！
+    <string name="hint_net_error">Network error， please connect to the network and retry.</string>
+    //设备已激活
+    <string name="hint_device_activate">Successfully activated</string>
+    //游泳
+    <string name="hint_swim">swim</string>
+    <string name="hint_network_available">The current network is unavailable</string>
 
+    //数据库显示 不需要翻译
     <string-array name="db">
-        <item>计步</item>
-        <item>睡眠</item>
-        <item>心率</item>
-        <item>血压</item>
-        <item>血氧</item>
+        <item>steps counting</item>
+        <item>sleep</item>
+        <item>heart rate</item>
+        <item>blood pressure</item>
+        <item>blood oxygen</item>
     </string-array>
+
 </resources>

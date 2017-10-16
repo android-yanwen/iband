@@ -92,8 +92,6 @@ public abstract class BaseEventFragment extends BaseFragment {
         Log.i(TAG, "onDetach");
     }
 
-
-
     public String getSafetyString(int resId){
         if (isAdded()) {
             return getResources().getString(resId);

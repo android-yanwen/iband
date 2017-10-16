@@ -61,7 +61,7 @@ public class SedentaryActivity extends BaseActionActivity {
     protected void initVariables() {
         registerEventBus();
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleAndMenu("久坐提醒", "保存");
+        setTitleAndMenu(getString(R.string.hint_menu_alert_sedentary),getString(R.string.hint_save));
         initSedentary();
     }
 
@@ -81,14 +81,14 @@ public class SedentaryActivity extends BaseActionActivity {
         tbMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showProgress("正在保存中...");
+                showProgress(getString(R.string.hint_saveing));
                 Sedentary sedentary = new Sedentary(curSedentary.isSedentaryOnOff(), curSedentary.isSedentaryNap(), curSedentary.getStartTime(), curSedentary.getEndTime());
                 mIwaerApplication.service.watch.setSedentaryAlert(sedentary, new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         curSedentary.save();
                         SPUtil.put(mContext, AppGlobal.DATA_ALERT_SEDENTARY,curSedentary.isSedentaryOnOff());
-                        eventSend(EventGlobal.MSG_SEDENTARY_TOAST, "保存成功");
+                        eventSend(EventGlobal.MSG_SEDENTARY_TOAST, getString(R.string.hint_save_success));
                         eventSend(EventGlobal.DATA_CHANGE_MENU);
                         dismissProgress();
                         finish();
@@ -97,7 +97,7 @@ public class SedentaryActivity extends BaseActionActivity {
                     @Override
                     public void onFailure(BleException exception) {
                         dismissProgress();
-                        eventSend(EventGlobal.MSG_SEDENTARY_TOAST, "保存失败");
+                        eventSend(EventGlobal.MSG_SEDENTARY_TOAST, getString(R.string.hint_save_fail));
                     }
                 });
             }
@@ -115,7 +115,7 @@ public class SedentaryActivity extends BaseActionActivity {
                 break;
             case R.id.ai_start_time:
                 int[] startInts = getTimeInt(curSedentary.getStartTime());
-                new TimeDialog(mContext, startInts, "开始时间", new TimeDialog.TimeDialogListener() {
+                new TimeDialog(mContext, startInts, getString(R.string.hint_alert_sedentary_time_start), new TimeDialog.TimeDialogListener() {
                     @Override
                     public void getTime(String hour, String minute) {
                         String startTime = hour + ":" + minute;
@@ -131,7 +131,7 @@ public class SedentaryActivity extends BaseActionActivity {
                 break;
             case R.id.ai_end_time:
                 int[] endInts = getTimeInt(curSedentary.getEndTime());
-                new TimeDialog(mContext, endInts, "开始时间", new TimeDialog.TimeDialogListener() {
+                new TimeDialog(mContext, endInts, getString(R.string.hint_alert_sedentary_time_end), new TimeDialog.TimeDialogListener() {
                     @Override
                     public void getTime(String hour, String minute) {
                         String endTime = hour + ":" + minute;
@@ -177,15 +177,15 @@ public class SedentaryActivity extends BaseActionActivity {
             Date startTime = dateFormat.parse(start);
             Date endTime = dateFormat.parse(end);
             if (startTime.after(endTime)) {
-                result = "开始时间不能晚于结束时间";
+                result = getString(R.string.error_start_after);
                 return result;
             }
             if (endTime.before(startTime)) {
-                result = "结束时间不能早于结束时间";
+                result = getString(R.string.error_end_before);
                 return result;
             }
             if (endTime.getTime() - startTime.getTime() < 60 * 60 * 1000) {
-                result = "请设置至少一小时";
+                result = getString(R.string.error_time_space);
                 return result;
             }
         } catch (ParseException e) {

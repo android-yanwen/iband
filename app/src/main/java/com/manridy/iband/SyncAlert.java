@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * Created by jarLiao on 17/5/25.
  */
 
@@ -61,7 +62,7 @@ public class SyncAlert {
         syncIndex = errorNum = 0;
         send();
     }
-//    同步时间>>获取版本号>>获取电量>>用户信息>>计步目标>>界面选择>>久坐提醒>>防丢提醒>>闹钟提醒>>亮度调节>>单位设置>>时间格式>>
+//    同步时间>>获取版本号>>获取电量>>用户信息>>计步目标>>界面选择>>久坐提醒>>防丢提醒>>闹钟提醒>>亮度调节>>单位设置>>时间格式>>翻腕亮屏
     BleCallback bleCallback = new BleCallback() {
         @Override
         public void onSuccess(Object o) {
@@ -79,7 +80,7 @@ public class SyncAlert {
                     syncAlertListener.onResult(false);
                 }
             }
-            Log.d("syncalert", "onFailure() called with: errorNum = [" + errorNum + "]");
+            Log.d("syncAlert", "onFailure() called with: errorNum = [" + errorNum + "]");
         }
     };
 
@@ -90,10 +91,10 @@ public class SyncAlert {
         }else {
             if (syncAlertListener != null) {
                 syncAlertListener.onResult(true);
-                Log.d("syncalert", "next() called onResult true");
+                Log.d("syncAlert", "next() called onResult true");
             }
         }
-        Log.d("syncalert", "next() called syncIndex == "+syncIndex);
+        Log.d("syncAlert", "next() called syncIndex == "+syncIndex);
     }
 
     private void send(){
@@ -119,27 +120,28 @@ public class SyncAlert {
                 watch.setSportTarget(target == 0 ? 8000:target,bleCallback);
                 break;
             case 5:
-                List<ViewModel> viewList = IbandDB.getInstance().getView();
-                if (viewList == null || viewList.size() == 0){
-                    viewList = new ArrayList<>();
-                    viewList.add(new ViewModel(0,"待机", R.mipmap.selection_standby,true,false));
-                    viewList.add(new ViewModel(1,"计步", R.mipmap.selection_step,true));
-                    viewList.add(new ViewModel(2,"运动", R.mipmap.selection_sport,true));
-                    viewList.add(new ViewModel(3,"心率", R.mipmap.selection_heartrate,true));
-                    viewList.add(new ViewModel(4,"睡眠", R.mipmap.selection_sleep,true));
-                    viewList.add(new ViewModel(9,"闹钟", R.mipmap.selection_alarmclock,true));
-                    viewList.add(new ViewModel(7,"查找", R.mipmap.selection_find,true));
-                    viewList.add(new ViewModel(6,"信息", R.mipmap.selection_about,true));
-                    viewList.add(new ViewModel(5,"关机", R.mipmap.selection_turnoff,true));
-                }
-                int size = viewList.size();
-                int[] onOffs = new int[size];
-                int[] ids = new int[size];
-                for (int i = 0; i < viewList.size(); i++) {
-                    ids[i] = viewList.get(i).getViewId();
-                    onOffs[i] = viewList.get(i).isSelect()? 1:0;
-                }
-                 watch.sendCmd(BleCmd.getWindowsSet(ids, onOffs),bleCallback);
+//                List<ViewModel> viewList = IbandDB.getInstance().getView();
+//                if (viewList == null || viewList.size() == 0){
+//                    viewList = new ArrayList<>();
+//                    viewList.add(new ViewModel(0,"待机", R.mipmap.selection_standby,true,false));
+//                    viewList.add(new ViewModel(1,"计步", R.mipmap.selection_step,true));
+//                    viewList.add(new ViewModel(2,"运动", R.mipmap.selection_sport,true));
+//                    viewList.add(new ViewModel(3,"心率", R.mipmap.selection_heartrate,true));
+//                    viewList.add(new ViewModel(4,"睡眠", R.mipmap.selection_sleep,true));
+//                    viewList.add(new ViewModel(9,"闹钟", R.mipmap.selection_alarmclock,true));
+//                    viewList.add(new ViewModel(7,"查找", R.mipmap.selection_find,true));
+//                    viewList.add(new ViewModel(6,"信息", R.mipmap.selection_about,true));
+//                    viewList.add(new ViewModel(5,"关机", R.mipmap.selection_turnoff,true));
+//                }
+//                int size = viewList.size();
+//                int[] onOffs = new int[size];
+//                int[] ids = new int[size];
+//                for (int i = 0; i < viewList.size(); i++) {
+//                    ids[i] = viewList.get(i).getViewId();
+//                    onOffs[i] = viewList.get(i).isSelect()? 1:0;
+//                }
+//                 watch.sendCmd(BleCmd.getWindowsSet(ids, onOffs),bleCallback);
+                next();
                 break;
             case 6:
                 SedentaryModel sedentaryModel = IbandDB.getInstance().getSedentary();
@@ -147,7 +149,7 @@ public class SyncAlert {
                     sedentaryModel = new SedentaryModel(false, false, "09:00", "21:00");
                 }
                 Sedentary sedentary = new Sedentary(sedentaryModel.isSedentaryOnOff(), sedentaryModel.isSedentaryNap()
-                        , sedentaryModel.getStartTime(), sedentaryModel.getStartTime());
+                        , sedentaryModel.getStartTime(), sedentaryModel.getEndTime());
                 watch.setSedentaryAlert(sedentary,bleCallback);
                 break;
             case 7:
@@ -169,7 +171,7 @@ public class SyncAlert {
                 watch.setClock(ClockType.SET_CLOCK,clocks,bleCallback);
                 break;
             case 9:
-                int light = (int) SPUtil.get(mContext,AppGlobal.DATA_SETTING_LIGHT,1);
+                int light = (int) SPUtil.get(mContext,AppGlobal.DATA_SETTING_LIGHT,2);
                 watch.sendCmd(BleCmd.setLight(light),bleCallback);
                 break;
             case 10:
@@ -192,7 +194,9 @@ public class SyncAlert {
         switch (syncIndex) {
             case 1:
                 String version = parseJsonString(o,"firmwareVersion");
-                SPUtil.put(mContext, AppGlobal.DATA_VERSION_FIRMWARE,version);
+                String type = parseJsonString(o,"firmwareType");
+                SPUtil.put(mContext, AppGlobal.DATA_FIRMWARE_VERSION,version);
+                SPUtil.put(mContext, AppGlobal.DATA_FIRMWARE_TYPE,type);
                 break;
             case 2:
                 parseBattery(o);

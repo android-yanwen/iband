@@ -16,6 +16,7 @@ import com.manridy.iband.bean.SleepModel;
 import com.manridy.iband.bean.StepModel;
 import com.manridy.iband.bean.UserModel;
 import com.manridy.iband.bean.ViewModel;
+import com.manridy.sdk.bean.Clock;
 import com.manridy.sdk.common.TimeUtil;
 
 import org.litepal.crud.DataSupport;
@@ -142,7 +143,7 @@ public class IbandDB {
     public List<HistoryAdapter.Item> getMonthHeart(List<String> days){
         List<HistoryAdapter.Item> dayData = new ArrayList<>();
         SimpleDateFormat dateFormFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        SimpleDateFormat dateToFormat = new SimpleDateFormat("MM月dd日 HH:mm:ss");
+        SimpleDateFormat dateToFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
         for (int i = days.size() - 1; i >= 0; i--) {
             List<HeartModel> heartModels =DataSupport.where("heartDay = ?", days.get(i)).order("heartDate desc").find(HeartModel.class);
             for (HeartModel heartModel : heartModels) {
@@ -153,7 +154,7 @@ public class IbandDB {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                HistoryAdapter.Item dayBean = new HistoryAdapter.Item(time,"",heartModel.getHeartRate()+"","次/分钟");
+                HistoryAdapter.Item dayBean = new HistoryAdapter.Item(time,"",heartModel.getHeartRate()+"","");
                 dayData.add(dayBean);
             }
         }
@@ -163,7 +164,7 @@ public class IbandDB {
     public List<HistoryAdapter.Item> getMonthBp(List<String> days){
         List<HistoryAdapter.Item> dayData = new ArrayList<>();
         SimpleDateFormat dateFormFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        SimpleDateFormat dateToFormat = new SimpleDateFormat("MM月dd日 HH:mm:ss");
+        SimpleDateFormat dateToFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
         for (int i = days.size() - 1; i >= 0; i--) {
             List<BpModel> bpModels =DataSupport.where("bpDay = ?",days.get(i)).order("bpDate desc").find(BpModel.class);
             for (BpModel bpModel : bpModels) {
@@ -184,7 +185,7 @@ public class IbandDB {
     public List<HistoryAdapter.Item> getMonthBo(List<String> days){
         List<HistoryAdapter.Item> dayData = new ArrayList<>();
         SimpleDateFormat dateFormFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        SimpleDateFormat dateToFormat = new SimpleDateFormat("MM月dd日 HH:mm:ss");
+        SimpleDateFormat dateToFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
         for (int i = days.size() - 1; i >= 0; i--) {
             List<BoModel> boModels =DataSupport.where("boDay = ?",days.get(i)).order("boDate desc").find(BoModel.class);
             for (BoModel boModel : boModels) {
@@ -222,7 +223,6 @@ public class IbandDB {
         return DataSupport.findAll(BoModel.class);
     }
 
-
     public List<AppModel> getAppList(){
         return DataSupport.findAll(AppModel.class);
     }
@@ -232,5 +232,16 @@ public class IbandDB {
         for (AppAdapter.Menu menu : menuList) {
             new AppModel(menu.menuId,menu.menuName,menu.menuCheck).save();
         }
+    }
+
+    public void resetAppData(){
+        DataSupport.deleteAll(StepModel.class);
+        DataSupport.deleteAll(SleepModel.class);
+        DataSupport.deleteAll(HeartModel.class);
+        DataSupport.deleteAll(BpModel.class);
+        DataSupport.deleteAll(BoModel.class);
+        DataSupport.deleteAll(AppModel.class);
+        DataSupport.deleteAll(Clock.class);
+        DataSupport.deleteAll(SedentaryModel.class);
     }
 }

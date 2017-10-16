@@ -27,13 +27,28 @@ public class AppGlobal {
     public static final String DATA_SETTING_TARGET_STEP = "data_setting_target_step";
     public static final String DATA_SETTING_TARGET_SLEEP = "data_setting_target_sleep";
     //version
-    public static final String DATA_VERSION_FIRMWARE = "data_setting_firmware";
+    public static final String DATA_FIRMWARE_VERSION = "data_setting_firmware";
+    public static final String DATA_FIRMWARE_TYPE = "data_firmware_type";
+    //
+    public static final String DATA_TIMING_HR = "data_timing_hr";
+    public static final String DATA_TIMING_HR_SPACE = "data_timing_hr_space";
+    //
     public static final String DATA_BATTERY_NUM = "data_battery_num";
     public static final String DATA_BATTERY_STATE = "data_battery_state";
     public static final String DATA_SYNC_TIME = "data_sync_time";
+
+    public static final String STATE_APP_OTA_RUN = "state_app_ota_run";
+
     //device state
-    public static final int DEVICE_STATE_UNCONNECT = 0;
-    public static final int DEVICE_STATE_CONNECTED = 1;
-    public static final int DEVICE_STATE_CONNECTING = 2;
-    public static final int DEVICE_STATE_UNFIND = 3;
+    public static final int DEVICE_STATE_UNCONNECT = 0;//未连接
+    public static final int DEVICE_STATE_CONNECTED = 1;//已连接
+    public static final int DEVICE_STATE_CONNECTING = 2;//连接中
+    public static final int DEVICE_STATE_CONNECT_FAIL = 3;//连接失败
+    public static final int DEVICE_STATE_CONNECT_SUCCESS = 4;//连接成功
+    public static final int DEVICE_STATE_UNFIND = 5;
+    public static final int DEVICE_STATE_UNBIND = 6;
+    public static final int DEVICE_STATE_SYNC_OK = 7;
+    public static final int DEVICE_STATE_SYNC_NO = 8;
+    public static final int DEVICE_STATE_BLUETOOTH_DISENABLE = 9;
+    public static final int DEVICE_STATE_BLUETOOTH_ENABLEING = 10;
 }

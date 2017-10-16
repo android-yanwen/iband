@@ -15,7 +15,7 @@
         android:layout_marginBottom="16dp"
         android:textColor="@color/text_title"
         android:textSize="14sp"
-        android:text="运动目标"/>
+        android:text="@string/hint_step_target"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:layout_centerVertical="true"
             android:textColor="@color/text_content"
             android:textSize="16sp"
-            android:text="每天步行"/>
+            android:text="@string/hint_step_everyday"/>
 
         <TextView
             android:id="@+id/tv_step"
@@ -43,7 +43,7 @@
             android:layout_centerInParent="true"
             android:textColor="#de2196f3"
             android:textSize="16sp"
-            android:text="8000步"/>
+            android:text="@string/hint_init_step_target"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -62,7 +62,7 @@
         android:layout_marginBottom="16dp"
         android:textColor="@color/text_title"
         android:textSize="14sp"
-        android:text="睡眠目标"/>
+        android:text="@string/hint_sleep_target"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -81,7 +81,7 @@
             android:layout_centerVertical="true"
             android:textColor="@color/text_content"
             android:textSize="16sp"
-            android:text="每天睡眠"/>
+            android:text="@string/hint_sleep_everyday"/>
 
         <TextView
             android:id="@+id/tv_sleep"
@@ -90,7 +90,7 @@
             android:layout_centerInParent="true"
             android:textColor="#de2196f3"
             android:textSize="16sp"
-            android:text="8小时"/>
+            android:text="@string/hint_init_sleep_target"/>
 
         <TextView
             android:layout_width="match_parent"

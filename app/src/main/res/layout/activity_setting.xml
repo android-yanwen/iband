@@ -5,8 +5,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/activity_background">
-
     <include layout="@layout/tab_activity"/>
+
     <ScrollView
         android:id="@+id/sv_menu"
         android:layout_width="match_parent"
@@ -48,7 +48,7 @@
                     android:layout_marginTop="2dp"
                     android:textColor="@color/text_hint"
                     android:textSize="14sp"
-                    android:text="用户信息"/>
+                    android:text="@string/hint_user_info"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
                 android:layout_marginBottom="16dp"
                 android:textColor="@color/text_title"
                 android:textSize="14sp"
-                android:text="设备连接"/>
+                android:text="@string/title_device_connect"/>
 
 
             <include layout="@layout/item_device"/>
@@ -87,7 +87,7 @@
                 android:layout_marginBottom="16dp"
                 android:textColor="#8a000000"
                 android:textSize="14sp"
-                android:text="功能设置"/>
+                android:text="@string/title_menu"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -101,77 +101,87 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_interface"
-                app:menus_name="界面选择"/>
+                app:menus_name="@string/hint_menu_view"
+                android:visibility="gone"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_camera"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_camera"
-                app:menus_name="遥控拍照"/>
+                app:menus_name="@string/hint_menu_camera"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_find"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_find"
-                app:menus_name="查找手环"/>
+                app:menus_name="@string/hint_menu_find"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_alert"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_phone"
-                app:menus_name="提醒功能"/>
+                app:menus_name="@string/hint_menu_alert"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_wechat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_wechat"
-                app:menus_name="微信运动"/>
+                app:menus_name="@string/hint_menu_wechat"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_wrist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_wrist"
-                app:menus_name="翻腕亮屏"/>
+                app:menus_name="@string/hint_menu_wrist"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_dimming"
-                app:menus_name="亮度调节"/>
+                app:menus_name="@string/hint_menu_light"
+                android:visibility="gone"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_unit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_unit"
-                app:menus_name="单位设置"/>
+                app:menus_name="@string/hint_menu_unit"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_time"
-                app:menus_name="时间格式"/>
+                app:menus_name="@string/hint_menu_time"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_target"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_goal"
-                app:menus_name="目标设置"/>
+                app:menus_name="@string/hint_menu_target"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_reset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_restore"
+                app:menus_name="@string/hint_reset"
+                android:visibility="gone"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_about"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_info"
-                app:menus_name="关于"/>
+                app:menus_name="@string/hint_title_about"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

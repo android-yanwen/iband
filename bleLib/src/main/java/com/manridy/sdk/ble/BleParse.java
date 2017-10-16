@@ -20,7 +20,6 @@ import com.manridy.sdk.callback.BleNotifyListener;
 import com.manridy.sdk.common.BitUtil;
 import com.manridy.sdk.common.LogUtil;
 import com.manridy.sdk.common.TimeUtil;
-import com.manridy.sdk.exception.BleException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,8 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-
-import static com.manridy.sdk.exception.BleException.ERROR_CODE_PARSE;
 
 
 /**
@@ -143,8 +140,8 @@ public class BleParse {
                 case CALL_SHAKE://震动
                     result = String.valueOf(body[0] == 0 ? false :true);
                     break;
-                case CALL_SPORT://运动
-                    result = parseSport();
+                case CALL_SPORT://计步
+                    result = parseStep();
                     break;
                 case CALL_CLEAR_SPORT://清除运动
                     result = String.valueOf(true);
@@ -207,10 +204,12 @@ public class BleParse {
                     result = parseStepSection(body);
                     break;
                 case 0x1B:
-                    result = parseRun();
+                    result = parseSport();
                     break;
             }
-            if (bleCallback == null) return;
+            if (bleCallback == null) {
+                return;
+            }
             bleCallback.onSuccess(result);
             bleCallback = null;
         }else {
@@ -251,13 +250,14 @@ public class BleParse {
                 }
                 break;
             case 9:
+                int ss = data[3];//测试类型
                 if (data[2] == 0) {
                     if (actionListener != null) {
-                        actionListener.onAction(900,null);
+                        actionListener.onAction(900,ss);
                     }
                 }else if (data[2] == 2){
                     if (actionListener != null) {
-                        actionListener.onAction(902,null);
+                        actionListener.onAction(902,ss);
                     }
                 }
                 break;
@@ -340,7 +340,7 @@ public class BleParse {
         return result;
     }
 
-    private String parseSport() {
+    private String parseStep() {
         byte En = body[0];
         Sport sport = new Sport();
         if (En == (byte)0x80) {
@@ -503,7 +503,7 @@ public class BleParse {
         String day =BitUtil.bytesToDate(endTimeBs,4);
         int type = body[0] ;
         int dataType = body[15];//睡眠数据类型 1深睡 2浅睡 3清醒
-        if ((body[11]&0xff) >20) {//如果日期时间大于20点判断为今天
+        if (body[11] >=0x20) {//如果日期时间大于20点判断为今天
             day = TimeUtil.getCalculateDay(day,+1);
         }
         int deep = 0,light = 0,awake = 0;
@@ -537,10 +537,29 @@ public class BleParse {
         String result = "";
         if (body[0] == 0x05) {
             byte[] date = new byte[3];
+            byte[] btType = new byte[2];
             System.arraycopy(body,1,date,0,date.length);
+            System.arraycopy(data,11,btType,0,btType.length);
             BitUtil.bytesToDate(date,4);
-            String ver = data[7]+"."+data[8]+"."+data[9];
-            result = putStringJson("firmwareVersion",ver);
+            String ver = (data[7]&0xff)+"."+(data[8]&0xff)+"."+(data[9]&0xff);
+            JSONObject jsonObject = new JSONObject();
+            String type = "";
+            if (data[10] == 0x55) {
+                type = BitUtil.bcd2Str(btType);
+                StringBuilder builder = new StringBuilder();
+                for (int x =4;x-type.length()>0;x--){
+                    builder.append("0");
+                }
+                builder.append(type);
+                type = builder.toString();
+            }
+            try {
+                jsonObject.put("firmwareVersion",ver);
+                jsonObject.put("firmwareType",(type));
+                result = jsonObject.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }else if (body[0] == 0x06){//电池电量
             byte[] date = new byte[6];
             System.arraycopy(body,1,date,0,date.length);
@@ -695,9 +714,7 @@ public class BleParse {
         System.arraycopy(body,1,bs,0,bs.length);
         Sport stepModel = new Sport();
         int ah = ((bs[0] <<4)&0x0ff0 | (bs[1] >>4)&0x0f) & 0x0fff;
-        int ch = (((bs[1] & 0x0f) << 8) | bs[2]) & 0x0fff;
-
-
+        int ch = (((bs[1] & 0x0f) << 8) | (bs[2] & 0xff)) & 0x0fff;
         if (en >> 2 == 1 || en == 1 ) {//分段历史数据/上报
             byte[] bsStep = new byte[3];
             byte[] bsCalorie = new byte[3];
@@ -739,51 +756,63 @@ public class BleParse {
         return result;
     }
 
-    private String parseRun() {
-        byte en = body[0];
-        byte[] bs = new byte[3];
-        System.arraycopy(body,1,bs,0,bs.length);
+    private String parseSport() {
+        String bits = BitUtil.bitToString(body[0]);//获得En字节的所有位
+        int mode = Integer.parseInt(bits.substring(0,4),2);//获得运动模式7-4位
+        int en = Integer.parseInt(bits.substring(4,8),2);//获得数据模型0-3位
+
+        String str = BitUtil.bitToString(body[1]);//获得ss字节的所有位
+        int ss = Integer.parseInt(str.substring(6,8),2);//获得步行状态0-1位
+
+        byte[] bsNumInfo = new byte[3];//获得包号3字节的所有位
+        System.arraycopy(body,2,bsNumInfo,0,bsNumInfo.length);
+        String cc = BitUtil.bitToString(bsNumInfo);
+        int packageLength = Integer.parseInt(cc.substring(0,12),2);
+        int packageNum = Integer.parseInt(cc.substring(12,24),2);
+
+        byte[] bsSports = new byte[7];
+        System.arraycopy(body,5,bsSports,0,bsSports.length);
+        String dd = BitUtil.bitToString(bsSports);
+        Log.e(TAG, "sport bits == "+dd);
+        int step = Integer.parseInt(dd.substring(5,22),2);
+        int ka = Integer.parseInt(dd.substring(22,39),2);
+        int mi = Integer.parseInt(dd.substring(39,56),2);
+
+        byte[] bsDate = new byte[4];
+        System.arraycopy(body,12,bsDate,0,bsDate.length);
+        long date = BitUtil.bytesToLong(bsDate)*1000;
+        date -= TimeZone.getDefault().getRawOffset();//减去时区
+
+        byte[] bsTime = new byte[2];
+        System.arraycopy(body,16,bsTime,0,bsTime.length);
+        int time = BitUtil.byte3ToInt(bsTime);
+
         Sport stepModel = new Sport();
-        int ch = ((bs[1] >>4) | (bs[0] <<4)) & 0x0fff;
-        int ah = (((bs[1] & 0x0f) << 8) | bs[2]) & 0x0fff;
-        if (en >> 2 == 1 || en == 1 ) {//分段历史数据/上报
-            byte[] bsStep = new byte[3];
-            byte[] bsCalorie = new byte[3];
-            byte[] bsMileage = new byte[3];
-            byte[] bsDate = new byte[4];
-            int time =  body[17] & 0xff;
-            System.arraycopy(body,4,bsStep,0,bsStep.length);
-            System.arraycopy(body,7,bsCalorie,0,bsCalorie.length);
-            System.arraycopy(body,10,bsMileage,0,bsMileage.length);
-            System.arraycopy(body,13,bsDate,0,bsDate.length);
-            long date = BitUtil.bytesToLong(bsDate)*1000;
-            date -= TimeZone.getDefault().getRawOffset();//减去时区
-            int step = BitUtil.byte3ToInt(bsStep);
-            int calorie = BitUtil.byte3ToInt(bsCalorie);
-            int mileage = BitUtil.byte3ToInt(bsMileage);
+        if (en == 3 || en == 1 ) {//分段历史数据/上报
             stepModel.setStepNum(step);
-            stepModel.setStepMileage(mileage);
-            stepModel.setStepCalorie(calorie);
-            stepModel.setHisLength(ch);
-            stepModel.setHisCount(ah);
+            stepModel.setStepMileage(mi);
+            stepModel.setStepCalorie(ka);
+            stepModel.setHisLength(packageLength);
+            stepModel.setHisCount(packageNum);
             stepModel.setStepDate(new Date(date));
             stepModel.setStepDay(TimeUtil.getYMD(new Date(date)));
             stepModel.setStepTime(time);
-            stepModel.setStepType(2);
-        }else if (en >> 1 == 1){//分段历史数量
-            stepModel.setHisLength(ch);
+            stepModel.setStepType(ss+2);//0代表当前 1代表分段计步
+            stepModel.setSportMode(mode);
+        }else if (en == 2){//运动历史数量
+            stepModel.setHisLength(packageLength);
         }
         String result = gson.toJson(stepModel,Sport.class);
-        if (en == 1){//上报
+        if (en == 3){//上报
             if (runNotifyListener != null) {
                 runNotifyListener.onNotify(stepModel);
             }
-        }else if (en >> 2 == 1){
+        }else if (en == 1){
             if (runHistoryListener != null) {
                 runHistoryListener.onHistory(result);
             }
         }
-        LogUtil.i(TAG, "跑步"+result);
+        LogUtil.i(TAG, "运动"+result);
         return result;
     }
 

@@ -229,9 +229,13 @@ public class BluetoothLeManager {
      * @param leDevice 设备
      */
     private synchronized void reConnect(BluetoothLeDevice leDevice){
-        if (leDevice == null) return;
+        if (leDevice == null) {
+            return;
+        }
             BluetoothGatt gatt = leDevice.getmBluetoothGatt();
-        if (gatt == null) return;
+        if (gatt == null) {
+            return;
+        }
             leDevice.getmBluetoothGatt().connect();
             broadcastUpdate(ACTION_GATT_RECONNECT,null,gatt.getDevice().getAddress());
             LogUtil.e(TAG, "reConnect: device is" + leDevice.getmBluetoothGatt().getDevice().getAddress());
@@ -376,20 +380,26 @@ public class BluetoothLeManager {
                         bluetoothLeDevice.setIsConnect(false);
                         if (disConnectCallback != null) {
                             handler.removeCallbacks(disConnectTimeoutRunnable);
+                            refreshDeviceCache(gatt);
                             gatt.close();
                             removeBluetoothLe(gatt);
-                            refreshDeviceCache(gatt);
                             disConnectCallback.onSuccess(null);
                             disConnectCallback = null;
                             mBluetoothGattCallback = null;
                             broadcastUpdate(ACTION_GATT_DISCONNECTED,null,gatt.getDevice().getAddress());
                         }else{
+                            broadcastUpdate(ACTION_GATT_DISCONNECTED,null,gatt.getDevice().getAddress());
                             if (bluetoothLeDevice.isReConnect()) {
-                                reConnect(bluetoothLeDevice);
+                                bluetoothLeDevice.getmBluetoothGatt().connect();
+                                broadcastUpdate(ACTION_GATT_RECONNECT,null,gatt.getDevice().getAddress());
                             }
                         }
                     }
                     LogUtil.e(TAG, "onConnectionStateChange: disconnected device is"+gatt.getDevice().getAddress());
+                }else {//连接异常状态处理
+                    refreshDeviceCache(gatt);
+                    gatt.close();
+                    removeBluetoothLe(gatt);
                 }
             }catch (Exception e){
                 e.printStackTrace();
@@ -516,6 +526,7 @@ public class BluetoothLeManager {
      */
     public boolean refreshDeviceCache(BluetoothGatt gatt) {
         try {
+
             final Method refresh = BluetoothGatt.class.getMethod("refresh");
             if (refresh != null) {
                 final boolean success = (Boolean) refresh.invoke(gatt);

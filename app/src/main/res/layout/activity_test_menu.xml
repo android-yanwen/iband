@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/activity_background">
+    <include layout="@layout/tab_activity"/>
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_interface"
+                app:menus_name="界面选择"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_dimming"
+                app:menus_name="亮度调节"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_hr_test"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_heart_rate"
+                app:menus_name="心率定时测量"/>
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_reset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_restore"
+                app:menus_name="恢复出厂"/>
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_db"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_camera"
+                app:menus_name="数据库"
+                android:visibility="gone"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_step"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_camera"
+                app:menus_name="设置步数"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

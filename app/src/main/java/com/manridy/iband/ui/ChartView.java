@@ -26,7 +26,7 @@ public class ChartView extends View {
     private Context mContext;
 
     private onChartItemSelectListener chartItemSelectListener;
-    private int[] mColors;
+    private int[] mColors,selectColors;
     private List<Item> itemList = new ArrayList<>();
     private List<Float> indexList = new ArrayList<>();
     private int _height;
@@ -55,8 +55,9 @@ public class ChartView extends View {
         super.onDraw(canvas);
         float left = 0,top = 0,right =0,bottom = _height;
         for (int i = 0; i < indexList.size(); i++) {
-            int color = getTypeColor(itemList.get(i),mColors);
-            color = i == position ? Color.parseColor("#de673ab7") : color;
+            Item item = itemList.get(i);
+            int color = getTypeColor(item,mColors);
+            color = i == position ? getSelectTypeColor(item,selectColors) : color;
             mPaint.setColor(color);
             left = right;
             right = indexList.get(i);
@@ -109,7 +110,9 @@ public class ChartView extends View {
     Runnable autoRunnable = new Runnable() {
         @Override
         public void run() {
-            if (actionState == MotionEvent.ACTION_DOWN) return;
+            if (actionState == MotionEvent.ACTION_DOWN) {
+                return;
+            }
             position = -1;
             invaliDate();
             if (chartItemSelectListener != null) {
@@ -119,12 +122,13 @@ public class ChartView extends View {
     };
 
 
-    public ChartView setChartData(int[] colors, List<SleepModel> sleepList) {
+    public ChartView setChartData(int[] colors,int[] selectColors ,List<SleepModel> sleepList) {
         this.itemList = new ArrayList<>();
         for (SleepModel sleepModel : sleepList) {
             itemList.add(new Item(sleepModel));
         }
         this.mColors = colors;
+        this.selectColors = selectColors;
         this.max = getMax(itemList);
         this.indexList =getIndexList(max,_width,itemList);
         return this;
@@ -159,6 +163,14 @@ public class ChartView extends View {
     }
 
     private int getTypeColor(Item item, int[] colors){
+        int color = Color.BLUE;
+        if (colors.length >= item._type && item._type>0) {
+            color = colors[item._type-1];
+        }
+        return color;
+    }
+
+    private int getSelectTypeColor(Item item, int[] colors){
         int color = Color.BLUE;
         if (colors.length >= item._type && item._type>0) {
             color = colors[item._type-1];

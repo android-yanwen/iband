@@ -79,12 +79,13 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      * @return true 如果处理了该异常信息;否则返回false.
      */
     public boolean handleException(Throwable ex) {
-        if (ex == null)
+        if (ex == null) {
             return true;
+        }
         new Thread() {
             public void run() {
                 Looper.prepare();
-                ToastUtil.showToast(mContext,R.string.error);
+                ToastUtil.showToast(mContext,"很抱歉,程序出现异常,即将退出");
                 Looper.loop();
             }
         }.start();

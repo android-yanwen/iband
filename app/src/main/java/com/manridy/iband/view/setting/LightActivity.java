@@ -49,8 +49,8 @@ public class LightActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleBar("亮度调节");
-        curLight = (int) SPUtil.get(mContext,AppGlobal.DATA_SETTING_LIGHT,1);
+        setTitleBar(getString(R.string.hint_menu_light));
+        curLight = (int) SPUtil.get(mContext,AppGlobal.DATA_SETTING_LIGHT,2);
         curLight =  curLight>2 ? 1:curLight;
         rsLight.setValue(curLight);
         tvLightNum.setText(getLightText(curLight));
@@ -94,13 +94,13 @@ public class LightActivity extends BaseActionActivity {
 
 
     private String getLightText(int curLight){
-        String text = "中";
+        String text = getString(R.string.hint_centre);
         switch (curLight) {
             case 0:
-                text = "低";
+                text = getString(R.string.hint_low);
                 break;
             case 2:
-                text = "高";
+                text = getString(R.string.hint_high);
                 break;
         }
         return text;

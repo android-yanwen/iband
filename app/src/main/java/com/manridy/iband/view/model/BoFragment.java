@@ -93,6 +93,7 @@ public class BoFragment extends BaseEventFragment {
                 }
                 isTestData = false;
                 curBoList.add(curBo);
+                EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_BO_TEST));
                 EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_BO));
             }
         });
@@ -106,7 +107,9 @@ public class BoFragment extends BaseEventFragment {
 
     @OnClick({R.id.iv_history})
     public void onClick(View view) {
-        if (isFastDoubleClick()) return;
+        if (isFastDoubleClick()) {
+            return;
+        }
         switch (view.getId()) {
             case R.id.iv_history:
                 Intent intent = new Intent(mContext, HrHistoryActivity.class);
@@ -122,10 +125,10 @@ public class BoFragment extends BaseEventFragment {
             setCircularView();
             updateChartView(lcBo, curBoList);
             setDataItem();
-        } else if (event.getWhat() == EventGlobal.ACTION_HR_TESTING) {
-            cvBo.setTitle("测量中").invaliDate();
-        } else if (event.getWhat() == EventGlobal.ACTION_HR_TESTED) {
-            cvBo.setTitle("上次测量结果").invaliDate();
+        } else if (event.getWhat() == EventGlobal.ACTION_BO_TEST) {
+            cvBo.setTitle(getString(R.string.hint_hr_testing)).invaliDate();
+        } else if (event.getWhat() == EventGlobal.ACTION_BO_TESTED) {
+            cvBo.setTitle(getString(R.string.hint_last_hr)).invaliDate();
             isTestData = true;
         }
     }
@@ -235,13 +238,15 @@ public class BoFragment extends BaseEventFragment {
             tvStart.setText(start);
             tvEnd.setText(end);
         }
-        diData1.setItemData("平均值", getOne(avgBo));
-        diData2.setItemData("最低值", getOne(minBo));
-        diData3.setItemData("最高值", getOne(maxBo));
+        diData1.setItemData(getString(R.string.hint_avg), getOne(avgBo));
+        diData2.setItemData(getString(R.string.hint_min), getOne(minBo));
+        diData3.setItemData(getString(R.string.hint_max), getOne(maxBo));
     }
 
     private void setCircularView() {
-        if (curBo == null) return;
+        if (curBo == null) {
+            return;
+        }
         String text = curBo.getboRate();
         String state = curBo.getboDate();
         float progress = 0;

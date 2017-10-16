@@ -133,6 +133,7 @@ public class SleepModel extends DataSupport {
         sb.append(", sleepDataType=").append(sleepDataType);
         sb.append(", sleepDeep=").append(sleepDeep);
         sb.append(", sleepLight=").append(sleepLight);
+        sb.append(", sleepAwake=").append(sleepAwake);
         sb.append('}');
         return sb.toString();
     }

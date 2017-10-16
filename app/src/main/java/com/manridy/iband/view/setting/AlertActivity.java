@@ -6,17 +6,19 @@ import android.view.View;
 import android.widget.Button;
 
 import com.manridy.applib.utils.SPUtil;
+import com.manridy.iband.R;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.items.AlertMenuItems;
-import com.manridy.iband.R;
-import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.iband.view.alert.AlertMenuActivity;
+import com.manridy.iband.view.alert.AppActivity;
 import com.manridy.iband.view.alert.ClockActivity;
+import com.manridy.iband.view.alert.LostActivity;
 import com.manridy.iband.view.alert.PhoneActivity;
 import com.manridy.iband.view.alert.SedentaryActivity;
 import com.manridy.iband.view.alert.SmsActivity;
+import com.manridy.iband.view.base.BaseActionActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -42,6 +44,10 @@ public class AlertActivity extends BaseActionActivity {
     AlertMenuItems menuClock;
     @BindView(R.id.bt_alert_more)
     Button btAlertMore;
+    @BindView(R.id.menu_lost)
+    AlertMenuItems menuLost;
+    @BindView(R.id.menu_app)
+    AlertMenuItems menuApp;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -53,7 +59,7 @@ public class AlertActivity extends BaseActionActivity {
     protected void initVariables() {
         registerEventBus();
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleBar("提醒功能");
+        setTitleBar(getString(R.string.title_alert));
         initState();
     }
 
@@ -62,7 +68,7 @@ public class AlertActivity extends BaseActionActivity {
 
     }
 
-    @OnClick({R.id.menu_phone, R.id.menu_sms, R.id.menu_sedentary, R.id.menu_clock, R.id.bt_alert_more})
+    @OnClick({R.id.menu_phone, R.id.menu_sms, R.id.menu_sedentary, R.id.menu_clock, R.id.menu_lost, R.id.menu_app, R.id.bt_alert_more})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.menu_phone:
@@ -80,6 +86,12 @@ public class AlertActivity extends BaseActionActivity {
             case R.id.bt_alert_more:
                 startActivity(AlertMenuActivity.class);
                 break;
+            case R.id.menu_lost:
+                startActivity(LostActivity.class);
+                break;
+            case R.id.menu_app:
+                startActivity(AppActivity.class);
+                break;
         }
     }
 
@@ -91,13 +103,19 @@ public class AlertActivity extends BaseActionActivity {
     }
 
     private void initState() {
-        boolean phoneEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_PHONE,false);
-        boolean smsEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_SMS,false);
-        boolean sedentaryEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_SEDENTARY,false);
-        boolean clockEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_CLOCK,false);
+        boolean phoneEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_PHONE, false);
+        boolean smsEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_SMS, false);
+        boolean sedentaryEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_SEDENTARY, false);
+        boolean clockEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_CLOCK, false);
+        boolean lostEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_LOST, false);
+        boolean appEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_APP, false);
         menuPhone.setAlertState(phoneEnable);
         menuSms.setAlertState(smsEnable);
         menuSedentary.setAlertState(sedentaryEnable);
         menuClock.setAlertState(clockEnable);
+        menuLost.setAlertState(lostEnable);
+        menuApp.setAlertState(appEnable);
     }
+
+
 }

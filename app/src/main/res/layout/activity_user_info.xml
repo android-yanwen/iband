@@ -27,7 +27,7 @@
         android:gravity="center"
         android:background="@null"
         android:maxLength="8"
-        android:hint="请输入用户名"/>
+        android:hint="@string/hint_input_user_name"/>
 
     <TextView
         android:layout_width="150dp"
@@ -46,8 +46,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:help_content_color="@color/text_content"
-        app:help_name="性别"
-        app:help_content="男"/>
+        app:help_name="@string/hint_sex"
+        app:help_content="@string/hint_man"/>
 
     <com.manridy.iband.ui.items.HelpItems
         android:id="@+id/hi_age"
@@ -55,9 +55,9 @@
         android:layout_height="wrap_content"
         app:help_bt_color="@color/text_title"
         app:help_content_color="@color/text_content"
-        app:help_name="年龄"
+        app:help_name="@string/hint_age"
         app:help_content="18"
-        app:help_bt="(岁)"/>
+        app:help_bt="@string/hint_unit_age"/>
 
     <com.manridy.iband.ui.items.HelpItems
         android:id="@+id/hi_height"
@@ -65,9 +65,9 @@
         android:layout_height="wrap_content"
         app:help_bt_color="@color/text_title"
         app:help_content_color="@color/text_content"
-        app:help_name="身高"
+        app:help_name="@string/hint_height"
         app:help_content="170"
-        app:help_bt="(cm)"/>
+        app:help_bt="@string/hint_unit_height"/>
 
     <com.manridy.iband.ui.items.HelpItems
         android:id="@+id/hi_weight"
@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         app:help_bt_color="@color/text_title"
         app:help_content_color="@color/text_content"
-        app:help_name="体重"
+        app:help_name="@string/hint_weight"
         app:help_content="65"
-        app:help_bt="(kg)"/>
+        app:help_bt="@string/hint_unit_weight"/>
 </LinearLayout>

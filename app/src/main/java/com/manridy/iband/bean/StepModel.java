@@ -20,6 +20,7 @@ import java.util.Date;
     private int stepCalorie;//卡路里
     private int stepTime;//运动时长
     private int stepType;//运动类型
+    private int sportMode;//运动模式
 
     public StepModel() {
     }
@@ -128,6 +129,14 @@ import java.util.Date;
         this.stepType = stepType;
     }
 
+    public int getSportMode() {
+        return sportMode;
+    }
+
+    public void setSportMode(int sportMode) {
+        this.sportMode = sportMode;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("StepModel{");
@@ -141,6 +150,7 @@ import java.util.Date;
         sb.append(", stepCalorie=").append(stepCalorie);
         sb.append(", stepTime=").append(stepTime);
         sb.append(", stepType=").append(stepType);
+        sb.append(", sportMode=").append(sportMode);
         sb.append('}');
         return sb.toString();
     }

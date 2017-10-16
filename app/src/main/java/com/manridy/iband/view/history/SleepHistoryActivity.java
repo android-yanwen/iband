@@ -77,9 +77,9 @@ public class SleepHistoryActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         registerEventBus();
-        setTitleBar("睡眠记录");
+        setTitleBar(getString(R.string.hint_sleep_history));
         mCalendar = Calendar.getInstance();
-        mDateFormat = new SimpleDateFormat("yyyy年MM月");
+        mDateFormat = new SimpleDateFormat("yyyy-MM");
         initChartView(bcHistorySleep);
         initChartAxis(bcHistorySleep);
         EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_SLEEP_HISTORY));
@@ -92,7 +92,7 @@ public class SleepHistoryActivity extends BaseActionActivity {
             public void onClick(View v) {
                 String time;
                 int[] times = new int[]{1999,07,01};
-                if (tvMonth.getText().equals("本月")) {
+                if (tvMonth.getText().equals(getString(R.string.hint_month_current))) {
                     time = mDateFormat.format(new Date());
                 }else {
                     time = tvMonth.getText().toString();
@@ -102,13 +102,13 @@ public class SleepHistoryActivity extends BaseActionActivity {
                     int month = Integer.parseInt(time.substring(6,7));
                     times = new int[]{year,month-1};
                 }
-                new DateDialog(mContext,times , "选择月份", new DateDialog.DateDialogListener() {
+                new DateDialog(mContext,times ,getString(R.string.hint_select_month), new DateDialog.DateDialogListener() {
                     @Override
                     public void getTime(int year, int monthOfYear, int dayOfMonth) {
-                        String time = year +"年"+ TimeUtil.zero(monthOfYear+1)+"月";
+                        String time = year + "-" + TimeUtil.zero(monthOfYear+1);
                         mCalendar.set(year, monthOfYear, dayOfMonth);
                         if (time.equals(mDateFormat.format(new Date()))) {
-                            tvMonth.setText("本月");
+                            tvMonth.setText(getString(R.string.hint_month_current));
                         }else {
                             tvMonth.setText(time);
                         }
@@ -200,13 +200,15 @@ public class SleepHistoryActivity extends BaseActionActivity {
     }
 
     private void setCircularView(){
-        if (sleepList == null || sleepList.size()== 0) return;
+        if (sleepList == null || sleepList.size()== 0) {
+            return;
+        }
         int target = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_TARGET_SLEEP,8);
-        String deep = TimeUtil.getHour(sleepDeep);
-        String light = TimeUtil.getHour(sleepLight);
+        String deep = getHour(sleepDeep);
+        String light = getHour(sleepLight);
         double dou = TimeUtil.getHourDouble(sleepLight) + TimeUtil.getHourDouble(sleepDeep);
         String sum = String .format("%.1f", dou);
-        String state = "深睡"+deep+"/浅睡" + light;
+        String state = getString(R.string.hint_sleep_deep)+deep+getString(R.string.hint_sleep_light1) + light;
         float progress = (sleepSum / (float)(target*60)) * 100;
         cvHistorySleep.setText(sum)
                 .setState(state)
@@ -220,9 +222,9 @@ public class SleepHistoryActivity extends BaseActionActivity {
         String light =  String .format("%.1f", (sleepLight/60.0));
         double dou = TimeUtil.getHourDouble(sleepLight) + TimeUtil.getHourDouble(sleepDeep);
         String sum = String .format("%.1f", dou);
-        diData1.setItemData("每日平均睡眠",sum);
-        diData2.setItemData("每日平均深睡",deep);
-        diData3.setItemData("每日平均浅睡",light);
+        diData1.setItemData(getString(R.string.hint_sleep_avg),sum);
+        diData2.setItemData(getString(R.string.hint_sleep_deep_avg),deep);
+        diData3.setItemData(getString(R.string.hint_sleep_light_avg),light);
     }
 
     OnChartValueSelectedListener selectedListener = new OnChartValueSelectedListener() {
@@ -238,8 +240,8 @@ public class SleepHistoryActivity extends BaseActionActivity {
                 String sum = String .format("%.1f", dou);
                 String day = dayBean.getDay();
                 diData1.setItemData(day,sum);
-                diData2.setItemData("深睡",strDeep);
-                diData3.setItemData("浅睡",strLight);
+                diData2.setItemData(getString(R.string.hint_sleep_deep),strDeep);
+                diData3.setItemData(getString(R.string.hint_sleep_light),strLight);
             }
         }
 
@@ -269,6 +271,16 @@ public class SleepHistoryActivity extends BaseActionActivity {
             sleepSum += (sleepLight + sleepDeep);
             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_SLEEP_HISTORY));
         }
+    }
+
+    private String getHour(int time) {
+        String str ;
+        if (time<60) {
+            str = time + getString(R.string.unit_min);
+        }else {
+            str =  String .format("%.1f", ((double)time/60))+getString(R.string.hint_unit_sleep);
+        }
+        return str;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

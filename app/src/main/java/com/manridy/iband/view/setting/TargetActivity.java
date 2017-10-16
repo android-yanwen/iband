@@ -44,13 +44,13 @@ public class TargetActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleAndMenu("目标设置", "保存");
+        setTitleAndMenu( getString(R.string.hint_menu_target),  getString(R.string.hint_save));
         curStep = (int) SPUtil.get(mContext,AppGlobal.DATA_SETTING_TARGET_STEP,8000);
         curSleep = (int) SPUtil.get(mContext,AppGlobal.DATA_SETTING_TARGET_SLEEP,8);
         setUnderline(tvStep);
         setUnderline(tvSleep);
-        tvStep.setText(curStep+"步");
-        tvSleep.setText(curSleep+"小时");
+        tvStep.setText(curStep+ getString(R.string.hint_unit_step));
+        tvSleep.setText(curSleep+getString(R.string.hint_unit_sleep));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class TargetActivity extends BaseActionActivity {
         tbMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showProgress("正在保存中...");
+                showProgress( getString(R.string.hint_saveing));
                 mIwaerApplication.service.watch.setSportTarget(curStep, new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
@@ -69,7 +69,7 @@ public class TargetActivity extends BaseActionActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast("保存成功");
+                                showToast( getString(R.string.hint_save_success));
                             }
                         });
                         finish();
@@ -81,7 +81,7 @@ public class TargetActivity extends BaseActionActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast("保存失败");
+                                showToast( getString(R.string.hint_save_fail));
                             }
                         });
                     }
@@ -96,20 +96,20 @@ public class TargetActivity extends BaseActionActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_step:
-                new NumDialog(mContext, getStepTargets(), curStep+"", "计步目标", new NumDialog.NumDialogListener() {
+                new NumDialog(mContext, getStepTargets(), curStep+"",getString(R.string.hint_step_target), new NumDialog.NumDialogListener() {
                     @Override
                     public void getNum(String num) {
                         curStep = Integer.valueOf(num);
-                        tvStep.setText(num+"步");
+                        tvStep.setText(num+getString(R.string.hint_unit_step));
                     }
                 }).show();
                 break;
             case R.id.rl_sleep:
-                new NumDialog(mContext, getSleepTargets(), curSleep+"", "睡眠目标", new NumDialog.NumDialogListener() {
+                new NumDialog(mContext, getSleepTargets(), curSleep+"", getString(R.string.hint_sleep_target), new NumDialog.NumDialogListener() {
                     @Override
                     public void getNum(String num) {
                         curSleep = Integer.valueOf(num);
-                        tvSleep.setText(num+"小时");
+                        tvSleep.setText(num+getString(R.string.hint_unit_sleep));
                     }
                 }).show();
                 break;

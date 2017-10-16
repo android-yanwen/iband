@@ -54,7 +54,7 @@ public class TimeActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleAndMenu("时间格式", "保存");
+        setTitleAndMenu(getString(R.string.hint_menu_time), getString(R.string.hint_save));
         curTime = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_UNIT_TIME, 0);
         selectTime();
     }
@@ -88,7 +88,7 @@ public class TimeActivity extends BaseActionActivity {
         tbMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showProgress("正在保存中...");
+                showProgress( getString(R.string.hint_saveing));
                 mIwaerApplication.service.watch.sendCmd(BleCmd.setHourSelect(curTime), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
@@ -97,7 +97,7 @@ public class TimeActivity extends BaseActionActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast("保存成功");
+                                showToast( getString(R.string.hint_save_success));
                             }
                         });
                         finish();
@@ -109,7 +109,7 @@ public class TimeActivity extends BaseActionActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast("保存失败");
+                                showToast( getString(R.string.hint_save_fail));
                             }
                         });
                     }

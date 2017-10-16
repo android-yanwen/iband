@@ -14,6 +14,7 @@ public class Sport {
     private int stepCalorie;//卡路里
     private int stepTime;//运动时长
     private int stepType;//运动类型
+    private int sportMode;//运动模式
 
     public Sport() {
     }
@@ -98,19 +99,29 @@ public class Sport {
         this.stepType = stepType;
     }
 
+    public int getSportMode() {
+        return sportMode;
+    }
+
+    public void setSportMode(int sportMode) {
+        this.sportMode = sportMode;
+    }
+
     @Override
     public String toString() {
-        return "Sport{" +
-                "id=" + id +
-                ", stepDate=" + stepDate +
-                ", stepDay='" + stepDay + '\'' +
-                ", hisLength=" + hisLength +
-                ", hisCount=" + hisCount +
-                ", stepNum=" + stepNum +
-                ", stepMileage=" + stepMileage +
-                ", stepCalorie=" + stepCalorie +
-                ", stepTime=" + stepTime +
-                ", stepType=" + stepType +
-                '}';
+        final StringBuffer sb = new StringBuffer("Sport{");
+        sb.append("id=").append(id);
+        sb.append(", stepDate=").append(stepDate);
+        sb.append(", stepDay='").append(stepDay).append('\'');
+        sb.append(", hisLength=").append(hisLength);
+        sb.append(", hisCount=").append(hisCount);
+        sb.append(", stepNum=").append(stepNum);
+        sb.append(", stepMileage=").append(stepMileage);
+        sb.append(", stepCalorie=").append(stepCalorie);
+        sb.append(", stepTime=").append(stepTime);
+        sb.append(", stepType=").append(stepType);
+        sb.append(", sportMode=").append(sportMode);
+        sb.append('}');
+        return sb.toString();
     }
 }

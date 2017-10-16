@@ -2,6 +2,7 @@ package com.manridy.iband.ui.items;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -42,6 +43,8 @@ public class AlertMenuItems extends RelativeLayout {
     }
 
     public void setAlertState(boolean isEnable){
-        alertState.setText(isEnable?"已开启":"未开启");
+        alertState.setText(isEnable?getContext().getString(R.string.hint_opens):getContext().getString(R.string.hint_unopen));
+        alertState.setTextColor(isEnable? Color.parseColor("#de2196f3"):Color.parseColor("#61000000"));
+
     }
 }

@@ -1,10 +1,13 @@
 package com.manridy.iband.view;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -91,7 +94,7 @@ public class OtaActivity extends BaseActionActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        showToast("连接失败，请重新尝试！");
+                        showToast(getString(R.string.error_connect_fail));
                     }
                 });
             }
@@ -101,12 +104,14 @@ public class OtaActivity extends BaseActionActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_device_ota);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ButterKnife.bind(this);
     }
 
     @Override
     protected void initVariables() {
         start();
+        SPUtil.put(mContext, AppGlobal.STATE_APP_OTA_RUN, true);
     }
 
     @Override
@@ -114,15 +119,15 @@ public class OtaActivity extends BaseActionActivity {
         tvOtaOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (tvOtaResult.getText().toString().equals("升级失败")) {
+                if (tvOtaResult.getText().toString().equals(getString(R.string.error_ota_fail))) {
                     finish();
                 }else {
                     int state = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
                     if (state == 1) {
-                        showProgress("正在同步设置...");
+                        showProgress(getString(R.string.hint_sync_data));
                         SyncAlert.getInstance(mContext).sync();
                     }else {
-                        showProgress("正在连接设备...");
+                        showProgress(getString(R.string.hint_connecting));
                         connect();
                     }
                 }
@@ -136,7 +141,7 @@ public class OtaActivity extends BaseActionActivity {
                     @Override
                     public void run() {
                         dismissProgress();
-                        showToast(isSuccess?"同步成功":"同步失败");
+                        showToast(isSuccess?getString(R.string.hint_sync_success):getString(R.string.hint_sync_fail));
                         finish();
                     }
                 });
@@ -186,20 +191,15 @@ public class OtaActivity extends BaseActionActivity {
             super.onProgressChanged(deviceAddress, percent, speed, avgSpeed, currentPart, partsTotal);
             cvOta.setProgress((float) percent)
                     .invaliDate();
-            tvOtaProgress.setText("已完成" + percent + "%");
+            tvOtaProgress.setText(getString(R.string.hint_ota_completed) + percent + "%");
             if (percent == 100) {
                 cvOta.setProgress(0);
                 ivOta.setVisibility(View.GONE);
                 tvOtaProgress.setVisibility(View.GONE);
                 tvOtaOk.setVisibility(View.VISIBLE);
                 tvOtaResult.setVisibility(View.VISIBLE);
-                tvOtaResult.setText("升级成功");
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-//                        EventBus.getDefault().post(new EventMessage()));
-                    }
-                }, 1000);
+                tvOtaResult.setText(R.string.hint_ota_success);
+                progressHandler.sendEmptyMessage(0);
             }
             Log.d(TAG, "onProgressChanged() called with: deviceAddress = [" + deviceAddress + "], percent = [" + percent + "], speed = [" + speed + "], avgSpeed = [" + avgSpeed + "], currentPart = [" + currentPart + "], partsTotal = [" + partsTotal + "]");
         }
@@ -213,10 +213,47 @@ public class OtaActivity extends BaseActionActivity {
             tvOtaOk.setVisibility(View.VISIBLE);
             tvOtaResult.setVisibility(View.VISIBLE);
             tvOtaResult.setTextColor(Color.parseColor("#e64a19"));
-            tvOtaResult.setText("升级失败");
+            tvOtaResult.setText(R.string.error_ota_fail);
             Log.d(TAG, "onError() called with: deviceAddress = [" + deviceAddress + "], error = [" + error + "], errorType = [" + errorType + "], message = [" + message + "]");
         }
     };
+
+    @Override
+    public void showProgress(String msg) {
+        if (!this.isFinishing()) {
+            ProgressDialog dialog = new ProgressDialog(mContext);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setMessage(msg);
+            dialog.show();
+        }
+    }
+
+
+    ProgressDialog progressDialog;
+    Handler progressHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                progressDialog = new ProgressDialog(mContext);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.setMessage("设备正在重启中,请稍后("+5+")");
+                progressDialog.show();
+            }else if (msg.what<=5){
+                if (progressDialog != null) {
+                    progressDialog.setMessage("设备正在重启中,请稍后("+(5-msg.what)+")");
+                }
+            }else {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+            }
+            progressHandler.sendEmptyMessageDelayed(msg.what+1,1000);
+        }
+    };
+
 
     @Override
     public void onBackPressed() {
@@ -224,5 +261,11 @@ public class OtaActivity extends BaseActionActivity {
         if (controller != null) {
             controller.pause();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SPUtil.put(mContext, AppGlobal.STATE_APP_OTA_RUN,false);
     }
 }

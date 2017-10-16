@@ -1,7 +1,15 @@
 package com.manridy.iband;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.manridy.applib.utils.LogUtil;
+import com.manridy.applib.utils.TimeUtil;
 import com.manridy.iband.bean.BoModel;
 import com.manridy.iband.bean.BpModel;
 import com.manridy.iband.bean.HeartModel;
@@ -14,6 +22,9 @@ import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleHistoryListener;
 import com.manridy.sdk.exception.BleException;
 import com.manridy.sdk.type.InfoType;
+
+import java.lang.reflect.Type;
+import java.util.Date;
 
 /**
  *
@@ -45,7 +56,15 @@ public class SyncData {
 
     private SyncData() {
         watch = IbandApplication.getIntance().service.watch;
-        mGson = new Gson();
+        GsonBuilder builder = new GsonBuilder();
+        // Register an adapter to manage the date types as long values
+        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+            public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                return new Date(json.getAsJsonPrimitive().getAsString());
+            }
+        });
+        mGson =  builder.create();
+//        thread.start();
     }
 
     public static SyncData getInstance() {
@@ -56,7 +75,9 @@ public class SyncData {
     }
 
     public synchronized void sync(){
-        if (isRun) return;
+        if (isRun) {
+            return;
+        }
         isRun = true;
         progressSum = progressIndex = syncIndex = errorNum = 0;
         stepSum = sleepSum = hrSum = bpSum = boSum = 0;
@@ -64,11 +85,11 @@ public class SyncData {
             @Override
             public void onHistory(Object o) {
                 StepModel historyStep = mGson.fromJson(o.toString(), StepModel.class);
-                if (historyStep.getHisLength() != 0) {
+                boolean isErrorData = historyStep.getStepType() == 1 && historyStep.getStepNum()>99999;
+                if (historyStep.getHisLength() != 0 &&!isErrorData) {
                     historyStep.save();
-                    progressIndex++;
-                    int progress = (int) (((double)progressIndex / progressSum)*100);
-                    syncAlertListener.onProgress(progress);
+                    timeOutIndex = 0;
+                    progress();
                 }
                 boolean is = historyStep.getHisLength() == (historyStep.getHisCount()+1);
                 if (is|| historyStep.getHisLength() == 0) {
@@ -80,11 +101,10 @@ public class SyncData {
             @Override
             public void onHistory(Object o) {
                 StepModel historyStep = mGson.fromJson(o.toString(), StepModel.class);
-                if (historyStep.getHisLength() != 0) {
+                if (historyStep.getHisLength() != 0 ) {
                     historyStep.save();
-                    progressIndex++;
-                    int progress = (int) (((double)progressIndex / progressSum)*100);
-                    syncAlertListener.onProgress(progress);
+                    timeOutIndex = 0;
+                    progress();
                 }
                 boolean is = historyStep.getHisLength() == (historyStep.getHisCount()+1);
                 if (is|| historyStep.getHisLength() == 0) {
@@ -98,9 +118,8 @@ public class SyncData {
                 SleepModel historySleep = mGson.fromJson(o.toString(), SleepModel.class);
                 if (historySleep.getSleepLength() != 0) {
                     historySleep.save();
-                    progressIndex++;
-                    int progress = (int) (((double)progressIndex / progressSum)*100);
-                    syncAlertListener.onProgress(progress);
+                    timeOutIndex = 0;
+                    progress();
                 }
                 boolean is = historySleep.getSleepLength() == (historySleep.getSleepNum()+1);
                 if (is || historySleep.getSleepLength() == 0) {
@@ -112,11 +131,10 @@ public class SyncData {
             @Override
             public void onHistory(Object o) {
                 HeartModel historyHr = mGson.fromJson(o.toString(), HeartModel.class);
-                if (historyHr.getHeartLength() != 0) {
+                if (historyHr.getHeartLength() != 0 && historyHr.getHeartDate().compareTo(TimeUtil.getNowYMDHMSTime())<=0) {
                     historyHr.save();
-                    progressIndex++;
-                    int progress = (int) (((double)progressIndex / progressSum)*100);
-                    syncAlertListener.onProgress(progress);
+                    timeOutIndex = 0;
+                    progress();
                 }
                 boolean is = historyHr.getHeartLength() == (historyHr.getHeartNum()+1);
                 if (is || historyHr.getHeartLength() == 0) {
@@ -129,11 +147,10 @@ public class SyncData {
             @Override
             public void onHistory(Object o) {
                 BpModel historyBp = mGson.fromJson(o.toString(), BpModel.class);
-                if (historyBp.getBpLength() != 0) {
+                if (historyBp.getBpLength() != 0 && historyBp.getBpDate().compareTo(TimeUtil.getNowYMDHMSTime()) <=0) {
                     historyBp.save();
-                    progressIndex++;
-                    int progress = (int) (((double)progressIndex / progressSum)*100);
-                    syncAlertListener.onProgress(progress);
+                    timeOutIndex = 0;
+                    progress();
                 }
                 boolean is = historyBp.getBpLength() == (historyBp.getBpNum()+1);
                 if (is || historyBp.getBpLength() == 0) {
@@ -146,11 +163,10 @@ public class SyncData {
             @Override
             public void onHistory(Object o) {
                 BoModel historyBo = mGson.fromJson(o.toString(), BoModel.class);
-                if (historyBo.getboLength() != 0) {
+                if (historyBo.getboLength() != 0 && historyBo.getboDate().compareTo(TimeUtil.getNowYMDHMSTime()) <=0) {
                     historyBo.save();
-                    progressIndex++;
-                    int progress = (int) (((double)progressIndex / progressSum)*100);
-                    syncAlertListener.onProgress(progress);
+                    timeOutIndex = 0;
+                    progress();
                 }
                 boolean is = historyBo.getboLength() == (historyBo.getboNum()+1);
                 if (is || historyBo.getboLength() == 0) {
@@ -160,6 +176,19 @@ public class SyncData {
             }
         });
         send();
+    }
+
+    private void progress() {
+        progressIndex++;
+        int progress = (int) (((double)progressIndex / progressSum)*100);
+        syncAlertListener.onProgress(progress);
+        if (progress >= 100) {
+            if (syncAlertListener != null) {
+                syncAlertListener.onResult(true);
+                isRun = false;
+                LogUtil.d("SyncData", "next() called onResult true");
+            }
+        }
     }
 
     BleCallback bleCallback = new BleCallback() {
@@ -273,6 +302,7 @@ public class SyncData {
                 }
                 break;
         }
+        timeOutIndex = 0;
     }
 
     private synchronized void parse(Object o){
@@ -324,6 +354,14 @@ public class SyncData {
         }
     }
 
+    public void setRun(boolean run) {
+        isRun = run;
+    }
+
+    public boolean isRun() {
+        return isRun;
+    }
+
     public static void saveCurStep(StepModel curStep) {
         StepModel dbStep = IbandDB.getInstance().getCurStep();
         if (dbStep == null) {
@@ -332,8 +370,33 @@ public class SyncData {
             dbStep.setStepNum(curStep.getStepNum());
             dbStep.setStepMileage(curStep.getStepMileage());
             dbStep.setStepCalorie(curStep.getStepCalorie());
+            dbStep.setStepDate(curStep.getStepDate());
             dbStep.save();
         }
     }
+
+
+    int timeOutIndex = 0;
+//    Thread thread = new Thread(new Runnable() {
+//        @Override
+//        public void run() {
+//            while (true){
+//                try {
+//                    thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                if (isRun) {
+//                    if (timeOutIndex == 5) {
+//                        next();
+//                    }
+//                    timeOutIndex++;
+//                    Log.d("syncData","timeOutIndex == "+ timeOutIndex);
+//                }
+//            }
+//        }
+//    });
+
+
 
 }

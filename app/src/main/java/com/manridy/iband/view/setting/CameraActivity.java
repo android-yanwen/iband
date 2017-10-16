@@ -2,6 +2,7 @@ package com.manridy.iband.view.setting;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,8 +10,10 @@ import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -18,6 +21,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
@@ -55,6 +59,8 @@ public class CameraActivity extends BaseActionActivity {
     SurfaceView svCamera;
     @BindView(R.id.iv_capture)
     ImageView ivCapture;
+    @BindView(R.id.tb_menu)
+    TextView tbMenu;
 
     private Camera mCamera;
     private SurfaceHolder mSurfaceHolder;
@@ -65,7 +71,8 @@ public class CameraActivity extends BaseActionActivity {
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleBar("遥控拍照");
+        tbMenu.setText(R.string.hint_photo);
+        setTitleBar(getString(R.string.title_camera));
     }
 
     @Override
@@ -99,7 +106,9 @@ public class CameraActivity extends BaseActionActivity {
         ivCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                capture();
+                if (!isFastDoubleClick()) {
+                    capture();
+                }
             }
         });
 
@@ -109,8 +118,26 @@ public class CameraActivity extends BaseActionActivity {
                 mCamera.autoFocus(null);
             }
         });
+
+        tbMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                open();
+            }
+        });
     }
 
+    private void open(){
+//        File file =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+//        File parentFlie = new File(file.getParent());
+//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//        intent.setDataAndType(Uri.fromFile(parentFlie), "*/*");
+//        intent.addCategory(Intent.CATEGORY_OPENABLE);
+//        startActivity(intent);
+        Intent albumIntent = new Intent(Intent.ACTION_PICK, null);
+        albumIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivity(albumIntent);
+    }
 
     SurfaceHolder.Callback SurfaceHolderCallback=  new SurfaceHolder.Callback() {
         @Override
@@ -221,6 +248,7 @@ public class CameraActivity extends BaseActionActivity {
         }
     }
 
+
     /**
      * 拍照
      */
@@ -282,6 +310,8 @@ public class CameraActivity extends BaseActionActivity {
                 byte[] newData = baos.toByteArray();
                 fos.write(newData);
                 fos.close();
+                sync(pictureFile);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -297,7 +327,7 @@ public class CameraActivity extends BaseActionActivity {
 
                 }
             });
-            showToast("保存成功"+pictureFile.getPath().toString());
+            showToast(getString(R.string.hint_save_success)+pictureFile.getPath().toString());
         }
     };
 
@@ -387,13 +417,25 @@ public class CameraActivity extends BaseActionActivity {
         }
     }
 
+    public void sync(File pictureFile) {
+//        try {
+//            MediaStore.Images.Media.insertImage(mContext.getContentResolver(), pictureFile.getAbsolutePath(), pictureFile.getName(), null);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri uri = Uri.fromFile(pictureFile);
+        intent.setData(uri);
+        mContext.sendBroadcast(intent);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(EventMessage event) {
         if (event.getWhat() == EventGlobal.ACTION_CAMERA_CAPTURE) {
-            showToast("开始拍照");
+            showToast(getString(R.string.hint_camera_start));
             capture();
         }else if (event.getWhat() == EventGlobal.ACTION_CAMERA_EXIT){
-            showToast("退出拍照");
+            showToast(getString(R.string.hint_camera_exit));
             finish();
         }
     }

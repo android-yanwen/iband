@@ -216,20 +216,19 @@ public class CircularView extends View {
         return this;
     }
 
-    public CircularView setProgressWithAnimation(float progress){
+    public void setProgressWithAnimation(float progress){
         progress = progress<0.1f? 0.5f :progress;
         progress = (progress<=100) ? progress : 100;
-        this.setProgressWithAnimation(progress,1000);
+        this.setProgressWithAnimation(progress,1500);
         Log.d("CircularView", "setProgressWithAnimation() called with: progress = [" + progress + "]");
-        return this;
+
     }
 
-    public CircularView setProgressWithAnimation(float progress , int duration){
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(this,"progress",progress);
+    public void setProgressWithAnimation(float progress , int duration){
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(this,"progress2",0,progress);
         objectAnimator.setDuration(duration);
         objectAnimator.setInterpolator(new DecelerateInterpolator());
         objectAnimator.start();
-        return this;
     }
 
     public CircularView setText(String text) {

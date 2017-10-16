@@ -1,5 +1,6 @@
 package com.manridy.iband.view;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
+import android.service.carrier.CarrierService;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NotificationCompat;
@@ -37,9 +39,12 @@ import com.manridy.applib.utils.CheckUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.TimeUtil;
 import com.manridy.iband.IbandApplication;
+import com.manridy.iband.OnResultCallBack;
 import com.manridy.iband.R;
 import com.manridy.iband.SyncData;
 import com.manridy.iband.common.AppGlobal;
+import com.manridy.iband.common.DeviceUpdate;
+import com.manridy.iband.common.DomXmlParse;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.common.Utils;
@@ -56,6 +61,7 @@ import com.manridy.sdk.callback.BleConnectCallback;
 import com.manridy.sdk.exception.BleException;
 import com.rd.PageIndicatorView;
 
+import org.bouncycastle.crypto.engines.CAST5Engine;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -98,23 +104,30 @@ public class MainActivity extends BaseActivity {
     private FragmentPagerAdapter viewAdapter;
     private List<Fragment> viewList = new ArrayList<>();
 
-    private IbandApplication iwaerApplication;
+    private IbandApplication ibandApplication;
     private NotificationManager mNotificationManager;
     private Notification notification;
     private AlertDialog findPhone;
     private AlertDialog lostAlert;
     private Vibrator vibrator;
     private MediaPlayer mp;
+    String url = "http://39.108.92.15:12345";
 
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (!iwaerApplication.service.watch.isBluetoothEnable()) {
+//            if (!ibandApplication.service.watch.isBluetoothEnable()) {
+            int state = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
+            boolean otaRun = (boolean) SPUtil.get(mContext, AppGlobal.STATE_APP_OTA_RUN, false);
+            if (state != AppGlobal.DEVICE_STATE_CONNECTED && !otaRun) {
                 playAlert(true, alertTime);
                 String time = TimeUtil.getNowYMDHMSTime();
                 showLostNotification(time);
                 showLostAlert(time);
+                Log.d(TAG, "onEventMainThread() called with: event = [handleMessage]");
             }
+
+//            }
         }
     };
 
@@ -127,7 +140,7 @@ public class MainActivity extends BaseActivity {
             if (time != 0 && tbSync != null) {
                 SimpleDateFormat format = new SimpleDateFormat("HH:mm");
                 String str = format.format(new Date(time));
-                tbSync.setText("上次同步" + str);
+                tbSync.setText(getString(R.string.hint_sync_last) + str);
             }
         }
     }
@@ -135,25 +148,51 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ButterKnife.bind(this);
     }
 
     @Override
     protected void initVariables() {
         EventBus.getDefault().register(this);
-        iwaerApplication = (IbandApplication) getApplication();
+        ibandApplication = (IbandApplication) getApplication();
         setStatusBar();
         initViewPager();
         initNotification();
         mSimpleView = new SimpleView(mContext.getApplicationContext());
-        initNotificationService();
+//        initDeviceUpdate();
     }
 
-    private void initNotificationService() {
-        boolean appOnOff = (boolean) SPUtil.get(this, AppGlobal.DATA_ALERT_APP,false);
-        if (appOnOff) {
-            startService(new Intent(this,NotificationService2.class));
+    private void initDeviceUpdate() {
+        String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC,"");
+        if (mac.isEmpty()) {
+            return;
         }
+        final String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"");
+        final String deviceVersion = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION,"1.0.0");
+        new DeviceUpdate(mContext).checkDeviceUpdate(new OnResultCallBack() {
+            @Override
+            public void onResult(boolean result, Object o) {
+                if (result) {
+                    if (o != null) {
+                        List<DomXmlParse.Image> imageList = (List<DomXmlParse.Image>) o;
+                        for (DomXmlParse.Image image : imageList) {
+                            if (image.id.equals(deviceType)) {
+                                if (image.least.compareTo(deviceVersion) > 0) {
+                                    final String fileUrl = url + "/" + image.id + "/" + image.file;
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            new DeviceUpdate(mContext).show(fileUrl);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void initNotification() {
@@ -266,11 +305,11 @@ public class MainActivity extends BaseActivity {
                     public void run() {
                         prlRefresh.setRefreshing(false);
                         if (isSuccess) {
-                            SPUtil.put(mContext,AppGlobal.DATA_SYNC_TIME,new Date().getTime());
-                            tbSync.setText("同步完成");
+                            SPUtil.put(mContext,AppGlobal.DATA_SYNC_TIME,System.currentTimeMillis());
+                            setHintState(AppGlobal.DEVICE_STATE_SYNC_OK);
                             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_ALL));
                         } else {
-                            tbSync.setText("同步失败");
+                            setHintState(AppGlobal.DEVICE_STATE_SYNC_NO);
                         }
                     }
                 });
@@ -283,7 +322,7 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void run() {
                         String str = progress == 0 ? "" : (progress + "%");
-                        tbSync.setText("正在同步" + str);
+                        tbSync.setText(getString(R.string.hint_syncing) + str);
                     }
                 });
                 Log.d(TAG, "onProgress() called with: progress = [" + progress + "]");
@@ -294,17 +333,36 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 final String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
-                if (checkBindDevice(mac)) return;
+                if (checkBindDevice(mac)){
+                    prlRefresh.setRefreshing(false);
+                    return;
+                }
+
                 int state = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
                 if (state != 1) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            tbSync.setText("设备连接中");
+                            setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
+                            ibandApplication.service.watch.disconnect(mac, new BleCallback() {
+                                @Override
+                                public void onSuccess(Object o) {
+
+                                }
+
+                                @Override
+                                public void onFailure(BleException exception) {
+
+                                }
+                            });
                             connectDevice();
                         }
                     });
                 }else{
+                    if (SyncData.getInstance().isRun()){
+                        prlRefresh.setRefreshing(false);
+                        return;
+                    }
                     EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));
                 }
             }
@@ -313,20 +371,19 @@ public class MainActivity extends BaseActivity {
 
     private boolean checkBindDevice(String mac) {
         if (mac == null || mac.isEmpty()) {
-            prlRefresh.setRefreshing(false);
             return true;
         }
         return false;
     }
 
     private void connectDevice(){
-        iwaerApplication.service.initConnect(true,new BleConnectCallback() {
+        ibandApplication.service.initConnect(true,new BleConnectCallback() {
             @Override
             public void onConnectSuccess() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        tbSync.setText("设备连接成功");
+                        setHintState(AppGlobal.DEVICE_STATE_CONNECT_SUCCESS);
                         prlRefresh.setRefreshing(false);
                     }
                 });
@@ -339,11 +396,11 @@ public class MainActivity extends BaseActivity {
                     public void run() {
                         prlRefresh.setRefreshing(false);
                         if (exception.getCode() ==  999) {
-                            tbSync.setText("设备未绑定");
+                            setHintState(AppGlobal.DEVICE_STATE_UNBIND);
                         }else if (exception.getCode() ==  1000){
-                            tbSync.setText("设备未找到");
+                            setHintState(AppGlobal.DEVICE_STATE_UNFIND);
                         }else{
-                            tbSync.setText("设备连接失败");
+                            setHintState(AppGlobal.DEVICE_STATE_CONNECT_FAIL);
                         }
                     }
                 });
@@ -356,37 +413,79 @@ public class MainActivity extends BaseActivity {
         super.loadData();
         String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
         int state = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
-        if (!iwaerApplication.service.watch.isBluetoothEnable()) {
+        if (!ibandApplication.service.watch.isBluetoothEnable()) {
             OpenBluetoothDialog();
         } else if (mac.isEmpty()) {
-            showFloatView("未绑定设备", "绑定");
-        } else if (state == 0) {
-            tbSync.setText("设备连接中");
-            iwaerApplication.service.initConnect(false);
-        } else if (state == 1) {
-            tbSync.setText("设备已连接");
+            showFloatView(getString(R.string.hint_device_unbind), getString(R.string.hint_bind));
+        } else if (state == AppGlobal.DEVICE_STATE_UNCONNECT) {
+            ibandApplication.service.initConnect(false);
+            setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
+            return;
+        } else if (state == AppGlobal.DEVICE_STATE_CONNECTED) {
             EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));
-        } else if (state == 2) {
-            tbSync.setText("设备连接中");
         }
+        setHintState(state);
     }
 
     private void selectTitle(int position) {
         switch (position) {
             case 0:
-                tbTitle.setText("计步");
+                tbTitle.setText(R.string.hint_view_step);
                 break;
             case 1:
-                tbTitle.setText("睡眠");
+                tbTitle.setText(R.string.hint_view_sleep);
                 break;
             case 2:
-                tbTitle.setText("心率");
+                tbTitle.setText(R.string.hint_view_hr);
                 break;
             case 3:
-                tbTitle.setText("血压");
+                tbTitle.setText(R.string.hint_view_hp);
                 break;
             case 4:
-                tbTitle.setText("血氧");
+                tbTitle.setText(R.string.hint_view_bo);
+                break;
+        }
+    }
+
+    private void setHintState(int state){
+        String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
+        if (bindMac == null || bindMac.isEmpty()) {
+            tbSync.setText(R.string.hint_un_bind);
+            return;
+        }else if (!ibandApplication.service.watch.isBluetoothEnable()){
+            tbSync.setText("蓝牙已关闭");
+            return;
+        }
+        switch (state) {
+            case AppGlobal.DEVICE_STATE_UNCONNECT:
+                tbSync.setText(R.string.hint_un_connect);
+                break;
+            case AppGlobal.DEVICE_STATE_CONNECTED:
+                tbSync.setText(R.string.hint_connected);
+                break;
+            case AppGlobal.DEVICE_STATE_CONNECTING:
+                tbSync.setText(R.string.hint_connecting);
+                break;
+            case AppGlobal.DEVICE_STATE_CONNECT_FAIL:
+                tbSync.setText(R.string.hint_connect_fail);
+                break;
+            case AppGlobal.DEVICE_STATE_CONNECT_SUCCESS:
+                tbSync.setText(R.string.hint_connect_success);
+                break;
+            case AppGlobal.DEVICE_STATE_UNFIND:
+                tbSync.setText(R.string.hint_un_find);
+                break;
+            case AppGlobal.DEVICE_STATE_SYNC_OK:
+                tbSync.setText(R.string.hint_sync_ok);
+                break;
+            case AppGlobal.DEVICE_STATE_SYNC_NO:
+                tbSync.setText(R.string.hint_sync_no);
+                break;
+            case AppGlobal.DEVICE_STATE_BLUETOOTH_DISENABLE:
+                tbSync.setText("蓝牙已关闭");
+                break;
+            case AppGlobal.DEVICE_STATE_BLUETOOTH_ENABLEING:
+                tbSync.setText("蓝牙开启中");
                 break;
         }
     }
@@ -408,20 +507,27 @@ public class MainActivity extends BaseActivity {
             playAlert(false, alertTime);
         } else if (event.getWhat() == EventGlobal.STATE_DEVICE_DISCONNECT) {
             boolean isLostOn = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_LOST, false);
-            if (isLostOn) {
-                handler.sendEmptyMessageDelayed(0, 15 * 1000);
+            String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC,"");
+            if (bindMac.isEmpty()) {
+                tbSync.setText(R.string.hint_device_unbind);
+            }else {
+                tbSync.setText(R.string.hint_un_connect);
             }
-            tbSync.setText("设备已断开");
+            if (isLostOn && !bindMac.isEmpty()) {
+                handler.sendEmptyMessageDelayed(0, 20 * 1000);
+            }
         } else if (event.getWhat() == EventGlobal.STATE_DEVICE_CONNECTING) {
             boolean isLostOn = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_LOST, false);
-            if (isLostOn) {
-                handler.sendEmptyMessageDelayed(0, 15 * 1000);
+            String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC,"");
+            if (isLostOn && !bindMac.isEmpty()) {
+                handler.sendEmptyMessageDelayed(0, 20 * 1000);
+                Log.d(TAG, "onEventMainThread() called with: event = [handler]");
             }
-            tbSync.setText("设备连接中");
+            tbSync.setText(getString(R.string.hint_connecting));
         } else if (event.getWhat() == EventGlobal.STATE_DEVICE_CONNECT) {
             handler.removeMessages(0);
             cancelLostAlert();
-            tbSync.setText("设备已连接");
+            tbSync.setText(getString(R.string.hint_connected));
 //            if (isFirstConnect) {
             EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));
 //            }
@@ -430,23 +536,29 @@ public class MainActivity extends BaseActivity {
             if (bluetoothDialog != null && bluetoothDialog.isShowing()) {
                 bluetoothDialog.dismiss();
             }
-            iwaerApplication.service.watch.clearBluetoothLe();
+            ibandApplication.service.watch.clearBluetoothLe();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    iwaerApplication.service.initConnect(false);
+                    ibandApplication.service.initConnect(false);
                 }
             }, 1500);
             hideFloatView();
+            setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
         } else if (event.getWhat() == EventGlobal.STATE_CHANGE_BLUETOOTH_OFF) {
-            iwaerApplication.service.watch.clearBluetoothLe();
+            ibandApplication.service.watch.clearBluetoothLe();
             OpenBluetoothDialog();
+            setHintState(AppGlobal.DEVICE_STATE_BLUETOOTH_DISENABLE);
         } else if (event.getWhat() == EventGlobal.STATE_CHANGE_BLUETOOTH_ON_RUNING) {
-
+            setHintState(AppGlobal.DEVICE_STATE_BLUETOOTH_ENABLEING);
         } else if (event.getWhat() == EventGlobal.ACTION_BLUETOOTH_OPEN) {
-            iwaerApplication.service.watch.BluetoothEnable(AppManage.getInstance().currentActivity());
+            ibandApplication.service.watch.BluetoothEnable(AppManage.getInstance().currentActivity());
         } else if (event.getWhat() == EventGlobal.ACTION_DEVICE_CONNECT) {
-            iwaerApplication.service.initConnect(false);
+            ibandApplication.service.initConnect(false);
+        } else if (event.getWhat() == EventGlobal.ACTION_HIDE_SIMPVIEW){
+            hideFloatView();
+        } else if (event.getWhat() == EventGlobal.STATE_DEVICE_UNBIND){
+            setHintState(AppGlobal.DEVICE_STATE_UNBIND);
         }
     }
 
@@ -528,12 +640,12 @@ public class MainActivity extends BaseActivity {
             findPhone.dismiss();
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(AppManage.getInstance().currentActivity());
-        builder.setTitle("查找手机");
-        builder.setMessage("设备正在查找手机...");
-        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.hint_find_phone);
+        builder.setMessage(R.string.hint_finding_phone);
+        builder.setNegativeButton(getString(R.string.hint_ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                iwaerApplication.service.watch.sendCmd(BleCmd.affirmFind(), new BleCallback() {
+                ibandApplication.service.watch.sendCmd(BleCmd.affirmFind(), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
 
@@ -561,8 +673,8 @@ public class MainActivity extends BaseActivity {
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext);
             mBuilder.setSmallIcon(R.mipmap.app_icon)
                     .setContentTitle(getResources().getString(R.string.app_name))
-                    .setContentText("设备正在查找手机...")
-                    .setTicker("设备正在查找手机...") //通知首次出现在通知栏，带上升动画效果的
+                    .setContentText(getString(R.string.hint_finding_phone))
+                    .setTicker(getString(R.string.hint_finding_phone)) //通知首次出现在通知栏，带上升动画效果的
                     .setAutoCancel(true)
                     .setWhen(System.currentTimeMillis())//通知产生的时间，会在通知信息里显示，一般是系统获取到的时间
                     .setPriority(Notification.PRIORITY_DEFAULT) //设置该通知优先级
@@ -589,9 +701,9 @@ public class MainActivity extends BaseActivity {
             //创建通知
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext);
             mBuilder.setSmallIcon(R.mipmap.app_icon)
-                    .setContentTitle("防丢提醒")
-                    .setContentText("检测手环在" + time + "与手机断开连接,可能丢失!")
-                    .setTicker("防丢提醒") //通知首次出现在通知栏，带上升动画效果的
+                    .setContentTitle(getString(R.string.hint_menu_alert_lost))
+                    .setContentText(getString(R.string.hint_alert_lost1) + time + getString(R.string.hint_alert_lost2))
+                    .setTicker(getString(R.string.hint_menu_alert_lost)) //通知首次出现在通知栏，带上升动画效果的
                     .setAutoCancel(true)
                     .setWhen(System.currentTimeMillis())//通知产生的时间，会在通知信息里显示，一般是系统获取到的时间
                     .setPriority(Notification.PRIORITY_DEFAULT) //设置该通知优先级
@@ -615,24 +727,26 @@ public class MainActivity extends BaseActivity {
             lostAlert.dismiss();
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(AppManage.getInstance().currentActivity());
-        builder.setTitle("防丢提醒");
-        builder.setMessage("检测手环在" + time + "与手机断开连接,可能丢失!");
-        builder.setNegativeButton("我知道了", new DialogInterface.OnClickListener() {
+        builder.setTitle(getString(R.string.hint_menu_alert_lost));
+        builder.setMessage(getString(R.string.hint_alert_lost1) + time + getString(R.string.hint_alert_lost2));
+        builder.setNegativeButton(R.string.hint_alert_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 playAlert(false, alertTime);
                 dialog.dismiss();
             }
         });
-        builder.setPositiveButton("不再提醒", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.hint_alert_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 SPUtil.put(mContext, AppGlobal.DATA_ALERT_LOST, false);
+                EventBus.getDefault().post(EventGlobal.DATA_CHANGE_MENU);
                 playAlert(false, alertTime);
                 dialog.dismiss();
             }
         });
         lostAlert = builder.create();
+        lostAlert.setCanceledOnTouchOutside(false);
         lostAlert.show();
     }
 
@@ -640,18 +754,19 @@ public class MainActivity extends BaseActivity {
     public void OpenBluetoothDialog(){
         PermissionView contentView = new PermissionView(this);
         List<PermissonItem> data = new ArrayList<>();
-        data.add(new PermissonItem("蓝牙","蓝牙",R.mipmap.permission_ic_bluetooth));
+        data.add(new PermissonItem(getString(R.string.hint_bluetooth),getString(R.string.hint_bluetooth),R.mipmap.permission_ic_bluetooth));
         contentView.setGridViewColum(data.size());
-        contentView.setTitle("开启蓝牙");
-        contentView.setMsg("为了您能正常使用iband，需要打开蓝牙");
+        contentView.setTitle(getString(R.string.hint_bluetooth_open));
+        contentView.setMsg(getString(R.string.hint_bluetooth_open_alert));
         contentView.setGridViewAdapter(new PermissionAdapter(data));
         contentView.setStyleId(R.style.PermissionBlueStyle);
 //        contentView.setFilterColor(mFilterColor);
         contentView.setBtnOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (bluetoothDialog != null && bluetoothDialog.isShowing())
+                if (bluetoothDialog != null && bluetoothDialog.isShowing()) {
                     bluetoothDialog.dismiss();
+                }
                 IbandApplication.getIntance().service.watch.BluetoothEnable(AppManage.getInstance().currentActivity());
             }
         });

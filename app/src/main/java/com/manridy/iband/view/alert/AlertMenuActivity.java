@@ -4,9 +4,16 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
+import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.R;
+import com.manridy.iband.common.AppGlobal;
+import com.manridy.iband.common.EventGlobal;
+import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.items.MenuItems;
 import com.manridy.iband.view.base.BaseActionActivity;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,7 +27,7 @@ import butterknife.OnClick;
 public class AlertMenuActivity extends BaseActionActivity {
 
     @BindView(R.id.menu_sedentary)
-    MenuItems menu;
+    MenuItems menuSedentary;
     @BindView(R.id.menu_clock)
     MenuItems menuClock;
     @BindView(R.id.menu_sms)
@@ -41,7 +48,25 @@ public class AlertMenuActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleBar("提醒功能");
+        setTitleBar(getString(R.string.title_alert));
+        registerEventBus();
+        initMenuState();
+    }
+
+    private void initMenuState() {
+        boolean phoneEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_PHONE,false);
+        boolean smsEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_SMS,false);
+        boolean sedentaryEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_SEDENTARY,false);
+        boolean clockEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_CLOCK,false);
+        boolean lostEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_LOST,false);
+        boolean appEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_APP,false);
+
+        menuSedentary.setMenuOpenState(sedentaryEnable);
+        menuClock.setMenuOpenState(clockEnable);
+        menuSms.setMenuOpenState(smsEnable);
+        menuPhone.setMenuOpenState(phoneEnable);
+        menuLost.setMenuOpenState(lostEnable);
+        menuApp.setMenuOpenState(appEnable);
     }
 
     @Override
@@ -70,6 +95,13 @@ public class AlertMenuActivity extends BaseActionActivity {
             case R.id.menu_app:
                 startActivity(AppActivity.class);
                 break;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(EventMessage event) {
+        if (event.getWhat() == EventGlobal.DATA_CHANGE_MENU) {
+            initMenuState();
         }
     }
 }

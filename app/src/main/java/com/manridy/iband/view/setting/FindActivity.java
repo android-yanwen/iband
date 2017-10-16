@@ -43,7 +43,7 @@ public class FindActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleBar("查找手环");
+        setTitleBar(getString(R.string.title_find));
         registerEventBus();
     }
 
@@ -60,10 +60,10 @@ public class FindActivity extends BaseActionActivity {
 
     private void showFindWatchDialog() {
         AlertDialog.Builder  builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("查找设备");
-        builder.setMessage("查找设备中...");
+        builder.setTitle(getString(R.string.title_find));
+        builder.setMessage(R.string.hint_device_finding);
 
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.hint_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -97,7 +97,7 @@ public class FindActivity extends BaseActionActivity {
         findWatch.setCanceledOnTouchOutside(false);
         findWatch.show();
         handler.removeCallbacksAndMessages(null);
-        handler.sendEmptyMessage(10);
+        handler.sendEmptyMessage(7);
     }
 
 
@@ -105,7 +105,7 @@ public class FindActivity extends BaseActionActivity {
         @Override
         public void handleMessage(Message msg, FindActivity mainActivity) {
             if (findWatch != null) {
-                findWatch.setMessage("查找设备中"+"("+msg.what+")...");
+                findWatch.setMessage(getString(R.string.hint_device_findings)+"("+msg.what+")");
                 if (msg.what == 0) {
                     findWatch.dismiss();
                 }else {
@@ -121,7 +121,7 @@ public class FindActivity extends BaseActionActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(EventMessage event) {
         if (event.getWhat() == EventGlobal.ACTION_FIND_WATCH_STOP) {
-            showToast("取消查找");
+            showToast(getString(R.string.hint_device_find_cancel));
             if (findWatch != null) {
                 findWatch.dismiss();
             }

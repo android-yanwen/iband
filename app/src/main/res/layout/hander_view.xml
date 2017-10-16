@@ -11,7 +11,7 @@
         android:layout_marginLeft="16dp"
         android:textColor="@color/text_title"
         android:textSize="14sp"
-        android:text="选择需要在设备上显示的界面"/>
+        android:text="@string/hint_view_select"/>
 
     <TextView
         android:layout_width="match_parent"

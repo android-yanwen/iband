@@ -24,9 +24,9 @@
             android:layout_marginTop="20dp"
             app:cv_background_color="#26ffffff"
             app:cv_progressbar_color="#deffffff"
-            app:cv_title="上次测量结果"
+            app:cv_title="@string/hint_last_hr"
             app:cv_text="-/-"
-            app:cv_state="--月--日 --:--"
+            app:cv_state="@string/hint_date"
             app:cv_unit="mmHg"
             app:cv_progress="0.5"
             app:cv_icon="@mipmap/blood_pressure_icon01"/>
@@ -54,7 +54,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:data_type="left"
-            app:data_hint="时间"
+            app:data_hint="@string/hint_time"
             app:data="--"/>
 
         <com.manridy.iband.ui.items.DataItems
@@ -63,7 +63,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:data_type="center"
-            app:data_hint="收缩压"
+            app:data_hint="@string/hint_hp"
             app:data_unit="mmHg"
             app:data="--"/>
 
@@ -73,7 +73,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:data_type="right"
-            app:data_hint="舒张压"
+            app:data_hint="@string/hint_lp"
             app:data_unit="mmHg"
             app:data="--"/>
 

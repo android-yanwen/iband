@@ -50,6 +50,7 @@
         <service android:name=".service.BleService"/>
         <service android:name=".service.AlertService"/>
         <service android:name=".service.DfuService"/>
+        <service android:name=".service.NotificationCollectorMonitorService"/>
         <service android:name=".service.NotificationService2"
                  android:label="@string/app_name"
                  android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
@@ -96,6 +97,7 @@
         <activity android:name=".view.setting.TargetActivity"/>
         <activity android:name=".view.setting.AboutActivity"/>
         <activity android:name=".view.setting.UpdateActivity"/>
+        <activity android:name=".view.setting.WristActivity"/>
         <activity android:name=".view.alert.AlertMenuActivity"/>
         <activity android:name=".view.alert.SedentaryActivity"/>
         <activity android:name=".view.alert.ClockActivity"/>
@@ -105,7 +107,7 @@
         <activity android:name=".view.alert.AppActivity"/>
 
         <activity android:name=".view.TrainActivity"/>
-        <activity android:name=".view.HrTestActivity"/>
+        <activity android:name=".view.test.TestHrTimingActivity"/>
         <activity android:name=".view.UserActivity"/>
         <activity android:name=".view.DeviceActivity"/>
         <activity android:name=".view.OtaActivity"
@@ -113,8 +115,8 @@
         <activity android:name=".view.history.HrHistoryActivity"/>
         <activity android:name=".view.history.StepHistoryActivity"/>
         <activity android:name=".view.history.SleepHistoryActivity"/>
-        <activity android:name=".view.TestActivity"/>
-        <activity android:name=".view.setting.WristActivity"/>
+        <activity android:name=".view.test.TestDatabaseActivity"/>
+        <activity android:name=".view.test.TestMenuActivity"/>
     </application>
 
 </manifest>

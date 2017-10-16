@@ -20,7 +20,7 @@
                 android:layout_marginTop="16dp"
                 android:textColor="@color/text_title"
                 android:textSize="14sp"
-                android:text="使用手表遥控拍照"/>
+                android:text="@string/hint_camera"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -44,7 +44,7 @@
                 android:layout_marginTop="20dp"
                 android:textColor="@color/text_title"
                 android:textSize="14sp"
-                android:text="开始拍照"/>
+                android:text="@string/hint_camera_start"/>
         </RelativeLayout>
 
         <SurfaceView

@@ -12,6 +12,8 @@ import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.service.AlertService;
 import com.manridy.iband.service.BleService;
+import com.manridy.iband.service.NotificationCollectorMonitorService;
+import com.manridy.iband.service.NotificationService2;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 
@@ -39,6 +41,8 @@ public class IbandApplication extends Application {
         initBleSevrice();//初始化蓝牙服务
         initAlertService();//初始化提醒服务
         initBugly();//初始化bugly
+        initNotificationService();
+
 //        CrashHandler.getInstance().init(intance);
     }
 
@@ -54,6 +58,13 @@ public class IbandApplication extends Application {
     private void initBugly() {
         Bugly.init(getApplicationContext(), "33139ca6ea",false);
         Beta.initDelay = 2 * 1000;//延迟两秒检测版本信息
+    }
+
+    private void initNotificationService() {
+        boolean appOnOff = (boolean) SPUtil.get(this, AppGlobal.DATA_ALERT_APP,false);
+        if (appOnOff) {
+            startService(new Intent(this, NotificationCollectorMonitorService.class));
+        }
     }
 
     public static IbandApplication getIntance() {

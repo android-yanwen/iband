@@ -49,13 +49,26 @@ public class EventGlobal {
     public static final int ACTION_FIND_PHONE_START = 1601;
     public static final int ACTION_FIND_WATCH_STOP = 1602;
     public static final int ACTION_BATTERY_NOTIFICATION = 1660;
-    public static final int ACTION_HR_TESTING = 902;
-    public static final int ACTION_HR_TESTED = 900;
+    public static final int ACTION_HEALTH_TEST = 902;
+    public static final int ACTION_HEALTH_TESTED = 900;
+
+    public static final int ACTION_HR_TEST = 910;
+    public static final int ACTION_BP_TEST = 911;
+    public static final int ACTION_BO_TEST = 912;
+    public static final int ACTION_HR_TESTED = 920;
+    public static final int ACTION_BP_TESTED = 921;
+    public static final int ACTION_BO_TESTED = 922;
+
     public static final int ACTION_CALL_END = 830;
     public static final int ACTION_CALL_RUN = 831;
+    public static final int ACTION_WECHAT_QUERY = 10000;
+    public static final int ACTION_WECHAT_REGIST = 10001;
     //通知栏动作
     public static final int ACTION_BLUETOOTH_OPEN = 2400;
     public static final int ACTION_DEVICE_CONNECT = 2401;
+    public static final int ACTION_LOCALE_CHANGED = 2402;
+    public static final int ACTION_HIDE_SIMPVIEW = 2403;
+
     //消息通知
     public static final int MSG_SEDENTARY_TOAST = 3000;
     public static final int MSG_CLOCK_TOAST = 3001;
@@ -64,4 +77,7 @@ public class EventGlobal {
     public static final int STATE_CHANGE_BLUETOOTH_ON = 4000;
     public static final int STATE_CHANGE_BLUETOOTH_OFF = 4001;
     public static final int STATE_CHANGE_BLUETOOTH_ON_RUNING = 4002;
+
+
+
 }

@@ -31,4 +31,7 @@
         <item name="PermissionBackround">@drawable/shape_bg_white</item>
         <item name="PermissionButtonTextColor">@android:color/white</item>
     </style>
+
+    <style name="ToolBarButton" parent="Base.Widget.AppCompat.Toolbar.Button.Navigation"/>
+
 </resources>

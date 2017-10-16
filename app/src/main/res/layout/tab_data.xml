@@ -13,8 +13,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         app:data_type="left"
-        app:data_hint="步数"
-        app:data_unit="步"
+        app:data_hint="@string/hint_steps"
+        app:data_unit="@string/hint_unit_step"
         app:data="--"/>
 
     <com.manridy.iband.ui.items.DataItems
@@ -23,8 +23,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         app:data_type="center"
-        app:data_hint="里程"
-        app:data_unit="公里"
+        app:data_hint="@string/hint_mi"
+        app:data_unit="@string/hint_unit_mi"
         app:data="--"/>
 
     <com.manridy.iband.ui.items.DataItems
@@ -33,8 +33,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         app:data_type="right"
-        app:data_hint="卡路里"
-        app:data_unit="千卡"
+        app:data_hint="@string/hint_ka"
+        app:data_unit="@string/hint_unit_ka"
         app:data="--"/>
 
 </LinearLayout>

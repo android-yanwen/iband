@@ -11,7 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:background="@color/toolbar_background">
-
+        <ImageView
+            android:id="@+id/iv_wechat_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="84dp"
+            android:src="@mipmap/we_chat_img"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_wechat_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="17dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:textColor="#8affffff"
+            android:text="@string/hint_join_wechat"/>
     </RelativeLayout>
     <TextView
         android:layout_width="match_parent"
@@ -20,33 +36,54 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="26dp"
-        android:textColor="@color/text_title"
-        android:textSize="17sp"
-        android:text="点击 接入 启动微信后，进入 深圳曼瑞德科技有限公司 账号页面然后点击 绑定设备 按钮即可完成接入"/>
-
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="16dp"
+        android:textColor="#de000000"
+        android:textSize="16sp"
+        android:text="@string/title_wechat"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#26000000"/>
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="40dp"
+        android:layout_height="38dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center_vertical"
         android:textColor="@color/text_title"
-        android:textSize="17sp"
-        android:text="接入后，步数将会同步至微信排行榜中"/>
+        android:textSize="16sp"
+        android:text="@string/hint_wechat_1"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/text_title"
+        android:textSize="16sp"
+        android:text="@string/hint_wechat_2"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="38dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/text_title"
+        android:textSize="16sp"
+        android:text="@string/hint_wechat_3"/>
     <Button
         android:id="@+id/bt_more"
-        android:layout_width="match_parent"
+        android:layout_width="288dp"
         android:layout_height="36dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="26dp"
-        android:layout_marginRight="26dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/shape_button_alert"
-        android:textColor="@color/text_hint_tint"
+        android:textColor="#c703a9f4"
         android:textSize="12sp"
-        android:text="更多"/>
+        android:text="@string/hint_wechat_open"
+        android:visibility="visible"/>
 </LinearLayout>

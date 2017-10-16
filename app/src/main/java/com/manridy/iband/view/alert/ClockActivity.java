@@ -60,7 +60,7 @@ public class ClockActivity extends BaseActionActivity {
     protected void initVariables() {
         registerEventBus();
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleAndMenu("闹钟提醒", "保存");
+        setTitleAndMenu(getString(R.string.title_clock), getString(R.string.hint_save));
         initClock();
         thread.start();
     }
@@ -86,7 +86,7 @@ public class ClockActivity extends BaseActionActivity {
         tbMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showProgress("正在保存中...");
+                showProgress(getString(R.string.hint_saveing));
                 List<Clock> clocks = new ArrayList<>();
                 for (ClockModel model : clockList) {
                     clocks.add(new Clock(model.getTime(),model.isClockOnOFF()));
@@ -102,7 +102,7 @@ public class ClockActivity extends BaseActionActivity {
                             clockModel.save();
                         }
                         SPUtil.put(mContext, AppGlobal.DATA_ALERT_CLOCK,openNum >0);
-                        eventSend(EventGlobal.MSG_CLOCK_TOAST, "保存成功");
+                        eventSend(EventGlobal.MSG_CLOCK_TOAST, getString(R.string.hint_save_success));
                         eventSend(EventGlobal.DATA_CHANGE_MENU);
                         dismissProgress();
                         finish();
@@ -110,7 +110,7 @@ public class ClockActivity extends BaseActionActivity {
 
                     @Override
                     public void onFailure(BleException exception) {
-                        eventSend(EventGlobal.MSG_CLOCK_TOAST, "保存失败");
+                        eventSend(EventGlobal.MSG_CLOCK_TOAST, getString(R.string.hint_save_fail));
                         dismissProgress();
                     }
                 });
@@ -141,7 +141,7 @@ public class ClockActivity extends BaseActionActivity {
         switch (view.getId()) {
             case R.id.ci_clock1:
                 int[] time1 = getTimeInt(clockList.get(0).getTime());
-                new TimeDialog(mContext, time1, "闹钟1", new TimeDialog.TimeDialogListener() {
+                new TimeDialog(mContext, time1, getString(R.string.hint_clock1), new TimeDialog.TimeDialogListener() {
                     @Override
                     public void getTime(String hour, String minute) {
                         String clockTime = hour + ":" + minute;
@@ -152,7 +152,7 @@ public class ClockActivity extends BaseActionActivity {
                 break;
             case R.id.ci_clock2:
                 int[] time2 = getTimeInt(clockList.get(1).getTime());
-                new TimeDialog(mContext, time2, "闹钟2", new TimeDialog.TimeDialogListener() {
+                new TimeDialog(mContext, time2, getString(R.string.hint_clock2), new TimeDialog.TimeDialogListener() {
                     @Override
                     public void getTime(String hour, String minute) {
                         String clockTime = hour + ":" + minute;
@@ -163,7 +163,7 @@ public class ClockActivity extends BaseActionActivity {
                 break;
             case R.id.ci_clock3:
                 int[] time3 = getTimeInt(clockList.get(2).getTime());
-                new TimeDialog(mContext, time3, "闹钟3", new TimeDialog.TimeDialogListener() {
+                new TimeDialog(mContext, time3, getString(R.string.hint_clock3), new TimeDialog.TimeDialogListener() {
                     @Override
                     public void getTime(String hour, String minute) {
                         String clockTime = hour + ":" + minute;

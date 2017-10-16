@@ -20,7 +20,7 @@
             android:gravity="center"
             android:textColor="@color/color_white"
             android:textSize="18sp"
-            android:text="睡眠记录"/>
+            android:text="@string/hint_sleep_history"/>
 
         <ImageView
             android:id="@+id/tb_back"
@@ -48,9 +48,9 @@
             app:cv_progressbar_color="#673ab7"
             app:cv_text_color="#de000000"
             app:cv_hint_color="#8a000000"
-            app:cv_title="每日平均睡眠"
+            app:cv_title="@string/hint_sleep_history_avg"
             app:cv_text="--"
-            app:cv_state="深睡--小时/浅睡--小时"
+            app:cv_state="@string/hint_sleep_history_time"
             app:cv_progress="0.5"
             app:cv_icon="@mipmap/sleep_sleepic02"/>
 
@@ -63,7 +63,7 @@
             android:layout_marginTop="250dp"
             android:textColor="#de000000"
             android:textSize="14sp"
-            android:text="本月"/>
+            android:text="@string/hint_month_current"/>
 
     </RelativeLayout>
 
@@ -80,9 +80,9 @@
             android:layout_weight="1"
             app:line_color="#26673ab7"
             app:data_type="left"
-            app:data_hint="每日平均睡眠"
+            app:data_hint="@string/hint_sleep_avg"
             app:data="--"
-            app:data_unit="小时"/>
+            app:data_unit="@string/hint_unit_sleep"/>
 
 
         <com.manridy.iband.ui.items.DataItems
@@ -92,9 +92,9 @@
             android:layout_weight="1"
             app:line_color="#26673ab7"
             app:data_type="center"
-            app:data_hint="每日平均深睡"
+            app:data_hint="@string/hint_sleep_deep_avg"
             app:data="--"
-            app:data_unit="小时"/>
+            app:data_unit="@string/hint_unit_sleep"/>
 
 
         <com.manridy.iband.ui.items.DataItems
@@ -104,8 +104,8 @@
             android:layout_weight="1"
             app:line_color="#26673ab7"
             app:data_type="right"
-            app:data_hint="每日平均浅睡"
-            app:data_unit="小时"
+            app:data_hint="@string/hint_sleep_light_avg"
+            app:data_unit="@string/hint_unit_sleep"
             app:data="--"/>
 
     </LinearLayout>

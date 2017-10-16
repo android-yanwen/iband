@@ -24,10 +24,10 @@
             android:layout_marginTop="20dp"
             app:cv_background_color="#26ffffff"
             app:cv_progressbar_color="#deffffff"
-            app:cv_title="今日睡眠"
+            app:cv_title="@string/hint_sleep_today"
             app:cv_text="--"
-            app:cv_unit="小时"
-            app:cv_state="深睡--小时/浅睡--小时"
+            app:cv_unit="@string/hint_unit_sleep"
+            app:cv_state="@string/hint_sleep_history_time"
             app:cv_progress="0.5"
             app:cv_icon="@mipmap/sleep_icon01"/>
 
@@ -54,7 +54,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:data_type="left"
-            app:data_hint="昨晚入睡"
+            app:data_hint="@string/hint_sleep_start"
             app:data="--"/>
 
         <com.manridy.iband.ui.items.DataItems
@@ -63,7 +63,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:data_type="center"
-            app:data_hint="今天醒来"
+            app:data_hint="@string/hint_sleep_end"
             app:data="--"/>
 
         <com.manridy.iband.ui.items.DataItems
@@ -72,8 +72,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:data_type="right"
-            app:data_hint="清醒时长"
-            app:data_unit="小时"
+            app:data_hint="@string/hint_sleep_sober"
+            app:data_unit="@string/hint_unit_sleep"
             app:data="--"/>
 
     </LinearLayout>

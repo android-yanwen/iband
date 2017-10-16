@@ -13,22 +13,27 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
+ *
  * Created by jarLiao on 17/4/19.
  */
 
 public class HttpService {
     private static final String TAG = "HttpService";
     private static HttpService httpService;
-    private OkHttpClient client;
+    private static OkHttpClient client = new OkHttpClient();
+    public static final String wechat_query = "http://39.108.92.15:12348/wx/device_query";
+    public static final String wechat_regist ="http://39.108.92.15:12348/wx/device_authorize";
+    public static final String wechat_old_query = "http://39.108.92.15:12347/wx/device_query";
+    public static final String wechat_old_regist = "http://39.108.92.15:12347/wx/device_authorize";
 
     private HttpService() {
-        client = new OkHttpClient();
     }
 
     public static HttpService getInstance(){
@@ -66,6 +71,7 @@ public class HttpService {
     }
 
     public void downloadOTAFile(String url, OnResultCallBack onResultCallBack) {
+
         Request request = new Request.Builder()
                 .url(url)
                 .get()
@@ -101,7 +107,63 @@ public class HttpService {
         }
     }
 
+    public void wechatQuery(String mac,boolean isOld ,OnResultCallBack onResultCallBack){
+        String url = isOld?wechat_old_query:wechat_query;
+        Request request = new Request.Builder()
+                .url(url+"?id="+mac)
+//                .addHeader("Connection", "close")
+                .get()
+                .build();
+        try {
+            OkHttpClient client = new OkHttpClient();
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String result = response.body().string();
+                onResultCallBack.onResult(true,result);
+            } else {
+                onResultCallBack.onResult(false,null);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            onResultCallBack.onResult(false,null);
+        } catch (Exception e) {
+            onResultCallBack.onResult(false,null);
+            e.printStackTrace();
+        }
+    }
 
+    /**
+     * {“product_id”:”33052”,”device_name”:”X9Pro”, “device_mac”:”xx:xx:xx:xx:xx:xx”}
+     * @param mac
+     * @param onResultCallBack
+     */
+    public void wechatRegister(String productID, String deviceName, String mac, OnResultCallBack onResultCallBack){
+        RequestBody formBody = new FormBody.Builder()
+                .add("product_id", productID)
+                .add("device_name", deviceName)
+                .add("device_mac", mac)
+                .build();
+        Request request = new Request.Builder()
+                .url(productID.equals("35788")?wechat_old_regist:wechat_regist)
+                .post(formBody)
+                .build();
+        try {
+            OkHttpClient client = new OkHttpClient();
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String result = response.body().string();
+                onResultCallBack.onResult(true,result);
+            } else {
+                onResultCallBack.onResult(false,null);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            onResultCallBack.onResult(false,null);
+        } catch (Exception e) {
+            onResultCallBack.onResult(false,null);
+            e.printStackTrace();
+        }
+    }
 
 
 }

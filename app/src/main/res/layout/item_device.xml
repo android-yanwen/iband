@@ -39,7 +39,7 @@
         android:layout_marginBottom="16dp"
         android:textColor="@color/text_device_hint"
         android:textSize="12sp"
-        android:text="已绑定"/>
+        android:text="@string/hint_state_bind"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
         android:layout_marginTop="18dp"
         android:textColor="@color/text_device_hint"
         android:textSize="12sp"
-        android:text="未连接"/>
+        android:text="@string/hint_state_unconnect"/>
 
     <TextView
         android:id="@+id/tv_device_battery"
@@ -70,17 +70,27 @@
         android:textColor="@color/text_device_hint"
         android:textSize="12sp"/>
 
-
-    <TextView
-        android:id="@+id/tv_un_bind"
+    <RelativeLayout
+        android:id="@+id/rl_un_bind"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="1dp"
-        android:gravity="center"
-        android:drawableLeft="@mipmap/set_add"
-        android:paddingLeft="115dp"
-        android:drawablePadding="-115dp"
-        android:background="@color/activity_background"
-        android:text="绑定新设备"
-        android:visibility="visible"/>
+        android:background="@color/activity_background">
+        <TextView
+            android:id="@+id/tv_un_bind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/hint_bind_new_device"/>
+        <ImageView
+            android:id="@+id/iv_un_bind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/tv_un_bind"
+            android:src="@mipmap/set_add"/>
+
+    </RelativeLayout>
+
 </RelativeLayout>

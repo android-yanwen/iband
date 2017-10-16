@@ -34,8 +34,9 @@ public class FileDecryptManage {
 
     public static FileDecryptManage getInstance() {
         synchronized (FileDecryptManage.class) {
-            if (instance == null)  
+            if (instance == null) {
                 instance = new FileDecryptManage();
+            }
         }  
         return instance;  
     }
@@ -56,11 +57,11 @@ public class FileDecryptManage {
     }
 
     public void setEncListener(EncProgressListener listener){
-        this.Enclistener = listener;
+        FileDecryptManage.Enclistener = listener;
     }
 
     public void setDecListener(DecProgressListener listener){
-        this.Declistener = listener;
+        FileDecryptManage.Declistener = listener;
     }
 
     /**
@@ -107,14 +108,18 @@ public class FileDecryptManage {
         }
 
         //关闭文件流
-        if (fos != null)
+        if (fos != null) {
             fos.close();
-        if (fis != null)
+        }
+        if (fis != null) {
             fis.close();
-        if (bos!=null)
+        }
+        if (bos!=null) {
             bos.close();
-        if (bis!= null)
+        }
+        if (bis!= null) {
             bis.close();
+        }
         return end;
     }
 
@@ -161,14 +166,18 @@ public class FileDecryptManage {
         }
 
         //关闭文件流
-        if(fis!=null)
+        if(fis!=null) {
             fis.close();
-        if(fos!=null)
+        }
+        if(fos!=null) {
             fos.close();
-        if (bos!=null)
+        }
+        if (bos!=null) {
             bos.close();
-        if (bis!= null)
+        }
+        if (bis!= null) {
             bis.close();
+        }
         return end;
     }
 
@@ -232,14 +241,18 @@ public class FileDecryptManage {
         }
 
         //关闭文件流
-        if (fos != null)
+        if (fos != null) {
             fos.close();
-        if (fis != null)
+        }
+        if (fis != null) {
             fis.close();
-        if (bos!=null)
+        }
+        if (bos!=null) {
             bos.close();
-        if (bis!= null)
+        }
+        if (bis!= null) {
             bis.close();
+        }
         return end;
     }
 
@@ -305,14 +318,18 @@ public class FileDecryptManage {
 
 
         //关闭文件流
-        if(fis!=null)
+        if(fis!=null) {
             fis.close();
-        if(fos!=null)
+        }
+        if(fos!=null) {
             fos.close();
-        if (bos!=null)
+        }
+        if (bos!=null) {
             bos.close();
-        if (bis!= null)
+        }
+        if (bis!= null) {
             bis.close();
+        }
         return end;
     }
 

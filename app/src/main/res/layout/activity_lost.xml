@@ -13,7 +13,7 @@
         android:id="@+id/ai_alert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:big_name="开启防丢提醒"
-        app:big_hint="连接断开时，手表会振动提醒"
+        app:big_name="@string/hint_alert_lost_open"
+        app:big_hint="@string/hint_alert_lost"
         app:big_onoff="true"/>
 </LinearLayout>

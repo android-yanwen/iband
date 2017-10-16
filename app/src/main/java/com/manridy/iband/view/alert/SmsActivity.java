@@ -44,7 +44,7 @@ public class SmsActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));
-        setTitleAndMenu("短信提醒", "保存");
+        setTitleAndMenu(getString(R.string.hint_menu_alert_sms), getString(R.string.hint_save));
         onOff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_SMS,false);
         aiAlert.setAlertCheck(onOff);
     }
@@ -55,11 +55,11 @@ public class SmsActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 List<PermissonItem> permissonItems = new ArrayList<PermissonItem>();
-                permissonItems.add(new PermissonItem(Manifest.permission.RECEIVE_SMS, "短信", R.mipmap.permission_ic_message));
-                permissonItems.add(new PermissonItem(Manifest.permission.READ_CONTACTS, "联系人", R.mipmap.permission_ic_contacts));
+                permissonItems.add(new PermissonItem(Manifest.permission.RECEIVE_SMS, getString(R.string.hint_sms), R.mipmap.permission_ic_message));
+                permissonItems.add(new PermissonItem(Manifest.permission.READ_CONTACTS, getString(R.string.hint_contacts), R.mipmap.permission_ic_contacts));
                 HiPermission.create(mContext)
-                        .title("开启提醒")
-                        .msg("为了您能正常使用短信提醒，需要以下权限")
+                        .title(getString(R.string.hint_alert_open))
+                        .msg(getString(R.string.hint_request_sms_alert))
                         .style(R.style.PermissionBlueStyle)
                         .permissions(permissonItems)
                         .checkMutiPermission(permissionCallback);
@@ -70,7 +70,7 @@ public class SmsActivity extends BaseActionActivity {
             public void onClick(View v) {
                 SPUtil.put(mContext, AppGlobal.DATA_ALERT_SMS,onOff);
                 eventSend(EventGlobal.DATA_CHANGE_MENU);
-                showToast("保存成功");
+                showToast(getString(R.string.hint_save_success));
                 finish();
             }
         });
