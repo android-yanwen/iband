@@ -207,6 +207,7 @@ public class BleService extends Service {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             String macStr = intent.getStringExtra("BLUETOOTH_MAC");
+            byte[] macData = intent.getByteArrayExtra("BLUETOOTH_DATA");
             switch (action){
                 case ACTION_GATT_CONNECT:
                     LogUtil.e(TAG,"设备地址 "+macStr+" 蓝牙状态----蓝牙已连接");
@@ -220,9 +221,7 @@ public class BleService extends Service {
                         showNotification(2);
                     }
                     EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_CONNECTING));
-                    if (!isConnectRun) {
-                        connectWardThread.start();
-                    }
+                    startConnectWardThread();
                     break;
                 case ACTION_GATT_DISCONNECTED:
                     LogUtil.e(TAG,"设备地址 "+macStr+" 蓝牙状态----蓝牙已断开");
@@ -231,7 +230,7 @@ public class BleService extends Service {
                         showNotification(0);
                     }
                     SPUtil.put(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
-                    EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_DISCONNECT));
+                    EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_DISCONNECT,macData));
                     break;
                 case ACTION_SERVICES_DISCOVERED:
                     LogUtil.e(TAG,"设备地址 "+macStr+" 蓝牙状态----发现服务");
@@ -246,9 +245,17 @@ public class BleService extends Service {
                     final byte[] data = intent.getByteArrayExtra("BLUETOOTH_DATA");
 //                    LogUtil.e(TAG,"蓝牙状态----数据:"+ BitUtil.parseByte2HexStr(data));
                     break;
+                default:
+                    break;
             }
         }
     };
+
+    private void startConnectWardThread() {
+        if (!isConnectRun) {
+            connectWardThread.start();
+        }
+    }
 
     BleActionListener actionListener = new BleActionListener() {
         @Override
@@ -304,6 +311,8 @@ public class BleService extends Service {
                     break;
                 case ACTION_CALL_RUN:
                     answerRingingCall(BleService.this);
+                    break;
+                default:
                     break;
             }
         }
@@ -394,8 +403,8 @@ public class BleService extends Service {
                 }
                int connectState = (int) SPUtil.get(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
                 if (connectState != DEVICE_STATE_CONNECTED ) {
-                    initConnect(true,mBleConnectCallback);
                     Log.d(TAG, "connectWardThread run() =================");
+                    initConnect(true,mBleConnectCallback);
                 }
                 Log.d(TAG, "connectWardThread isConnectRun() =================");
             }
@@ -410,20 +419,7 @@ public class BleService extends Service {
 
         @Override
         public void onConnectFailure(BleException exception) {
-            if (exception.getCode() != 1000) {
-                String mac = (String) SPUtil.get(BleService.this, AppGlobal.DATA_DEVICE_BIND_MAC,"");
-                watch.disconnect(mac, new BleCallback() {
-                    @Override
-                    public void onSuccess(Object o) {
-
-                    }
-
-                    @Override
-                    public void onFailure(BleException exception) {
-
-                    }
-                });
-            }
+            startConnectWardThread();
             Log.d(TAG, "onConnectFailure() called with: exception = [" + exception.toString() + "]");
         }
     };

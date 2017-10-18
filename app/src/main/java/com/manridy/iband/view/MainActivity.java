@@ -119,6 +119,7 @@ public class MainActivity extends BaseActivity {
 //            if (!ibandApplication.service.watch.isBluetoothEnable()) {
             int state = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
             boolean otaRun = (boolean) SPUtil.get(mContext, AppGlobal.STATE_APP_OTA_RUN, false);
+            Log.d(TAG, "LostHandleMessage() called with: state = [" + state + "]"+"otaRun = ["+otaRun+"]");
             if (state != AppGlobal.DEVICE_STATE_CONNECTED && !otaRun) {
                 playAlert(true, alertTime);
                 String time = TimeUtil.getNowYMDHMSTime();
@@ -344,17 +345,7 @@ public class MainActivity extends BaseActivity {
                         @Override
                         public void run() {
                             setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
-                            ibandApplication.service.watch.disconnect(mac, new BleCallback() {
-                                @Override
-                                public void onSuccess(Object o) {
-
-                                }
-
-                                @Override
-                                public void onFailure(BleException exception) {
-
-                                }
-                            });
+                            ibandApplication.service.watch.closeBluetoothGatt(mac);
                             connectDevice();
                         }
                     });
@@ -506,23 +497,26 @@ public class MainActivity extends BaseActivity {
             }
             playAlert(false, alertTime);
         } else if (event.getWhat() == EventGlobal.STATE_DEVICE_DISCONNECT) {
+            byte[] bytes = (byte[]) (null == event.getObject()? new byte[1] : event.getObject()) ;//得到异常信息,空为新建
             boolean isLostOn = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_LOST, false);
             String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC,"");
+            Log.d(TAG, "STATE_DEVICE_DISCONNECT() called with: bytes = [" + bytes[0] + "]");
             if (bindMac.isEmpty()) {
                 tbSync.setText(R.string.hint_device_unbind);
             }else {
                 tbSync.setText(R.string.hint_un_connect);
             }
-            if (isLostOn && !bindMac.isEmpty()) {
+            if (isLostOn && !bindMac.isEmpty() && 0 == bytes[0]) {
                 handler.sendEmptyMessageDelayed(0, 20 * 1000);
+                Log.d(TAG, "onLostThread() called with: event = [STATE_DEVICE_DISCONNECT]");
             }
         } else if (event.getWhat() == EventGlobal.STATE_DEVICE_CONNECTING) {
-            boolean isLostOn = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_LOST, false);
-            String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC,"");
-            if (isLostOn && !bindMac.isEmpty()) {
-                handler.sendEmptyMessageDelayed(0, 20 * 1000);
-                Log.d(TAG, "onEventMainThread() called with: event = [handler]");
-            }
+//            boolean isLostOn = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_LOST, false);
+//            String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC,"");
+//            if (isLostOn && !bindMac.isEmpty()) {
+//                handler.sendEmptyMessageDelayed(0, 20 * 1000);
+//                Log.d(TAG, "onLostThread() called with: event = [STATE_DEVICE_CONNECTING]");
+//            }
             tbSync.setText(getString(R.string.hint_connecting));
         } else if (event.getWhat() == EventGlobal.STATE_DEVICE_CONNECT) {
             handler.removeMessages(0);

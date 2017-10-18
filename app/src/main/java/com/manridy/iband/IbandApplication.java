@@ -36,6 +36,7 @@ public class IbandApplication extends Application {
         super.onCreate();
         intance = this;
         SPUtil.put(this, AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
+        SPUtil.put(this, AppGlobal.STATE_APP_OTA_RUN, false);
         LitePalApplication.initialize(this);//初始化数据库
         Fresco.initialize(this);//初始化图片加载
         initBleSevrice();//初始化蓝牙服务

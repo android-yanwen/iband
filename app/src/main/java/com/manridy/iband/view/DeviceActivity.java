@@ -210,17 +210,7 @@ public class DeviceActivity extends BaseActionActivity {
             @Override
             public void onConnectFailure(BleException exception) {
                 dismissProgress();
-                mIwaerApplication.service.watch.disconnect(mac, new BleCallback() {
-                    @Override
-                    public void onSuccess(Object o) {
-
-                    }
-
-                    @Override
-                    public void onFailure(BleException exception) {
-
-                    }
-                });
+                mIwaerApplication.service.watch.closeBluetoothGatt(mac);
                 curPosition = -1;
                 bindName = "";
                 eventSend(EventGlobal.STATE_DEVICE_BIND_FAIL);

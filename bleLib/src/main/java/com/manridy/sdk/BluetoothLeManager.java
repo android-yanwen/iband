@@ -184,6 +184,7 @@ public class BluetoothLeManager {
         }
         handler.postDelayed(connectTimeoutRunnable,CONNECT_TIME_OUT);
     }
+
     Runnable connectTimeoutRunnable = new Runnable() {
         @Override
         public void run() {
@@ -366,15 +367,15 @@ public class BluetoothLeManager {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             try{
                 super.onConnectionStateChange(gatt, status, newState);
-                LogUtil.e(TAG, "onConnectionStateChange: connected device is "+gatt.getDevice().getAddress()+",status is "+status );
-                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                LogUtil.e(TAG, "onConnectionStateChange: connected device is "+gatt.getDevice().getAddress()+",status is "+status+", new state "+newState );
+                if (newState == BluetoothProfile.STATE_CONNECTED && status == BluetoothGatt.GATT_SUCCESS ) {
                     BluetoothLeDevice bluetoothLeDevice = getBluetoothLeDevice(gatt);
                     if (bluetoothLeDevice != null){
                         bluetoothLeDevice.setIsConnect(true);
                     }
                     gatt.discoverServices();
                     broadcastUpdate(ACTION_GATT_CONNECT,null,gatt.getDevice().getAddress());
-                }else if (newState == BluetoothProfile.STATE_DISCONNECTED){
+                }else if (newState == BluetoothProfile.STATE_DISCONNECTED && status == BluetoothGatt.GATT_SUCCESS){
                     BluetoothLeDevice bluetoothLeDevice = getBluetoothLeDevice(gatt);
                     if (bluetoothLeDevice != null){
                         bluetoothLeDevice.setIsConnect(false);
@@ -388,7 +389,7 @@ public class BluetoothLeManager {
                             mBluetoothGattCallback = null;
                             broadcastUpdate(ACTION_GATT_DISCONNECTED,null,gatt.getDevice().getAddress());
                         }else{
-                            broadcastUpdate(ACTION_GATT_DISCONNECTED,null,gatt.getDevice().getAddress());
+                            broadcastUpdate(ACTION_GATT_DISCONNECTED,new byte[]{(byte) status},gatt.getDevice().getAddress());
                             if (bluetoothLeDevice.isReConnect()) {
                                 bluetoothLeDevice.getmBluetoothGatt().connect();
                                 broadcastUpdate(ACTION_GATT_RECONNECT,null,gatt.getDevice().getAddress());
@@ -547,6 +548,13 @@ public class BluetoothLeManager {
         if (gatt != null) {
             refreshDeviceCache(gatt);
             gatt.close();
+        }
+    }
+
+    public void closeBluetoothGatt(String mac){
+        BluetoothLeDevice leDevice = getBluetoothLeDevice(mac);
+        if (leDevice != null) {
+            closeBluetoothGatt(leDevice.getmBluetoothGatt());
         }
     }
 
