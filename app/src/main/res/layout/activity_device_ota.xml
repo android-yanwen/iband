@@ -51,23 +51,25 @@
             android:id="@+id/tv_ota_result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_marginTop="26dp"
+            android:layout_centerHorizontal="true"
             android:textColor="#ccffffff"
+            android:textSize="18sp"
             android:text="@string/hint_ota_success"
             android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_ota_ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="72dp"
+            android:layout_height="24dp"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:paddingBottom="20dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:textColor="#61ffffff"
-            android:textSize="12dp"
-            android:text="@string/hint_ok"
+            android:layout_below="@id/tv_ota_result"
+            android:layout_marginTop="12dp"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:background="@drawable/shape_button_hr"
+            android:textSize="12sp"
+            android:text="@string/bt_next"
             android:visibility="gone"/>
     </RelativeLayout>
 

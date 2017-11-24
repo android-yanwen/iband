@@ -10,6 +10,7 @@ import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.VersionUtil;
 import com.manridy.iband.OnResultCallBack;
 import com.manridy.iband.R;
+import com.manridy.iband.SyncAlert;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.DeviceUpdate;
 import com.manridy.iband.common.DomXmlParse;
@@ -19,6 +20,9 @@ import com.manridy.iband.service.HttpService;
 import com.manridy.iband.ui.items.HelpItems;
 import com.manridy.iband.view.OtaActivity;
 import com.manridy.iband.view.base.BaseActionActivity;
+import com.manridy.sdk.ble.BleCmd;
+import com.manridy.sdk.callback.BleCallback;
+import com.manridy.sdk.exception.BleException;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.upgrade.UpgradeListener;
@@ -66,7 +70,6 @@ public class UpdateActivity extends BaseActionActivity {
         setStatusBarColor(Color.parseColor("#2196f3"));
         setTitleBar(getString(R.string.hint_menu_update));
         hiUpdateSoft.setMenuContent("v"+ VersionUtil.getVersionName(mContext));
-
     }
 
     private void updateFirmView() {
@@ -84,13 +87,48 @@ public class UpdateActivity extends BaseActionActivity {
 //        }
     }
 
+    boolean isForce;
     @Override
     protected void initListener() {
-        hiUpdateFirm.setOnLongClickListener(new View.OnLongClickListener() {
+//        hiUpdateFirm.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                startActivity(OtaActivity.class);
+//                return true;
+//            }
+//        });
+
+        findViewById(R.id.tb_title).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                startActivity(OtaActivity.class);
+                showToast("开启强制升级模式");
+                isForce = true;
                 return true;
+            }
+        });
+    }
+
+    @Override
+    protected void loadData() {
+        super.loadData();
+        ibandApplication.service.watch.getFirmwareVersion(new BleCallback() {
+            @Override
+            public void onSuccess(Object o) {
+                firm = SyncAlert.parseJsonString(o,"firmwareVersion");
+                deviceType = SyncAlert.parseJsonString(o,"firmwareType");
+                SPUtil.put(mContext, AppGlobal.DATA_FIRMWARE_VERSION,firm);
+                SPUtil.put(mContext, AppGlobal.DATA_FIRMWARE_TYPE,deviceType);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateFirmView();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(BleException exception) {
+
             }
         });
     }
@@ -127,14 +165,10 @@ public class UpdateActivity extends BaseActionActivity {
 //                info.append("图片地址：").append(upgradeInfo.imageUrl);
                 break;
             case R.id.hi_update_firm:
-                new DeviceUpdate(mContext).getOTAVersion(deviceType,firm);
+                new DeviceUpdate(mContext).getOTAVersion(deviceType,firm,isForce);
                 break;
         }
     }
-
-
-
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMainEvent(EventMessage event){

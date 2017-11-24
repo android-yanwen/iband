@@ -742,4 +742,28 @@ public class BleCmd {
         body[3] = (byte) (num & 0xFF);
         return BleProtocol.cmd(head,type,body);
     }
+
+    public static byte[] setHrCorrect(int corrent){
+        type = 0x0F;
+        body = new byte[17];
+        body[0] = 0x14;
+        body[2] = (byte) (corrent >>8 & 0xff);
+        body[3] = (byte) (corrent & 0xff);
+        return BleProtocol.cmd(head,type,body);
+    }
+///fc 08 f0 ff
+    public static byte[] getPair(){
+        type = 0x08;
+        body = new byte[17];
+        body[0] = (byte) 0xf0;
+        body[1] = (byte) 0xff;
+        return BleProtocol.cmd(head,type,body);
+    }
+
+    public static byte[] getSleepStats(){
+        type = 0x23;
+        body = new byte[17];
+        body[0] = (byte) 0x01;
+        return BleProtocol.cmd(head,type,body);
+    }
 }

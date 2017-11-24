@@ -1,9 +1,14 @@
 package com.manridy.iband.service;
 
+import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import com.manridy.applib.utils.FileUtil;
+import com.manridy.applib.utils.SPUtil;
+import com.manridy.applib.utils.VersionUtil;
 import com.manridy.iband.OnResultCallBack;
+import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.DomXmlParse;
 
 import java.io.File;
@@ -32,6 +37,9 @@ public class HttpService {
     public static final String wechat_regist ="http://39.108.92.15:12348/wx/device_authorize";
     public static final String wechat_old_query = "http://39.108.92.15:12347/wx/device_query";
     public static final String wechat_old_regist = "http://39.108.92.15:12347/wx/device_authorize";
+    public static final String device_list = "http://120.78.138.141:8080/device_list.php";
+    public static final String device_img = "http://120.78.138.141:8080/image/";
+    public static final String device_ota_record = "http://120.78.138.141:8080/update/update_record.php";
 
     private HttpService() {
     }
@@ -165,5 +173,53 @@ public class HttpService {
         }
     }
 
+    public void getDeviceList(OnResultCallBack onResultCallBack){
+        Request request = new Request.Builder().url(device_list).build();
+        OkHttpClient client = new OkHttpClient();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String result = response.body().string();
+                onResultCallBack.onResult(true,result);
+            }else {
+                onResultCallBack.onResult(false,"");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void sendOtaData(Context mContext,OnResultCallBack onResultCallBack){
+        String name = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,"");
+        String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC,"");
+        String version = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION,"");
+        String versionNew = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION_NEW,"");
+        String phone = android.os.Build.MANUFACTURER+" "+android.os.Build.MODEL;
+        RequestBody formBody = new FormBody.Builder()
+                .add("device_name", name)
+                .add("device_mac", mac)
+                .add("device_version", version)
+                .add("app_name","iband")
+                .add("update_version",versionNew)
+                .add("app_type",phone)
+                .build();
+        Request request = new Request.Builder()
+                .url(device_ota_record)
+                .post(formBody)
+                .build();
+        OkHttpClient client = new OkHttpClient();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String result = response.body().string();
+                onResultCallBack.onResult(true,result);
+            }else {
+                onResultCallBack.onResult(false,"");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

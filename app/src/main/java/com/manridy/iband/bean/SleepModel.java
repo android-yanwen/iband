@@ -1,5 +1,7 @@
 package com.manridy.iband.bean;
 
+import com.manridy.applib.utils.TimeUtil;
+
 import org.litepal.crud.DataSupport;
 
 /**
@@ -19,8 +21,7 @@ public class SleepModel extends DataSupport {
     private int sleepDeep;//深睡
     private int sleepLight;//浅睡
     private int sleepAwake;//浅睡
-
-
+    private long updateDate;//数据更新时间
 
     public SleepModel() {
     }
@@ -121,6 +122,19 @@ public class SleepModel extends DataSupport {
         this.sleepAwake = sleepAwake;
     }
 
+    public long getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(long updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public void saveToDate(){
+        this.setUpdateDate(System.currentTimeMillis());
+        save();
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("SleepModel{");
@@ -134,6 +148,7 @@ public class SleepModel extends DataSupport {
         sb.append(", sleepDeep=").append(sleepDeep);
         sb.append(", sleepLight=").append(sleepLight);
         sb.append(", sleepAwake=").append(sleepAwake);
+        sb.append(", updateDate=").append(TimeUtil.getNowYMDHMSTime(updateDate));
         sb.append('}');
         return sb.toString();
     }

@@ -1,5 +1,7 @@
 package com.manridy.iband.bean;
 
+import com.manridy.applib.utils.TimeUtil;
+
 import org.litepal.crud.DataSupport;
 
 import java.util.Date;
@@ -21,6 +23,7 @@ import java.util.Date;
     private int stepTime;//运动时长
     private int stepType;//运动类型
     private int sportMode;//运动模式
+    private long updateDate;//数据更新时间
 
     public StepModel() {
     }
@@ -137,6 +140,19 @@ import java.util.Date;
         this.sportMode = sportMode;
     }
 
+    public long getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(long updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public void saveToDate(){
+        this.setUpdateDate(System.currentTimeMillis());
+        save();
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("StepModel{");
@@ -151,6 +167,7 @@ import java.util.Date;
         sb.append(", stepTime=").append(stepTime);
         sb.append(", stepType=").append(stepType);
         sb.append(", sportMode=").append(sportMode);
+        sb.append(", updateDate=").append(TimeUtil.getNowYMDHMSTime(updateDate));
         sb.append('}');
         return sb.toString();
     }

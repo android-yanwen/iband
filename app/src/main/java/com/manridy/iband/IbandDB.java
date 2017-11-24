@@ -13,12 +13,14 @@ import com.manridy.iband.bean.DayBean;
 import com.manridy.iband.bean.HeartModel;
 import com.manridy.iband.bean.SedentaryModel;
 import com.manridy.iband.bean.SleepModel;
+import com.manridy.iband.bean.SleepStatsModel;
 import com.manridy.iband.bean.StepModel;
 import com.manridy.iband.bean.UserModel;
 import com.manridy.iband.bean.ViewModel;
 import com.manridy.sdk.bean.Clock;
 import com.manridy.sdk.common.TimeUtil;
 
+import org.bouncycastle.crypto.Mac;
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
@@ -87,6 +89,28 @@ public class IbandDB {
         return DataSupport.where("sleepDay = ?",TimeUtil.getNowYMD()).find(SleepModel.class);
     }
 
+    public void saveSleepStats(SleepStatsModel statsModel,String mac){
+        SleepStatsModel sleepStatsModel = DataSupport.where("sleepDay = ? and deviceMac = ?",TimeUtil.getNowYMD(),mac).findFirst(SleepStatsModel.class);
+        if (sleepStatsModel != null) {
+            sleepStatsModel.setSleepStartTime(statsModel.getSleepStartTime());
+            sleepStatsModel.setSleepEndTime(statsModel.getSleepEndTime());
+            sleepStatsModel.setSleepSum(statsModel.getSleepSum());
+            sleepStatsModel.setSleepDeep(statsModel.getSleepDeep());
+            sleepStatsModel.setSleepLight(statsModel.getSleepLight());
+            sleepStatsModel.setSleepAwake(statsModel.getSleepAwake());
+            sleepStatsModel.saveToDate();
+        }else {
+            statsModel.saveToDate();
+        }
+    }
+    public SleepStatsModel getSleepStats(String mac){
+        return DataSupport.where("sleepDay = ? and deviceMac = ?",TimeUtil.getNowYMD(),mac).findFirst(SleepStatsModel.class);
+    }
+
+    public List<SleepStatsModel> getSleepStatsList(){
+        return DataSupport.findAll(SleepStatsModel.class);
+    }
+
     public HeartModel getLastHeart(){
         return DataSupport.order("heartDate desc").findFirst(HeartModel.class);
     }
@@ -128,16 +152,20 @@ public class IbandDB {
     }
 
 
-    public List<DayBean> getMonthSleep(List<String> days) {
-        List<DayBean> dayData = new ArrayList<>();
-        for (String day : days) {
-            DayBean dayBean = new DayBean(day);
-            dayBean.setDayMax(DataSupport.where("sleepDay = ?",day).sum(SleepModel.class,"sleepDeep",int.class));
-            dayBean.setDayMin(DataSupport.where("sleepDay = ?",day).sum(SleepModel.class,"sleepLight",int.class));
-            dayBean.setDayCount(DataSupport.where("sleepDay = ?",day).count(SleepModel.class));
-            dayData.add(dayBean);
-        }
-        return dayData;
+    public DayBean getMonthSleep(String day) {
+        DayBean dayBean = new DayBean(day);
+        dayBean.setDayMax(DataSupport.where("sleepDay = ?",day).sum(SleepModel.class,"sleepDeep",int.class));
+        dayBean.setDayMin(DataSupport.where("sleepDay = ?",day).sum(SleepModel.class,"sleepLight",int.class));
+        dayBean.setDayCount(DataSupport.where("sleepDay = ?",day).count(SleepModel.class));
+        return dayBean;
+    }
+
+    public DayBean getMonthSleepStats(String day,String mac) {
+        DayBean dayBean = new DayBean(day);
+        dayBean.setDayMax(DataSupport.where("sleepDay = ? and deviceMac = ?",day,mac).sum(SleepStatsModel.class,"sleepDeep",int.class));
+        dayBean.setDayMin(DataSupport.where("sleepDay = ? and deviceMac = ?",day,mac).sum(SleepStatsModel.class,"sleepLight",int.class));
+        dayBean.setDayCount(DataSupport.where("sleepDay = ? and deviceMac = ?",day,mac).count(SleepStatsModel.class));
+        return dayBean;
     }
 
     public List<HistoryAdapter.Item> getMonthHeart(List<String> days){

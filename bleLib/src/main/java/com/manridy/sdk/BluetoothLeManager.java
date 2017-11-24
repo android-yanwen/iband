@@ -367,15 +367,15 @@ public class BluetoothLeManager {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             try{
                 super.onConnectionStateChange(gatt, status, newState);
-                LogUtil.e(TAG, "onConnectionStateChange: connected device is "+gatt.getDevice().getAddress()+",status is "+status+", new state "+newState );
-                if (newState == BluetoothProfile.STATE_CONNECTED && status == BluetoothGatt.GATT_SUCCESS ) {
+                LogUtil.e(TAG, "onConnectionStateChange: device is "+gatt.getDevice().getAddress()+",status is "+status+", new state "+newState );
+                if (newState == BluetoothProfile.STATE_CONNECTED    ) {
                     BluetoothLeDevice bluetoothLeDevice = getBluetoothLeDevice(gatt);
                     if (bluetoothLeDevice != null){
                         bluetoothLeDevice.setIsConnect(true);
                     }
                     gatt.discoverServices();
                     broadcastUpdate(ACTION_GATT_CONNECT,null,gatt.getDevice().getAddress());
-                }else if (newState == BluetoothProfile.STATE_DISCONNECTED && status == BluetoothGatt.GATT_SUCCESS){
+                }else if (newState == BluetoothProfile.STATE_DISCONNECTED ){
                     BluetoothLeDevice bluetoothLeDevice = getBluetoothLeDevice(gatt);
                     if (bluetoothLeDevice != null){
                         bluetoothLeDevice.setIsConnect(false);
@@ -391,12 +391,10 @@ public class BluetoothLeManager {
                         }else{
                             broadcastUpdate(ACTION_GATT_DISCONNECTED,new byte[]{(byte) status},gatt.getDevice().getAddress());
                             if (bluetoothLeDevice.isReConnect()) {
-                                bluetoothLeDevice.getmBluetoothGatt().connect();
-                                broadcastUpdate(ACTION_GATT_RECONNECT,null,gatt.getDevice().getAddress());
+                                reConnect(bluetoothLeDevice);
                             }
                         }
                     }
-                    LogUtil.e(TAG, "onConnectionStateChange: disconnected device is"+gatt.getDevice().getAddress());
                 }else {//连接异常状态处理
                     refreshDeviceCache(gatt);
                     gatt.close();

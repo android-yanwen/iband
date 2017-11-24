@@ -1,15 +1,12 @@
 package com.manridy.iband.view.test;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.manridy.applib.utils.SPUtil;
@@ -18,6 +15,7 @@ import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.ui.items.MenuItems;
+import com.manridy.iband.view.HrCorrectActivity;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.iband.view.setting.LightActivity;
 import com.manridy.iband.view.setting.ViewActivity;
@@ -42,6 +40,9 @@ public class TestMenuActivity extends BaseActionActivity {
     MenuItems menuDb;
     @BindView(R.id.menu_hr_test)
     MenuItems menuHrTest;
+    @BindView(R.id.menu_hr_correct)
+    MenuItems menuHrCorrect;
+
     @BindView(R.id.tb_menu)
     TextView tbMenu;
     @BindView(R.id.menu_step)
@@ -81,9 +82,27 @@ public class TestMenuActivity extends BaseActionActivity {
                 return true;
             }
         });
+        menuView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ibandApplication.service.watch.sendCmd(BleCmd.getPair(), new BleCallback() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        showToastOnMain("发送配对请求成功");
+                    }
+
+                    @Override
+                    public void onFailure(BleException exception) {
+
+                    }
+                });
+                return true;
+            }
+        });
+
     }
 
-    @OnClick({R.id.menu_view, R.id.menu_db, R.id.menu_hr_test,R.id.menu_step,R.id.menu_reset,R.id.menu_light})
+    @OnClick({R.id.menu_view, R.id.menu_db, R.id.menu_hr_test,R.id.menu_step,R.id.menu_reset,R.id.menu_light,R.id.menu_hr_correct})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.menu_view:
@@ -124,13 +143,16 @@ public class TestMenuActivity extends BaseActionActivity {
                         dialog.dismiss();
                         int num = Integer.parseInt(editText.getText().toString());
                         if (num < 99999) {
-                            mIwaerApplication.service.watch.sendCmd(BleCmd.setDeviceStepNum(num));
+                            ibandApplication.service.watch.sendCmd(BleCmd.setDeviceStepNum(num));
                         }else {
                             showToast("数值超出！");
                         }
                     }
                 });
                 dialog.show();
+                break;
+            case R.id.menu_hr_correct:
+                startActivity(HrCorrectActivity.class);
                 break;
         }
     }

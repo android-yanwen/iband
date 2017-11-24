@@ -3,7 +3,6 @@ package com.manridy.iband.view.setting;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.manridy.applib.utils.SPUtil;
@@ -53,7 +52,7 @@ public class WristActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 showProgress(getString(R.string.hint_saveing));
-                mIwaerApplication.service.watch.sendCmd(BleCmd.setWristOnOff(onOff ? 1 : 0), new BleCallback() {
+                ibandApplication.service.watch.sendCmd(BleCmd.setWristOnOff(onOff ? 1 : 0), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         dismissProgress();
@@ -88,6 +87,7 @@ public class WristActivity extends BaseActionActivity {
             public void onClick(View v) {
                 onOff = !onOff;
                 aiAlert.setAlertCheck(onOff);
+                isChange = true;
             }
         });
 

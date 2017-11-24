@@ -1,0 +1,441 @@
+<resources>
+    <string name="app_name">iband</string>
+    <string name="hint_title_about">정보</string>
+    <string name="hint_current_version">현재 버전:V</string>
+    <string name="hint_menu_update">업그레이드 확인</string>
+    <string name="hint_menu_help">도움말 사용</string>
+    <string name="hint_menu_about">회사 소개</string>
+    <string name="hint_menu_alert_phone">통화 알림</string>
+    <string name="hint_menu_alert_sms">SMS 알리미</string>
+    <string name="hint_menu_alert_sedentary">앉아있는 알림</string>
+    <string name="hint_menu_alert_clock">알람 시계</string>
+    <string name="hint_menu_more">기타</string>
+    <string name="hint_menu_alert_lost">안티 분실 알림</string>
+    <string name="hint_menu_alert_app">알림 신청</string>
+    <string name="hint_title_alert_app">APP 알림 열기</string>
+    <string name="hint_alert_app">때 전화 APP 응용 프로그램 알림, 시계가 진동합니다</string>
+    <string name="hint_select_alert_app">APP에 상기시킬 필요성을 선택하십시오.</string>
+    <string name="hint_camera">시계 리모콘 카메라 사용</string>
+    <string name="hint_camera_start">사진 찍기 시작</string>
+    <string name="hint_clock">최대 세 개의 알람 시계를 설정할 수 있습니다</string>
+    <string name="hint_title_ota">펌웨어 업그레이드</string>
+    <string name="hint_ota">업그레이드 도중 전화에서 장치를 떨어 뜨려 두지 마십시오.</string>
+    <string name="hint_ota_progress">나중에 업그레이드를 준비하고 있습니다....</string>
+    <string name="hint_ota_success">성공적으로 업그레이드</string>
+    <string name="hint_ok">확인</string>
+    <string name="hint_find">이 기능을 사용하면 연결 상태를 유지하기 위해 전화와 팔찌가 필요합니다</string>
+    <string name="title_find">팔찌 찾기</string>
+    <string name="hint_find_title">팔찌를 찾으면 팔찌가 진동합니다.</string>
+    <string name="hint_last_hr">마지막 측정 결과</string>
+    <string name="hint_unit_hr">횟수 / 분</string>
+    <string name="hint_date">--달--주간 --:--</string>
+    <string name="hint_month_current">이번 달</string>
+    <string name="hint_hr_avg">평균 심박수</string>
+    <string name="hint_hr_min">최저 심박수</string>
+    <string name="hint_hr_max">최고 심박수</string>
+    <string name="hint_sleep_history">수면 기록</string>
+    <string name="hint_sleep_history_avg">일일 평균 수면</string>
+    <string name="hint_sleep_history_time">깊은 수면--시간/얕은 잠--시간</string>
+    <string name="hint_sleep_avg">일일 평균 수면</string>
+    <string name="hint_sleep_deep_avg">일 평균 깊은 잠</string>
+    <string name="hint_sleep_light_avg">일 평균 얕은 수면</string>
+    <string name="hint_unit_sleep">시간</string>
+    <string name="hint_step_history">보수계 기록</string>
+    <string name="hint_step_history_avg">일일 평균 단계 수</string>
+    <string name="hint_step_history_num">--Km/--큰 카드</string>
+    <string name="hint_step_history_sum">단계의 총 수</string>
+    <string name="hint_step_history_mi">총 마일리지</string>
+    <string name="hint_step_history_ka">총 칼로리</string>
+    <string name="hint_unit_ka">Kcal</string>
+    <string name="hint_unit_mi">Km</string>
+    <string name="hint_unit_step">속도</string>
+    <string name="hint_watch_light">설정 밝기 시계</string>
+    <string name="hint_normal">매체</string>
+    <string name="hint_alert_lost_open">안티 분실 알림을 엽니 다.</string>
+    <string name="hint_alert_lost">연결이 끊어지면 시계가 진동합니다.</string>
+    <string name="hint_step">단계</string>
+    <string name="hint_title_alert_phone">Bluetooth를 위에 지키고 팔찌는 전화에 연결 된다</string>
+    <string name="hint_alert_phone_open">통화 미리 알림 설정</string>
+    <string name="hint_alert_phone">휴대폰이 호출 되 면 시계가 진동 합니다.</string>
+    <string name="hint_alert_sedentary_title">1 시간 동안 앉아 있으면 팔찌가 흔들릴 것입니다.</string>
+    <string name="hint_alert_sedentary_open">긴 앉아 알리미 시작</string>
+    <string name="hint_alert_sedentary_time_start">시작 시간</string>
+    <string name="hint_alert_sedentary_time_end">종료 시간</string>
+    <string name="hint_alert_sedentary_title_nap">점심 시간</string>
+    <string name="hint_alert_sedentary_nap">12:00~14:00생각나 게 하지</string>
+    <string name="hint_user_info">사용자 정보</string>
+    <string name="hint_menu_view">인터페이스 선택</string>
+    <string name="hint_menu_camera">원격 카메라</string>
+    <string name="hint_menu_find">팔찌 찾기</string>
+    <string name="hint_menu_alert">알림 기능</string>
+    <string name="hint_menu_wechat">WeChatSport</string>
+    <string name="hint_menu_wrist">스마트 디스플레이</string>
+    <string name="hint_menu_light">광도 조정</string>
+    <string name="hint_menu_unit">단위 선택置</string>
+    <string name="hint_menu_time">시간 형식</string>
+    <string name="hint_menu_target">대상 설정</string>
+    <string name="title_device_connect">장치 연결</string>
+    <string name="title_menu">기능 설정</string>
+    <string name="title_alert_sms">Bluetooth를 위에 지키고 팔찌는 전화에 연결 된다</string>
+    <string name="hint_alert_sms_open">열기 SMS 알림</string>
+    <string name="hint_alert_sms">전화를 SMS로 보내면 시계가 진동합니다.</string>
+    <string name="hint_step_target">운동 계획</string>
+    <string name="hint_step_everyday">매일 걸어 라</string>
+    <string name="hint_init_step_target">8000단계</string>
+    <string name="hint_sleep_target">수 면 대상</string>
+    <string name="hint_sleep_everyday">매일 수 면</string>
+    <string name="hint_init_sleep_target">8시간</string>
+    <string name="hint_time_set">시간 단위 설정</string>
+    <string name="hint_time_24">24-h</string>
+    <string name="hint_time_12">12-h</string>
+    <string name="hint_unit_set">미터법 시스템 설정</string>
+    <string name="hint_unit_metric">미터법 (m / km / kg)</string>
+    <string name="hint_unit_inch">영국 (인치 / 마일 / 파운드)</string>
+    <string name="hint_soft_version">소프트웨어 버전</string>
+    <string name="hint_check_version">소프트웨어 버전...</string>
+    <string name="hint_firm_version">펌웨어 버전</string>
+    <string name="hint_device_unbind">언 바운드 장치</string>
+    <string name="hint_device_bind">장치 바인딩</string>
+    <string name="hint_input_user_name">사용자 이름을 입력 하십시오.</string>
+    <string name="hint_sex">성별</string>
+    <string name="hint_man">남성</string>
+    <string name="hint_age">나이</string>
+    <string name="hint_unit_age">(세)</string>
+    <string name="hint_height">고도</string>
+    <string name="hint_unit_height">(cm)</string>
+    <string name="hint_weight">무게</string>
+    <string name="hint_unit_weight">(kg)</string>
+    <string name="hint_open">열기</string>
+    <string name="hint_alert_wrist_open">스마트 디스플레이 켜기</string>
+    <string name="hint_alert_wrist">손목을 돌리면 화면이 표시 됩니다.</string>
+    <string name="title_alert">알림 기능</string>
+    <string name="hint_opens">열렸습니다.</string>
+    <string name="hint_unopen">열리지 않음</string>
+    <string name="hint_phone_num_unknow">알 수없는 번호</string>
+    <string name="title_app">미리 알림 적용</string>
+    <string name="hint_save">저장</string>
+    <string name="hint_app_wechat">wechat</string>
+    <string name="hint_app_qq">QQ</string>
+    <string name="hint_app_whatsapp">WhatsApp</string>
+    <string name="hint_app_facebook">Facebook</string>
+    <string name="hint_notification">통지</string>
+    <string name="hint_alert_open">미리 알림 열기</string>
+    <string name="hint_request_alert_app">응용 프로그램 미리 알림이 제대로 작동 하려면 알림 사용 권한을 얻어야 합니다.</string>
+    <string name="hint_device_unconnect">팔찌 연결 되지 않음</string>
+    <string name="hint_device_connected">팔찌는 연결 되어 있습니다.</string>
+    <string name="hint_device_connecting">핸드 링 연결</string>
+    <string name="hint_hr_testing">측정 중...</string>
+    <string name="hint_avg">평균</string>
+    <string name="hint_min">최소값</string>
+    <string name="hint_max">최고 값</string>
+    <string name="hint_time">시간</string>
+    <string name="hint_hp">수축기 혈압</string>
+    <string name="hint_lp">확장기 혈압</string>
+    <string name="title_camera">원격 제어 카메라</string>
+    <string name="hint_save_success">성공적으로 저장되었습니다.</string>
+    <string name="hint_camera_exit">종료 사진</string>
+    <string name="title_clock">자명종</string>
+    <string name="hint_save_fail">저장 실패</string>
+    <string name="hint_clock1">자명종1</string>
+    <string name="hint_clock2">자명종2</string>
+    <string name="hint_clock3">자명종3</string>
+    <string name="hint_time_after">진동</string>
+    <string name="hint_device">장비</string>
+    <string name="hint_search">검색</string>
+    <string name="hint_device_binding">장치 연결...</string>
+    <string name="hint_device_binded">바운드 장비</string>
+    <string name="hint_deivce_un_bind">장치 제거</string>
+    <string name="hint_alert_bind">먼저 장비의 연결을 해제하십시오.</string>
+    <string name="hint_device_searching">검색 장비...</string>
+    <string name="hint_bind_success">바인딩 성공</string>
+    <string name="hint_sync_data">동기화 설정...</string>
+    <string name="hint_un_bind_success">성공적으로 장치 삭제</string>
+    <string name="hint_un_bind_fail">바인딩하지 못했습니다. 다시 시도하십시오.</string>
+    <string name="error_mac">팔찌 정보가 오류, 다시 시도하십시오!</string>
+    <string name="hint_update_alert">업그레이드 알림</string>
+    <string name="hint_update_alert_content">현재 업그레이드 할 것인지, 펌웨어의 새 버전을보고?</string>
+    <string name="hint_next">다음에 말할 시간</string>
+    <string name="hint_now">지금 업데이트</string>
+    <string name="hint_device_finding">손 반지를 찾기...</string>
+    <string name="hint_cancel">취소됨</string>
+    <string name="hint_device_findings">장치 찾기...</string>
+    <string name="hint_device_find_cancel">검색 취소</string>
+    <string name="hint_test">측정</string>
+    <string name="hint_sleep_today">오늘 수 면</string>
+    <string name="hint_sleep_start">잠들기</string>
+    <string name="hint_sleep_end">일어나세요.</string>
+    <string name="hint_sleep_sober">일어나기 시간</string>
+    <string name="hint_step_today">오늘의 단계 수</string>
+    <string name="hint_stop">중지하세요</string>
+    <string name="hint_saveing">저장 진행 중...</string>
+    <string name="hint_permission_camera">사진 사용 권한</string>
+    <string name="hint_permission_location">위치 정보</string>
+    <string name="hint_permission_sd">저장 공간</string>
+    <string name="hint_view_stand">수면</string>
+    <string name="hint_view_step">보수계</string>
+    <string name="hint_view_sport">운동</string>
+    <string name="hint_view_hr">심박수</string>
+    <string name="hint_view_sleep">잠자는</string>
+    <string name="hint_view_off">종료</string>
+    <string name="hint_view_info">정보</string>
+    <string name="hint_view_find">찾고있는</string>
+    <string name="hint_view_hp">혈압</string>
+    <string name="hint_view_clock">자명종</string>
+    <string name="hint_view_mac">MAC이차원 코드</string>
+    <string name="hint_view_download">이차원 코드를 다운로드</string>
+    <string name="hint_view_div">사용자 정의 이차원 코드</string>
+    <string name="hint_view_run">달리기</string>
+    <string name="hint_view_hill">등산</string>
+    <string name="hint_view_badminton">배드민턴</string>
+    <string name="hint_view_basketball">농구</string>
+    <string name="hint_view_pingpong">탁구대</string>
+    <string name="hint_select_pic">사진 선택</string>
+    <string name="hint_woman">레이디</string>
+    <string name="hint_select_sex">성별 선택</string>
+    <string name="hint_select_age">연령 선택</string>
+    <string name="hint_select_height">높이 선택</string>
+    <string name="hint_select_weight">체중 선택</string>
+    <string name="error_update_fail">업그레이드 정보를 가져 오지 못했습니다. 다시 시도하십시오.</string>
+    <string name="hint_ota_file_download">OTA 파일 다운로드 시작</string>
+    <string name="hint_ota_file_success">OTA 파일 다운로드가 성공적으로 완료되었습니다.</string>
+    <string name="hint_ota_file_fail">OTA 파일 다운로드에 실패했습니다.</string>
+    <string name="hint_ota_newest">이미 최신 상태 야.</string>
+    <string name="title_test">측정 중에는 휴대 전화와 연결하여 시계를 보관하십시오.</string>
+    <string name="hint_sync_success">동기화 성공</string>
+    <string name="hint_sync_fail">동기화 실패</string>
+    <string name="hint_hr_current_test">실시간 측정</string>
+    <string name="hint_view_select">장치에 표시해야하는 인터페이스를 선택하십시오.</string>
+    <string name="hint_select_month">달 선택</string>
+    <string name="hint_month">달</string>
+    <string name="hint_year">년</string>
+    <string name="hint_hp_avg">평균 수축기 혈압</string>
+    <string name="hint_lp_avg">평균 이완기 혈압</string>
+    <string name="title_hr_history">심박수 기록</string>
+    <string name="title_bp_history">혈압 기록</string>
+    <string name="title_bo_history">혈액 산소 기록</string>
+    <string name="hint_centre">매체</string>
+    <string name="hint_low">낮음</string>
+    <string name="hint_high">높음</string>
+    <string name="hint_sync_last">마지막 동기화</string>
+    <string name="hint_sync_ok">동기식 완료</string>
+    <string name="hint_sync_no">동기화 실패</string>
+    <string name="hint_syncing">동기화 중입니다.</string>
+    <string name="hint_connecting">장치 연결...</string>
+    <string name="hint_connect_success">장치 연결이 성공 했습니다.</string>
+    <string name="hint_un_bind">장치 언바운드</string>
+    <string name="hint_un_find">기기를 찾을 수 없음</string>
+    <string name="hint_connect_fail">기기 연결에 실패했습니다.</string>
+    <string name="hint_connected">장치가 연결되었습니다.</string>
+    <string name="hint_bind">바인딩</string>
+    <string name="hint_view_bo">혈액 산소</string>
+    <string name="hint_un_connect">장치 연결 끊김</string>
+    <string name="hint_find_phone">전화 찾기</string>
+    <string name="hint_finding_phone">장치는 전화를 찾고 있다...</string>
+    <string name="hint_alert_lost1">팔찌가 감지되었습니다</string>
+    <string name="hint_alert_lost2">전화 연결을 해제하는 손실 될 수 있습니다!</string>
+    <string name="hint_alert_ok">나는 그것을 안다.</string>
+    <string name="hint_alert_cancel">생각 나게하지 마세요</string>
+    <string name="hint_bluetooth">블루투스</string>
+    <string name="hint_bluetooth_open">블루투스 켜기</string>
+    <string name="hint_bluetooth_open_alert">iband를 올바르게 사용하려면 Bluetooth를 켜야합니다.</string>
+    <string name="error_connect_fail">연결에 실패했습니다,다시 시도하십시오.！</string>
+    <string name="error_ota_fail">업그레이드 실패</string>
+    <string name="hint_ota_completed">완료 된</string>
+    <string name="hint_permisson_phone">호출 미리 알림을 정상적으로 사용 하려면 다음 사용 권한이 필요 합니다.</string>
+    <string name="hint_phone">전화</string>
+    <string name="hint_call">호출</string>
+    <string name="hint_contacts">연락처</string>
+    <string name="error_start_after">시작 시간은 종료 시간보다 늦을 수 없습니다.</string>
+    <string name="error_end_before">종료 시간은 종료 시간보다 빠를 수 없습니다.</string>
+    <string name="error_time_space">최소 1 시간 동안 설정하십시오.</string>
+    <string name="hint_set">설정</string>
+    <string name="hint_state_connected">연결됨</string>
+    <string name="hint_state_unconnect">연결되지 않음</string>
+    <string name="hint_state_connecting">연결...</string>
+    <string name="hint_state_bind">이미 바인딩되어</string>
+    <string name="hint_state_charge">충전 중...</string>
+    <string name="hint_state_battery">전기:</string>
+    <string name="hint_run">달리기</string>
+    <string name="hint_stay">천천히 걷기</string>
+    <string name="unit_min">분</string>
+    <string name="hint_tarin">훈련</string>
+    <string name="hint_day_max">데이터가 없습니다, 다시 선택하십시오！</string>
+    <string name="hint_select_day">날짜 선택</string>
+    <string name="hint_unit_inch_mi">마일즈</string>
+    <string name="hint_mi">마일리지</string>
+    <string name="hint_ka">칼로리</string>
+    <string name="hint_steps">단계 수</string>
+    <string name="hint_sms">SMS</string>
+    <string name="hint_request_sms_alert">SMS 경고를 정상적으로 사용하려면 다음 권한이 필요합니다.</string>
+    <string name="hint_sleep_deep">깊은 수면</string>
+    <string name="hint_sleep_light">얕은 잠</string>
+    <string name="hint_sleep_light1">/얕은 잠</string>
+    <string name="hint_sleep_awake">소버</string>
+    <string name="hint_start">시작</string>
+    <string name="hint_end">끝</string>
+    <string name="hint_times">시간</string>
+    <string name="hint_action_bind">구속</string>
+    <string name="hint_action_connect">연결</string>
+    <string name="hint_action_sync">동기화</string>
+    //--------------------------新增微信运动-----------------------------
+    <string name="hint_wechat_sport">WeChat Sport</string>
+    <string name="hint_join_wechat">운동을 준비하기 위해 "WeChat Sport"에 가입하십시오!</string>
+    <string name="title_wechat">"WeChat Sport"방법 추가</string>
+    <string name="hint_wechat_1">1."WeChat Sport"열기 - 설정</string>
+    <string name="hint_wechat_2">2.데이터 소스 - 데이터 소스 추가-深圳曼瑞德科技</string>
+    <string name="hint_wechat_3">3.완료</string>
+    <string name="hint_wechat_open">WeChat 열기</string>
+    <string name="hint_wechart_alert">시계를 활성화 해주세요</string>
+    <string name="hint_activate">활성화</string>
+    <string name="hint_activateing">장치가 활성화 기다려주십시오</string>
+    <string name="error_not_install">먼저 WeChat을 설치하십시오.</string>
+    <string name="hint_install_success">활성화 성공</string>
+    //--------------------------新增恢复出厂-----------------------------
+    <string name="hint_app_line">Line</string>
+    <string name="hint_cycling">타기</string>
+    <string name="hint_bind_new_device">새로운 장비를 바인딩</string>
+    <string name="local">지역 앨범</string>
+    <string name="camera">사진을 찍을 수있는 카메라</string>
+    <string name="hint_reset">팔찌 초기화</string>
+    <string name="hint_reset_text">이렇게하면 APP 및 장치의 모든 데이터가 지워지고 복원되지 않습니다.?</string>
+    <string name="hintUnConnect">장치가 연결되어 있는지 확인하십시오.</string>
+    <string name="hint_reset_success">복구에 성공, 응용 프로그램을 다시 시작하십시오</string>
+    <string name="hint_reset_failure">복구에 실패했습니다.</string>
+    <string name="hint_photo">앨범</string>
+    <string name="hint_wechat_query">장치 상태 쿼리, 기다려주십시오...</string>
+    <string name="hint_net_error">네트워크 이상이 발생했습니다. 네트워크를 확인한 후 다시 시도하십시오.！</string>
+    <string name="hint_device_activate">장치가 활성화되었습니다.</string>
+    <string name="hint_swim">수영</string>
+    <string name="hint_network_available">현재 네트워크를 사용할 수 없습니다</string>
+    //--------------------------17/10/31新增未保存提醒-----------------------------
+    <string name="hint_not_save">设置尚未保存，确定退出?</string>
+    <string name="hint_warm_alert">温馨提醒</string>
+    <string name="hint_set_correct">设置心率测量强度</string>
+    <string name="hint_hr_correct1">注意：如果您的设备可以正常测量心率，请勿修改此数据！</string>
+    <string name="hint_title_correct">心率测量加强</string>
+    <string name="toast_ota_battery_low">当前设备电池电量低，请充电完成后升级!</string>
+    <string name="bt_next">下一步</string>
+    <string name="error_call_end">挂断电话失败，请检测iband权限是否开启</string>
+    //数据库显示 不需要翻译
+    <string-array name="db">
+        <item>计步</item>
+        <item>睡眠</item>
+        <item>心率</item>
+        <item>血压</item>
+        <item>血氧</item>
+    </string-array>
+
+    <string-array name="corrects">
+        <item >最弱</item>
+        <item>正常</item>
+        <item>最强</item>
+    </string-array>
+
+    <string-array name="helpTitleList">
+        <item>Q:提示搜索不到手环怎么办？</item>
+        <item>Q:绑定设备提示绑定失败如何处理？</item>
+        <item>Q:如何同步手环数据？同步数据时提示失败如何处理？</item>
+        <item>Q:设置了来电提醒有来电为什么没有提醒？</item>
+        <item>Q:设置了短信提醒有短信为什么没有提醒？</item>
+        <item>Q:设置了qq、微信等应用提醒为什么没有提醒？</item>
+        <item>Q:收到来电提醒长按挂断电话为什么失败？</item>
+        <item>Q:为什么我的心率测试失败？</item>
+        <item>Q:绑定微信运动前的准备</item>
+        <item>Q:如何同步数据到微信运动？</item>
+        <item>Q:每次更新微信运动的数据都需要手动点击吗？</item>
+        <item>Q:为什么我添加了微信运动，在排行榜不能马上看到数据更新</item>
+        <item>Q:怎么知道我的设备添加了微信运动？</item>
+        <item>Q:怎么删除微信运动？</item>
+        <item>Q:我添加了微信运动，为什么手环（手表）的数据更新不了？</item>
+        <item>Q:如何知道我的设备是否能被微信运动连上？</item>
+        <item>Q:每次使用微信运动都需要解绑设备或者忽略设备吗？</item>
+    </string-array>
+
+    <string-array name="helpContentList">
+        <item>1）请先检测手环是否有电，屏幕是否能点亮，电量是否过低；\n
+              2）请将手环靠近手机，越近越好.\n
+              3）检测手环蓝牙图标是否显示已连接，若显示已连接请重启一次手环；\n
+                若以上操作后还是不行，请尝试开关一次手机蓝牙或重启手机。\n
+            提示:\n
+                苹果用户，请在手机设置蓝牙列表中查看设备信息，点击并忽略此设备，然后再开关一次手机蓝牙。\n
+                安卓用户，系统版本6.0及以上版本，搜索手环需要获取您的位置信息，请开启位置服务，并再次搜索。</item>
+
+        <item>1）请先检测手环是否有电，屏幕是否能点亮，电量是否过低；\n
+2）请将手环靠近手机，越近越好\n
+3）检测手环蓝牙图标是否显示已连接，若显示已连接请重启一次手环；\n
+若以上操作后还是不行，请尝试开关一次手机蓝牙或重启手机。\n
+提示:\n
+苹果用户，请在手机设置蓝牙列表中查看设备信息，点击并忽略此设备，然后再开关一次手机蓝牙
+</item>
+        <item>1）打开iband App时会自动同步；您也可以在iband App主界面下拉消息列表进行同步。\n
+2）若同步时提示连接失败，请尝试以下方法：\n
+首先可再次尝试下拉同步操作；其次，请结束iband App，再重新进入； \n
+            如果还不行请开关一次手机蓝牙或重启手机。（在重启手机之前也可以尝试在手机设置中清除蓝牙共享信息）\n
+提示：苹果用户，请在手机设置蓝牙列表中查看设备，点击并忽略此设备，然后再开关一下手机蓝牙或重启手机。
+</item>
+        <item>1)请先确认手机蓝牙是否打开并与手环连接着；\n
+2)请检查iband App是否正常运行着(后台运行就可以)\n
+3)请检查iband App电话及通讯录权限是否授权；\n
+提示:\n
+一键清理内存及一些管家软件可能会清理进程并拦截，请将iband App加入白名单。
+</item>
+        <item>1)请先确认手机蓝牙是否打开并与手环连接着；\n
+2)请检查iband App是否正常运行着(后台运行就可以)\n
+3)请检查iband App短信及通讯录权限是否授权；\n
+提示:\n
+一键清理内存及一些管家软件可能会清理进程并拦截，请将iband App加入白名单。
+</item>
+        <item>1)请先确认手机蓝牙是否打开并与手环连接着；\n
+2)请检查iband App是否正常运行着(后台运行就可以)\n
+3)请检查iband App短信及通讯录权限是否授权；\n
+提示:\n
+一键清理内存及一些管家软件可能会清理进程并拦截，请将iband App加入白名单。
+</item>
+        <item>1)请先确认手机蓝牙是否打开并与手环连接着；\n
+2)请检查iband App是否正常运行着(后台运行就可以)\n
+3)请检查iband App接听电话权限是否授权\n
+提示:\n
+一键清理内存及一些管家软件可能会清理进程并拦截，请将iband App加入白名单。
+</item>
+        <item>1）测量心率时，注意保持人处于静止状态，并将手环底部贴紧手臂不留明显缝隙，测量期间不要晃动手臂\n
+2）不标准的佩戴方式会影响心率信号的测量，比如不完全贴合导致的漏光、手臂的摆动以及手环在皮肤上的轻微移动等，手环佩戴得过紧、手臂抬高和握拳等会影响血液循环，同样可能影响到心率信号。正确的测量方式将手臂平放，放松并保持静止，同时保证手环贴紧手臂。注意：佩戴正确情况下，皮肤颜色、毛发、纹身以及伤疤等个体差异也可能会影响到心率信号。
+</item>
+        <item>1.解绑设备（苹果手机还需在系统蓝牙中忽略设备）\n
+2.开启手机蓝牙\n
+3.确保手表（手环）蓝牙是断开的\n
+绑定方法一\n
+1.打开微信，扫描下方的二维码\n
+2.点击“下一步”，进入搜索设备界面\n
+3.选择“MRD-Sports XXXX”，进入微信运动公众号-MRD运动健康（如果有多个设备，你可以根据XXXX来区分，它代表设备MAC地址的后四位）\n
+4.点击“绑定设备”，完成。此时可以返回微信运动中查看数据。\n
+绑定方法二\n
+打开微信运动-设置-数据来源-添加数据来源-选择“MRD运动健康”，完成添加\n
+注：使用这种方式添加微信运动，是看不到MRD-SportsXXXX，如果有多个设备在附近，需要关掉其他的设备
+</item>
+        <item>1）请先关闭iband App（苹果用户请额外在蓝牙列表忽略手环）\n
+2）请在微信公众号搜索微信运动并关注\n
+3）请在微信运动设置里搜索并添加数据来源”MRD运动健康”\n
+4）等待手环连接并同步手环步数\n
+5）点击步数排行榜查看数据\n
+提示：\n
+有时数据更新会慢一些，需要多点几次才能同步
+</item>
+        <item>不需要，如果开启微信运动，每隔两小时会自动更新一次数据\n
+每次点击微信运动排行榜时，也会更新（有时并不可靠，需要多点几次）
+</item>
+        <item>这和手机及微信服务器有关，微信运动绑定成功后，不同的手机第一次看到数据更新的时间是不一样的，据我们不完全测试，安卓手机大约在一分钟之内就可以看到数据更新，苹果手机最长需要等三分钟左右</item>
+        <item>1.关闭APP（苹果手机需要在蓝牙中忽略设备），打开微信运动可以看到设备是连接状态，说明你已经添加了微信运动\n
+2.打开微信-我-设置-设备，如果看到MRD-Sports的设备，说明你已经添加了微信运动
+</item>
+        <item>打开微信-我-设置-设备-选择设备-删除设备</item>
+        <item>原因1：如果你微信运动绑定了手机或者其他的设备，微信运动只会显示数据最大的那一个。\n
+原因2：如果微信运动没有连接上设备，数据也同步不了。
+</item>
+        <item>把设备靠近手机，保证手机蓝牙开启\n
+方法1：打开微信-我-设置-设备-点击“MRD-Sports”-进入公众号，在MRD运动健康公众号顶部可以看到设备状态：连接中/已经连接/未连接等\n
+方法2：关掉APP（苹果手机还需在蓝牙中忽略设备），此时设备蓝牙应该是断开的状态；打开微信运动，设备蓝牙状态应该是连接状态，说明微信运动已经连接上设备
+</item>
+        <item>1.不需要，只是在第一次添加微信运动的时候需要这样做，这样做是为了释放设备蓝牙，使微信可以搜索到设备。（如果设备已经被手机连上，微信运动是无法搜索到设备的）\n
+2.绑定微信运动后，APP和微信运动可以同时连接设备，互不影响。</item>
+    </string-array>
+</resources>

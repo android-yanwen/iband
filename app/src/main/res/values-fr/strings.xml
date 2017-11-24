@@ -1,0 +1,441 @@
+<resources>
+    <string name="app_name">iband</string>
+    <string name="hint_title_about">sur</string>
+    <string name="hint_current_version">Version actuelle:V</string>
+    <string name="hint_menu_update">Vérifier les mises à jour</string>
+    <string name="hint_menu_help">Utilisez de l\'aide</string>
+    <string name="hint_menu_about">À propos de nous</string>
+    <string name="hint_menu_alert_phone">Appeler des rappels</string>
+    <string name="hint_menu_alert_sms">Rappel par SMS</string>
+    <string name="hint_menu_alert_sedentary">Rappel sédentaire</string>
+    <string name="hint_menu_alert_clock">Réveil</string>
+    <string name="hint_menu_more">Plus</string>
+    <string name="hint_menu_alert_lost">Anti perdu rappel</string>
+    <string name="hint_menu_alert_app">Avis d\'APP</string>
+    <string name="hint_title_alert_app">Ouvrir la notification de l\'APP</string>
+    <string name="hint_alert_app">Lorsque APP avis, la montre vibrera</string>
+    <string name="hint_select_alert_app">Sélectionnez un rappel APP</string>
+    <string name="hint_camera">Utilisez les montres de la caméra à distance</string>
+    <string name="hint_camera_start">Commencez à prendre des photos</string>
+    <string name="hint_clock">Vous pouvez configurer jusqu\'à trois réveils</string>
+    <string name="hint_title_ota">Mise à niveau du micrologiciel</string>
+    <string name="hint_ota">Ne laissez pas l\'appareil hors du téléphone pendant la mise à niveau</string>
+    <string name="hint_ota_progress">Se prépare à la mise à niveau, s\'il vous plaît attendre...</string>
+    <string name="hint_ota_success">Mettez à niveau avec succès</string>
+    <string name="hint_ok">D\'accord</string>
+    <string name="hint_find">Utilisez cette fonction pour garder le bracelet connecté au téléphone</string>
+    <string name="title_find">Trouver bracelet</string>
+    <string name="hint_find_title">Si vous trouvez un bracelet, le bracelet vibrera</string>
+    <string name="hint_last_hr">Dernier résultat de mesure</string>
+    <string name="hint_unit_hr">Nombre de fois / min</string>
+    <string name="hint_date">--Mois--Jour --:--</string>
+    <string name="hint_month_current">Ce mois-ci</string>
+    <string name="hint_hr_avg">Fréquence cardiaque moyenne</string>
+    <string name="hint_hr_min">Valeur minimale</string>
+    <string name="hint_hr_max">La valeur maximale</string>
+    <string name="hint_sleep_history">Record de sommeil</string>
+    <string name="hint_sleep_history_avg">Sommeil journalier moyen</string>
+    <string name="hint_sleep_history_time">Sommeil profond--Heure/Sommeil sombre--Heure</string>
+    <string name="hint_sleep_avg">Quotidien moyen du sommeil</string>
+    <string name="hint_sleep_deep_avg">sommeil profond quotidien moyen</string>
+    <string name="hint_sleep_light_avg">Sommeil moyen peu profond du jour</string>
+    <string name="hint_unit_sleep">Heure</string>
+    <string name="hint_step_history">podomètre records</string>
+    <string name="hint_step_history_avg">Nombre moyen d\'étapes journalières</string>
+    <string name="hint_step_history_num">--Km/--kcal</string>
+    <string name="hint_step_history_sum">Nombre total d\'étapes</string>
+    <string name="hint_step_history_mi">Kilométrage total</string>
+    <string name="hint_step_history_ka">Total des calories</string>
+    <string name="hint_unit_ka">Kcal</string>
+    <string name="hint_unit_mi">Km</string>
+    <string name="hint_unit_step">Étape</string>
+    <string name="hint_watch_light">Réglez la luminosité de la montre</string>
+    <string name="hint_normal">Au milieu</string>
+    <string name="hint_alert_lost_open">Ouvrez le rappel anti-perdu</string>
+    <string name="hint_alert_lost">Lorsqu\'il est déconnecté, la montre vibrera</string>
+    <string name="hint_step">Étape</string>
+    <string name="hint_title_alert_phone">Gardez Bluetooth ouvert et le bracelet reste connecté au téléphone</string>
+    <string name="hint_alert_phone_open">Activer les alertes d\'appel</string>
+    <string name="hint_alert_phone">Lorsque le téléphone appelle, la montre vibrera</string>
+    <string name="hint_alert_sedentary_title">Asseyez-vous pendant une heure, bracelet vibrera</string>
+    <string name="hint_alert_sedentary_open">Ouvert rappel sédentaire</string>
+    <string name="hint_alert_sedentary_time_start">Heure de début</string>
+    <string name="hint_alert_sedentary_time_end">Heure de fin</string>
+    <string name="hint_alert_sedentary_title_nap">Heure du déjeuner</string>
+    <string name="hint_alert_sedentary_nap">12:00~14:00non rappeler</string>
+    <string name="hint_user_info">Informations pour l\'utilisateur</string>
+    <string name="hint_menu_view">Interface de sélection</string>
+    <string name="hint_menu_camera">caméra à distance</string>
+    <string name="hint_menu_find">Trouver bracelet</string>
+    <string name="hint_menu_alert">Paramètres de rappel</string>
+    <string name="hint_menu_wechat">WeChat Sport</string>
+    <string name="hint_menu_wrist">Affichage intelligent</string>
+    <string name="hint_menu_light">Réglage de la luminosité</string>
+    <string name="hint_menu_unit">Réglage de l\'unité</string>
+    <string name="hint_menu_time">Format de l\'heure</string>
+    <string name="hint_menu_target">Paramètre cible</string>
+    <string name="title_device_connect">Connexion de périphérique</string>
+    <string name="title_menu">Paramètres de la fonction</string>
+    <string name="title_alert_sms">Gardez Bluetooth ouvert et le bracelet reste connecté au téléphone</string>
+    <string name="hint_alert_sms_open">Ouvrir l\'alerte SMS</string>
+    <string name="hint_alert_sms">Lorsque le téléphone arrive au message, la montre vibrera</string>
+    <string name="hint_step_target">Plan de marche</string>
+    <string name="hint_step_everyday">Marcher tous les jours</string>
+    <string name="hint_init_step_target">8000Étape</string>
+    <string name="hint_sleep_target">Cible de sommeil</string>
+    <string name="hint_sleep_everyday">Dormir tous les jours</string>
+    <string name="hint_init_sleep_target">8Heure</string>
+    <string name="hint_time_set">Réglage de l\'unité de temps</string>
+    <string name="hint_time_24">24-h</string>
+    <string name="hint_time_12">12-h</string>
+    <string name="hint_unit_set">Paramètres du système métrique</string>
+    <string name="hint_unit_metric">Métrique (m / km / kg)</string>
+    <string name="hint_unit_inch">Britannique (pouces / mille / livre)</string>
+    <string name="hint_soft_version">Version du logiciel</string>
+    <string name="hint_check_version">Vérifiez la version</string>
+    <string name="hint_firm_version">Version du firmware</string>
+    <string name="hint_device_unbind">Périphérique non consolidé</string>
+    <string name="hint_device_bind">Reliez le périphérique</string>
+    <string name="hint_input_user_name">Entrez un nom d\'utilisateur</string>
+    <string name="hint_sex">Sexe</string>
+    <string name="hint_man">Mâle</string>
+    <string name="hint_age">Âge</string>
+    <string name="hint_unit_age">(Âge)</string>
+    <string name="hint_height">Hauteur</string>
+    <string name="hint_unit_height">(cm)</string>
+    <string name="hint_weight">Poids</string>
+    <string name="hint_unit_weight">(kg)</string>
+    <string name="hint_open">Ouvert</string>
+    <string name="hint_alert_wrist_open">Allumez l\'écran intelligent</string>
+    <string name="hint_alert_wrist">L\'écran s\'allume lorsque vous tournez le poignet</string>
+    <string name="title_alert">Fonction de notification</string>
+    <string name="hint_opens">A été ouvert</string>
+    <string name="hint_unopen">Non ouvert</string>
+    <string name="hint_phone_num_unknow">Numéro inconnu</string>
+    <string name="title_app">Avis d\'APP</string>
+    <string name="hint_save">Enregistrer</string>
+    <string name="hint_app_wechat">WeChat</string>
+    <string name="hint_app_qq">QQ</string>
+    <string name="hint_app_whatsapp">WhatsApp</string>
+    <string name="hint_app_facebook">Facebook</string>
+    <string name="hint_notification">Aviso</string>
+    <string name="hint_alert_open">Lembrete aberto</string>
+    <string name="hint_request_alert_app">Pour que vous puissiez utiliser la notification de l\'APP normalement, vous devez activer la notification</string>
+    <string name="hint_device_unconnect">Le bracelet n\'est pas connecté</string>
+    <string name="hint_device_connected">Le bracelet est connecté</string>
+    <string name="hint_device_connecting">connexion Bracelet</string>
+    <string name="hint_hr_testing">Medição</string>
+    <string name="hint_avg">Média</string>
+    <string name="hint_min">Valor mais baixo</string>
+    <string name="hint_max">La valeur maximale</string>
+    <string name="hint_time">Tempo</string>
+    <string name="hint_hp">pressão sistólica</string>
+    <string name="hint_lp">pressão diastólica</string>
+    <string name="title_camera">Câmera remota</string>
+    <string name="hint_save_success">Salvar com êxito</string>
+    <string name="hint_camera_exit">Sair foto</string>
+    <string name="title_clock">Despertador</string>
+    <string name="hint_save_fail">Falha ao salvar</string>
+    <string name="hint_clock1">Despertador1</string>
+    <string name="hint_clock2">Despertador2</string>
+    <string name="hint_clock3">Despertador3</string>
+    <string name="hint_time_after">Vibração do borne</string>
+    <string name="hint_device">Equipamento</string>
+    <string name="hint_search">Busca</string>
+    <string name="hint_device_binding">Dispositivo de ligação...</string>
+    <string name="hint_device_binded">Dispositivo vinculado</string>
+    <string name="hint_deivce_un_bind">Unbind</string>
+    <string name="hint_alert_bind">Por favor, retire o equipamento primeiro</string>
+    <string name="hint_device_searching">Recherchez le périphérique...</string>
+    <string name="hint_bind_success">succès Reliure</string>
+    <string name="hint_sync_data">Synchroniser les paramètres...</string>
+    <string name="hint_un_bind_success">Décomposé avec succès</string>
+    <string name="hint_un_bind_fail">Le lien a échoué, réessayez</string>
+    <string name="error_mac">Erro da informação do anel da mão, tente outra vez!</string>
+    <string name="hint_update_alert">Atualização de lembrete</string>
+    <string name="hint_update_alert_content">O relógio atual tem uma nova versão do firmware e é atualizado?</string>
+    <string name="hint_next">Da próxima vez.</string>
+    <string name="hint_now">Atualizar agora</string>
+    <string name="hint_device_finding">A la recherche de bracelet...</string>
+    <string name="hint_cancel">Annulé</string>
+    <string name="hint_device_findings">Trouver l\'appareil</string>
+    <string name="hint_device_find_cancel">Annuler la recherche</string>
+    <string name="hint_test">Mesures</string>
+    <string name="hint_sleep_today">Le sommeil aujourd\'hui</string>
+    <string name="hint_sleep_start">S\'endormir</string>
+    <string name="hint_sleep_end">Wake up</string>
+    <string name="hint_sleep_sober">Heure de réveil</string>
+    <string name="hint_step_today">Aujourd\'hui, le nombre d\'étapes</string>
+    <string name="hint_stop">Stop</string>
+    <string name="hint_saveing">Salvar...</string>
+    <string name="hint_permission_camera">Permissão de foto</string>
+    <string name="hint_permission_location">Informações sobre o local</string>
+    <string name="hint_permission_sd">Espaço de armazenamento</string>
+    <string name="hint_view_stand">dormance</string>
+    <string name="hint_view_step">Étape</string>
+    <string name="hint_view_sport">Mouvement</string>
+    <string name="hint_view_hr">Fréquence cardiaque</string>
+    <string name="hint_view_sleep">Sommeil</string>
+    <string name="hint_view_off">fermeture</string>
+    <string name="hint_view_info">Information</string>
+    <string name="hint_view_find">À la recherche de</string>
+    <string name="hint_view_hp">Pression artérielle</string>
+    <string name="hint_view_clock">Réveil</string>
+    <string name="hint_view_mac">Code bidimensionnel MAC</string>
+    <string name="hint_view_download">Télécharger le code bidimensionnel</string>
+    <string name="hint_view_div">Personnaliser le code bidimensionnel</string>
+    <string name="hint_view_run">Courir</string>
+    <string name="hint_view_hill">alpiniste</string>
+    <string name="hint_view_badminton">Badminton</string>
+    <string name="hint_view_basketball">Basketball</string>
+    <string name="hint_view_pingpong">Tennis de table</string>
+    <string name="hint_select_pic">Sélectionnez l\'image</string>
+    <string name="hint_woman">Dame</string>
+    <string name="hint_select_sex">Sélectionnez le sexe</string>
+    <string name="hint_select_age">Choisissez l\'âge</string>
+    <string name="hint_select_height">Choisir la hauteur</string>
+    <string name="hint_select_weight">Choisissez le poids</string>
+    <string name="error_update_fail">Impossible d\'obtenir des informations de mise à niveau, essayez à nouveau</string>
+    <string name="hint_ota_file_download">Commencez à télécharger des fichiers OTA</string>
+    <string name="hint_ota_file_success">Téléchargement du fichier OTA avec succès</string>
+    <string name="hint_ota_file_fail">Le téléchargement du fichier OTA a échoué</string>
+    <string name="hint_ota_newest">Vous êtes déjà à jour</string>
+    <string name="title_test">Gardez la montre en relation avec le téléphone pendant la mesure</string>
+    <string name="hint_sync_success">La synchronisation est réussie</string>
+    <string name="hint_sync_fail">La synchronisation a échoué</string>
+    <string name="hint_hr_current_test">Mesure en temps réel</string>
+    <string name="hint_view_select">Sélectionnez l\'interface qui doit être affichée sur l\'appareil</string>
+    <string name="hint_select_month">Sélectionnez le mois</string>
+    <string name="hint_month">Mois</string>
+    <string name="hint_year">Âge</string>
+    <string name="hint_hp_avg">Pression systolique moyenne</string>
+    <string name="hint_lp_avg">Pression sanguine moyenne diastolique</string>
+    <string name="title_hr_history">Enregistrement de fréquence cardiaque</string>
+    <string name="title_bp_history">Record de la pression artérielle</string>
+    <string name="title_bo_history">Enregistrement d\'oxygène sanguin</string>
+    <string name="hint_centre">Standard</string>
+    <string name="hint_low">Faible</string>
+    <string name="hint_high">Haut</string>
+    <string name="hint_sync_last">Dernière synchronisation</string>
+    <string name="hint_sync_ok">Exécution synchrone</string>
+    <string name="hint_sync_no">La synchronisation a échoué</string>
+    <string name="hint_syncing">Être synchronisé</string>
+    <string name="hint_connecting">Connexion de périphérique...</string>
+    <string name="hint_connect_success">L\'appareil est connecté avec succès</string>
+    <string name="hint_un_bind">Non consolidé de l\'équipement</string>
+    <string name="hint_un_find">Aucun dispositif trouvé</string>
+    <string name="hint_connect_fail">La connexion de l\'appareil a échoué</string>
+    <string name="hint_connected">Dispositivo conectado</string>
+    <string name="hint_bind">Ligação</string>
+    <string name="hint_view_bo">Oxigênio do sangue</string>
+    <string name="hint_un_connect">Dispositivo desconectado</string>
+    <string name="hint_find_phone">Encontrar um telefone</string>
+    <string name="hint_finding_phone">Dispositivo está à procura de um telefone...</string>
+    <string name="hint_alert_lost1">Le bracelet est détecté</string>
+    <string name="hint_alert_lost2">Déconnecté du téléphone et peut être perdu!</string>
+    <string name="hint_alert_ok">Je sais que</string>
+    <string name="hint_alert_cancel">Fermer le rappel</string>
+    <string name="hint_bluetooth">Bluetooth</string>
+    <string name="hint_bluetooth_open">Activer Bluetooth</string>
+    <string name="hint_bluetooth_open_alert">Pour que vous utilisiez correctement iband, vous devez activer Bluetooth</string>
+    <string name="error_connect_fail">La connexion a échoué, réessayez！</string>
+    <string name="error_ota_fail">La mise à niveau a échoué</string>
+    <string name="hint_ota_completed">A été complété</string>
+    <string name="hint_permisson_phone">Les autorisations suivantes sont nécessaires pour l\'utilisation normale des alertes d\'appel</string>
+    <string name="hint_phone">Téléphone</string>
+    <string name="hint_call">Appelez</string>
+    <string name="hint_contacts">Personne de contact</string>
+    <string name="error_start_after">L\'heure de début ne peut être plus tard que l\'heure de fin</string>
+    <string name="error_end_before">L\'heure de fin ne peut pas être antérieure à l\'heure de fin</string>
+    <string name="error_time_space">Réglez-le pendant au moins une heure</string>
+    <string name="hint_set">Mise en place</string>
+    <string name="hint_state_connected">Connecté</string>
+    <string name="hint_state_unconnect">Non connecté</string>
+    <string name="hint_state_connecting">En connexion</string>
+    <string name="hint_state_bind">Já está vinculado</string>
+    <string name="hint_state_charge">Charger</string>
+    <string name="hint_state_battery">Capacité restante:</string>
+    <string name="hint_run">Courir</string>
+    <string name="hint_stay">Marcher lentement</string>
+    <string name="unit_min">minute</string>
+    <string name="hint_tarin">Formation</string>
+    <string name="hint_day_max">Vers le haut, re-sélectionner！</string>
+    <string name="hint_select_day">Sélectionnez la date</string>
+    <string name="hint_unit_inch_mi">Miles</string>
+    <string name="hint_mi">Kilométrage</string>
+    <string name="hint_ka">Calories</string>
+    <string name="hint_steps">Nombre d\'étapes</string>
+    <string name="hint_sms">SMS</string>
+    <string name="hint_request_sms_alert">Pour utiliser vos alertes SMS normaux, vous devez disposer des autorisations suivantes</string>
+    <string name="hint_sleep_deep">Sommeil profond</string>
+    <string name="hint_sleep_light">sommeil léger</string>
+    <string name="hint_sleep_light1">/sommeil léger</string>
+    <string name="hint_sleep_awake">Sober</string>
+    <string name="hint_start">Début</string>
+    <string name="hint_end">La fin</string>
+    <string name="hint_times">Le temps</string>
+    <string name="hint_action_bind">Lier</string>
+    <string name="hint_action_connect">lien</string>
+    <string name="hint_action_sync">Synchronisation</string>
+    //--------------------------新增微信运动-----------------------------
+    <string name="hint_wechat_sport">WeChat Sport</string>
+    <string name="hint_join_wechat">Acesso WeChat Sport, prepare-se para exercitar!</string>
+    <string name="title_wechat">Reliez les étapes de "WeChat Sport"</string>
+    <string name="hint_wechat_1">1.Ouvrez le "WeChatSport" - ensemble</string>
+    <string name="hint_wechat_2">2.Source de données - Ajouter une source de données-深圳曼瑞德科技</string>
+    <string name="hint_wechat_3">3.Terminé</string>
+    <string name="hint_wechat_open">Open WeChat</string>
+    <string name="hint_wechart_alert">Veuillez activer la montre d\'abord</string>
+    <string name="hint_activate">Activé</string>
+    <string name="hint_activateing">Le dispositif est activé, S\'il vous plaît attendre</string>
+    <string name="error_not_install">Veuillez installer "WeChat Sport"</string>
+    <string name="hint_install_success">L\'activation est réussie</string>
+    //--------------------------新增恢复出厂-----------------------------
+    <string name="hint_app_line">Line</string>
+    <string name="hint_cycling">Ride</string>
+    <string name="hint_bind_new_device">Lier le nouvel appareil</string>
+    <string name="local">Album local</string>
+    <string name="camera">Foto da câmera</string>
+    <string name="hint_reset">Initialiser l\'appareil</string>
+    <string name="hint_reset_text">Cela effacera toutes les données sur l\'APP et l\'appareil, ne peut pas être récupéré, effacé</string>
+    <string name="hintUnConnect">Assurez-vous que l\'appareil est connecté</string>
+    <string name="hint_reset_success">Resume réussie, redémarrez l\'application</string>
+    <string name="hint_reset_failure">Rétablissement échoué</string>
+    <string name="hint_photo">Album</string>
+    <string name="hint_wechat_query">requêtes d\'état de l\'appareil, s\'il vous plaît attendre...</string>
+    <string name="hint_net_error">anomalies de réseau, vérifiez votre réseau et essayez à nouveau！</string>
+    <string name="hint_device_activate">L\'appareil est activé</string>
+    <string name="hint_swim">Natation</string>
+    <string name="hint_network_available">Le réseau actuel est indisponible</string>
+    //--------------------------17/10/31新增未保存提醒-----------------------------
+    <string name="hint_not_save">设置尚未保存，确定退出?</string>
+    <string name="hint_warm_alert">温馨提醒</string>
+    <string name="hint_set_correct">设置心率测量强度</string>
+    <string name="hint_hr_correct1">注意：如果您的设备可以正常测量心率，请勿修改此数据！</string>
+    <string name="hint_title_correct">心率测量加强</string>
+    <string name="toast_ota_battery_low">当前设备电池电量低，请充电完成后升级!</string>
+    <string name="bt_next">下一步</string>
+    <string name="error_call_end">挂断电话失败，请检测iband权限是否开启</string>
+    //数据库显示 不需要翻译
+    <string-array name="db">
+        <item>计步</item>
+        <item>睡眠</item>
+        <item>心率</item>
+        <item>血压</item>
+        <item>血氧</item>
+    </string-array>
+
+    <string-array name="corrects">
+        <item >最弱</item>
+        <item>正常</item>
+        <item>最强</item>
+    </string-array>
+
+    <string-array name="helpTitleList">
+        <item>Q:提示搜索不到手环怎么办？</item>
+        <item>Q:绑定设备提示绑定失败如何处理？</item>
+        <item>Q:如何同步手环数据？同步数据时提示失败如何处理？</item>
+        <item>Q:设置了来电提醒有来电为什么没有提醒？</item>
+        <item>Q:设置了短信提醒有短信为什么没有提醒？</item>
+        <item>Q:设置了qq、微信等应用提醒为什么没有提醒？</item>
+        <item>Q:收到来电提醒长按挂断电话为什么失败？</item>
+        <item>Q:为什么我的心率测试失败？</item>
+        <item>Q:绑定微信运动前的准备</item>
+        <item>Q:如何同步数据到微信运动？</item>
+        <item>Q:每次更新微信运动的数据都需要手动点击吗？</item>
+        <item>Q:为什么我添加了微信运动，在排行榜不能马上看到数据更新</item>
+        <item>Q:怎么知道我的设备添加了微信运动？</item>
+        <item>Q:怎么删除微信运动？</item>
+        <item>Q:我添加了微信运动，为什么手环（手表）的数据更新不了？</item>
+        <item>Q:如何知道我的设备是否能被微信运动连上？</item>
+        <item>Q:每次使用微信运动都需要解绑设备或者忽略设备吗？</item>
+    </string-array>
+
+    <string-array name="helpContentList">
+        <item>1）请先检测手环是否有电，屏幕是否能点亮，电量是否过低；\n
+              2）请将手环靠近手机，越近越好.\n
+              3）检测手环蓝牙图标是否显示已连接，若显示已连接请重启一次手环；\n
+                若以上操作后还是不行，请尝试开关一次手机蓝牙或重启手机。\n
+            提示:\n
+                苹果用户，请在手机设置蓝牙列表中查看设备信息，点击并忽略此设备，然后再开关一次手机蓝牙。\n
+                安卓用户，系统版本6.0及以上版本，搜索手环需要获取您的位置信息，请开启位置服务，并再次搜索。</item>
+
+        <item>1）请先检测手环是否有电，屏幕是否能点亮，电量是否过低；\n
+2）请将手环靠近手机，越近越好\n
+3）检测手环蓝牙图标是否显示已连接，若显示已连接请重启一次手环；\n
+若以上操作后还是不行，请尝试开关一次手机蓝牙或重启手机。\n
+提示:\n
+苹果用户，请在手机设置蓝牙列表中查看设备信息，点击并忽略此设备，然后再开关一次手机蓝牙
+</item>
+        <item>1）打开iband App时会自动同步；您也可以在iband App主界面下拉消息列表进行同步。\n
+2）若同步时提示连接失败，请尝试以下方法：\n
+首先可再次尝试下拉同步操作；其次，请结束iband App，再重新进入； \n
+            如果还不行请开关一次手机蓝牙或重启手机。（在重启手机之前也可以尝试在手机设置中清除蓝牙共享信息）\n
+提示：苹果用户，请在手机设置蓝牙列表中查看设备，点击并忽略此设备，然后再开关一下手机蓝牙或重启手机。
+</item>
+        <item>1)请先确认手机蓝牙是否打开并与手环连接着；\n
+2)请检查iband App是否正常运行着(后台运行就可以)\n
+3)请检查iband App电话及通讯录权限是否授权；\n
+提示:\n
+一键清理内存及一些管家软件可能会清理进程并拦截，请将iband App加入白名单。
+</item>
+        <item>1)请先确认手机蓝牙是否打开并与手环连接着；\n
+2)请检查iband App是否正常运行着(后台运行就可以)\n
+3)请检查iband App短信及通讯录权限是否授权；\n
+提示:\n
+一键清理内存及一些管家软件可能会清理进程并拦截，请将iband App加入白名单。
+</item>
+        <item>1)请先确认手机蓝牙是否打开并与手环连接着；\n
+2)请检查iband App是否正常运行着(后台运行就可以)\n
+3)请检查iband App短信及通讯录权限是否授权；\n
+提示:\n
+一键清理内存及一些管家软件可能会清理进程并拦截，请将iband App加入白名单。
+</item>
+        <item>1)请先确认手机蓝牙是否打开并与手环连接着；\n
+2)请检查iband App是否正常运行着(后台运行就可以)\n
+3)请检查iband App接听电话权限是否授权\n
+提示:\n
+一键清理内存及一些管家软件可能会清理进程并拦截，请将iband App加入白名单。
+</item>
+        <item>1）测量心率时，注意保持人处于静止状态，并将手环底部贴紧手臂不留明显缝隙，测量期间不要晃动手臂\n
+2）不标准的佩戴方式会影响心率信号的测量，比如不完全贴合导致的漏光、手臂的摆动以及手环在皮肤上的轻微移动等，手环佩戴得过紧、手臂抬高和握拳等会影响血液循环，同样可能影响到心率信号。正确的测量方式将手臂平放，放松并保持静止，同时保证手环贴紧手臂。注意：佩戴正确情况下，皮肤颜色、毛发、纹身以及伤疤等个体差异也可能会影响到心率信号。
+</item>
+        <item>1.解绑设备（苹果手机还需在系统蓝牙中忽略设备）\n
+2.开启手机蓝牙\n
+3.确保手表（手环）蓝牙是断开的\n
+绑定方法一\n
+1.打开微信，扫描下方的二维码\n
+2.点击“下一步”，进入搜索设备界面\n
+3.选择“MRD-Sports XXXX”，进入微信运动公众号-MRD运动健康（如果有多个设备，你可以根据XXXX来区分，它代表设备MAC地址的后四位）\n
+4.点击“绑定设备”，完成。此时可以返回微信运动中查看数据。\n
+绑定方法二\n
+打开微信运动-设置-数据来源-添加数据来源-选择“MRD运动健康”，完成添加\n
+注：使用这种方式添加微信运动，是看不到MRD-SportsXXXX，如果有多个设备在附近，需要关掉其他的设备
+</item>
+        <item>1）请先关闭iband App（苹果用户请额外在蓝牙列表忽略手环）\n
+2）请在微信公众号搜索微信运动并关注\n
+3）请在微信运动设置里搜索并添加数据来源”MRD运动健康”\n
+4）等待手环连接并同步手环步数\n
+5）点击步数排行榜查看数据\n
+提示：\n
+有时数据更新会慢一些，需要多点几次才能同步
+</item>
+        <item>不需要，如果开启微信运动，每隔两小时会自动更新一次数据\n
+每次点击微信运动排行榜时，也会更新（有时并不可靠，需要多点几次）
+</item>
+        <item>这和手机及微信服务器有关，微信运动绑定成功后，不同的手机第一次看到数据更新的时间是不一样的，据我们不完全测试，安卓手机大约在一分钟之内就可以看到数据更新，苹果手机最长需要等三分钟左右</item>
+        <item>1.关闭APP（苹果手机需要在蓝牙中忽略设备），打开微信运动可以看到设备是连接状态，说明你已经添加了微信运动\n
+2.打开微信-我-设置-设备，如果看到MRD-Sports的设备，说明你已经添加了微信运动
+</item>
+        <item>打开微信-我-设置-设备-选择设备-删除设备</item>
+        <item>原因1：如果你微信运动绑定了手机或者其他的设备，微信运动只会显示数据最大的那一个。\n
+原因2：如果微信运动没有连接上设备，数据也同步不了。
+</item>
+        <item>把设备靠近手机，保证手机蓝牙开启\n
+方法1：打开微信-我-设置-设备-点击“MRD-Sports”-进入公众号，在MRD运动健康公众号顶部可以看到设备状态：连接中/已经连接/未连接等\n
+方法2：关掉APP（苹果手机还需在蓝牙中忽略设备），此时设备蓝牙应该是断开的状态；打开微信运动，设备蓝牙状态应该是连接状态，说明微信运动已经连接上设备
+</item>
+        <item>1.不需要，只是在第一次添加微信运动的时候需要这样做，这样做是为了释放设备蓝牙，使微信可以搜索到设备。（如果设备已经被手机连上，微信运动是无法搜索到设备的）\n
+2.绑定微信运动后，APP和微信运动可以同时连接设备，互不影响。</item>
+    </string-array>
+</resources>

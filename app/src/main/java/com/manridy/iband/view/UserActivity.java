@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.manridy.applib.utils.BitmapUtil;
 import com.manridy.applib.utils.CheckUtil;
 import com.manridy.applib.utils.SPUtil;
@@ -32,8 +31,6 @@ import com.manridy.sdk.exception.BleException;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -167,6 +164,7 @@ public class UserActivity extends BaseActionActivity {
                     public void getNum(String num) {
                         mSex = num.equals( getString(R.string.hint_man)) ? 0 : 1;
                         hiSex.setMenuContent(num);
+                        isChange = true;
                     }
                 }).show();
                 break;
@@ -176,6 +174,7 @@ public class UserActivity extends BaseActionActivity {
                     public void getNum(String num) {
                         mAge = num;
                         hiAge.setMenuContent(mAge);
+                        isChange = true;
                     }
                 }).show();
                 break;
@@ -185,7 +184,7 @@ public class UserActivity extends BaseActionActivity {
                     public void getNum(String num) {
                         mHeight = num;
                         hiHeight.setMenuContent(mHeight);
-
+                        isChange = true;
                     }
                 }).show();
                 break;
@@ -195,6 +194,7 @@ public class UserActivity extends BaseActionActivity {
                     public void getNum(String num) {
                         mWeight = num;
                         hiWeight.setMenuContent(mWeight);
+                        isChange = true;
                     }
                 }).show();
                 break;
@@ -210,7 +210,7 @@ public class UserActivity extends BaseActionActivity {
                 curUser.setUserWeight(mWeight);
                 curUser.save();
                 eventSend(EventGlobal.DATA_CHANGE_USER);
-                mIwaerApplication.service.watch.setUserInfo(new User(mHeight, mWeight), new BleCallback() {
+                ibandApplication.service.watch.setUserInfo(new User(mHeight, mWeight), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
 

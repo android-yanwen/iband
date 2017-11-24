@@ -59,7 +59,7 @@ public class TargetActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 showProgress( getString(R.string.hint_saveing));
-                mIwaerApplication.service.watch.setSportTarget(curStep, new BleCallback() {
+                ibandApplication.service.watch.setSportTarget(curStep, new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         SPUtil.put(mContext, AppGlobal.DATA_SETTING_TARGET_STEP,curStep);
@@ -101,6 +101,7 @@ public class TargetActivity extends BaseActionActivity {
                     public void getNum(String num) {
                         curStep = Integer.valueOf(num);
                         tvStep.setText(num+getString(R.string.hint_unit_step));
+                        isChange = true;
                     }
                 }).show();
                 break;
@@ -110,6 +111,7 @@ public class TargetActivity extends BaseActionActivity {
                     public void getNum(String num) {
                         curSleep = Integer.valueOf(num);
                         tvSleep.setText(num+getString(R.string.hint_unit_sleep));
+                        isChange = true;
                     }
                 }).show();
                 break;

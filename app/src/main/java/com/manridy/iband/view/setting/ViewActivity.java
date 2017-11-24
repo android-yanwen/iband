@@ -2,7 +2,6 @@ package com.manridy.iband.view.setting;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -111,7 +110,7 @@ public class ViewActivity extends BaseActionActivity {
                     ids[i] = viewList.get(i).getViewId();
                     onOffs[i] = viewList.get(i).isSelect()? 1:0;
                 }
-                mIwaerApplication.service.watch.sendCmd(BleCmd.getWindowsSet(ids, onOffs), new BleCallback() {
+                ibandApplication.service.watch.sendCmd(BleCmd.getWindowsSet(ids, onOffs), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         for (ViewModel viewModel : viewList) {
@@ -176,7 +175,7 @@ public class ViewActivity extends BaseActionActivity {
 
 
     public void syncViewData(){
-        mIwaerApplication.service.watch.sendCmd(BleCmd.getWindowsChild(128), new BleCallback() {
+        ibandApplication.service.watch.sendCmd(BleCmd.getWindowsChild(128), new BleCallback() {
             @Override
             public void onSuccess(Object o) {
                 Type type = new TypeToken<ArrayList<com.manridy.sdk.bean.View>>() {}.getType();

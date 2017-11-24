@@ -80,14 +80,17 @@ public class SyncData {
         }
         isRun = true;
         progressSum = progressIndex = syncIndex = errorNum = 0;
-        stepSum = sleepSum = hrSum = bpSum = boSum = 0;
+        stepSum =runSum = sleepSum = hrSum = bpSum = boSum = 0;
+
+        watch.sendCmd(BleCmd.getSleepStats());
+
         BleParse.getInstance().setStepHistoryListener(new BleHistoryListener() {
             @Override
             public void onHistory(Object o) {
                 StepModel historyStep = mGson.fromJson(o.toString(), StepModel.class);
                 boolean isErrorData = historyStep.getStepType() == 1 && historyStep.getStepNum()>99999;
                 if (historyStep.getHisLength() != 0 &&!isErrorData) {
-                    historyStep.save();
+                    historyStep.saveToDate();
                     timeOutIndex = 0;
                     progress();
                 }
@@ -102,7 +105,7 @@ public class SyncData {
             public void onHistory(Object o) {
                 StepModel historyStep = mGson.fromJson(o.toString(), StepModel.class);
                 if (historyStep.getHisLength() != 0 ) {
-                    historyStep.save();
+                    historyStep.saveToDate();
                     timeOutIndex = 0;
                     progress();
                 }
@@ -117,7 +120,7 @@ public class SyncData {
             public void onHistory(Object o) {
                 SleepModel historySleep = mGson.fromJson(o.toString(), SleepModel.class);
                 if (historySleep.getSleepLength() != 0) {
-                    historySleep.save();
+                    historySleep.saveToDate();
                     timeOutIndex = 0;
                     progress();
                 }
@@ -132,7 +135,7 @@ public class SyncData {
             public void onHistory(Object o) {
                 HeartModel historyHr = mGson.fromJson(o.toString(), HeartModel.class);
                 if (historyHr.getHeartLength() != 0 && historyHr.getHeartDate().compareTo(TimeUtil.getNowYMDHMSTime())<=0) {
-                    historyHr.save();
+                    historyHr.saveToDate();
                     timeOutIndex = 0;
                     progress();
                 }
@@ -148,7 +151,7 @@ public class SyncData {
             public void onHistory(Object o) {
                 BpModel historyBp = mGson.fromJson(o.toString(), BpModel.class);
                 if (historyBp.getBpLength() != 0 && historyBp.getBpDate().compareTo(TimeUtil.getNowYMDHMSTime()) <=0) {
-                    historyBp.save();
+                    historyBp.saveToDate();
                     timeOutIndex = 0;
                     progress();
                 }
@@ -164,7 +167,7 @@ public class SyncData {
             public void onHistory(Object o) {
                 BoModel historyBo = mGson.fromJson(o.toString(), BoModel.class);
                 if (historyBo.getboLength() != 0 && historyBo.getboDate().compareTo(TimeUtil.getNowYMDHMSTime()) <=0) {
-                    historyBo.save();
+                    historyBo.saveToDate();
                     timeOutIndex = 0;
                     progress();
                 }
@@ -365,13 +368,13 @@ public class SyncData {
     public static void saveCurStep(StepModel curStep) {
         StepModel dbStep = IbandDB.getInstance().getCurStep();
         if (dbStep == null) {
-            curStep.save();
+            curStep.saveToDate();
         }else{
             dbStep.setStepNum(curStep.getStepNum());
             dbStep.setStepMileage(curStep.getStepMileage());
             dbStep.setStepCalorie(curStep.getStepCalorie());
             dbStep.setStepDate(curStep.getStepDate());
-            dbStep.save();
+            dbStep.saveToDate();
         }
     }
 

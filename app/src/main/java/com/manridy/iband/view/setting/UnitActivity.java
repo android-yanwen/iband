@@ -15,7 +15,6 @@ import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.exception.BleException;
-import com.tencent.tinker.android.dex.EncodedValue;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -58,7 +57,7 @@ public class UnitActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 showProgress(getString(R.string.hint_saveing));
-                mIwaerApplication.service.watch.sendCmd(BleCmd.setUnit(unit), new BleCallback() {
+                ibandApplication.service.watch.sendCmd(BleCmd.setUnit(unit), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         SPUtil.put(mContext, AppGlobal.DATA_SETTING_UNIT,unit);
@@ -95,9 +94,11 @@ public class UnitActivity extends BaseActionActivity {
         switch (view.getId()) {
             case R.id.unit_metric:
                 selectUnit();
+                isChange = true;
                 break;
             case R.id.unit_inch:
                 selectUnit();
+                isChange = true;
                 break;
         }
     }

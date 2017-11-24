@@ -20,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.weyye.hipermission.HiPermission;
 import me.weyye.hipermission.PermissionCallback;
-import me.weyye.hipermission.PermissonItem;
+import me.weyye.hipermission.PermissionItem;
 
 /**
  * 短信提醒
@@ -54,9 +54,9 @@ public class SmsActivity extends BaseActionActivity {
         aiAlert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<PermissonItem> permissonItems = new ArrayList<PermissonItem>();
-                permissonItems.add(new PermissonItem(Manifest.permission.RECEIVE_SMS, getString(R.string.hint_sms), R.mipmap.permission_ic_message));
-                permissonItems.add(new PermissonItem(Manifest.permission.READ_CONTACTS, getString(R.string.hint_contacts), R.mipmap.permission_ic_contacts));
+                List<PermissionItem> permissonItems = new ArrayList<PermissionItem>();
+                permissonItems.add(new PermissionItem(Manifest.permission.RECEIVE_SMS, getString(R.string.hint_sms), R.mipmap.permission_ic_message));
+                permissonItems.add(new PermissionItem(Manifest.permission.READ_CONTACTS, getString(R.string.hint_contacts), R.mipmap.permission_ic_contacts));
                 HiPermission.create(mContext)
                         .title(getString(R.string.hint_alert_open))
                         .msg(getString(R.string.hint_request_sms_alert))
@@ -86,6 +86,7 @@ public class SmsActivity extends BaseActionActivity {
         public void onFinish() {
             onOff = !onOff;
             aiAlert.setAlertCheck(onOff);
+            isChange = true;
         }
 
         @Override

@@ -16,6 +16,7 @@ import com.manridy.iband.bean.BoModel;
 import com.manridy.iband.bean.BpModel;
 import com.manridy.iband.bean.HeartModel;
 import com.manridy.iband.bean.SleepModel;
+import com.manridy.iband.bean.SleepStatsModel;
 import com.manridy.iband.bean.StepModel;
 import com.manridy.iband.view.base.BaseActionActivity;
 
@@ -107,6 +108,13 @@ public class TestDatabaseActivity extends BaseActionActivity {
                 List<BoModel> boList = IbandDB.getInstance().getBoList();
                 for (BoModel stepModel : boList) {
                     buffer.append(stepModel.toString());
+                    buffer.append("\n\r");
+                }
+                break;
+            case 5:
+                List<SleepStatsModel> sleepStatsList = IbandDB.getInstance().getSleepStatsList();
+                for (SleepStatsModel sleepStatsModel : sleepStatsList) {
+                    buffer.append(sleepStatsModel.toString());
                     buffer.append("\n\r");
                 }
                 break;

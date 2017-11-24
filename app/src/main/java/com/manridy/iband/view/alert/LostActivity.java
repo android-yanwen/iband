@@ -51,7 +51,7 @@ public class LostActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 showProgress(getString(R.string.hint_saveing));
-                mIwaerApplication.service.watch.sendCmd(BleCmd.setLostDeviceAlert(onOff ? 1 : 0, 20), new BleCallback() {
+                ibandApplication.service.watch.sendCmd(BleCmd.setLostDeviceAlert(onOff ? 1 : 0, 20), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         dismissProgress();
@@ -87,6 +87,7 @@ public class LostActivity extends BaseActionActivity {
             public void onClick(View v) {
                 onOff = !onOff;
                 aiAlert.setAlertCheck(onOff);
+                isChange = true;
             }
         });
     }

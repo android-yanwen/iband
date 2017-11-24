@@ -71,7 +71,7 @@ public class LightActivity extends BaseActionActivity {
                 }
                 if (curLight != oldLight) {
                     SPUtil.put(mContext, AppGlobal.DATA_SETTING_LIGHT,curLight);
-                    mIwaerApplication.service.watch.sendCmd(BleCmd.setLight(curLight));
+                    ibandApplication.service.watch.sendCmd(BleCmd.setLight(curLight));
                 }
                 oldLight = curLight;
             }

@@ -145,7 +145,7 @@
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_dimming"
                 app:menus_name="@string/hint_menu_light"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_unit"

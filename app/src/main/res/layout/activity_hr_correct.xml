@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/activity_background">
+    <include layout="@layout/tab_activity"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/text_title"
+        android:textSize="14sp"
+        android:text="@string/hint_set_correct"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_background"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="38dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:textColor="#c1272d"
+        android:textSize="14sp"
+        android:text="@string/hint_hr_correct1"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp">
+
+        <com.jaygoo.widget.RangeSeekbar
+            android:id="@+id/rs_light"
+            android:layout_width="280dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            app:markTextArray="@array/corrects"
+            app:lineColorSelected="@color/toolbar_background"
+            app:lineColorEdge="#8a000000"
+            app:cellMode="other"
+            app:seekBarMode="single"
+            app:hideProgressHint="true"
+            app:cells="2"
+            app:textPadding="20dp"
+            app:max="2"/>
+
+        <TextView
+            android:id="@+id/tv_reduce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/rs_light"
+            android:layout_centerVertical="true"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:textColor="#1e1e1e"
+            android:textSize="30dp"
+            android:text="-"/>
+
+        <TextView
+            android:id="@+id/tv_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/rs_light"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="20dp"
+            android:textColor="#1e1e1e"
+            android:textSize="30dp"
+            android:text="+"/>
+    </RelativeLayout>
+
+
+</LinearLayout>

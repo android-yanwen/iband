@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -13,10 +14,12 @@ import android.widget.TextView;
 
 import com.manridy.applib.utils.FileUtil;
 import com.manridy.applib.utils.SPUtil;
+import com.manridy.iband.OnResultCallBack;
 import com.manridy.iband.R;
 import com.manridy.iband.SyncAlert;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.service.DfuService;
+import com.manridy.iband.service.HttpService;
 import com.manridy.iband.ui.CircularView;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.sdk.callback.BleConnectCallback;
@@ -48,6 +51,7 @@ public class OtaActivity extends BaseActionActivity {
     @BindView(R.id.tv_ota_progress)
     TextView tvOtaProgress;
     private DfuServiceController controller;
+    private boolean isInfiniti;
 
 //    Handler handler = new Handler(){
 //        @Override
@@ -83,7 +87,7 @@ public class OtaActivity extends BaseActionActivity {
 //    };
 
     private void connect() {
-        mIwaerApplication.service.initConnect(false,new BleConnectCallback() {
+        ibandApplication.service.initConnect(false,new BleConnectCallback() {
             @Override
             public void onConnectSuccess() {
                 SyncAlert.getInstance(mContext).sync();
@@ -108,10 +112,32 @@ public class OtaActivity extends BaseActionActivity {
         ButterKnife.bind(this);
     }
 
+
     @Override
     protected void initVariables() {
+        isInfiniti = getStartType() == 1;
+        int battery = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_NUM,0);
+        if (battery < 30){
+            showToast(getString(R.string.toast_ota_battery_low));
+            finish();
+            return;
+        }
         start();
         SPUtil.put(mContext, AppGlobal.STATE_APP_OTA_RUN, true);
+    }
+
+    private void sendOtaData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpService.getInstance().sendOtaData(mContext, new OnResultCallBack() {
+                    @Override
+                    public void onResult(boolean result, Object o) {
+                        Log.d(TAG, "onResult() called with: result = [" + result + "], o = [" + o + "]");
+                    }
+                });
+            }
+        }).start();
     }
 
     @Override
@@ -131,6 +157,15 @@ public class OtaActivity extends BaseActionActivity {
                         connect();
                     }
                 }
+            }
+        });
+
+        tvOtaProgress.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                isInfiniti = true;
+                showToast("开启无限OTA模式");
+                return true;
             }
         });
 
@@ -160,6 +195,8 @@ public class OtaActivity extends BaseActionActivity {
         starter.setUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(true);
         starter.setZip(null, FileUtil.getSdCardPath()+"/ota.zip");
         controller = starter.start(this,DfuService.class);
+
+        sendOtaData();
     }
 
 
@@ -183,6 +220,7 @@ public class OtaActivity extends BaseActionActivity {
 
         @Override
         public void onDfuProcessStarting(final String deviceAddress) {
+            tvOtaProgress.setVisibility(View.VISIBLE);
             Log.d(TAG, "onDfuProcessStarting() called with: deviceAddress = [" + deviceAddress + "]");
         }
 
@@ -196,9 +234,10 @@ public class OtaActivity extends BaseActionActivity {
                 cvOta.setProgress(0);
                 ivOta.setVisibility(View.GONE);
                 tvOtaProgress.setVisibility(View.GONE);
-                tvOtaOk.setVisibility(View.VISIBLE);
                 tvOtaResult.setVisibility(View.VISIBLE);
                 tvOtaResult.setText(R.string.hint_ota_success);
+                tvOtaOk.setVisibility(isInfiniti ?View.GONE : View.VISIBLE);
+                resetTime = isInfiniti ? 10:5;
                 progressHandler.sendEmptyMessage(0);
             }
             Log.d(TAG, "onProgressChanged() called with: deviceAddress = [" + deviceAddress + "], percent = [" + percent + "], speed = [" + speed + "], avgSpeed = [" + avgSpeed + "], currentPart = [" + currentPart + "], partsTotal = [" + partsTotal + "]");
@@ -231,6 +270,7 @@ public class OtaActivity extends BaseActionActivity {
 
 
     ProgressDialog progressDialog;
+    int resetTime = 5;
     Handler progressHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -239,29 +279,60 @@ public class OtaActivity extends BaseActionActivity {
                 progressDialog = new ProgressDialog(mContext);
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressDialog.setCanceledOnTouchOutside(false);
-                progressDialog.setMessage("设备正在重启中,请稍后("+5+")");
+                progressDialog.setMessage("设备正在重启中,请稍后("+resetTime+")");
                 progressDialog.show();
-            }else if (msg.what<=5){
+            }else if (msg.what<=resetTime){
                 if (progressDialog != null) {
-                    progressDialog.setMessage("设备正在重启中,请稍后("+(5-msg.what)+")");
+                    progressDialog.setMessage("设备正在重启中,请稍后("+(resetTime-msg.what)+")");
                 }
             }else {
                 if (progressDialog != null) {
                     progressDialog.dismiss();
                 }
+                if (isInfiniti) {
+                    int state = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
+                    if (state == AppGlobal.DEVICE_STATE_CONNECTED) {
+                        start();
+                    }else {
+                        ibandApplication.service.initConnect(false, connectCallback);
+                    }
+                }
             }
-            progressHandler.sendEmptyMessageDelayed(msg.what+1,1000);
+            if (msg.what<=resetTime) {
+                progressHandler.sendEmptyMessageDelayed(msg.what+1,1000);
+            }
+
         }
     };
 
+    BleConnectCallback connectCallback = new BleConnectCallback() {
+        @Override
+        public void onConnectSuccess() {
+            start();
+        }
+
+        @Override
+        public void onConnectFailure(BleException exception) {
+            ibandApplication.service.initConnect(false, connectCallback);
+        }
+    };
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        if (controller != null) {
-            controller.pause();
-        }
+//        super.onBackPressed();
+//        if (controller != null) {
+//            controller.pause();
+//        }
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     @Override
     protected void onDestroy() {

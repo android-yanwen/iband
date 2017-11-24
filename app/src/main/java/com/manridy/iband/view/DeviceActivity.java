@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -14,16 +15,20 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.manridy.applib.utils.CheckUtil;
 import com.manridy.applib.utils.SPUtil;
+import com.manridy.iband.OnResultCallBack;
 import com.manridy.iband.SyncAlert;
 import com.manridy.iband.SyncData;
+import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.R;
 import com.manridy.iband.adapter.DeviceAdapter;
 import com.manridy.iband.common.OnItemClickListener;
+import com.manridy.iband.service.HttpService;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.sdk.BluetoothLeDevice;
 import com.manridy.sdk.callback.BleCallback;
@@ -73,6 +78,10 @@ public class DeviceActivity extends BaseActionActivity {
     private List<DeviceAdapter.DeviceModel> mDeviceList = new ArrayList<>();
     private String bindName;//绑定设备名称
     private int curPosition = -1;//选中设备序号
+    private String strDeviceList;
+    private DeviceList filterDeviceList;
+    private boolean isDebug;
+    public static String identifier = "iband";
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -127,6 +136,15 @@ public class DeviceActivity extends BaseActionActivity {
             }
         });
 
+        findViewById(R.id.tb_title).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                isDebug = true;
+                showToast("不筛选设备模式开启");
+                return true;
+            }
+        });
+
         SyncAlert.getInstance(mContext).setSyncAlertListener(new SyncAlert.OnSyncAlertListener() {
             @Override
             public void onResult(final boolean isSuccess) {
@@ -144,11 +162,19 @@ public class DeviceActivity extends BaseActionActivity {
         });
     }
 
+    @Override
+    protected void loadData() {
+        super.loadData();
+        strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
+        filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
+        EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_LOAD_DEVICE_LIST));
+    }
+
     @OnClick({R.id.iv_qrcode, R.id.iv_refresh, R.id.bt_bind, R.id.tb_menu})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_qrcode://二维码点击
-                mIwaerApplication.service.watch.startScan(new TimeScanCallback(5000,null) {
+                ibandApplication.service.watch.startScan(new TimeScanCallback(5000,null) {
                     @Override
                     public void onScanEnd() {
 
@@ -194,23 +220,24 @@ public class DeviceActivity extends BaseActionActivity {
         showProgress(getString(R.string.hint_device_binding));
         bindName = bindDevice.getName();
         final String mac = bindDevice.getAddress();
-        mIwaerApplication.service.watch.connect(bindDevice, true, new BleConnectCallback() {
+        ibandApplication.service.watch.connect(bindDevice, true, new BleConnectCallback() {
             @Override
             public void onConnectSuccess() {
                 dismissProgress();//取消弹窗，保存设备名称和地址
-                BluetoothLeDevice leDevice = mIwaerApplication.service.watch.getBluetoothLeDevice(mac);
+                BluetoothLeDevice leDevice = ibandApplication.service.watch.getBluetoothLeDevice(mac);
                 SPUtil.put(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, mac);
                 if (leDevice != null) {
                     bindName = leDevice.getmBluetoothGatt().getDevice().getName();
                 }
                 SPUtil.put(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,bindName == null ? "UNKONW":bindName);
+                SPUtil.put(mContext,AppGlobal.DATA_DEVICE_BIND_IMG,getDeviceImgRes(bindName));
                 eventSend(EventGlobal.STATE_DEVICE_BIND);//发送绑定成功广播
             }
 
             @Override
             public void onConnectFailure(BleException exception) {
                 dismissProgress();
-                mIwaerApplication.service.watch.closeBluetoothGatt(mac);
+                ibandApplication.service.watch.closeBluetoothGatt(mac);
                 curPosition = -1;
                 bindName = "";
                 eventSend(EventGlobal.STATE_DEVICE_BIND_FAIL);
@@ -221,7 +248,7 @@ public class DeviceActivity extends BaseActionActivity {
     //解绑设备
     private void unBindDevice() {
         String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
-        mIwaerApplication.service.watch.disconnect(mac, new BleCallback() {
+        ibandApplication.service.watch.disconnect(mac, new BleCallback() {
             @Override
             public void onSuccess(Object o) {
             }
@@ -232,6 +259,7 @@ public class DeviceActivity extends BaseActionActivity {
         });
         SPUtil.remove(mContext, AppGlobal.DATA_DEVICE_BIND_NAME);
         SPUtil.remove(mContext, AppGlobal.DATA_DEVICE_BIND_MAC);
+        SPUtil.remove(mContext, AppGlobal.DATA_DEVICE_BIND_IMG);
         SPUtil.remove(mContext, AppGlobal.DATA_FIRMWARE_TYPE);
         SPUtil.remove(mContext, AppGlobal.DATA_FIRMWARE_VERSION);
         curPosition = -1;
@@ -265,8 +293,8 @@ public class DeviceActivity extends BaseActionActivity {
 
     //扫描设备
     private void scanDevice(boolean isCheckBind) {
-        if (!mIwaerApplication.service.watch.isBluetoothEnable()) {
-            mIwaerApplication.service.watch.BluetoothEnable(mContext);
+        if (!ibandApplication.service.watch.isBluetoothEnable()) {
+            ibandApplication.service.watch.BluetoothEnable(mContext);
             return;
         }
         if (null != bindName && !bindName.isEmpty()) {
@@ -278,12 +306,12 @@ public class DeviceActivity extends BaseActionActivity {
         showProgress(getString(R.string.hint_device_searching), new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                mIwaerApplication.service.watch.stopScan(mTimeScanCallback);
+                ibandApplication.service.watch.stopScan(mTimeScanCallback);
             }
         });
         ivRefresh.setVisibility(View.GONE);
         mDeviceList.clear();
-        mIwaerApplication.service.watch.startScan(mTimeScanCallback);
+        ibandApplication.service.watch.startScan(mTimeScanCallback);
     }
 
     //扫描设备回调
@@ -301,7 +329,7 @@ public class DeviceActivity extends BaseActionActivity {
                 public void run() {
                     String deviceName = device.getName();
 //                    Log.d(TAG, "mTimeScanCallback() deviceName ==== "+deviceName==null?"null":deviceName);
-                    if (deviceName != null && checkFilter(deviceName,filters)) {
+                    if ((deviceName != null && checkFilter(deviceName,filters))||isDebug) {
                         mDeviceList.add(new DeviceAdapter.DeviceModel(device, rssi, scanRecord));
                         mDeviceAdapter.notifyDataSetChanged();
                     }
@@ -320,20 +348,63 @@ public class DeviceActivity extends BaseActionActivity {
     public static String HW031 = "watch";
     public static String HW028 = "TF1";
     public static String HW027 = "N67";
-
+    public static String HW028_1 = "R11";
     public static String TEST = "HB";
     public static String TEST2 = "K2";
     public static String TEST3 = "HM";
     public static String[] filters = {HWO14,HW018,HW021,HW022,
-            HW026,HW029,HW030,HW031,
+            HW026,HW029,HW030,HW031,HW028_1,
             HW028,HW027,TEST,TEST2,TEST3};
-    public static boolean checkFilter(String deviceName,String[] filters){
-        for (String filter : filters) {
+
+    /**
+     * 检测过滤设备
+     * @param deviceName
+     * @param filters
+     * @return
+     */
+    public boolean checkFilter(String deviceName,String[] filters){
+        if (filterDeviceList != null && filterDeviceList.getResult().size() >0) {//如果有网络设备列表，以网络为准
+            return checkNetworkDeviceData(deviceName);
+        }
+        return checkLocalDeviceData(deviceName, filters);
+    }
+
+    /**
+     * 检测网络设备列表
+     * @param deviceName
+     * @return
+     */
+    private boolean checkNetworkDeviceData(String deviceName) {
+        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+            if (deviceName.contains(resultBean.getDevice_name()) && identifier.equals(resultBean.getIdentifier())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 检测本地设备列表
+     * @param deviceName
+     * @param filters
+     * @return
+     */
+    private boolean checkLocalDeviceData(String deviceName, String[] filters) {
+        for (String filter : filters) {//本地设备数据判断
             if (deviceName.contains(filter)) {
                 return true;
             }
         }
         return false;
+    }
+
+    private String getDeviceImgRes(String deviceName){
+        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+            if (resultBean.getDevice_name().equals(deviceName)) {
+                return resultBean.getImageName() == null ? "unknown" : resultBean.getImageName();
+            }
+        }
+        return "unknown";
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -355,7 +426,7 @@ public class DeviceActivity extends BaseActionActivity {
         }else if (event.getWhat() == EventGlobal.STATE_DEVICE_UNBIND) {
             //解绑成功显示未绑定视图，弹出提示
             showUnBindView();
-            mIwaerApplication.service.stopNotification();
+            ibandApplication.service.stopNotification();
             showToast(getString(R.string.hint_un_bind_success));
         }else if (event.getWhat() == EventGlobal.STATE_DEVICE_BIND_FAIL){
             //绑定失败清空列表，弹出提示
@@ -363,6 +434,22 @@ public class DeviceActivity extends BaseActionActivity {
             mDeviceAdapter.notifyDataSetChanged();
             showUnBindView();
             showToast(getString(R.string.hint_un_bind_fail));
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onEventBackroundThread(EventMessage event){
+        if (event.getWhat() == EventGlobal.ACTION_LOAD_DEVICE_LIST) {
+            HttpService.getInstance().getDeviceList(new OnResultCallBack() {
+                @Override
+                public void onResult(boolean result, Object o) {
+                    if (result) {
+                        strDeviceList = o.toString();
+                        filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
+                        SPUtil.put(mContext,AppGlobal.DATA_DEVICE_LIST, strDeviceList);
+                    }
+                }
+            });
         }
     }
 
@@ -382,12 +469,19 @@ public class DeviceActivity extends BaseActionActivity {
                         showToast(getString(R.string.error_mac));
                         return;
                     }
-                    BluetoothDevice device = mIwaerApplication.service.watch.getDevice(result);
+                    BluetoothDevice device = ibandApplication.service.watch.getDevice(result);
+                    SyncData.getInstance().setRun(true);//正在绑定关闭同步数据流程,同步设置后开启
                     bindDevice(device);
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
 
                 }
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dismissProgress();
     }
 }

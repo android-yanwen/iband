@@ -89,7 +89,7 @@ public class TimeActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 showProgress( getString(R.string.hint_saveing));
-                mIwaerApplication.service.watch.sendCmd(BleCmd.setHourSelect(curTime), new BleCallback() {
+                ibandApplication.service.watch.sendCmd(BleCmd.setHourSelect(curTime), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         SPUtil.put(mContext, AppGlobal.DATA_SETTING_UNIT_TIME,curTime);
@@ -132,10 +132,12 @@ public class TimeActivity extends BaseActionActivity {
             case R.id.unit_hour_24:
                 curTime = curTime == 0 ? 1:0;
                 selectTime();
+                isChange = true;
                 break;
             case R.id.unit_hour_12:
                 curTime = curTime == 0 ? 1:0;
                 selectTime();
+                isChange = true;
                 break;
         }
     }

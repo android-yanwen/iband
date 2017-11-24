@@ -13,7 +13,7 @@ import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.service.AlertService;
 import com.manridy.iband.service.BleService;
 import com.manridy.iband.service.NotificationCollectorMonitorService;
-import com.manridy.iband.service.NotificationService2;
+import com.manridy.iband.service.AppNotificationListenerService;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 
@@ -37,6 +37,7 @@ public class IbandApplication extends Application {
         intance = this;
         SPUtil.put(this, AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
         SPUtil.put(this, AppGlobal.STATE_APP_OTA_RUN, false);
+//        startService(new Intent(this, AppNotificationListenerService.class));
         LitePalApplication.initialize(this);//初始化数据库
         Fresco.initialize(this);//初始化图片加载
         initBleSevrice();//初始化蓝牙服务

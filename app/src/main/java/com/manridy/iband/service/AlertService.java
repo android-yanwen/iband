@@ -35,6 +35,8 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -185,7 +187,7 @@ public class AlertService extends Service {
                 }else {
                     String name = getSmsFromPhone(AlertService.this,phoneNumber.toString());
                     if (name == null ||name.isEmpty()) {//2.名称为空，发送号码
-                        ibandApplication.service.watch.setSmsAlertName(PhoneType.PHONE_NUMBER,smsId,phoneNumber.toString(),smsBleCallback);//发送短信提醒
+                        ibandApplication.service.watch.setSmsAlertName(PhoneType.PHONE_NUMBER,smsId,getFilterNum(phoneNumber.toString()),smsBleCallback);//发送短信提醒
                     }else{//3.名称不为空，发送短信人名称
                         ibandApplication.service.watch.setSmsAlertName(PhoneType.PHONE_NAME,smsId,name,smsBleCallback);//发送短信提醒
                         System.out.println("发送者名称："+name);
@@ -219,9 +221,9 @@ public class AlertService extends Service {
             ibandApplication.service.watch.sendCmd(BleCmd.setPhoneAlert(1,getString(R.string.hint_phone_num_unknow)));
         }else{
             try {
-               String name = getSmsFromPhone(AlertService.this,incomingNumber);
+                String name = getSmsFromPhone(AlertService.this,incomingNumber);
                 if (null == name) {//2.来电号码不为空，获取不到名称
-                    ibandApplication.service.watch.sendCmd(BleCmd.setPhoneAlert(2,incomingNumber));
+                    ibandApplication.service.watch.sendCmd(BleCmd.setPhoneAlert(2,getFilterNum(incomingNumber)));
                 }else {//3.获取到来电名称
                     ibandApplication.service.watch.sendCmd(BleCmd.setPhoneAlert(1,name));
                 }
@@ -322,6 +324,13 @@ public class AlertService extends Service {
      */
     private boolean checkOpenPhoneAlert() {
         return (boolean) SPUtil.get(AlertService.this, AppGlobal.DATA_ALERT_PHONE,false);
+    }
+
+    private String getFilterNum(String num){
+        String regEx = "[^0-9]";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(num);
+        return m.replaceAll("").trim();
     }
 
     @Override

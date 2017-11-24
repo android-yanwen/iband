@@ -67,6 +67,7 @@ public class SleepHistoryActivity extends BaseActionActivity {
     private List<String> days = new ArrayList<>();
     private List<DayBean> sleepList = new ArrayList<>();
     private int sleepSum = 0,sleepLight = 0,sleepDeep = 0,sleepCount = 0;
+    private String curMac;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -77,6 +78,7 @@ public class SleepHistoryActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         registerEventBus();
+        curMac = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_MAC,"");
         setTitleBar(getString(R.string.hint_sleep_history));
         mCalendar = Calendar.getInstance();
         mDateFormat = new SimpleDateFormat("yyyy-MM");
@@ -256,7 +258,15 @@ public class SleepHistoryActivity extends BaseActionActivity {
         if (event.getWhat() == EventGlobal.DATA_LOAD_SLEEP_HISTORY) {
             sleepSum = sleepDeep = sleepLight = sleepCount =0;
             days = TimeUtil.getMonthToDay(mCalendar);
-            sleepList = IbandDB.getInstance().getMonthSleep(days);
+//            sleepList = IbandDB.getInstance().getMonthSleep(days);
+            sleepList = new ArrayList<>();
+            for (String day : days) {//遍历数据 如果有统计数据默认优先拿统计数据
+                DayBean dayBean = IbandDB.getInstance().getMonthSleepStats(day,curMac);
+                if (dayBean.getDayCount() == 0) {
+                    dayBean = IbandDB.getInstance().getMonthSleep(day);
+                }
+                sleepList.add(dayBean);
+            }
             for (DayBean dayBean : sleepList) {
                 sleepLight += dayBean.getDayMin();
                 sleepDeep +=dayBean.getDayMax();

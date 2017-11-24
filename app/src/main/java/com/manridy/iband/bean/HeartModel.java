@@ -1,5 +1,7 @@
 package com.manridy.iband.bean;
 
+import com.manridy.applib.utils.TimeUtil;
+
 import org.litepal.crud.DataSupport;
 
 /**
@@ -15,6 +17,7 @@ public class HeartModel extends DataSupport {
     private int heartLength;//心率条数
     private int heartNum;//心率编号
     private int heartRate;//心率
+    private long updateDate;//数据更新时间
 
     public HeartModel() {
     }
@@ -75,6 +78,19 @@ public class HeartModel extends DataSupport {
         this.heartRate = heartRate;
     }
 
+    public long getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(long updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public void saveToDate(){
+        this.setUpdateDate(System.currentTimeMillis());
+        save();
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("HeartModel{");
@@ -84,6 +100,7 @@ public class HeartModel extends DataSupport {
         sb.append(", heartLength=").append(heartLength);
         sb.append(", heartNum=").append(heartNum);
         sb.append(", heartRate=").append(heartRate);
+        sb.append(", updateDate=").append(TimeUtil.getNowYMDHMSTime(updateDate));
         sb.append('}');
         return sb.toString();
     }

@@ -91,7 +91,7 @@ public class ClockActivity extends BaseActionActivity {
                 for (ClockModel model : clockList) {
                     clocks.add(new Clock(model.getTime(),model.isClockOnOFF()));
                 }
-                mIwaerApplication.service.watch.setClock(ClockType.SET_CLOCK, clocks, new BleCallback() {
+                ibandApplication.service.watch.setClock(ClockType.SET_CLOCK, clocks, new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         int openNum = 0;
@@ -120,18 +120,21 @@ public class ClockActivity extends BaseActionActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 clockList.get(0).setClockOnOFF(isChecked);
+                isChange = true;
             }
         });
         ciClock2.setCheckClockListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 clockList.get(1).setClockOnOFF(isChecked);
+                isChange = true;
             }
         });
         ciClock3.setCheckClockListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 clockList.get(2).setClockOnOFF(isChecked);
+                isChange = true;
             }
         });
     }
@@ -147,6 +150,7 @@ public class ClockActivity extends BaseActionActivity {
                         String clockTime = hour + ":" + minute;
                         ciClock1.setClockTime(clockTime);
                         clockList.get(0).setTime(clockTime);
+                        isChange = true;
                     }
                 }).show();
                 break;
@@ -158,6 +162,7 @@ public class ClockActivity extends BaseActionActivity {
                         String clockTime = hour + ":" + minute;
                         ciClock2.setClockTime(clockTime);
                         clockList.get(1).setTime(clockTime);
+                        isChange = true;
                     }
                 }).show();
                 break;
@@ -169,6 +174,7 @@ public class ClockActivity extends BaseActionActivity {
                         String clockTime = hour + ":" + minute;
                         ciClock3.setClockTime(clockTime);
                         clockList.get(2).setTime(clockTime);
+                        isChange = true;
                     }
                 }).show();
                 break;

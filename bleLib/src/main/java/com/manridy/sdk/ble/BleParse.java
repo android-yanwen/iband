@@ -72,6 +72,7 @@ public class BleParse {
     private BleNotifyListener boNotifyListener;
     private BleNotifyListener stepNotifyListener;
     private BleNotifyListener runNotifyListener;
+    private BleNotifyListener sleepStatsNotifyListener;
 
     private BleHistoryListener stepHistoryListener;
     private BleHistoryListener sleepHistoryListener;
@@ -81,6 +82,7 @@ public class BleParse {
     private BleHistoryListener runHistoryListener;
 
     private BleActionListener actionListener;
+
 
     public synchronized static BleParse getInstance() {
         if (instance == null) {
@@ -205,6 +207,9 @@ public class BleParse {
                     break;
                 case 0x1B:
                     result = parseSport();
+                    break;
+                case 0x23:
+                    result = parseStatsSleep();
                     break;
             }
             if (bleCallback == null) {
@@ -480,6 +485,30 @@ public class BleParse {
 
         //打印日志
         LogUtil.i(TAG,"心率数据："+ result);
+        return result;
+    }
+
+    private String parseStatsSleep(){
+        String result = "";
+        byte[] sleepStart = new byte[4];
+        byte[] sleepEnd = new byte[4];
+        int sum = BitUtil.doubleByteToInt(body[9],body[10]);
+        int deep = BitUtil.doubleByteToInt(body[11],body[12]);
+        int light = BitUtil.doubleByteToInt(body[13],body[14]);
+        int sober = BitUtil.doubleByteToInt(body[15],body[16]);
+        System.arraycopy(body,1,sleepStart,0,sleepStart.length);
+        System.arraycopy(body,5,sleepEnd,0,sleepEnd.length);
+        long dateStart = BitUtil.bytesToLong(sleepStart)*1000;
+        dateStart -= TimeZone.getDefault().getRawOffset();//减去时区
+        long dateEnd = BitUtil.bytesToLong(sleepEnd)*1000;
+        dateEnd -= TimeZone.getDefault().getRawOffset();//减去时区
+        Sleep sleep = new Sleep(TimeUtil.getYMD(new Date(dateEnd)),sum,0,
+                TimeUtil.longToTime(dateStart),
+                TimeUtil.longToTime(dateEnd),4,deep,light,sober);
+        if (sleepStatsNotifyListener != null) {
+            result = gson.toJson(sleep);
+            sleepStatsNotifyListener.onNotify(result);
+        }
         return result;
     }
 
@@ -871,6 +900,10 @@ public class BleParse {
 
     public void setBoHistoryListener(BleHistoryListener boHistoryListener) {
         this.boHistoryListener = boHistoryListener;
+    }
+
+    public void setSleepStatsNotifyListener(BleNotifyListener sleepStatsNotifyListener) {
+        this.sleepStatsNotifyListener = sleepStatsNotifyListener;
     }
 
     private String putIntJson(String key, int value){

@@ -1,5 +1,7 @@
 package com.manridy.iband.bean;
 
+import com.manridy.applib.utils.TimeUtil;
+
 import org.litepal.crud.DataSupport;
 
 /**
@@ -15,6 +17,7 @@ public class BoModel extends DataSupport {
     private int boLength;//血氧条数
     private int boNum;//血氧编号
     private String boRate;//血氧
+    private long updateDate;//数据更新时间
 
     public BoModel() {
     }
@@ -81,6 +84,19 @@ public class BoModel extends DataSupport {
         this.boRate = boRate;
     }
 
+    public long getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(long updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public void saveToDate(){
+        this.setUpdateDate(System.currentTimeMillis());
+        save();
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("BoModel{");
@@ -90,6 +106,7 @@ public class BoModel extends DataSupport {
         sb.append(", boLength=").append(boLength);
         sb.append(", boNum=").append(boNum);
         sb.append(", boRate='").append(boRate).append('\'');
+        sb.append(", updateDate=").append(TimeUtil.getNowYMDHMSTime(updateDate));
         sb.append('}');
         return sb.toString();
     }

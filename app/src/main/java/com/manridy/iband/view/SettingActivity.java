@@ -2,6 +2,7 @@ package com.manridy.iband.view;
 
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
@@ -14,16 +15,17 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.gson.Gson;
 import com.manridy.applib.utils.CheckUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.IbandApplication;
+import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.bean.UserModel;
-import com.manridy.iband.ui.items.AlertMenuItems;
-import com.manridy.iband.view.alert.AlertMenuActivity;
+import com.manridy.iband.service.HttpService;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.iband.view.setting.AboutActivity;
 import com.manridy.iband.view.setting.AlertActivity;
@@ -67,7 +69,7 @@ public class SettingActivity extends BaseActionActivity {
     @BindView(R.id.rl_user_info)
     RelativeLayout rlUserInfo;
     @BindView(R.id.iv_device_icon)
-    ImageView ivDeviceIcon;
+    SimpleDraweeView ivDeviceIcon;
     @BindView(R.id.tv_device_name)
     TextView tvDeviceName;
     @BindView(R.id.tv_device_bind_state)
@@ -130,14 +132,48 @@ public class SettingActivity extends BaseActionActivity {
         connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
         curBatteryNum = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_NUM,-1);
         curBatteryState = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_STATE,-1);
-        if (!bindName.isEmpty()){
+        if (!bindName.isEmpty()) {
             showBindDevice();
             showConnectState();
+        }
+        loadDeviceImg();
+        checkMenuVisibility();
+    }
+
+    private void checkMenuVisibility() {
+        try {
+            menuLight.setVisibility(View.VISIBLE);
+            String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST,"");
+            String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
+            String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
+            if (strDeviceList == null || strDeviceList.isEmpty()) {
+                return;
+            }
+            DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
+            for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+                if (resultBean.getDevice_name().equals(deviceName) || resultBean.getDevice_id().equals(deviceType)){
+                    if (resultBean.getBrightness().equals("0")) {
+                        menuLight.setVisibility(View.GONE);
+                        return;
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void loadDeviceImg() {
+        String deviceImgPath = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_IMG,"");
+        if (!deviceImgPath.isEmpty()&& !deviceImgPath.equals("unknown")) {
+            Uri loadImgUri = Uri.parse(HttpService.device_img+deviceImgPath);
+            ivDeviceIcon.setImageURI(loadImgUri);
         }
     }
 
     private void initUser() {
         UserModel curUser = IbandDB.getInstance().getUser();
+
         if (curUser != null) {
             tvUserName.setText(curUser.getUserName());
         }
@@ -151,7 +187,7 @@ public class SettingActivity extends BaseActionActivity {
 
     @Override
     protected void initListener() {
-        mIwaerApplication.service.watch.getBatteryInfo(new BleCallback() {
+        ibandApplication.service.watch.getBatteryInfo(new BleCallback() {
             @Override
             public void onSuccess(Object o) {
 
@@ -239,6 +275,8 @@ public class SettingActivity extends BaseActionActivity {
         }else if (event.getWhat() == EventGlobal.STATE_DEVICE_BIND) {
             bindName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,"");
             showBindDevice();
+            loadDeviceImg();
+            checkMenuVisibility();
         }else if (event.getWhat() == EventGlobal.STATE_DEVICE_UNBIND) {
             rlUnBind.setVisibility(View.VISIBLE);
         }else if (event.getWhat() == EventGlobal.STATE_DEVICE_CONNECT) {

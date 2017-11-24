@@ -4,6 +4,7 @@
                 android:layout_height="72dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/rl_device">
     <TextView
         android:layout_width="match_parent"
@@ -11,11 +12,11 @@
         android:layout_alignParentTop="true"
         android:background="@color/line_background"/>
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/iv_device_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/set_product01"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:placeholderImage="@mipmap/set_product01"
         android:layout_centerVertical="true"/>
 
     <TextView

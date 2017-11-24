@@ -211,7 +211,7 @@ public class SyncAlert {
         SPUtil.put(mContext, AppGlobal.DATA_BATTERY_STATE,batteryState);
     }
 
-    private String parseJsonString(Object o,String key){
+    public static String parseJsonString(Object o,String key){
         String str = o.toString();
         String result = "";
         try {
@@ -223,7 +223,7 @@ public class SyncAlert {
         return result;
     }
 
-    private int parseJsonInt(Object o,String key){
+    public static int parseJsonInt(Object o,String key){
         String str = o.toString();
         int result = 0;
         try {

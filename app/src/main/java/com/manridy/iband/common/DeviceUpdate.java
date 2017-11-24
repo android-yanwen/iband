@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.ToastUtil;
 import com.manridy.iband.OnResultCallBack;
 import com.manridy.iband.R;
@@ -38,7 +39,7 @@ public class DeviceUpdate {
     }
 
 
-    public void getOTAVersion( final String deviceType, final String deviceVersion){
+    public void getOTAVersion(final String deviceType, final String deviceVersion, final boolean isForce){
         checkDeviceUpdate(new OnResultCallBack() {
             @Override
             public void onResult(boolean result, Object o) {
@@ -48,7 +49,8 @@ public class DeviceUpdate {
                         boolean isShow = false;
                         for (DomXmlParse.Image image : imageList) {
                             if (image.id.equals(deviceType)) {
-                                if (image.least.compareTo(deviceVersion) > 0) {
+                                if (image.least.compareTo(deviceVersion) > 0 || isForce) {
+                                    SPUtil.put(mContext,AppGlobal.DATA_FIRMWARE_VERSION_NEW,image.least);
                                     isShow = true;
                                     final String fileUrl = url+"/"+image.id+"/"+image.file;
                                     ((Activity)mContext).runOnUiThread(new Runnable() {
@@ -79,7 +81,7 @@ public class DeviceUpdate {
         view.findViewById(R.id.goto_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (dialog != null && dialog.isShowing()) {
+                if (dialog != null &&  !((Activity)mContext).isFinishing()) {
                     dialog.dismiss();
                 }
             }
@@ -89,10 +91,14 @@ public class DeviceUpdate {
             public void onClick(View v) {
                 getOTAFile(fileUrl);
                 showToast(R.string.hint_ota_file_download);
-                dialog.dismiss();
+                if (dialog != null && !((Activity)mContext).isFinishing()) {
+                    dialog.dismiss();
+                }
             }
         });
-        dialog.show();
+        if (!((Activity)mContext).isFinishing()) {
+            dialog.show();
+        }
     }
 
     private void getOTAFile(final String fileUrl){
@@ -104,7 +110,6 @@ public class DeviceUpdate {
                     public void onResult(boolean result, Object o) {
                         if (result) {
                             showToast(R.string.hint_ota_file_success);
-
                             mContext.startActivity(new Intent(mContext,OtaActivity.class));
                         }else{
                             showToast(R.string.hint_ota_file_fail);

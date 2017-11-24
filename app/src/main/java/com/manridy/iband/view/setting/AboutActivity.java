@@ -2,12 +2,15 @@ package com.manridy.iband.view.setting;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.manridy.applib.utils.VersionUtil;
 import com.manridy.iband.IbandApplication;
+import com.manridy.iband.OnResultCallBack;
 import com.manridy.iband.R;
+import com.manridy.iband.service.HttpService;
 import com.manridy.iband.ui.items.HelpItems;
 import com.manridy.iband.view.test.TestDatabaseActivity;
 import com.manridy.iband.view.base.BaseActionActivity;
@@ -58,6 +61,7 @@ public class AboutActivity extends BaseActionActivity {
         hiHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(HelpActivity.class);
             }
         });
 

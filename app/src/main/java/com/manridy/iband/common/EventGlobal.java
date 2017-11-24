@@ -51,6 +51,7 @@ public class EventGlobal {
     public static final int ACTION_BATTERY_NOTIFICATION = 1660;
     public static final int ACTION_HEALTH_TEST = 902;
     public static final int ACTION_HEALTH_TESTED = 900;
+    public static final int ACTION_LOAD_DEVICE_LIST = 2222;
 
     public static final int ACTION_HR_TEST = 910;
     public static final int ACTION_BP_TEST = 911;

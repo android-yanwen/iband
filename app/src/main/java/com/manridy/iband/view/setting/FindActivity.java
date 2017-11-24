@@ -68,7 +68,7 @@ public class FindActivity extends BaseActionActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 handler.removeCallbacksAndMessages(null);
-                mIwaerApplication.service.watch.sendCmd(BleCmd.findDevice(0), new BleCallback() {
+                ibandApplication.service.watch.sendCmd(BleCmd.findDevice(0), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
 
@@ -82,7 +82,7 @@ public class FindActivity extends BaseActionActivity {
             }
         });
 
-        mIwaerApplication.service.watch.sendCmd(BleCmd.findDevice(3), new BleCallback() {
+        ibandApplication.service.watch.sendCmd(BleCmd.findDevice(3), new BleCallback() {
             @Override
             public void onSuccess(Object o) {
 

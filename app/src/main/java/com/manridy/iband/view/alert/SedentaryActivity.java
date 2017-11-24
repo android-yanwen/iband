@@ -83,7 +83,7 @@ public class SedentaryActivity extends BaseActionActivity {
             public void onClick(View v) {
                 showProgress(getString(R.string.hint_saveing));
                 Sedentary sedentary = new Sedentary(curSedentary.isSedentaryOnOff(), curSedentary.isSedentaryNap(), curSedentary.getStartTime(), curSedentary.getEndTime());
-                mIwaerApplication.service.watch.setSedentaryAlert(sedentary, new BleCallback() {
+                ibandApplication.service.watch.setSedentaryAlert(sedentary, new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         curSedentary.save();
@@ -112,6 +112,7 @@ public class SedentaryActivity extends BaseActionActivity {
                 boolean onOff = !curSedentary.isSedentaryOnOff();
                 curSedentary.setSedentaryOnOff(onOff);
                 aiOnoff.setAlertCheck(onOff);
+                isChange = true;
                 break;
             case R.id.ai_start_time:
                 int[] startInts = getTimeInt(curSedentary.getStartTime());
@@ -126,6 +127,7 @@ public class SedentaryActivity extends BaseActionActivity {
                         }
                         curSedentary.setStartTime(startTime);
                         aiStartTime.setAlertContent(startTime);
+                        isChange = true;
                     }
                 }).show();
                 break;
@@ -142,6 +144,7 @@ public class SedentaryActivity extends BaseActionActivity {
                         }
                         curSedentary.setEndTime(endTime);
                         aiEndTime.setAlertContent(endTime);
+                        isChange = true;
                     }
                 }).show();
                 break;
@@ -149,6 +152,7 @@ public class SedentaryActivity extends BaseActionActivity {
                 boolean nap = !curSedentary.isSedentaryNap();
                 curSedentary.setSedentaryNap(nap);
                 aiNap.setAlertCheck(nap);
+                isChange = true;
                 break;
         }
     }

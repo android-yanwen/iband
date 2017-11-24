@@ -67,11 +67,16 @@ public class TimeUtil {
      */
     @SuppressLint("SimpleDateFormat")
     public static String getNowYMDHMSTime() {
-
-
         SimpleDateFormat mDateFormat = new SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss");
         String date = mDateFormat.format(new Date());
+        return date;
+    }
+
+    public static String getNowYMDHMSTime(long time) {
+        SimpleDateFormat mDateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss");
+        String date = mDateFormat.format(new Date(time));
         return date;
     }
 

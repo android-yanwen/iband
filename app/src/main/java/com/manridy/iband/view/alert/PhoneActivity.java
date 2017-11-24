@@ -20,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.weyye.hipermission.HiPermission;
 import me.weyye.hipermission.PermissionCallback;
-import me.weyye.hipermission.PermissonItem;
+import me.weyye.hipermission.PermissionItem;
 
 /**
  * 来电提醒
@@ -54,10 +54,10 @@ public class PhoneActivity extends BaseActionActivity {
         aiAlert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<PermissonItem> permissonItems = new ArrayList<PermissonItem>();
-                permissonItems.add(new PermissonItem(Manifest.permission.READ_PHONE_STATE, getString(R.string.hint_phone), R.mipmap.permission_ic_phone));
-                permissonItems.add(new PermissonItem(Manifest.permission.CALL_PHONE, getString(R.string.hint_call), R.mipmap.permission_ic_phone_remind));
-                permissonItems.add(new PermissonItem(Manifest.permission.READ_CONTACTS, getString(R.string.hint_contacts), R.mipmap.permission_ic_contacts));
+                List<PermissionItem> permissonItems = new ArrayList<PermissionItem>();
+                permissonItems.add(new PermissionItem(Manifest.permission.READ_PHONE_STATE, getString(R.string.hint_phone), R.mipmap.permission_ic_phone));
+                permissonItems.add(new PermissionItem(Manifest.permission.CALL_PHONE, getString(R.string.hint_call), R.mipmap.permission_ic_phone_remind));
+                permissonItems.add(new PermissionItem(Manifest.permission.READ_CONTACTS, getString(R.string.hint_contacts), R.mipmap.permission_ic_contacts));
                 HiPermission.create(mContext)
                         .title(getString(R.string.hint_alert_open))
                         .msg(getString(R.string.hint_permisson_phone))
@@ -87,6 +87,7 @@ public class PhoneActivity extends BaseActionActivity {
         public void onFinish() {
             onOff = !onOff;
             aiAlert.setAlertCheck(onOff);
+            isChange = true;
         }
 
         @Override

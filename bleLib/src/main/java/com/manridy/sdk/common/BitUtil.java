@@ -382,4 +382,8 @@ public class BitUtil {
         return Long.parseLong(temp.toString(), 2);
     }
 
+    public static int doubleByteToInt(byte b1,byte b2){
+        return (b1 & 0xff) << 8 | (b2 & 0xff);
+    }
+
 }

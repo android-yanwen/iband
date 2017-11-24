@@ -1,12 +1,16 @@
 package com.manridy.iband.view.base;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.manridy.applib.base.BaseActivity;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.IbandApplication;
@@ -22,11 +26,14 @@ import org.greenrobot.eventbus.EventBus;
  */
 
 public abstract class BaseActionActivity extends BaseActivity {
+    public IbandApplication ibandApplication;
     boolean isRegistEventBus;
-    public IbandApplication mIwaerApplication;
+    protected boolean isChange;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        mIwaerApplication = (IbandApplication) getApplication();
+        ibandApplication = (IbandApplication) getApplication();
         super.onCreate(savedInstanceState);
         setStatusBar();
         initBack();
@@ -71,7 +78,7 @@ public abstract class BaseActionActivity extends BaseActivity {
         findViewById(R.id.tb_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                exitFinish();
             }
         });
         ((TextView)findViewById(R.id.tb_title)).setText(title);
@@ -81,7 +88,7 @@ public abstract class BaseActionActivity extends BaseActivity {
         findViewById(R.id.tb_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                exitFinish();
             }
         });
         ((TextView)findViewById(R.id.tb_title)).setText(title);
@@ -92,7 +99,7 @@ public abstract class BaseActionActivity extends BaseActivity {
         findViewById(R.id.tb_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                exitFinish();
             }
         });
         ((TextView)findViewById(R.id.tb_title)).setText(title);
@@ -105,7 +112,7 @@ public abstract class BaseActionActivity extends BaseActivity {
         findViewById(R.id.tb_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                exitFinish();
             }
         });
         ((TextView)findViewById(R.id.tb_title)).setText(title);
@@ -150,15 +157,45 @@ public abstract class BaseActionActivity extends BaseActivity {
         EventBus.getDefault().post(new EventMessage(what,msg));
     }
 
+    public void showNotSaveDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage(R.string.hint_not_save);
+        builder.setTitle(R.string.hint_warm_alert);
+        builder.setPositiveButton(getString(R.string.hint_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                finish();
+            }
+        });
+        builder.setNegativeButton(getString(R.string.hint_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
 
     @Override
     public void onBackPressed() {
-        finish();
+        exitFinish();
     }
+
+    public void exitFinish(){
+        if (isChange) {
+            showNotSaveDialog();
+        }else {
+            finish();
+        }
+    }
+
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mContext = null;
         if (isRegistEventBus) {
             EventBus.getDefault().unregister(this);
         }

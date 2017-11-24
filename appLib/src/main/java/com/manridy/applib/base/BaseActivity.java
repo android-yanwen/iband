@@ -86,6 +86,10 @@ public abstract class BaseActivity extends AppCompatActivity  implements SwipeBa
         return v;
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+//        super.onConfigurationChanged(newConfig);
+    }
 
     protected abstract void initView(Bundle savedInstanceState);
 
@@ -94,6 +98,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements SwipeBa
     protected abstract void initListener();
 
     protected void loadData(){}
+
+
 
     @Override
     protected void onDestroy() {
@@ -107,6 +113,15 @@ public abstract class BaseActivity extends AppCompatActivity  implements SwipeBa
      */
     protected void showToast(String msg){
         ToastUtil.showToast(mContext,msg);
+    }
+
+    protected void showToastOnMain(final String msg){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showToast(msg);
+            }
+        });
     }
 
     /**
@@ -147,7 +162,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements SwipeBa
      * 进度条消失
      */
     public void dismissProgress(){
-        if (dialog != null) {
+        if (dialog != null && !this.isFinishing()) {
             dialog.dismiss();
         }
     }
@@ -289,7 +304,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements SwipeBa
         long time = System.currentTimeMillis();
         long timeD = time - lastClickTime;
         lastClickTime = time;
-        return timeD <= 600;
+        return timeD <= 1000;
     }
 
 

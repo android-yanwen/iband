@@ -1,15 +1,10 @@
 package com.manridy.iband.service;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Process;
 import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -32,22 +27,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * note: VERSION_CODE >= API_18
- * <p/>
- * manifest:
- * <service android:name=".service.NotificationService"
- *  android:label="@string/app_name"
- *  android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
- *  <intent-filter>
- *      <action android:name="android.service.notification.NotificationListenerService" />
- *  </intent-filter>
- * </service>
- *
- * @author MaTianyu
- * @date 2015-03-09
+ * Created by jarLiao on 17/11/11.
  */
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-public class NotificationService2 extends NotificationListenerService {
+
+public class AppNotificationListenerService extends NotificationListenerService {
     private static final String TAG = "NotificationService";
     public static final String ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
     private static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
@@ -62,19 +45,25 @@ public class NotificationService2 extends NotificationListenerService {
     public static final String PAGE_NAME_FACEBOOK ="com.facebook.katana";
     public static final String PAGE_NAME_LINE ="jp.naver.line.android";
 
-
     public static final int APP_ID_QQ =2;
     public static final int APP_ID_WX =4;
     public static final int APP_ID_WHATSAPP =5;
     public static final int APP_ID_FACEBOOK =6;
     public static final int APP_ID_LINE =7;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d(TAG, "onCreate() called");
+    }
+
     /*----------------- 静态方法 -----------------*/
     public synchronized static void startNotificationService(Context context) {
-        context.startService(new Intent(context, NotificationService2.class));
+        context.startService(new Intent(context, AppNotificationListenerService.class));
     }
 
     public synchronized static void stopNotificationService(Context context) {
-        context.stopService(new Intent(context, NotificationService2.class));
+        context.stopService(new Intent(context, AppNotificationListenerService.class));
     }
 
 
@@ -106,45 +95,17 @@ public class NotificationService2 extends NotificationListenerService {
         return false;
     }
 
-    /*----------------- 生命周期 -----------------*/
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.i(TAG, "onCreate..");
-//        ensureCollectorRunning();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, "onStartCommand..");
-        return START_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "onDestroy..");
-    }
-
-    /*----------------- 通知回调 -----------------*/
+    /*----------------- 监听通知状态 -----------------*/
     int infoId = 1;
     List<byte[]> cmdList = new ArrayList<>();
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         sendAppAlert(sbn);
+    }
 
+    @Override
+    public void onNotificationRemoved(StatusBarNotification sbn) {
 
-//            Log.i(TAG, "tickerText : " + notification.tickerText);
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                Bundle bundle = notification.extras;
-//                for (String key : bundle.keySet()) {
-//                    Log.i(TAG, key + ": " + bundle.get(key));
-//                }
-//            }
-//
-//        if (self != null && notificationListener != null) {
-//            notificationListener.onNotificationPosted(sbn);
-//        }
     }
 
     private synchronized void sendAppAlert(StatusBarNotification sbn) {
@@ -231,60 +192,5 @@ public class NotificationService2 extends NotificationListenerService {
         return bytes;
     }
 
-    @Override
-    public void onNotificationRemoved(StatusBarNotification sbn) {
-
-    }
-
-    private void ensureCollectorRunning() {
-        ComponentName collectorComponent = new ComponentName(this, NotificationService2.class);
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        boolean collectorRunning = false;
-        List<ActivityManager.RunningServiceInfo> runningServices = manager.getRunningServices(Integer.MAX_VALUE);
-        if (runningServices == null ) {
-            return;
-        }
-        for (ActivityManager.RunningServiceInfo service : runningServices) {
-            if (service.service.equals(collectorComponent)) {
-                if (service.pid == Process.myPid() ) {
-                    collectorRunning = true;
-                }
-            }
-        }
-        if (collectorRunning) {
-            return;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            requestRebind(new ComponentName(this,  NotificationService2.class));
-        }else {
-            toggleNotificationListenerService();
-        }
-    }
-
-    //重新开启NotificationMonitor
-    private void toggleNotificationListenerService() {
-        ComponentName thisComponent = new ComponentName(this,  NotificationService2.class);
-        PackageManager pm = getPackageManager();
-        pm.setComponentEnabledSetting(thisComponent, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-        pm.setComponentEnabledSetting(thisComponent, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-    }
-
-    public void printCurrentNotifications() {
-        StatusBarNotification[] ns = getActiveNotifications();
-        for (StatusBarNotification n : ns) {
-            Log.i(TAG, String.format("%20s",n.getPackageName()) + ": " + n.getNotification().tickerText);
-        }
-    }
-    public static void toggleNotificationListenerService(Context context) {
-        Log.e(TAG,"toggleNLS");
-        PackageManager pm = context.getPackageManager();
-        pm.setComponentEnabledSetting(
-                new ComponentName(context, NotificationService2.class),
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-
-        pm.setComponentEnabledSetting(
-                new ComponentName(context, NotificationService2.class),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-    }
 
 }

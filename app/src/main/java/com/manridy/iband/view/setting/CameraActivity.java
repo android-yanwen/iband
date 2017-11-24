@@ -19,7 +19,6 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,7 +38,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -87,7 +85,7 @@ public class CameraActivity extends BaseActionActivity {
             public void onClick(View v) {
                 svCamera.setVisibility(View.VISIBLE);
                 ivCapture.setVisibility(View.VISIBLE);
-                mIwaerApplication.service.watch.sendCmd(BleCmd.setCameraViewOnOff(1), new BleCallback() {
+                ibandApplication.service.watch.sendCmd(BleCmd.setCameraViewOnOff(1), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
 
@@ -316,7 +314,7 @@ public class CameraActivity extends BaseActionActivity {
                 e.printStackTrace();
             }
             mCamera.startPreview();
-            mIwaerApplication.service.watch.sendCmd(BleCmd.setCameraNotify(0), new BleCallback() {
+            ibandApplication.service.watch.sendCmd(BleCmd.setCameraNotify(0), new BleCallback() {
                 @Override
                 public void onSuccess(Object o) {
 
@@ -460,7 +458,7 @@ public class CameraActivity extends BaseActionActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mIwaerApplication.service.watch.sendCmd(BleCmd.setCameraViewOnOff(0), new BleCallback() {
+        ibandApplication.service.watch.sendCmd(BleCmd.setCameraViewOnOff(0), new BleCallback() {
             @Override
             public void onSuccess(Object o) {
 

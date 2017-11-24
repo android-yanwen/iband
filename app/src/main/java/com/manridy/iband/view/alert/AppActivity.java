@@ -17,7 +17,7 @@ import com.manridy.iband.bean.AppModel;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.OnItemClickListener;
-import com.manridy.iband.service.NotificationService2;
+import com.manridy.iband.service.AppNotificationListenerService;
 import com.manridy.iband.ui.items.AlertBigItems;
 import com.manridy.iband.view.base.BaseActionActivity;
 
@@ -27,8 +27,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.weyye.hipermission.PermissionAdapter;
+import me.weyye.hipermission.PermissionItem;
 import me.weyye.hipermission.PermissionView;
-import me.weyye.hipermission.PermissonItem;
 
 /**
  * 应用提醒
@@ -46,6 +46,7 @@ public class AppActivity extends BaseActionActivity {
     List<AppModel> curAppList;
     AppAdapter mAppAdapter;
     List<AppAdapter.Menu> menuList;
+
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_app);
@@ -81,6 +82,7 @@ public class AppActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 selectApp(!onOff);
+                isChange = true;
             }
         });
 
@@ -94,7 +96,7 @@ public class AppActivity extends BaseActionActivity {
                             AppAdapter.Menu menu = menuList.get(position);
                             menu.menuCheck = !menu.menuCheck;
                             mAppAdapter.notifyDataSetChanged();
-
+                            isChange = true;
                         }
                     }
                 });
@@ -114,15 +116,15 @@ public class AppActivity extends BaseActionActivity {
     }
 
     private void selectApp(boolean isChecked){
-        if (!NotificationService2.isNotificationListenEnable(mContext)) {
+        if (!AppNotificationListenerService.isNotificationListenEnable(mContext)) {
             OpenNotifiactionDialog();
             return;
         }
         if (isChecked) {
-            NotificationService2.startNotificationService(mContext);
+            AppNotificationListenerService.startNotificationService(mContext);
                 onOff = true;
             }else {
-                NotificationService2.stopNotificationService(mContext);
+            AppNotificationListenerService.stopNotificationService(mContext);
                 onOff = false;
             }
         aiAlert.setAlertCheck(onOff);
@@ -141,8 +143,8 @@ public class AppActivity extends BaseActionActivity {
 
     public void OpenNotifiactionDialog(){
         PermissionView contentView = new PermissionView(this);
-        List<PermissonItem> data = new ArrayList<>();
-        data.add(new PermissonItem(getString(R.string.hint_notification),getString(R.string.hint_notification),R.mipmap.permission_ic_notice));
+        List<PermissionItem> data = new ArrayList<>();
+        data.add(new PermissionItem(getString(R.string.hint_notification),getString(R.string.hint_notification),R.mipmap.permission_ic_notice));
         contentView.setGridViewColum(data.size());
         contentView.setTitle(getString(R.string.hint_alert_open));
         contentView.setMsg(getString(R.string.hint_request_alert_app));
@@ -161,7 +163,7 @@ public class AppActivity extends BaseActionActivity {
 //                Intent intent = new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                startActivityForResult(intent,10000);
-                NotificationService2.startNotificationListenSettings(mContext);
+                AppNotificationListenerService.startNotificationListenSettings(mContext);
                 onOff = true;
             }
         });
@@ -174,11 +176,19 @@ public class AppActivity extends BaseActionActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        boolean isEnable = NotificationService2.isNotificationListenEnable(mContext);
+        boolean isEnable = AppNotificationListenerService.isNotificationListenEnable(mContext);
         aiAlert.setAlertCheck(isEnable && onOff);
     }
 
-//    @Override
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (isChange) {
+            showNotSaveDialog();
+        }
+    }
+
+    //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
 //        if (requestCode == 10000) {

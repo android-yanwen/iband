@@ -9,17 +9,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.internal.telephony.ITelephony;
 import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
+import com.manridy.applib.utils.ToastUtil;
 import com.manridy.iband.SyncAlert;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
@@ -221,7 +226,7 @@ public class BleService extends Service {
                         showNotification(2);
                     }
                     EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_CONNECTING));
-                    startConnectWardThread();
+//                    startConnectWardThread();
                     break;
                 case ACTION_GATT_DISCONNECTED:
                     LogUtil.e(TAG,"设备地址 "+macStr+" 蓝牙状态----蓝牙已断开");
@@ -307,7 +312,10 @@ public class BleService extends Service {
                     }
                     break;
                 case ACTION_CALL_END:
-                    end(BleService.this);
+                    boolean isEnd = end(BleService.this);
+                    if (!isEnd) {
+                        toastHandler.sendEmptyMessage(0);
+                    }
                     break;
                 case ACTION_CALL_RUN:
                     answerRingingCall(BleService.this);
@@ -317,6 +325,15 @@ public class BleService extends Service {
             }
         }
     };
+
+    Handler toastHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            ToastUtil.showToast(getApplicationContext(),getString(R.string.error_call_end));
+        }
+    };
+
 
     BleNotifyListener notifyListener = new BleNotifyListener() {
         @Override
@@ -333,7 +350,8 @@ public class BleService extends Service {
         }
     }
 
-    public void end(Context context){
+    public boolean end(Context context){
+        boolean isEnd = false;
         try {
             Method getITelephonyMethod =TelephonyManager.class
                     .getDeclaredMethod("getITelephony", (Class[]) null);
@@ -342,16 +360,23 @@ public class BleService extends Service {
             ITelephony  mITelephony = (ITelephony) getITelephonyMethod.invoke(tm,
                     (Object[]) null);
             // 拒接来电
-            mITelephony.endCall();
+            isEnd =mITelephony.endCall();
+            Log.d(TAG, "end() called with: context = [" + isEnd+ "]") ;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
+            Log.d(TAG, "end() called with: context = NoSuchMethodException");
         }catch (IllegalAccessException e) {
             e.printStackTrace();
+            Log.d(TAG, "end() called with: context = IllegalAccessException");
         } catch (InvocationTargetException e) {
             e.printStackTrace();
+            Log.d(TAG, "end() called with: context = InvocationTargetException");
         }catch (RemoteException e) {
+            Log.d(TAG, "end() called with: context = RemoteException");
             e.printStackTrace();
         }
+
+        return isEnd;
     }
 
 
@@ -419,7 +444,7 @@ public class BleService extends Service {
 
         @Override
         public void onConnectFailure(BleException exception) {
-            startConnectWardThread();
+//            startConnectWardThread();
             Log.d(TAG, "onConnectFailure() called with: exception = [" + exception.toString() + "]");
         }
     };

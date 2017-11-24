@@ -11,6 +11,7 @@ public class AppGlobal {
     //device bind
     public static final String DATA_DEVICE_BIND_NAME = "data_device_bind_name";
     public static final String DATA_DEVICE_BIND_MAC = "data_device_bind_mac";
+    public static final String DATA_DEVICE_BIND_IMG = "data_device_bind_img";
     public static final String DATA_DEVICE_CONNECT_STATE = "data_device_connect_state";
     //alert
     public static final String DATA_ALERT_SMS = "data_alert_sms";
@@ -26,8 +27,12 @@ public class AppGlobal {
     public static final String DATA_SETTING_UNIT_TIME = "data_setting_unit_time";
     public static final String DATA_SETTING_TARGET_STEP = "data_setting_target_step";
     public static final String DATA_SETTING_TARGET_SLEEP = "data_setting_target_sleep";
+    public static final String DATA_SETTING_HRCORRECT ="data_setting_hrcorrect";
+
     //version
     public static final String DATA_FIRMWARE_VERSION = "data_setting_firmware";
+    public static final String DATA_FIRMWARE_VERSION_NEW = "data_setting_firmware_new";
+
     public static final String DATA_FIRMWARE_TYPE = "data_firmware_type";
     //
     public static final String DATA_TIMING_HR = "data_timing_hr";
@@ -36,6 +41,8 @@ public class AppGlobal {
     public static final String DATA_BATTERY_NUM = "data_battery_num";
     public static final String DATA_BATTERY_STATE = "data_battery_state";
     public static final String DATA_SYNC_TIME = "data_sync_time";
+
+    public static final String DATA_DEVICE_LIST = "data_device_list";
 
     public static final String STATE_APP_OTA_RUN = "state_app_ota_run";
 

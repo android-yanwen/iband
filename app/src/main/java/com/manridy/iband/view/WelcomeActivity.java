@@ -28,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.weyye.hipermission.HiPermission;
 import me.weyye.hipermission.PermissionCallback;
-import me.weyye.hipermission.PermissonItem;
+import me.weyye.hipermission.PermissionItem;
 
 /**
  * 引导页
@@ -110,10 +110,10 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     private void initPermisson() {
-        List<PermissonItem> permissonItems = new ArrayList<PermissonItem>();
-        permissonItems.add(new PermissonItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, getString(R.string.hint_permission_sd), R.mipmap.permission_ic_sd));
-        permissonItems.add(new PermissonItem(Manifest.permission.ACCESS_FINE_LOCATION, getString(R.string.hint_permission_location), R.mipmap.permission_ic_location));
-        permissonItems.add(new PermissonItem(Manifest.permission.CAMERA, getString(R.string.hint_permission_camera), R.mipmap.permission_ic_camera));
+        List<PermissionItem> permissonItems = new ArrayList<PermissionItem>();
+        permissonItems.add(new PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, getString(R.string.hint_permission_sd), R.mipmap.permission_ic_sd));
+        permissonItems.add(new PermissionItem(Manifest.permission.ACCESS_FINE_LOCATION, getString(R.string.hint_permission_location), R.mipmap.permission_ic_location));
+        permissonItems.add(new PermissionItem(Manifest.permission.CAMERA, getString(R.string.hint_permission_camera), R.mipmap.permission_ic_camera));
         HiPermission.create(mContext)
                 .permissions(permissonItems)
 //                .filterColor(Color.parseColor("#2196f3"))

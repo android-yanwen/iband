@@ -9,7 +9,6 @@ import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.view.dialog.NumDialog;
 import com.manridy.iband.R;
 import com.manridy.iband.common.AppGlobal;
-import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.ui.items.AlertBigItems;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.sdk.ble.BleCmd;
@@ -81,7 +80,7 @@ public class TestHrTimingActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 showProgress( getString(R.string.hint_saveing));
-                mIwaerApplication.service.watch.sendCmd(BleCmd.setTimingHrTest(curOnoff,curSpace), new BleCallback() {
+                ibandApplication.service.watch.sendCmd(BleCmd.setTimingHrTest(curOnoff,curSpace), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);

@@ -48,7 +48,7 @@ import com.manridy.iband.common.DomXmlParse;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.common.Utils;
-import com.manridy.iband.service.NotificationService2;
+import com.manridy.iband.service.AppNotificationListenerService;
 import com.manridy.iband.ui.SimpleView;
 import com.manridy.iband.view.model.BoFragment;
 import com.manridy.iband.view.model.BpFragment;
@@ -74,8 +74,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.weyye.hipermission.PermissionAdapter;
+import me.weyye.hipermission.PermissionItem;
 import me.weyye.hipermission.PermissionView;
-import me.weyye.hipermission.PermissonItem;
 
 /**
  * 主页
@@ -536,7 +536,7 @@ public class MainActivity extends BaseActivity {
                 public void run() {
                     ibandApplication.service.initConnect(false);
                 }
-            }, 1500);
+            }, 3000);
             hideFloatView();
             setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
         } else if (event.getWhat() == EventGlobal.STATE_CHANGE_BLUETOOTH_OFF) {
@@ -747,8 +747,8 @@ public class MainActivity extends BaseActivity {
     AlertDialog bluetoothDialog;
     public void OpenBluetoothDialog(){
         PermissionView contentView = new PermissionView(this);
-        List<PermissonItem> data = new ArrayList<>();
-        data.add(new PermissonItem(getString(R.string.hint_bluetooth),getString(R.string.hint_bluetooth),R.mipmap.permission_ic_bluetooth));
+        List<PermissionItem> data = new ArrayList<>();
+        data.add(new PermissionItem(getString(R.string.hint_bluetooth),getString(R.string.hint_bluetooth),R.mipmap.permission_ic_bluetooth));
         contentView.setGridViewColum(data.size());
         contentView.setTitle(getString(R.string.hint_bluetooth_open));
         contentView.setMsg(getString(R.string.hint_bluetooth_open_alert));

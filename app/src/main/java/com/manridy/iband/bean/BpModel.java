@@ -1,5 +1,7 @@
 package com.manridy.iband.bean;
 
+import com.manridy.applib.utils.TimeUtil;
+
 import org.litepal.crud.DataSupport;
 
 /**
@@ -17,6 +19,7 @@ public class BpModel extends DataSupport {
     private int bpHp;//高压
     private int bpLp;//低压
     private int bpHr;//心率
+    private long updateDate;//数据更新时间
 
     public BpModel() {
     }
@@ -104,6 +107,19 @@ public class BpModel extends DataSupport {
         this.bpHr = bpHr;
     }
 
+    public long getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(long updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public void saveToDate(){
+        this.setUpdateDate(System.currentTimeMillis());
+        save();
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("BpModel{");
@@ -115,6 +131,7 @@ public class BpModel extends DataSupport {
         sb.append(", bpHp=").append(bpHp);
         sb.append(", bpLp=").append(bpLp);
         sb.append(", bpHr=").append(bpHr);
+        sb.append(", updateDate=").append(TimeUtil.getNowYMDHMSTime(updateDate));
         sb.append('}');
         return sb.toString();
     }

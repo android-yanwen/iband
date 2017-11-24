@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:textColor="@color/text_title"
+        android:maxEms="18"
         android:textSize="14sp"
         android:text="检测升级"/>
 

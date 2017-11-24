@@ -37,6 +37,12 @@
                 app:menus_icon="@mipmap/set_heart_rate"
                 app:menus_name="心率定时测量"/>
             <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_hr_correct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_heart_rate"
+                app:menus_name="心率加强测量"/>
+            <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_reset"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
