@@ -506,7 +506,7 @@ public class MainActivity extends BaseActivity {
             }else {
                 tbSync.setText(R.string.hint_un_connect);
             }
-            if (isLostOn && !bindMac.isEmpty() && 0 == bytes[0]) {
+            if (isLostOn && !bindMac.isEmpty() && 0 == bytes[0] || 19 == bytes[0]) {
                 handler.sendEmptyMessageDelayed(0, 20 * 1000);
                 Log.d(TAG, "onLostThread() called with: event = [STATE_DEVICE_DISCONNECT]");
             }

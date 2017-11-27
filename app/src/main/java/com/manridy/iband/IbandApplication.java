@@ -59,7 +59,7 @@ public class IbandApplication extends Application {
 
     private void initBugly() {
         Bugly.init(getApplicationContext(), "33139ca6ea",false);
-        Beta.initDelay = 2 * 1000;//延迟两秒检测版本信息
+        Beta.initDelay = 5 * 1000;//延迟两秒检测版本信息
     }
 
     private void initNotificationService() {

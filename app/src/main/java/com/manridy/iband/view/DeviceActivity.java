@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -16,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.manridy.applib.utils.CheckUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.OnResultCallBack;
@@ -35,14 +35,13 @@ import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleConnectCallback;
 import com.manridy.sdk.exception.BleException;
 import com.manridy.sdk.scan.TimeScanCallback;
-import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
-import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,9 +78,11 @@ public class DeviceActivity extends BaseActionActivity {
     private String bindName;//绑定设备名称
     private int curPosition = -1;//选中设备序号
     private String strDeviceList;
-    private DeviceList filterDeviceList;
     private boolean isDebug;
+    private ArrayList<String> deviceFilters = new ArrayList<>();
     public static String identifier = "iband";
+    public String localFilters = "[\"HB\",\"HM\",\"M7\",\"CB606\",\"R11\",\"HB-M1\",\"N67\",\"watch\",\"F07\",\"F1Pro\",\"HB08\",\"Smart\",\"K2\",\"N68\",\"Smart B\",\"N109\",\"Smart-2\",\"TF1\"]";
+
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -93,10 +94,11 @@ public class DeviceActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         registerEventBus();//注册EventBus
-        ZXingLibrary.initDisplayOpinion(this);//初始化zxinglib
         initRecyclerView();//初始化搜索设备列表
         initBindView();//初始化绑定视图
-        scanDevice(false);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        String filterStr = (String) SPUtil.get(ibandApplication,AppGlobal.DATA_DEVICE_FILTER,localFilters);
+        deviceFilters = new Gson().fromJson(filterStr,type);
     }
 
     //初始化搜索设备列表
@@ -165,9 +167,9 @@ public class DeviceActivity extends BaseActionActivity {
     @Override
     protected void loadData() {
         super.loadData();
-        strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
-        filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
+        scanDevice(false);
         EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_LOAD_DEVICE_LIST));
+
     }
 
     @OnClick({R.id.iv_qrcode, R.id.iv_refresh, R.id.bt_bind, R.id.tb_menu})
@@ -185,7 +187,7 @@ public class DeviceActivity extends BaseActionActivity {
 
                     }
                 });
-                Intent intent = new Intent(DeviceActivity.this, CaptureActivity.class);
+                Intent intent = new Intent(DeviceActivity.this, QrActivity.class);
                 startActivityForResult(intent,10000);
                 break;
             case R.id.iv_refresh://刷新按钮点击
@@ -230,7 +232,7 @@ public class DeviceActivity extends BaseActionActivity {
                     bindName = leDevice.getmBluetoothGatt().getDevice().getName();
                 }
                 SPUtil.put(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,bindName == null ? "UNKONW":bindName);
-                SPUtil.put(mContext,AppGlobal.DATA_DEVICE_BIND_IMG,getDeviceImgRes(bindName));
+                SPUtil.put(mContext,AppGlobal.DATA_DEVICE_BIND_IMG,getDeviceImgRes(bindName,filterDeviceList));
                 eventSend(EventGlobal.STATE_DEVICE_BIND);//发送绑定成功广播
             }
 
@@ -329,7 +331,7 @@ public class DeviceActivity extends BaseActionActivity {
                 public void run() {
                     String deviceName = device.getName();
 //                    Log.d(TAG, "mTimeScanCallback() deviceName ==== "+deviceName==null?"null":deviceName);
-                    if ((deviceName != null && checkFilter(deviceName,filters))||isDebug) {
+                    if ((deviceName != null && checkFilter(deviceName,deviceFilters))||isDebug) {
                         mDeviceList.add(new DeviceAdapter.DeviceModel(device, rssi, scanRecord));
                         mDeviceAdapter.notifyDataSetChanged();
                     }
@@ -338,59 +340,17 @@ public class DeviceActivity extends BaseActionActivity {
 
         }
     };
-    public static String HWO14 = "N109";
-    public static String HW018 = "Smart-2";
-    public static String HW021 = "N68";
-    public static String HW022 = "Smart";
-    public static String HW026 = "N66";
-    public static String HW029 = "F1Pro";
-    public static String HW030 = "F07";
-    public static String HW031 = "watch";
-    public static String HW028 = "TF1";
-    public static String HW027 = "N67";
-    public static String HW028_1 = "R11";
-    public static String TEST = "HB";
-    public static String TEST2 = "K2";
-    public static String TEST3 = "HM";
-    public static String[] filters = {HWO14,HW018,HW021,HW022,
-            HW026,HW029,HW030,HW031,HW028_1,
-            HW028,HW027,TEST,TEST2,TEST3};
+
+
+
 
     /**
-     * 检测过滤设备
-     * @param deviceName
-     * @param filters
-     * @return
-     */
-    public boolean checkFilter(String deviceName,String[] filters){
-        if (filterDeviceList != null && filterDeviceList.getResult().size() >0) {//如果有网络设备列表，以网络为准
-            return checkNetworkDeviceData(deviceName);
-        }
-        return checkLocalDeviceData(deviceName, filters);
-    }
-
-    /**
-     * 检测网络设备列表
+     * 筛选过滤设备
      * @param deviceName
      * @return
      */
-    private boolean checkNetworkDeviceData(String deviceName) {
-        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
-            if (deviceName.contains(resultBean.getDevice_name()) && identifier.equals(resultBean.getIdentifier())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 检测本地设备列表
-     * @param deviceName
-     * @param filters
-     * @return
-     */
-    private boolean checkLocalDeviceData(String deviceName, String[] filters) {
-        for (String filter : filters) {//本地设备数据判断
+    private boolean checkFilter(String deviceName, ArrayList<String> filterList) {
+        for (String filter : filterList) {//本地设备数据判断
             if (deviceName.contains(filter)) {
                 return true;
             }
@@ -398,7 +358,7 @@ public class DeviceActivity extends BaseActionActivity {
         return false;
     }
 
-    private String getDeviceImgRes(String deviceName){
+    private String getDeviceImgRes(String deviceName,DeviceList filterDeviceList){
         for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
             if (resultBean.getDevice_name().equals(deviceName)) {
                 return resultBean.getImageName() == null ? "unknown" : resultBean.getImageName();
@@ -437,6 +397,7 @@ public class DeviceActivity extends BaseActionActivity {
         }
     }
 
+    DeviceList filterDeviceList;
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onEventBackroundThread(EventMessage event){
         if (event.getWhat() == EventGlobal.ACTION_LOAD_DEVICE_LIST) {
@@ -445,8 +406,29 @@ public class DeviceActivity extends BaseActionActivity {
                 public void onResult(boolean result, Object o) {
                     if (result) {
                         strDeviceList = o.toString();
-                        filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
-                        SPUtil.put(mContext,AppGlobal.DATA_DEVICE_LIST, strDeviceList);
+                        //解析服务器设备列表数据
+                        SPUtil.put(ibandApplication,AppGlobal.DATA_DEVICE_LIST, strDeviceList);
+                        filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
+                        //筛选iband设备数据
+                        ArrayList<String> nameList = new ArrayList<>();
+                        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+                            if (identifier.equals(resultBean.getIdentifier())) {
+                                nameList.add(resultBean.getDevice_name());
+                            }
+                        }
+                        //比较绑定数据得到需要补充数据
+                        ArrayList<String> needAddData = new ArrayList<>();
+                        if (nameList.size()>0) {
+                            for (String filter : deviceFilters) {
+                                if (!nameList.contains(filter)) {
+                                    needAddData.add(filter);
+                                }
+                            }
+                        }
+                        nameList.addAll(needAddData);
+                        deviceFilters = nameList;
+                        String str =new Gson().toJson(deviceFilters);
+                        SPUtil.put(ibandApplication,AppGlobal.DATA_DEVICE_FILTER,str);
                     }
                 }
             });

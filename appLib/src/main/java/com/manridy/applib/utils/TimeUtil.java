@@ -316,13 +316,13 @@ public class TimeUtil {
         if (time<60) {
             str = time+"分钟";
         }else {
-            str =  String .format("%.1f", ((double)time/60))+"小时";
+            str =  String .format("%.1f", ((double)time/60)+0.005)+"小时";
         }
         return str;
     }
 
     public static double getHourDouble(int time){
-        String str =  String .format("%.1f", ((double)time/60));
+        String str =  String .format("%.1f", ((double)time/60)+0.005);
         return Double.valueOf(str);
     }
 }

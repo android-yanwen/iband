@@ -122,6 +122,7 @@
         <activity android:name=".view.HrCorrectActivity"/>
         <activity android:name=".view.setting.HelpActivity"/>
         <activity android:name=".view.setting.HelpItemActivity"/>
+        <activity android:name=".view.QrActivity"/>
     </application>
 
 </manifest>

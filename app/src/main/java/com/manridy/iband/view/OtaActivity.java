@@ -336,7 +336,7 @@ public class OtaActivity extends BaseActionActivity {
 
     @Override
     protected void onDestroy() {
+        SPUtil.put(ibandApplication, AppGlobal.STATE_APP_OTA_RUN,false);
         super.onDestroy();
-        SPUtil.put(mContext, AppGlobal.STATE_APP_OTA_RUN,false);
     }
 }

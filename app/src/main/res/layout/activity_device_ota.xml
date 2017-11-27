@@ -24,15 +24,15 @@
         android:text="@string/hint_ota"/>
 
     <RelativeLayout
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:layout_gravity="center"
         android:layout_marginTop="96dp">
 
         <com.manridy.iband.ui.CircularView
             android:id="@+id/cv_ota"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
             android:layout_centerInParent="true"
             app:cv_background_color="#4dffffff"
             app:cv_progressbar_color="#ffffff"
@@ -64,7 +64,7 @@
             android:layout_height="24dp"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/tv_ota_result"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="20dp"
             android:textColor="#ffffff"
             android:gravity="center"
             android:background="@drawable/shape_button_hr"

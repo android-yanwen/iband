@@ -218,7 +218,7 @@ public class UserActivity extends BaseActionActivity {
 
                     @Override
                     public void onFailure(BleException exception) {
-                        SPUtil.put(mContext, AppGlobal.DATA_USER_SEND, false);
+//                        SPUtil.put(mContext, AppGlobal.DATA_USER_SEND, false);
                     }
                 });
                 finish();

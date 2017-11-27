@@ -43,6 +43,7 @@ public class AppGlobal {
     public static final String DATA_SYNC_TIME = "data_sync_time";
 
     public static final String DATA_DEVICE_LIST = "data_device_list";
+    public static final String DATA_DEVICE_FILTER = "data_device_filter";
 
     public static final String STATE_APP_OTA_RUN = "state_app_ota_run";
 

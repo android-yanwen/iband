@@ -307,7 +307,7 @@ public class SleepFragment extends BaseEventFragment {
         if (time < 60) {
             str = time + getString(R.string.unit_min);
         } else {
-            str = String.format("%.1f", ((double) time / 60)) + getString(R.string.hint_unit_sleep);
+            str = String.format("%.1f", ((double) time / 60)+0.005) + getString(R.string.hint_unit_sleep);
         }
         return str;
     }

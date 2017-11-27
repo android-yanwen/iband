@@ -566,7 +566,7 @@ public class BleParse {
         String result = "";
         if (body[0] == 0x05) {
             byte[] date = new byte[3];
-            byte[] btType = new byte[2];
+            byte[]  btType = new byte[2];
             System.arraycopy(body,1,date,0,date.length);
             System.arraycopy(data,11,btType,0,btType.length);
             BitUtil.bytesToDate(date,4);
