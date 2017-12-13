@@ -32,7 +32,7 @@ public class Utils {
     }
 
     public static String[] getAgeData(){
-        String[] datas = new String[50];
+        String[] datas = new String[81];
         for (int i = 0; i < datas.length; i++) {
             datas[i] = (10+i)+"";
         }

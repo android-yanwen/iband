@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.dalimao.library.util.FloatUtil;
+import com.google.gson.Gson;
 import com.manridy.applib.base.BaseActivity;
 import com.manridy.applib.common.AppManage;
 import com.manridy.applib.utils.CheckUtil;
@@ -42,6 +43,7 @@ import com.manridy.iband.IbandApplication;
 import com.manridy.iband.OnResultCallBack;
 import com.manridy.iband.R;
 import com.manridy.iband.SyncData;
+import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.DeviceUpdate;
 import com.manridy.iband.common.DomXmlParse;
@@ -49,6 +51,7 @@ import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.common.Utils;
 import com.manridy.iband.service.AppNotificationListenerService;
+import com.manridy.iband.service.HttpService;
 import com.manridy.iband.ui.SimpleView;
 import com.manridy.iband.view.model.BoFragment;
 import com.manridy.iband.view.model.BpFragment;
@@ -81,7 +84,6 @@ import me.weyye.hipermission.PermissionView;
  * 主页
  * Created by jarLiao on 17/5/4.
  */
-
 public class MainActivity extends BaseActivity {
 
     @BindView(R.id.vp_model)
@@ -131,19 +133,52 @@ public class MainActivity extends BaseActivity {
 //            }
         }
     };
+    private boolean isShowBp;
+    private boolean isShowBo;
 
     @Override
     protected void onResume() {
         super.onResume();
         int connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
-        if (connectState == 1) {
+        if (connectState == AppGlobal.DEVICE_STATE_CONNECTED) {
             long time = (long) SPUtil.get(mContext, AppGlobal.DATA_SYNC_TIME, 0L);
             if (time != 0 && tbSync != null) {
                 SimpleDateFormat format = new SimpleDateFormat("HH:mm");
                 String str = format.format(new Date(time));
                 tbSync.setText(getString(R.string.hint_sync_last) + str);
             }
+            ibandApplication.service.watch.sendCmd(BleCmd.setTime());
         }
+        isShowBp = isShowBo =true;
+        String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST,"");
+        String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
+        if (!strDeviceList.isEmpty()) {
+            DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
+            for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+                if (resultBean.getDevice_id().equals(deviceType)){
+                    if (resultBean.getBlood_pressure().equals("0")) {
+                        isShowBp = false;
+                    }
+                    if (resultBean.getOxygen_pressure().equals("0")) {
+                        isShowBo = false;
+                    }
+                }
+            }
+            try {
+                if (!isShowBp) {
+                    viewList.remove(bpFragment);
+                }
+                if (!isShowBo) {
+                    viewList.remove(boFragment);
+                }
+                if (!isShowBp || !isShowBo){
+                    viewAdapter.notifyDataSetChanged();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @Override
@@ -203,13 +238,17 @@ public class MainActivity extends BaseActivity {
         mp.setLooping(true);
     }
 
+    BpFragment bpFragment;
+    BoFragment boFragment;
     private void initViewPager() {
+        bpFragment = new BpFragment();
+        boFragment = new BoFragment();
+
         viewList.add(new StepFragment());
         viewList.add(new SleepFragment());
         viewList.add(new HrFragment());
-        viewList.add(new BpFragment());
-        viewList.add(new BoFragment());
-
+        viewList.add(bpFragment);
+        viewList.add(boFragment);
         viewAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -416,6 +455,8 @@ public class MainActivity extends BaseActivity {
             EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));
         }
         setHintState(state);
+        EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_LOAD_DEVICE_LIST));
+
     }
 
     private void selectTitle(int position) {
@@ -560,6 +601,27 @@ public class MainActivity extends BaseActivity {
     public void onBackgroundEvent(EventMessage event) {
         if (event.getWhat() == EventGlobal.DATA_SYNC_HISTORY) {
             SyncData.getInstance().sync();
+        }else  if (event.getWhat() == EventGlobal.ACTION_LOAD_DEVICE_LIST) {
+            HttpService.getInstance().getDeviceList(new OnResultCallBack() {
+                @Override
+                public void onResult(boolean result, Object o) {
+                    if (result) {
+                        String strDeviceList = o.toString();
+                        //解析服务器设备列表数据
+                        SPUtil.put(ibandApplication,AppGlobal.DATA_DEVICE_LIST, strDeviceList);
+                        DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
+                        //筛选iband设备数据
+                        ArrayList<String> nameList = new ArrayList<>();
+                        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+                            if (resultBean.getIdentifier().equals("iband")) {
+                                nameList.add(resultBean.getDevice_name());
+                            }
+                        }
+                        String str =new Gson().toJson(nameList);
+                        SPUtil.put(ibandApplication,AppGlobal.DATA_DEVICE_FILTER,str);
+                    }
+                }
+            });
         }
     }
 

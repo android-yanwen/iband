@@ -28,7 +28,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_dimming"
-                app:menus_name="亮度调节"/>
+                app:menus_name="亮度调节"
+                android:visibility="gone"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_hr_test"

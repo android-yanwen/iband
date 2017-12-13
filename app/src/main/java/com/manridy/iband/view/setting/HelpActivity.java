@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import com.manridy.iband.R;
 import com.manridy.iband.adapter.HelpAdapter;
@@ -27,8 +29,9 @@ public class HelpActivity extends BaseActionActivity {
 
     @BindView(R.id.rv_help)
     RecyclerView rvHelp;
+    @BindView(R.id.tv_hint)
+    TextView tvHint;
 
-    Map<String,String> curHelpList = new HashMap<>();
     ArrayList<HelpAdapter.Menu> helpTitleList = new ArrayList<>();
     HelpAdapter helpAdapter;
 
@@ -45,8 +48,13 @@ public class HelpActivity extends BaseActionActivity {
         setStatusBarColor(Color.parseColor("#2196f3"));
         setTitleBar(getString(R.string.hint_menu_help));
         String[] titleStrs = getResources().getStringArray(R.array.helpTitleList);
-        for (String titleStr : titleStrs) {
-            helpTitleList.add(new HelpAdapter.Menu(titleStr));
+        if (titleStrs.length == 0) {
+            tvHint.setVisibility(View.VISIBLE);
+        }else {
+            for (String titleStr : titleStrs) {
+                helpTitleList.add(new HelpAdapter.Menu(titleStr));
+            }
+
         }
         helpAdapter = new HelpAdapter(helpTitleList);
         rvHelp.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));

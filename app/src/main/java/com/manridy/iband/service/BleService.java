@@ -226,7 +226,7 @@ public class BleService extends Service {
                         showNotification(2);
                     }
                     EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_CONNECTING));
-//                    startConnectWardThread();
+                    connectWardHandler.sendEmptyMessage(0);
                     break;
                 case ACTION_GATT_DISCONNECTED:
                     LogUtil.e(TAG,"设备地址 "+macStr+" 蓝牙状态----蓝牙已断开");
@@ -245,6 +245,7 @@ public class BleService extends Service {
                     showNotification(1);
                     SPUtil.put(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_CONNECTED);
                     EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_CONNECT));
+                    connectWardHandler.sendEmptyMessage(2);
                     break;
                 case ACTION_DATA_AVAILABLE:
                     final byte[] data = intent.getByteArrayExtra("BLUETOOTH_DATA");
@@ -255,12 +256,6 @@ public class BleService extends Service {
             }
         }
     };
-
-    private void startConnectWardThread() {
-        if (!isConnectRun) {
-            connectWardThread.start();
-        }
-    }
 
     BleActionListener actionListener = new BleActionListener() {
         @Override
@@ -414,6 +409,33 @@ public class BleService extends Service {
         return new boolean[]{isTestHr,isTestBp,isTestBo};
     }
 
+    Handler connectWardHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            //检测运行状态
+            //运行任务
+            //抛出下次任务
+            if (msg.what == 0) {//开始任务
+                isConnectRun = true;
+                sendEmptyMessageDelayed(1,30*1000);
+            }else if (msg.what == 1){//执行任务
+                if (isConnectRun){
+                    int connectState = (int) SPUtil.get(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
+                    if (connectState != DEVICE_STATE_CONNECTED ) {
+                        initConnect(false,mBleConnectCallback);
+                        sendEmptyMessageDelayed(1,15*1000);
+                        Log.d(TAG, "connectWardHandler() called initConnect = [" + msg + "]");
+                    }
+                }
+            }else if (msg.what == 2){//结束任务
+                isConnectRun = false;
+                removeMessages(1);
+            }
+        }
+    };
+
+
     boolean isConnectRun;
     Thread connectWardThread = new Thread(){
         @Override
@@ -422,14 +444,14 @@ public class BleService extends Service {
             isConnectRun = true;
             while (isConnectRun) {
                 try {
-                    sleep(15*1000);
+                    sleep(20*1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                int connectState = (int) SPUtil.get(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
                 if (connectState != DEVICE_STATE_CONNECTED ) {
                     Log.d(TAG, "connectWardThread run() =================");
-                    initConnect(true,mBleConnectCallback);
+                    initConnect(false,mBleConnectCallback);
                 }
                 Log.d(TAG, "connectWardThread isConnectRun() =================");
             }

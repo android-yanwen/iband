@@ -280,9 +280,6 @@
     //--------------------------新增微信运动-----------------------------
     <string name="hint_wechat_sport">微信运动</string>
     <string name="hint_join_wechat">加入微信运动，和小伙伴一起PK吧!</string>
-
-
-
     <string name="title_wechat">绑定微信运动的步骤</string>
     <string name="hint_wechat_1">1.解除设备绑定（iOS需要在系统蓝牙中忽略设备）</string>
     <string name="hint_wechat_2">2.打开微信运动-设置-数据来源-添加数据来源-点击“MRD运动健康”</string>
@@ -316,7 +313,7 @@
     <string name="hint_set_correct">设置心率测量强度</string>
     <string name="hint_hr_correct1">注意：如果您的设备可以正常测量心率，请勿修改此数据！</string>
     <string name="hint_title_correct">心率测量加强</string>
-    <string name="toast_ota_battery_low">当前设备电池电量低，请充电完成后升级!</string>
+    <string name="toast_ota_battery_low">当前设备电池电量低，请充电完成后再升级!</string>
     <string name="bt_next">下一步</string>
     <string name="error_call_end">挂断电话失败，请检测iband权限是否开启</string>
     //--------------------------17/11/24新增App帮助内容-----------------------------
@@ -383,6 +380,7 @@
         <item>1)请先确认手机蓝牙是否打开并与手环连接着；\n
 2)请检查iband App是否正常运行着(后台运行就可以)\n
 3)请检查iband App接听电话权限是否授权\n
+            操作步骤：设置-权限-应用权限-iband-设置单项权限-拨打电话，请开启拨打电话权限。\n
 提示:\n
 一键清理内存及一些管家软件可能会清理进程并拦截，请将iband App加入白名单。
 </item>

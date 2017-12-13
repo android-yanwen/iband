@@ -308,14 +308,22 @@
     <string name="hint_swim">Natation</string>
     <string name="hint_network_available">Le réseau actuel est indisponible</string>
     //--------------------------17/10/31新增未保存提醒-----------------------------
-    <string name="hint_not_save">设置尚未保存，确定退出?</string>
-    <string name="hint_warm_alert">温馨提醒</string>
-    <string name="hint_set_correct">设置心率测量强度</string>
-    <string name="hint_hr_correct1">注意：如果您的设备可以正常测量心率，请勿修改此数据！</string>
-    <string name="hint_title_correct">心率测量加强</string>
-    <string name="toast_ota_battery_low">当前设备电池电量低，请充电完成后升级!</string>
-    <string name="bt_next">下一步</string>
-    <string name="error_call_end">挂断电话失败，请检测iband权限是否开启</string>
+    <!-- 您的设置尚未保存，确定退出? -->
+    <string name="hint_not_save">Vos réglages n\'ont pas été sauvegardés, OK Exit?</string>
+    <!-- 温馨提醒 -->
+    <string name="hint_warm_alert">Rappel chaleureux</string>
+    <!-- 设置心率测量强度 -->
+    <string name="hint_set_correct">Réglez l\'intensité de mesure du rythme cardiaque</string>
+    <!-- 注意：如果您的设备可以正常测量心率，请勿修改此数据！ -->
+    <string name="hint_hr_correct1">Remarque: Si votre appareil peut mesurer correctement la fréquence cardiaque, ne modifiez pas ces données！</string>
+    <!-- 心率测量加强 -->
+    <string name="hint_title_correct">La mesure du rythme cardiaque renforce</string>
+    <!-- 当前设备电池电量低，请充电完成后升级! -->
+    <string name="toast_ota_battery_low">Appareil courant batterie faible, s\'il vous plaît charger d\'abord!</string>
+    <!-- 下一步 -->
+    <string name="bt_next">Prochaine étape</string>
+    <!-- 挂断电话失败，请检测iband权限是否开启 -->
+    <string name="error_call_end">Impossible de raccrocher le téléphone, veuillez détecter si l\'autorisation iBand est activée</string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>
@@ -325,117 +333,20 @@
         <item>血氧</item>
     </string-array>
 
+    <!-- 最弱 -->
     <string-array name="corrects">
-        <item >最弱</item>
-        <item>正常</item>
-        <item>最强</item>
+        <item >Le plus faible</item>
+        <!-- 正常 -->
+        <item>Normal</item>
+        <!-- 最强 -->
+        <item>Le plus fort</item>
     </string-array>
 
     <string-array name="helpTitleList">
-        <item>Q:提示搜索不到手环怎么办？</item>
-        <item>Q:绑定设备提示绑定失败如何处理？</item>
-        <item>Q:如何同步手环数据？同步数据时提示失败如何处理？</item>
-        <item>Q:设置了来电提醒有来电为什么没有提醒？</item>
-        <item>Q:设置了短信提醒有短信为什么没有提醒？</item>
-        <item>Q:设置了qq、微信等应用提醒为什么没有提醒？</item>
-        <item>Q:收到来电提醒长按挂断电话为什么失败？</item>
-        <item>Q:为什么我的心率测试失败？</item>
-        <item>Q:绑定微信运动前的准备</item>
-        <item>Q:如何同步数据到微信运动？</item>
-        <item>Q:每次更新微信运动的数据都需要手动点击吗？</item>
-        <item>Q:为什么我添加了微信运动，在排行榜不能马上看到数据更新</item>
-        <item>Q:怎么知道我的设备添加了微信运动？</item>
-        <item>Q:怎么删除微信运动？</item>
-        <item>Q:我添加了微信运动，为什么手环（手表）的数据更新不了？</item>
-        <item>Q:如何知道我的设备是否能被微信运动连上？</item>
-        <item>Q:每次使用微信运动都需要解绑设备或者忽略设备吗？</item>
+
     </string-array>
 
     <string-array name="helpContentList">
-        <item>1）请先检测手环是否有电，屏幕是否能点亮，电量是否过低；\n
-              2）请将手环靠近手机，越近越好.\n
-              3）检测手环蓝牙图标是否显示已连接，若显示已连接请重启一次手环；\n
-                若以上操作后还是不行，请尝试开关一次手机蓝牙或重启手机。\n
-            提示:\n
-                苹果用户，请在手机设置蓝牙列表中查看设备信息，点击并忽略此设备，然后再开关一次手机蓝牙。\n
-                安卓用户，系统版本6.0及以上版本，搜索手环需要获取您的位置信息，请开启位置服务，并再次搜索。</item>
 
-        <item>1）请先检测手环是否有电，屏幕是否能点亮，电量是否过低；\n
-2）请将手环靠近手机，越近越好\n
-3）检测手环蓝牙图标是否显示已连接，若显示已连接请重启一次手环；\n
-若以上操作后还是不行，请尝试开关一次手机蓝牙或重启手机。\n
-提示:\n
-苹果用户，请在手机设置蓝牙列表中查看设备信息，点击并忽略此设备，然后再开关一次手机蓝牙
-</item>
-        <item>1）打开iband App时会自动同步；您也可以在iband App主界面下拉消息列表进行同步。\n
-2）若同步时提示连接失败，请尝试以下方法：\n
-首先可再次尝试下拉同步操作；其次，请结束iband App，再重新进入； \n
-            如果还不行请开关一次手机蓝牙或重启手机。（在重启手机之前也可以尝试在手机设置中清除蓝牙共享信息）\n
-提示：苹果用户，请在手机设置蓝牙列表中查看设备，点击并忽略此设备，然后再开关一下手机蓝牙或重启手机。
-</item>
-        <item>1)请先确认手机蓝牙是否打开并与手环连接着；\n
-2)请检查iband App是否正常运行着(后台运行就可以)\n
-3)请检查iband App电话及通讯录权限是否授权；\n
-提示:\n
-一键清理内存及一些管家软件可能会清理进程并拦截，请将iband App加入白名单。
-</item>
-        <item>1)请先确认手机蓝牙是否打开并与手环连接着；\n
-2)请检查iband App是否正常运行着(后台运行就可以)\n
-3)请检查iband App短信及通讯录权限是否授权；\n
-提示:\n
-一键清理内存及一些管家软件可能会清理进程并拦截，请将iband App加入白名单。
-</item>
-        <item>1)请先确认手机蓝牙是否打开并与手环连接着；\n
-2)请检查iband App是否正常运行着(后台运行就可以)\n
-3)请检查iband App短信及通讯录权限是否授权；\n
-提示:\n
-一键清理内存及一些管家软件可能会清理进程并拦截，请将iband App加入白名单。
-</item>
-        <item>1)请先确认手机蓝牙是否打开并与手环连接着；\n
-2)请检查iband App是否正常运行着(后台运行就可以)\n
-3)请检查iband App接听电话权限是否授权\n
-提示:\n
-一键清理内存及一些管家软件可能会清理进程并拦截，请将iband App加入白名单。
-</item>
-        <item>1）测量心率时，注意保持人处于静止状态，并将手环底部贴紧手臂不留明显缝隙，测量期间不要晃动手臂\n
-2）不标准的佩戴方式会影响心率信号的测量，比如不完全贴合导致的漏光、手臂的摆动以及手环在皮肤上的轻微移动等，手环佩戴得过紧、手臂抬高和握拳等会影响血液循环，同样可能影响到心率信号。正确的测量方式将手臂平放，放松并保持静止，同时保证手环贴紧手臂。注意：佩戴正确情况下，皮肤颜色、毛发、纹身以及伤疤等个体差异也可能会影响到心率信号。
-</item>
-        <item>1.解绑设备（苹果手机还需在系统蓝牙中忽略设备）\n
-2.开启手机蓝牙\n
-3.确保手表（手环）蓝牙是断开的\n
-绑定方法一\n
-1.打开微信，扫描下方的二维码\n
-2.点击“下一步”，进入搜索设备界面\n
-3.选择“MRD-Sports XXXX”，进入微信运动公众号-MRD运动健康（如果有多个设备，你可以根据XXXX来区分，它代表设备MAC地址的后四位）\n
-4.点击“绑定设备”，完成。此时可以返回微信运动中查看数据。\n
-绑定方法二\n
-打开微信运动-设置-数据来源-添加数据来源-选择“MRD运动健康”，完成添加\n
-注：使用这种方式添加微信运动，是看不到MRD-SportsXXXX，如果有多个设备在附近，需要关掉其他的设备
-</item>
-        <item>1）请先关闭iband App（苹果用户请额外在蓝牙列表忽略手环）\n
-2）请在微信公众号搜索微信运动并关注\n
-3）请在微信运动设置里搜索并添加数据来源”MRD运动健康”\n
-4）等待手环连接并同步手环步数\n
-5）点击步数排行榜查看数据\n
-提示：\n
-有时数据更新会慢一些，需要多点几次才能同步
-</item>
-        <item>不需要，如果开启微信运动，每隔两小时会自动更新一次数据\n
-每次点击微信运动排行榜时，也会更新（有时并不可靠，需要多点几次）
-</item>
-        <item>这和手机及微信服务器有关，微信运动绑定成功后，不同的手机第一次看到数据更新的时间是不一样的，据我们不完全测试，安卓手机大约在一分钟之内就可以看到数据更新，苹果手机最长需要等三分钟左右</item>
-        <item>1.关闭APP（苹果手机需要在蓝牙中忽略设备），打开微信运动可以看到设备是连接状态，说明你已经添加了微信运动\n
-2.打开微信-我-设置-设备，如果看到MRD-Sports的设备，说明你已经添加了微信运动
-</item>
-        <item>打开微信-我-设置-设备-选择设备-删除设备</item>
-        <item>原因1：如果你微信运动绑定了手机或者其他的设备，微信运动只会显示数据最大的那一个。\n
-原因2：如果微信运动没有连接上设备，数据也同步不了。
-</item>
-        <item>把设备靠近手机，保证手机蓝牙开启\n
-方法1：打开微信-我-设置-设备-点击“MRD-Sports”-进入公众号，在MRD运动健康公众号顶部可以看到设备状态：连接中/已经连接/未连接等\n
-方法2：关掉APP（苹果手机还需在蓝牙中忽略设备），此时设备蓝牙应该是断开的状态；打开微信运动，设备蓝牙状态应该是连接状态，说明微信运动已经连接上设备
-</item>
-        <item>1.不需要，只是在第一次添加微信运动的时候需要这样做，这样做是为了释放设备蓝牙，使微信可以搜索到设备。（如果设备已经被手机连上，微信运动是无法搜索到设备的）\n
-2.绑定微信运动后，APP和微信运动可以同时连接设备，互不影响。</item>
     </string-array>
 </resources>

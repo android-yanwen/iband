@@ -2,15 +2,17 @@ package com.manridy.iband.view.setting;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.jaygoo.widget.RangeSeekbar;
 import com.manridy.applib.utils.SPUtil;
-import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.R;
+import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.sdk.ble.BleCmd;
 
@@ -39,6 +41,8 @@ public class LightActivity extends BaseActionActivity {
     TextView tbTitle;
     int curLight;
     int oldLight = -1;
+    @BindView(R.id.rg_light)
+    RadioGroup rgLight;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -50,60 +54,45 @@ public class LightActivity extends BaseActionActivity {
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));
         setTitleBar(getString(R.string.hint_menu_light));
-        curLight = (int) SPUtil.get(mContext,AppGlobal.DATA_SETTING_LIGHT,2);
-        curLight =  curLight>2 ? 1:curLight;
-        rsLight.setValue(curLight);
-        tvLightNum.setText(getLightText(curLight));
+        curLight = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_LIGHT, 2);
+        curLight = curLight > 2 ? 1 : curLight;
+        rgLight.check(getLightRes(curLight));
     }
 
     @Override
     protected void initListener() {
-        rsLight.setOnRangeChangedListener(new RangeSeekbar.OnRangeChangedListener() {
+        rgLight.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onRangeChanged(RangeSeekbar rangeSeekbar, float v, float v1, boolean b) {
-                Log.d(TAG, "onRangeChanged() called with: rangeSeekbar = [" + rangeSeekbar + "], v = [" + v + "], v1 = [" + v1 + "], b = [" + b + "]");
-                if (!b){
-                    curLight = (int)(v*2) ;
-                    tvLightNum.setText(getLightText(curLight));
-                }else {
-                    curLight = (int)v;
-                    tvLightNum.setText(getLightText(curLight));
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                switch (checkedId) {
+                    case R.id.rb_left:
+                        curLight = 0;
+                        break;
+                    case R.id.rb_center:
+                        curLight = 1;
+                        break;
+                    case R.id.rb_right:
+                        curLight = 2;
+                        break;
                 }
-                if (curLight != oldLight) {
-                    SPUtil.put(mContext, AppGlobal.DATA_SETTING_LIGHT,curLight);
-                    ibandApplication.service.watch.sendCmd(BleCmd.setLight(curLight));
-                }
-                oldLight = curLight;
+                SPUtil.put(mContext, AppGlobal.DATA_SETTING_LIGHT, curLight);
+                ibandApplication.service.watch.sendCmd(BleCmd.setLight(curLight));
             }
         });
     }
 
-    @OnClick({R.id.tv_reduce, R.id.tv_add})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tv_reduce:
-                curLight = curLight <= 0 ? 0 : curLight-1;
-                rsLight.setValue(curLight);
-                break;
-            case R.id.tv_add:
-                curLight = curLight >= 2 ? 2 : curLight+1;
-                rsLight.setValue(curLight);
-                break;
-        }
-    }
-
-
-    private String getLightText(int curLight){
-        String text = getString(R.string.hint_centre);
+    private int getLightRes(int curLight) {
+        int res = R.id.rb_right;
         switch (curLight) {
             case 0:
-                text = getString(R.string.hint_low);
+                res = R.id.rb_left;
                 break;
-            case 2:
-                text = getString(R.string.hint_high);
+            case 1:
+                res = R.id.rb_center;
                 break;
         }
-        return text;
+        return res;
     }
+
 
 }

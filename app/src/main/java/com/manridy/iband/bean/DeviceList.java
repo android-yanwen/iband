@@ -49,19 +49,16 @@ public class DeviceList {
          * describe : null
          */
 
-        @SerializedName("0")
         private String device_name;
-        @SerializedName("1")
         private String id;
-        @SerializedName("2")
         private String identifier;
-        @SerializedName("3")
         private String imageName;
-        @SerializedName("4")
-        private Object describe;
-        @SerializedName("5")
+        private String describe;
         private String brightness;
         private String device_id;
+        private String blood_pressure;
+        private String oxygen_pressure;
+        private String project_number;
 
         public String getDevice_name() {
             return device_name;
@@ -99,7 +96,7 @@ public class DeviceList {
             return describe;
         }
 
-        public void setDescribe(Object describe) {
+        public void setDescribe(String describe) {
             this.describe = describe;
         }
 
@@ -117,6 +114,30 @@ public class DeviceList {
 
         public void setDevice_id(String device_id) {
             this.device_id = device_id;
+        }
+
+        public String getBlood_pressure() {
+            return blood_pressure;
+        }
+
+        public void setBlood_pressure(String blood_pressure) {
+            this.blood_pressure = blood_pressure;
+        }
+
+        public String getOxygen_pressure() {
+            return oxygen_pressure;
+        }
+
+        public void setOxygen_pressure(String oxygen_pressure) {
+            this.oxygen_pressure = oxygen_pressure;
+        }
+
+        public String getProject_number() {
+            return project_number;
+        }
+
+        public void setProject_number(String project_number) {
+            this.project_number = project_number;
         }
     }
 }

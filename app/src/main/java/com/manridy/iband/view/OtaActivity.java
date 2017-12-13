@@ -117,8 +117,15 @@ public class OtaActivity extends BaseActionActivity {
     protected void initVariables() {
         isInfiniti = getStartType() == 1;
         int battery = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_NUM,0);
-        if (battery < 30){
+        int connect = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
+
+        if (battery < 30){//检测设备电量
             showToast(getString(R.string.toast_ota_battery_low));
+            finish();
+            return;
+        }
+        if (connect != AppGlobal.DEVICE_STATE_CONNECTED) {//检测设备连接状态
+            showToast(getString(R.string.hintUnConnect));
             finish();
             return;
         }

@@ -81,8 +81,8 @@ public class DeviceActivity extends BaseActionActivity {
     private boolean isDebug;
     private ArrayList<String> deviceFilters = new ArrayList<>();
     public static String identifier = "iband";
-    public String localFilters = "[\"HB\",\"HM\",\"M7\",\"CB606\",\"R11\",\"HB-M1\",\"N67\",\"watch\",\"F07\",\"F1Pro\",\"HB08\",\"Smart\",\"K2\",\"N68\",\"Smart B\",\"N109\",\"Smart-2\",\"TF1\"]";
-
+    public String localFilters = "[\"HB\",\"F07Lite\",\"CB606\",\"L8\",\"HM\",\"M7\",\"CB606\",\"R11\",\"HB-M1\",\"N67\",\"watch\",\"F07\",\"F1Pro\",\"HB08\",\"Smart\",\"K2\",\"N68\",\"Smart B\",\"N109\",\"Smart-2\",\"TF1\"]";
+    DeviceList filterDeviceList;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -98,7 +98,9 @@ public class DeviceActivity extends BaseActionActivity {
         initBindView();//初始化绑定视图
         Type type = new TypeToken<ArrayList<String>>() {}.getType();
         String filterStr = (String) SPUtil.get(ibandApplication,AppGlobal.DATA_DEVICE_FILTER,localFilters);
+        String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST,"");
         deviceFilters = new Gson().fromJson(filterStr,type);
+        filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
     }
 
     //初始化搜索设备列表
@@ -168,7 +170,6 @@ public class DeviceActivity extends BaseActionActivity {
     protected void loadData() {
         super.loadData();
         scanDevice(false);
-        EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_LOAD_DEVICE_LIST));
 
     }
 
@@ -341,9 +342,6 @@ public class DeviceActivity extends BaseActionActivity {
         }
     };
 
-
-
-
     /**
      * 筛选过滤设备
      * @param deviceName
@@ -397,42 +395,9 @@ public class DeviceActivity extends BaseActionActivity {
         }
     }
 
-    DeviceList filterDeviceList;
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onEventBackroundThread(EventMessage event){
-        if (event.getWhat() == EventGlobal.ACTION_LOAD_DEVICE_LIST) {
-            HttpService.getInstance().getDeviceList(new OnResultCallBack() {
-                @Override
-                public void onResult(boolean result, Object o) {
-                    if (result) {
-                        strDeviceList = o.toString();
-                        //解析服务器设备列表数据
-                        SPUtil.put(ibandApplication,AppGlobal.DATA_DEVICE_LIST, strDeviceList);
-                        filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
-                        //筛选iband设备数据
-                        ArrayList<String> nameList = new ArrayList<>();
-                        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
-                            if (identifier.equals(resultBean.getIdentifier())) {
-                                nameList.add(resultBean.getDevice_name());
-                            }
-                        }
-                        //比较绑定数据得到需要补充数据
-                        ArrayList<String> needAddData = new ArrayList<>();
-                        if (nameList.size()>0) {
-                            for (String filter : deviceFilters) {
-                                if (!nameList.contains(filter)) {
-                                    needAddData.add(filter);
-                                }
-                            }
-                        }
-                        nameList.addAll(needAddData);
-                        deviceFilters = nameList;
-                        String str =new Gson().toJson(deviceFilters);
-                        SPUtil.put(ibandApplication,AppGlobal.DATA_DEVICE_FILTER,str);
-                    }
-                }
-            });
-        }
+
     }
 
     @Override
