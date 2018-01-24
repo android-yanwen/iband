@@ -54,21 +54,23 @@ public class HelpActivity extends BaseActionActivity {
             for (String titleStr : titleStrs) {
                 helpTitleList.add(new HelpAdapter.Menu(titleStr));
             }
+            helpAdapter = new HelpAdapter(helpTitleList);
+            rvHelp.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
+            rvHelp.setAdapter(helpAdapter);
+
+            helpAdapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    startActivity(HelpItemActivity.class,position);
+                }
+            });
 
         }
-        helpAdapter = new HelpAdapter(helpTitleList);
-        rvHelp.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
-        rvHelp.setAdapter(helpAdapter);
+
     }
 
     @Override
     protected void initListener() {
-        helpAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                startActivity(HelpItemActivity.class,position);
-            }
-        });
     }
 
 }

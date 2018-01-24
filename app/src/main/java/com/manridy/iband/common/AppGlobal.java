@@ -8,6 +8,8 @@ public class AppGlobal {
     public static final String DATA_APP_FIRST = "data_app_first";
     public static final String DATA_USER_HEAD = "data_user_head";
     public static final String DATA_USER_SEND = "data_user_send";
+    public static final String DATA_APP_LANGUE = "data_app_langue";
+
     //device bind
     public static final String DATA_DEVICE_BIND_NAME = "data_device_bind_name";
     public static final String DATA_DEVICE_BIND_MAC = "data_device_bind_mac";
@@ -21,6 +23,7 @@ public class AppGlobal {
     public static final String DATA_ALERT_SEDENTARY = "data_alert_sedentary";
     public static final String DATA_ALERT_APP = "data_alert_app";
     public static final String DATA_ALERT_WRIST = "data_alert_wrist";
+    public static final String DATA_APP_VERSINO = "data_app_version";
     //setting
     public static final String DATA_SETTING_LIGHT = "data_setting_light";
     public static final String DATA_SETTING_UNIT= "data_setting_unit";

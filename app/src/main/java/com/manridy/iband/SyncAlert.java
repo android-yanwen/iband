@@ -46,6 +46,7 @@ public class SyncAlert {
         this.syncAlertListener = syncAlertListener;
     }
 
+
     private SyncAlert(Context context) {
         mContext = context.getApplicationContext();
         watch = IbandApplication.getIntance().service.watch;

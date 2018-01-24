@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.TimeUtil;
-import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.bean.SleepModel;
@@ -25,7 +24,6 @@ import com.manridy.iband.ui.CircularView;
 import com.manridy.iband.ui.items.DataItems;
 import com.manridy.iband.view.base.BaseEventFragment;
 import com.manridy.iband.view.history.SleepHistoryActivity;
-import com.manridy.sdk.bean.Sleep;
 import com.manridy.sdk.ble.BleParse;
 import com.manridy.sdk.callback.BleNotifyListener;
 
@@ -38,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -201,14 +200,14 @@ public class SleepFragment extends BaseEventFragment {
             }
             sleepSum += (sleepLight + sleepDeep);
             dou = TimeUtil.getHourDouble(sleepLight) + TimeUtil.getHourDouble(sleepDeep);
-            sum = String.format("%.1f", dou);
+            sum = String.format(Locale.US,"%.1f", dou);
             state = getString(R.string.hint_sleep_deep) + getHour(sleepDeep) + getString(R.string.hint_sleep_light1) + getHour(sleepLight);
             progress = (sleepSum / (float) (target * 60)) * 100;
         }
 
         if (curSleepStats != null) {
             dou = TimeUtil.getHourDouble(curSleepStats.getSleepDeep()) + TimeUtil.getHourDouble(curSleepStats.getSleepLight());
-            sum = String.format("%.1f", dou);
+            sum = String.format(Locale.US,"%.1f", dou);
             state = getString(R.string.hint_sleep_deep) + getHour(curSleepStats.getSleepDeep()) + getString(R.string.hint_sleep_light1) + getHour(curSleepStats.getSleepLight());
             progress = (curSleepStats.getSleepSum() / (float) (target * 60)) * 100;
         }
@@ -247,7 +246,7 @@ public class SleepFragment extends BaseEventFragment {
             SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("HH:mm");
             String startTime = simpleDateFormat2.format(dateStart);
             String endTime = simpleDateFormat2.format(dateEnd);
-            String m = String.format("%.1f", ((double) min / 60));
+            String m = String.format(Locale.US,"%.1f", ((double) min / 60));
             diData1.setItemData(title + getString(R.string.hint_start), startTime);
             diData2.setItemData(title + getString(R.string.hint_end), endTime);
             diData3.setItemData(title + getString(R.string.hint_times), m);
@@ -273,7 +272,7 @@ public class SleepFragment extends BaseEventFragment {
             awake = curSleepStats.getSleepAwake();
         }
 
-        String str = String.format("%.1f", ((double) awake / 60));
+        String str = String.format(Locale.US,"%.1f", ((double) awake / 60));
         try {
             if (!start.isEmpty() && !end.isEmpty()) {
                 Date dateStart = simpleDateFormat.parse(start);
@@ -307,7 +306,7 @@ public class SleepFragment extends BaseEventFragment {
         if (time < 60) {
             str = time + getString(R.string.unit_min);
         } else {
-            str = String.format("%.1f", ((double) time / 60)+0.005) + getString(R.string.hint_unit_sleep);
+            str = String.format(Locale.US,"%.1f", ((double) time / 60)+0.005) + getString(R.string.hint_unit_sleep);
         }
         return str;
     }

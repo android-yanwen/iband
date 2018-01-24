@@ -324,6 +324,11 @@
     <string name="bt_next">계속하기</string>
     <!-- 挂断电话失败，请检测iband权限是否开启 -->
     <string name="error_call_end">전화 끊기, iband 사용 권한이 켜져 있는지 확인하십시오.</string>
+    <string name="hint_skip">점프 밧줄</string>
+    <string name="hint_push">푸시 업</string>
+    <string name="hint_langue">언어 설정</string>
+    <string name="hint_langue_normal">기본 언어</string>
+    <string name="hint_switch_langue">언어를 전환하는 중입니다. 잠시 기다려주십시오 ...</string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

@@ -529,10 +529,10 @@ public class BleParse {
         String endTime = BitUtil.bytesToDate(endTimeBs,1);//解析结束时间
         int time = BitUtil.byte3ToInt(sleepTimeBs);//解析深度睡眠
 //        int light = BitUtil.byte3ToInt(lightTimeBs);//解析浅度睡眠
-        String day =BitUtil.bytesToDate(endTimeBs,4);
+        String day = BitUtil.bytesToDate(endTimeBs,4);
         int type = body[0] ;
         int dataType = body[15];//睡眠数据类型 1深睡 2浅睡 3清醒
-        if (body[11] >=0x20) {//如果日期时间大于20点判断为今天
+        if (body[11] >= 0x20) {//如果日期时间大于20点判断为今天
             day = TimeUtil.getCalculateDay(day,+1);
         }
         int deep = 0,light = 0,awake = 0;

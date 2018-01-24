@@ -35,6 +35,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -261,7 +262,7 @@ public class BoFragment extends BaseEventFragment {
 
 
     public String getOne(float f) {
-        return String.format("%.1f", f);
+        return String.format(Locale.US,"%.1f", f);
     }
 
 }

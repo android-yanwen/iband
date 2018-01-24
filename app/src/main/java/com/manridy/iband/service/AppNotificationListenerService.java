@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -44,12 +45,20 @@ public class AppNotificationListenerService extends NotificationListenerService 
     public static final String PAGE_NAME_WHATSAPP ="com.whatsapp";
     public static final String PAGE_NAME_FACEBOOK ="com.facebook.katana";
     public static final String PAGE_NAME_LINE ="jp.naver.line.android";
+    public static final String PAGE_NAME_TWITTER ="com.twitter.android";
+    public static final String PAGE_NAME_SKYPE ="com.skype.raider";
+    public static final String PAGE_NAME_SKYPE_FOR_CHINA ="com.skype.rover";
+
+    public static final String PAGE_NAME_INS ="com.instagram.android";
 
     public static final int APP_ID_QQ =2;
     public static final int APP_ID_WX =4;
     public static final int APP_ID_WHATSAPP =5;
     public static final int APP_ID_FACEBOOK =6;
     public static final int APP_ID_LINE =7;
+    public static final int APP_ID_TWITTER =8;
+    public static final int APP_ID_SKYPE =9;
+    public static final int APP_ID_INS =10;
 
     @Override
     public void onCreate() {
@@ -113,8 +122,22 @@ public class AppNotificationListenerService extends NotificationListenerService 
         String packageName = sbn.getPackageName();
         Notification notification = sbn.getNotification();
         String content = String.valueOf(notification.tickerText);
-        Log.i(TAG, sbn.toString());
-        Log.i(TAG, content);
+
+        //通过以下方式可以获取Notification的详细信息
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            Bundle extras = sbn.getNotification().extras;
+            String notificationTitle = extras.getString(Notification.EXTRA_TITLE);
+            CharSequence notificationText = extras.getCharSequence(Notification.EXTRA_TEXT);
+            CharSequence notificationSubText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT);
+            Log.i("SevenNLS", "notificationTitle:"+notificationTitle);
+            Log.i("SevenNLS", "notificationText:"+notificationText);
+            Log.i("SevenNLS", "notificationSubText:"+notificationSubText);
+            if (packageName.equals(APP_ID_TWITTER) || isSkypePackage(packageName)){
+                content = notificationTitle +":"+ notificationText;
+            }
+        }
+        Log.i(TAG,"sbn"+ sbn.toString());
+        Log.i(TAG,"sbn"+  content);
         boolean appOnOff = (boolean) SPUtil.get(this, AppGlobal.DATA_ALERT_APP,false);
         if (appOnOff && !content.equals("null")) {
             List<AppModel> appList = IbandDB.getInstance().getAppList();
@@ -129,6 +152,9 @@ public class AppNotificationListenerService extends NotificationListenerService 
             boolean whatsAlert = map.containsKey(APP_ID_WHATSAPP) && map.get(APP_ID_WHATSAPP).isOnOff();
             boolean facebookAlert = map.containsKey(APP_ID_FACEBOOK) && map.get(APP_ID_FACEBOOK).isOnOff();
             boolean lineAlert = map.containsKey(APP_ID_LINE) && map.get(APP_ID_LINE).isOnOff();
+            boolean twitterAlert = map.containsKey(APP_ID_TWITTER) && map.get(APP_ID_TWITTER).isOnOff();
+            boolean skypeAlert = map.containsKey(APP_ID_SKYPE) && map.get(APP_ID_SKYPE).isOnOff();
+            boolean insAlert = map.containsKey(APP_ID_INS) && map.get(APP_ID_INS).isOnOff();
 
             if (isQQPackage(packageName) && qqAlert) {
                 appAlert = APP_ID_QQ;
@@ -140,12 +166,22 @@ public class AppNotificationListenerService extends NotificationListenerService 
                 appAlert = APP_ID_FACEBOOK;
             }else if (packageName.equals(PAGE_NAME_LINE) && lineAlert) {
                 appAlert = APP_ID_LINE;
+            }else if (packageName.equals(PAGE_NAME_TWITTER) && twitterAlert) {
+                appAlert = APP_ID_TWITTER;
+            }else if (isSkypePackage(packageName) && skypeAlert) {
+                appAlert = APP_ID_SKYPE;
+            }else if (packageName.equals(PAGE_NAME_INS) && insAlert) {
+                appAlert = APP_ID_INS;
             }
             if (appAlert != -1) {
                 infoId = infoId > 63 ? 1 : infoId++;
                 IbandApplication.getIntance().service.watch.sendCmd(BleCmd.setAppAlertName(infoId,appAlert), AppleCallback);
             }
         }
+    }
+
+    private boolean isSkypePackage(String packageName) {
+        return packageName.equals(PAGE_NAME_SKYPE) || packageName.equals(PAGE_NAME_SKYPE_FOR_CHINA);
     }
 
     private boolean isQQPackage(String packageName) {

@@ -287,7 +287,7 @@
     <string name="hint_wechat_open">Abrir WeChat</string>
     <string name="hint_wechart_alert">Con WeChat Sport, el reloj debe ser activado primero</string>
     <string name="hint_activate">Activado</string>
-    <string name="hint_activateing">设El modo de espera está activo, por favor, espere</string>
+    <string name="hint_activateing">El modo de espera está activo, por favor, espere</string>
     <string name="error_not_install">Instale "WeChat"</string>
     <string name="hint_install_success">La activación tiene éxito</string>
     //--------------------------新增恢复出厂-----------------------------
@@ -324,6 +324,12 @@
     <string name="bt_next">Siguiente paso</string>
     <!-- 挂断电话失败，请检测iband权限是否开启 -->
     <string name="error_call_end">Cuelgue el teléfono fallido, compruebe que el permiso esté activado</string>
+
+    <string name="hint_skip">Saltar la cuerda</string>
+    <string name="hint_push">Flexiones</string>
+    <string name="hint_langue">Configuración de idioma</string>
+    <string name="hint_langue_normal">Lenguaje por defecto</string>
+    <string name="hint_switch_langue">Lenguaje por defecto...</string>
 
     //数据库显示 不需要翻译
     <string-array name="db">

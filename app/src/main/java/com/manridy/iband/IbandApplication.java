@@ -4,7 +4,11 @@ import android.app.Application;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.IBinder;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -20,6 +24,7 @@ import com.tencent.bugly.beta.Beta;
 import org.litepal.LitePalApplication;
 
 import static com.manridy.iband.common.AppGlobal.DEVICE_STATE_UNCONNECT;
+import static com.manridy.iband.view.setting.LangueActivity.getLocale;
 
 /**
  * 应用全局
@@ -44,8 +49,25 @@ public class IbandApplication extends Application {
         initAlertService();//初始化提醒服务
         initBugly();//初始化bugly
         initNotificationService();
-
+        initLangue();
 //        CrashHandler.getInstance().init(intance);
+    }
+
+    private void initLangue() {
+        int curSelect = (int) SPUtil.get(this, AppGlobal.DATA_APP_LANGUE,0);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (curSelect == 0) { //选择跟随系统
+                conf.setLocale(conf.getLocales().get(0));
+            } else { //设置选择的语言
+                conf.setLocale(getLocale(curSelect));
+            }
+        } else {
+            conf.locale = getLocale(curSelect);
+        }
+        res.updateConfiguration(conf, dm);
     }
 
     private void initBleSevrice() {

@@ -324,6 +324,11 @@
     <string name="bt_next">Próximo passo</string>
     <!-- 挂断电话失败，请检测iband权限是否开启 -->
     <string name="error_call_end">Falha ao desligar o telefone, por favor, detectar se a permissão iBand é ativado</string>
+    <string name="hint_skip">Corda de salto</string>
+    <string name="hint_push">Push-ups</string>
+    <string name="hint_langue">Configuração de idioma</string>
+    <string name="hint_langue_normal">Idioma Defina o idioma padrão</string>
+    <string name="hint_switch_langue">Alternando idiomas, aguarde ...</string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

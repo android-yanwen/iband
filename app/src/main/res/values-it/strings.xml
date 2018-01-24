@@ -324,6 +324,11 @@
     <string name="bt_next">Prossimo passo</string>
     <!-- 挂断电话失败，请检测iband权限是否开启 -->
     <string name="error_call_end">Riagganciare il telefono non è riuscito, si prega di controllare iband permesso è acceso</string>
+    <string name="hint_skip">Saltare la corda</string>
+    <string name="hint_push">push-up</string>
+    <string name="hint_langue">Impostazione della lingua</string>
+    <string name="hint_langue_normal">Lingua predefinita</string>
+    <string name="hint_switch_langue">Cambiare lingua, per favore aspetta ...</string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

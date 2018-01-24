@@ -1,7 +1,10 @@
 package com.manridy.iband.view.setting;
 
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -16,6 +19,8 @@ import com.manridy.iband.view.test.TestDatabaseActivity;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.iband.view.test.TestMenuActivity;
 
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,6 +34,8 @@ public class AboutActivity extends BaseActionActivity {
 
     @BindView(R.id.hi_update)
     HelpItems hiUpdate;
+    @BindView(R.id.hi_langue)
+    HelpItems hiLangue;
     @BindView(R.id.hi_help)
     HelpItems hiHelp;
     @BindView(R.id.hi_about)
@@ -57,6 +64,12 @@ public class AboutActivity extends BaseActionActivity {
                 startActivity(UpdateActivity.class);
             }
         });
+        hiLangue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(LangueActivity.class);
+            }
+        });
 
         hiHelp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +81,7 @@ public class AboutActivity extends BaseActionActivity {
         hiHelp.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                IbandApplication.getIntance().service.watch.sendCmd(new byte[]{(byte) 0xfc,0x0c,0x03});
+//                IbandApplication.getIntance().service.watch.sendCmd(new byte[]{(byte) 0xfc,0x0c,0x03});
                 return true;
             }
         });

@@ -69,7 +69,7 @@
     <string name="hint_menu_find">Trouver bracelet</string>
     <string name="hint_menu_alert">Paramètres de rappel</string>
     <string name="hint_menu_wechat">WeChat Sport</string>
-    <string name="hint_menu_wrist">Affichage intelligent</string>
+    <string name="hint_menu_wrist">Tournez l\'écran lumineux de poignet</string>
     <string name="hint_menu_light">Réglage de la luminosité</string>
     <string name="hint_menu_unit">Réglage de l\'unité</string>
     <string name="hint_menu_time">Format de l\'heure</string>
@@ -163,7 +163,7 @@
     <string name="hint_test">Mesures</string>
     <string name="hint_sleep_today">Le sommeil aujourd\'hui</string>
     <string name="hint_sleep_start">S\'endormir</string>
-    <string name="hint_sleep_end">Wake up</string>
+    <string name="hint_sleep_end">Réveillez-vous aujourd\'hui</string>
     <string name="hint_sleep_sober">Heure de réveil</string>
     <string name="hint_step_today">Aujourd\'hui, le nombre d\'étapes</string>
     <string name="hint_stop">Stop</string>
@@ -324,6 +324,12 @@
     <string name="bt_next">Prochaine étape</string>
     <!-- 挂断电话失败，请检测iband权限是否开启 -->
     <string name="error_call_end">Impossible de raccrocher le téléphone, veuillez détecter si l\'autorisation iBand est activée</string>
+    <string name="hint_skip">Corde à sauter</string>
+    <string name="hint_push">Push-ups</string>
+    <string name="hint_langue">Réglage de la langue</string>
+    <string name="hint_langue_normal">Langue par défaut</string>
+    <string name="hint_switch_langue">Changer de langue, veuillez patienter ...</string>
+
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

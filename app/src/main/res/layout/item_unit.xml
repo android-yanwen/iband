@@ -3,7 +3,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp">
+                android:layout_marginRight="16dp"
+    android:id="@+id/rl_unit_view">
 
     <TextView
         android:id="@+id/tv_unit_text"

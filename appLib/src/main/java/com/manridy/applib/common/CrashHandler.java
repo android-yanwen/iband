@@ -101,6 +101,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         final StackTraceElement[] stack = ex.getStackTrace();
         final String message = ex.getMessage();
         /* 准备错误日志文件 */
+        if (FileUtil.getSdCardPath() == null) {
+            return;
+        }
         File logFile = new File(FileUtil.getSdCardPath() + LOG_NAME);
         if (!logFile.getParentFile().exists()) {
             logFile.getParentFile().mkdirs();

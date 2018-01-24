@@ -187,7 +187,7 @@ public class BitUtil {
         for (int i = 0; i < bytes.length; i++) {
             builder.append(bitToString(bytes[i]));
         }
-        return Integer.parseInt(builder.toString(), 2);
+        return Integer.parseInt(builder.toString(),2);
     }
 
     /**

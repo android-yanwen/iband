@@ -137,7 +137,7 @@ public class OtaActivity extends BaseActionActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                HttpService.getInstance().sendOtaData(mContext, new OnResultCallBack() {
+                HttpService.getInstance().sendOtaData(getApplicationContext(), new OnResultCallBack() {
                     @Override
                     public void onResult(boolean result, Object o) {
                         Log.d(TAG, "onResult() called with: result = [" + result + "], o = [" + o + "]");
@@ -200,9 +200,11 @@ public class OtaActivity extends BaseActionActivity {
                 .setDisableNotification(true)
                 .setKeepBond(true);
         starter.setUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(true);
+        if (FileUtil.getSdCardPath() == null) {
+            return;
+        }
         starter.setZip(null, FileUtil.getSdCardPath()+"/ota.zip");
         controller = starter.start(this,DfuService.class);
-
         sendOtaData();
     }
 

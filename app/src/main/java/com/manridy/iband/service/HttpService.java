@@ -88,6 +88,9 @@ public class HttpService {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 InputStream is = response.body().byteStream();
+                if (FileUtil.getSdCardPath() == null) {
+                    return;
+                }
                 String path = FileUtil.getSdCardPath()+"/ota.zip";
                 FileOutputStream fos = new FileOutputStream(new File(path));
                 byte[] buffer = new byte[2048];

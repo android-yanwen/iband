@@ -60,9 +60,8 @@ public class Watch extends BluetoothLeManager implements WatchApi {
         public void run() {
             for (;;){//循环
                 if (!isRun.get()) {//运行状态
-                    Iterator iterator = messageList.iterator();
-                    if (iterator.hasNext()) {//判断消息队列是否存在消息
-                        cmdMessage cmdMessage = (Watch.cmdMessage) iterator.next();//拿到消息
+                    if (messageList.size() > 0) {//判断消息队列是否存在消息
+                        cmdMessage cmdMessage = messageList.get(0);//拿到消息
                         isRun.set(true);//运行状态改变运行中
 //                        if (sleepIndex-- < 0) {
 //                            sleepIndex = 2;
@@ -76,24 +75,28 @@ public class Watch extends BluetoothLeManager implements WatchApi {
                         writeCharacteristic(cmdMessage.data, new BleCallback() {//执行发送
                             @Override
                             public void onSuccess(Object o) {//执行成功
-                                cmdCallback.onSuccess(o);//返回执行结果
-                                handler.removeCallbacks(timeOutRunnable);//删除超时任务
-                                if (messageList.size()>0) {
-                                    messageList.remove(0);//删除消息队列消息
+                                if (cmdCallback != null) {
+                                    cmdCallback.onSuccess(o);//返回执行结果
+                                    handler.removeCallbacks(timeOutRunnable);//删除超时任务
+                                    if (messageList.size()>0) {
+                                        messageList.remove(0);//删除消息队列消息
+                                    }
+                                    isRun.set(false);//运行状态改变未运行
+                                    reSend = 0;//重发计数归零
                                 }
-                                isRun.set(false);//运行状态改变未运行
-                                reSend = 0;//重发计数归零
                             }
 
                             @Override
                             public void onFailure(BleException exception) {//执行失败
-                                cmdCallback.onFailure(exception);//返回执行结果
-                                handler.removeCallbacks(timeOutRunnable);//删除超时任务
-                                if (messageList.size()>0) {
-                                    messageList.remove(0);//删除消息队列消息
+                                if (cmdCallback != null) {
+                                    cmdCallback.onFailure(exception);//返回执行结果
+                                    handler.removeCallbacks(timeOutRunnable);//删除超时任务
+                                    if (messageList.size()>0) {
+                                        messageList.remove(0);//删除消息队列消息
+                                    }
+                                    isRun.set(false);//运行状态改变未运行
+                                    reSend = 0;//重发计数归零
                                 }
-                                isRun.set(false);//运行状态改变未运行
-                                reSend = 0;//重发计数归零
                             }
                         });
                         handler.postDelayed(timeOutRunnable,messageTimeOut);//开始超时计时任务
@@ -132,15 +135,14 @@ public class Watch extends BluetoothLeManager implements WatchApi {
     };
 
 
-    public static synchronized Watch getInstance(Context context){
+    public static synchronized Watch getInstance(){
         if (instance == null) {
-            instance = new Watch(context);
+            instance = new Watch();
         }
         return instance;
     }
 
-    private Watch(Context context) {
-        super(context);
+    private Watch() {
         thread.start();
     }
 

@@ -123,6 +123,7 @@
         <activity android:name=".view.setting.HelpActivity"/>
         <activity android:name=".view.setting.HelpItemActivity"/>
         <activity android:name=".view.QrActivity"/>
+        <activity android:name=".view.setting.LangueActivity"/>
     </application>
 
 </manifest>

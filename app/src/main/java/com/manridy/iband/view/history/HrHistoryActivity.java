@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -165,7 +166,7 @@ public class HrHistoryActivity extends BaseActionActivity {
             }
         }else if (event.getWhat() == EventGlobal.REFRESH_VIEW_BO_HISTORY) {
             historyAdapter.setItemList(itemList);
-            String str = String.format("%.1f ", boAvg);
+            String str = String.format(Locale.US,"%.1f ", boAvg);
             diData1.setItemData(getString(R.string.hint_avg),str+"","%",lineColor);
             diData2.setItemData(getString(R.string.hint_min), boMin +"","%",lineColor);
             diData3.setItemData(getString(R.string.hint_max), boMax +"","%",lineColor);

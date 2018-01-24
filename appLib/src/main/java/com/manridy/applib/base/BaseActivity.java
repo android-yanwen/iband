@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -142,8 +143,12 @@ public abstract class BaseActivity extends AppCompatActivity  implements SwipeBa
             dialog = new ProgressDialog(mContext);
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             dialog.setCanceledOnTouchOutside(false);
+            Drawable drawable = getResources().getDrawable(R.drawable.drawable_progress);
+            drawable.setBounds(1,1,100,100);
+            dialog.setIndeterminateDrawable(drawable);
+            dialog.setIndeterminate(true);
             dialog.setMessage(msg);
-            dialog.show();
+            dialog.show();//自定义布局
         }
     }
 
@@ -154,7 +159,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements SwipeBa
             dialog.setCanceledOnTouchOutside(false);
             dialog.setMessage(msg);
             dialog.setOnCancelListener(listener);
-            dialog.show();
+            dialog.show();;//自定义布局
+
         }
     }
 

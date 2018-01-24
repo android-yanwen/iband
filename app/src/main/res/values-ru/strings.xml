@@ -324,6 +324,11 @@
     <string name="bt_next">Следующий шаг</string>
     <!-- 挂断电话失败，请检测iband权限是否开启 -->
     <string name="error_call_end">Повесьте трубку, пожалуйста, проверьте, разрешено ли разрешение iband</string>
+    <string name="hint_skip">Скакалка</string>
+    <string name="hint_push">Отжимания</string>
+    <string name="hint_langue">Настройка языка</string>
+    <string name="hint_langue_normal">Язык по умолчанию</string>
+    <string name="hint_switch_langue">Переключение языков, подождите ...</string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

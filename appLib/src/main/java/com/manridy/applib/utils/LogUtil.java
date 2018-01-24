@@ -64,6 +64,9 @@ public class LogUtil {
             public void run() {
                 BufferedWriter bw = null;
                 try {
+                    if (FileUtil.getSdCardPath() == null) {
+                        return;
+                    }
                     bw = new BufferedWriter(new FileWriter(FileUtil.getSdCardPath() + LOG_FILE_PATH, true));
                     bw.write(dateLogContent);
 //                    Log.d(tag, "log to " + fullPath + " success!");

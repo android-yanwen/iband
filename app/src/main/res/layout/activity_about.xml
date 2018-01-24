@@ -51,6 +51,12 @@
         app:help_name="@string/hint_menu_update"/>
 
     <com.manridy.iband.ui.items.HelpItems
+        android:id="@+id/hi_langue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:help_name="@string/hint_langue"/>
+
+    <com.manridy.iband.ui.items.HelpItems
         android:id="@+id/hi_help"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -55,7 +55,7 @@ public class SyncData {
     }
 
     private SyncData() {
-        watch = IbandApplication.getIntance().service.watch;
+        watch = Watch.getInstance();
         GsonBuilder builder = new GsonBuilder();
         // Register an adapter to manage the date types as long values
         builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {

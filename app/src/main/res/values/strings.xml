@@ -44,7 +44,6 @@
     //正在准备升级中,请稍后...
     <string name="hint_ota_progress">Preparing for update, please wait ...</string>
     //升级成功
-
     <string name="hint_ota_success">Successfully updated</string>
     //确定
     <string name="hint_ok">Yes</string>
@@ -631,6 +630,11 @@
     <string name="bt_next">Next step</string>
     <!-- 挂断电话失败，请检测iband权限是否开启 -->
     <string name="error_call_end">Hang up the phone failed, please check iband permission is turned on</string>
+    <string name="hint_skip">rope skipping</string>
+    <string name="hint_push">push ups</string>
+    <string name="hint_langue">language settings</string>
+    <string name="hint_langue_normal">default language</string>
+    <string name="hint_switch_langue">Switching languages, please wait ...</string>
 
     //数据库显示 不需要翻译
     <string-array name="db">

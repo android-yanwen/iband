@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -277,9 +278,9 @@ public class StepHistoryActivity extends BaseActionActivity {
 
     public String miToKm(int mi,int unit){
         if (unit == 1) {
-            return String .format("%.1f", CheckUtil.kmToMi(mi/1000.0));
+            return String .format(Locale.US,"%.1f", CheckUtil.kmToMi(mi/1000.0));
         }
-        return String .format("%.1f",(mi/1000.0));
+        return String .format(Locale.US,"%.1f",(mi/1000.0));
     }
 
 }

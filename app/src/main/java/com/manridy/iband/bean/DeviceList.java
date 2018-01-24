@@ -59,6 +59,7 @@ public class DeviceList {
         private String blood_pressure;
         private String oxygen_pressure;
         private String project_number;
+        private String notify_version;
 
         public String getDevice_name() {
             return device_name;
@@ -138,6 +139,14 @@ public class DeviceList {
 
         public void setProject_number(String project_number) {
             this.project_number = project_number;
+        }
+
+        public String getNotify_version() {
+            return notify_version;
+        }
+
+        public void setNotify_version(String notify_version) {
+            this.notify_version = notify_version;
         }
     }
 }

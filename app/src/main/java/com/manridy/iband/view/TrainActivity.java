@@ -239,6 +239,10 @@ public class TrainActivity extends BaseActionActivity {
                 colors[i] = Color.parseColor("#abf45334");
             }else if (dayData.get(i).getSportMode() == 2){
                 colors[i] = Color.parseColor("#ab0736e2");
+            }else if (dayData.get(i).getSportMode() == 3){
+                colors[i] = Color.parseColor("#abd83232");
+            }else if (dayData.get(i).getSportMode() == 4){
+                colors[i] = Color.parseColor("#abc65e18");
             }
             set.addEntry(barEntry);
         }

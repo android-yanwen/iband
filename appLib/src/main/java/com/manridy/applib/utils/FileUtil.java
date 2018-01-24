@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * File工具类
@@ -76,7 +77,11 @@ import java.util.List;
      * @return
      */
     public static String getSdCardPath(){
-       return Environment.getExternalStorageDirectory().getPath();
+        try {
+            return Environment.getExternalStorageDirectory().getPath();
+        }catch (Exception e){
+            return null;
+        }
     }
 
     /**
@@ -314,15 +319,15 @@ import java.util.List;
         long gb = mb * 1024;
 
         if (size >= gb) {
-            return String.format("%.1f GB", (float) size / gb);
+            return String.format(Locale.US,"%.1f GB", (float) size / gb);
         } else if (size >= mb) {
             float f = (float) size / mb;
-            return String.format(f > 100 ? "%.0f MB" : "%.1f MB", f);
+            return String.format(Locale.US,f > 100 ? "%.0f MB" : "%.1f MB", f);
         } else if (size >= kb) {
             float f = (float) size / kb;
-            return String.format(f > 100 ? "%.0f KB" : "%.1f KB", f);
+            return String.format(Locale.US,f > 100 ? "%.0f KB" : "%.1f KB", f);
         } else {
-            return String.format("%d B", size);
+            return String.format(Locale.US,"%d B", size);
         }
     }
 }

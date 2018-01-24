@@ -103,6 +103,7 @@ public class IbandDB {
             statsModel.saveToDate();
         }
     }
+
     public SleepStatsModel getSleepStats(String mac){
         return DataSupport.where("sleepDay = ? and deviceMac = ?",TimeUtil.getNowYMD(),mac).findFirst(SleepStatsModel.class);
     }

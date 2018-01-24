@@ -324,6 +324,11 @@
     <string name="bt_next">次のステップ</string>
     <!-- 挂断电话失败，请检测iband权限是否开启 -->
     <string name="error_call_end">電話を切った後、ibandの許可がオンになっているかどうか確認してください</string>
+    <string name="hint_skip">ジャンプロープ</string>
+    <string name="hint_push">プッシュアップ</string>
+    <string name="hint_langue">言語設定</string>
+    <string name="hint_langue_normal">デフォルト言語</string>
+    <string name="hint_switch_langue">デカルヒカルスイーツ言語</string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

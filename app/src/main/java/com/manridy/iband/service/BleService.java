@@ -19,7 +19,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.internal.telephony.ITelephony;
 import com.manridy.applib.utils.LogUtil;
@@ -33,7 +32,6 @@ import com.manridy.iband.R;
 import com.manridy.iband.view.MainActivity;
 import com.manridy.sdk.Watch;
 import com.manridy.sdk.callback.BleActionListener;
-import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleConnectCallback;
 import com.manridy.sdk.callback.BleNotifyListener;
 import com.manridy.sdk.exception.BleException;
@@ -45,6 +43,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.manridy.iband.common.AppGlobal.DEVICE_STATE_CONNECTED;
 import static com.manridy.iband.common.AppGlobal.DEVICE_STATE_CONNECTING;
@@ -81,7 +82,9 @@ public class BleService extends Service {
     public Watch watch;
 
     public void init(){
-        watch = Watch.getInstance(this);//初始化手表sdk
+        watch = Watch.getInstance();//初始化手表sdk
+        watch.init(getApplicationContext());
+        thread.start();
         initListener();//初始化监听器
         initBroadcast();//初始化ble广播
         initConnect(true);//初始化连接
@@ -108,6 +111,7 @@ public class BleService extends Service {
      * @param bleConnectCallback 结果回调
      */
     public void initConnect(boolean isScan,final BleConnectCallback bleConnectCallback) {
+        Log.d(TAG, "initConnect() called with: isScan = [" + isScan + "], bleConnectCallback = [" + bleConnectCallback + "]");
         if (!watch.isBluetoothEnable()) {
             SPUtil.put(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
         }
@@ -133,7 +137,7 @@ public class BleService extends Service {
             @Override
             public void onDeviceFound(boolean isFound, BluetoothDevice device) {
                 if (isFound) {
-                    watch.connect(mac,true,bleConnectCallback);
+                    Watch.getInstance().connect(mac,true,bleConnectCallback);
                 }else {
                     bleConnectCallback.onConnectFailure(new BleException(1000,"no find device!"));
                 }
@@ -226,7 +230,7 @@ public class BleService extends Service {
                         showNotification(2);
                     }
                     EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_CONNECTING));
-                    connectWardHandler.sendEmptyMessage(0);
+//                    connectWardHandler.sendEmptyMessage(0);
                     break;
                 case ACTION_GATT_DISCONNECTED:
                     LogUtil.e(TAG,"设备地址 "+macStr+" 蓝牙状态----蓝牙已断开");
@@ -245,7 +249,7 @@ public class BleService extends Service {
                     showNotification(1);
                     SPUtil.put(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_CONNECTED);
                     EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_CONNECT));
-                    connectWardHandler.sendEmptyMessage(2);
+//                    connectWardHandler.sendEmptyMessage(2);
                     break;
                 case ACTION_DATA_AVAILABLE:
                     final byte[] data = intent.getByteArrayExtra("BLUETOOTH_DATA");
@@ -292,6 +296,7 @@ public class BleService extends Service {
                     if (healths[2]) {
                         EventBus.getDefault().post(new EventMessage(ACTION_BO_TESTED));
                     }
+                    EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));
                     break;
                 case ACTION_HEALTH_TEST:
                     int healthType2 = (int) o;
@@ -409,56 +414,101 @@ public class BleService extends Service {
         return new boolean[]{isTestHr,isTestBp,isTestBo};
     }
 
-    Handler connectWardHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            //检测运行状态
-            //运行任务
-            //抛出下次任务
-            if (msg.what == 0) {//开始任务
-                isConnectRun = true;
-                sendEmptyMessageDelayed(1,30*1000);
-            }else if (msg.what == 1){//执行任务
-                if (isConnectRun){
-                    int connectState = (int) SPUtil.get(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
-                    if (connectState != DEVICE_STATE_CONNECTED ) {
-                        initConnect(false,mBleConnectCallback);
-                        sendEmptyMessageDelayed(1,15*1000);
-                        Log.d(TAG, "connectWardHandler() called initConnect = [" + msg + "]");
-                    }
-                }
-            }else if (msg.what == 2){//结束任务
-                isConnectRun = false;
-                removeMessages(1);
-            }
+//    Handler connectWardHandler = new Handler(){
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//            //检测运行状态
+//            //运行任务
+//            //抛出下次任务
+//            if (msg.what == 0) {//开始任务
+//                isConnectRun = true;
+//                sendEmptyMessageDelayed(1,30*1000);
+//            }else if (msg.what == 1){//执行任务
+//                if (isConnectRun){
+//                    int connectState = (int) SPUtil.get(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
+//                    if (connectState != DEVICE_STATE_CONNECTED ) {
+//                        initConnect(false,mBleConnectCallback);
+//                        sendEmptyMessageDelayed(1,15*1000);
+//                        Log.d(TAG, "connectWardHandler() called initConnect = [" + msg + "]");
+//                    }
+//                }
+//            }else if (msg.what == 2){//结束任务
+//                isConnectRun = false;
+//                removeMessages(1);
+//            }
+//        }
+//    };
+
+
+    List<ConnectMessage> messageList = new ArrayList<>();
+    AtomicBoolean isConnectRun = new AtomicBoolean(false);
+    class ConnectMessage {
+        String mac;
+        boolean isReConnect;
+        BleConnectCallback connectCallback;
+
+        public ConnectMessage(String mac, boolean isReConnect, BleConnectCallback connectCallback) {
+            this.mac = mac;
+            this.isReConnect = isReConnect;
+            this.connectCallback = connectCallback;
         }
-    };
+    }
 
-
-    boolean isConnectRun;
-    Thread connectWardThread = new Thread(){
+    Thread thread = new Thread(new Runnable() {
         @Override
         public void run() {
-            super.run();
-            isConnectRun = true;
-            while (isConnectRun) {
-                try {
-                    sleep(20*1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-               int connectState = (int) SPUtil.get(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
-                if (connectState != DEVICE_STATE_CONNECTED ) {
-                    Log.d(TAG, "connectWardThread run() =================");
-                    initConnect(false,mBleConnectCallback);
-                }
-                Log.d(TAG, "connectWardThread isConnectRun() =================");
-            }
-        }
-    };
+            while (true){
+                if (!isConnectRun.get())
+                {
+                    if (messageList.size() > 0) {
+                        final ConnectMessage connectMessage = messageList.get(0);//拿到消息
+                        isConnectRun.set(true);
+                        watch.closeBluetoothGatt(connectMessage.mac);
+                        Watch.getInstance().connect(connectMessage.mac, connectMessage.isReConnect, new BleConnectCallback() {
+                            @Override
+                            public void onConnectSuccess() {
+                                if (connectMessage.connectCallback != null) {
+                                    connectMessage.connectCallback.onConnectSuccess();
+                                    messageList.clear();//清空任务队列
+                                }
+                                isConnectRun.set(false);
+                            }
 
-    BleConnectCallback mBleConnectCallback = new BleConnectCallback() {
+                            @Override
+                            public void onConnectFailure(BleException exception) {
+                                if (connectMessage.connectCallback != null) {
+                                    connectMessage.connectCallback.onConnectFailure(exception);
+                                    if (messageList.size()>0) {
+                                        messageList.remove(0);//删除消息队列消息
+                                    }
+                                }
+                                isConnectRun.set(false);
+                            }
+                        });
+                    } else {
+                        synchronized (thread) {
+                            try {
+                                thread.wait();//线程休眠
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    });
+
+    private void connectAction(String mac, boolean isReConnect, BleConnectCallback connectCallback){
+        messageList.add(new ConnectMessage(mac, isReConnect, connectCallback));
+        synchronized (thread) {
+            thread.notify();
+        }
+    }
+
+        BleConnectCallback mBleConnectCallback = new BleConnectCallback() {
         @Override
         public void onConnectSuccess() {
             Log.d(TAG, "onConnectSuccess() called");
@@ -468,6 +518,11 @@ public class BleService extends Service {
         public void onConnectFailure(BleException exception) {
 //            startConnectWardThread();
             Log.d(TAG, "onConnectFailure() called with: exception = [" + exception.toString() + "]");
+//            int connectState = (int) SPUtil.get(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
+//            String mac = (String) SPUtil.get(BleService.this, AppGlobal.DATA_DEVICE_BIND_MAC,"");
+//            if (connectState != DEVICE_STATE_CONNECTED && !mac.isEmpty()) {
+//                initConnect(false,mBleConnectCallback);
+//            }
         }
     };
 

@@ -58,6 +58,7 @@ import com.manridy.iband.view.model.BpFragment;
 import com.manridy.iband.view.model.HrFragment;
 import com.manridy.iband.view.model.SleepFragment;
 import com.manridy.iband.view.model.StepFragment;
+import com.manridy.sdk.Watch;
 import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleConnectCallback;
@@ -150,16 +151,16 @@ public class MainActivity extends BaseActivity {
             ibandApplication.service.watch.sendCmd(BleCmd.setTime());
         }
         isShowBp = isShowBo =true;
-        String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST,"");
+        String strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
         String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
         if (!strDeviceList.isEmpty()) {
             DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
             for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
-                if (resultBean.getDevice_id().equals(deviceType)){
-                    if (resultBean.getBlood_pressure().equals("0")) {
+                if (deviceType.equals(resultBean.getDevice_id())){
+                    if ("0".equals(resultBean.getBlood_pressure())) {
                         isShowBp = false;
                     }
-                    if (resultBean.getOxygen_pressure().equals("0")) {
+                    if ("0".equals(resultBean.getOxygen_pressure())) {
                         isShowBo = false;
                     }
                 }
@@ -407,6 +408,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private void connectDevice(){
+        if (ibandApplication.service == null) {
+            return;
+        }
         ibandApplication.service.initConnect(true,new BleConnectCallback() {
             @Override
             public void onConnectSuccess() {
@@ -443,7 +447,7 @@ public class MainActivity extends BaseActivity {
         super.loadData();
         String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
         int state = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
-        if (!ibandApplication.service.watch.isBluetoothEnable()) {
+        if (!Watch.getInstance().isBluetoothEnable()) {
             OpenBluetoothDialog();
         } else if (mac.isEmpty()) {
             showFloatView(getString(R.string.hint_device_unbind), getString(R.string.hint_bind));

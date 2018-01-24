@@ -8,12 +8,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.manridy.applib.common.AppManage;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.adapter.AppAdapter;
 import com.manridy.iband.bean.AppModel;
+import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.OnItemClickListener;
@@ -46,7 +48,7 @@ public class AppActivity extends BaseActionActivity {
     List<AppModel> curAppList;
     AppAdapter mAppAdapter;
     List<AppAdapter.Menu> menuList;
-
+    boolean isAppNewShow = false;
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_app);
@@ -58,6 +60,7 @@ public class AppActivity extends BaseActionActivity {
         setStatusBarColor(Color.parseColor("#2196f3"));
         setTitleAndMenu(getString(R.string.title_app), getString(R.string.hint_save));
         onOff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_APP,false);
+        isAppNewShow = getAppNewShow();//判断app通知支持新版
         aiAlert.setAlertCheck(onOff);
         menuList = getMenuList();
         curAppList = IbandDB.getInstance().getAppList();
@@ -74,6 +77,22 @@ public class AppActivity extends BaseActionActivity {
         rvApp.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
         rvApp.setAdapter(mAppAdapter);
 
+    }
+
+    private boolean getAppNewShow() {
+        String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST,"");
+        String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
+        String firmVersion = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_VERSION,"1.0.0");
+        String appVersion = "1.0";
+        if (!strDeviceList.isEmpty()) {
+            DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
+            for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+                if (resultBean.getDevice_id().equals(deviceType)) {
+                    appVersion = resultBean.getNotify_version();
+                }
+            }
+        }
+        return appVersion.compareTo(firmVersion) >= 0;
     }
 
     @Override
@@ -138,6 +157,11 @@ public class AppActivity extends BaseActionActivity {
         menuList.add(new AppAdapter.Menu(5,getString(R.string.hint_app_whatsapp),R.mipmap.appremind_whatsapp));
         menuList.add(new AppAdapter.Menu(6,getString(R.string.hint_app_facebook),R.mipmap.appremind_facebook));
         menuList.add(new AppAdapter.Menu(7,getString(R.string.hint_app_line),R.mipmap.line));
+        if (isAppNewShow) {
+            menuList.add(new AppAdapter.Menu(8,"Twiteer",R.mipmap.appremind_twitter));
+            menuList.add(new AppAdapter.Menu(9,"Skype",R.mipmap.appremind_skype));
+            menuList.add(new AppAdapter.Menu(10,"Ins",R.mipmap.appremind_ins));
+        }
         return menuList;
     }
 

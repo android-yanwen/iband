@@ -164,7 +164,6 @@ public class HrFragment extends BaseEventFragment {
             btTest.setText(R.string.hint_test);
             cvHr.setTitle(getString(R.string.hint_last_hr)).invaliDate();
             isTestData = true;
-            EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));
         }
     }
 

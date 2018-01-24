@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * 时间工具类
@@ -316,13 +317,13 @@ public class TimeUtil {
         if (time<60) {
             str = time+"分钟";
         }else {
-            str =  String .format("%.1f", ((double)time/60)+0.005)+"小时";
+            str =  String.format(Locale.US,"%.1f", ((double)time/60)+0.005)+"小时";
         }
         return str;
     }
 
     public static double getHourDouble(int time){
-        String str =  String .format("%.1f", ((double)time/60)+0.005);
+        String str =  String.format(Locale.US,"%.1f", ((double)time/60)+0.005);
         return Double.valueOf(str);
     }
 }

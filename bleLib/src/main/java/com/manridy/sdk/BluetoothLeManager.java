@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.manridy.sdk.ble.BleParse;
 import com.manridy.sdk.callback.BleCallback;
@@ -68,7 +69,7 @@ public class BluetoothLeManager {
     public static final String ACTION_NOTIFICATION_ENABLE ="ACTION_NOTIFICATION_ENABLE";//蓝牙通知开启
     public static final String ACTION_DATA_AVAILABLE = "ACTION_DATA_AVAILABLE";//收到蓝牙数据
 
-    public BluetoothLeManager(Context mContext) {
+    public void init(Context mContext){
         this.mContext = mContext.getApplicationContext();
         mBluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = mBluetoothManager.getAdapter();
@@ -109,6 +110,7 @@ public class BluetoothLeManager {
      */
     public synchronized boolean startScan(TimeScanCallback callback){
         callback.setBluetoothLeManager(this).notifyScanStated();//开始倒计时暂停
+        mBluetoothAdapter.stopLeScan(callback);
         boolean suc = mBluetoothAdapter.startLeScan(callback);
         if (suc){
             isScaning.set(true);
@@ -158,6 +160,7 @@ public class BluetoothLeManager {
         this.connectCallback = connectCallback;
         if (null == device || mBluetoothAdapter == null) {
             LogUtil.e(TAG, "connect device or bluetoothAdapter is null" );
+            return;
         }
         mBluetoothGattCallback = new mBluetoothGattCallback();
         int index = -1;
@@ -229,17 +232,17 @@ public class BluetoothLeManager {
      * 重连设备
      * @param leDevice 设备
      */
-    private synchronized void reConnect(BluetoothLeDevice leDevice){
+    private synchronized void reConnect(final BluetoothLeDevice leDevice){
         if (leDevice == null) {
             return;
         }
-            BluetoothGatt gatt = leDevice.getmBluetoothGatt();
+            final BluetoothGatt gatt = leDevice.getmBluetoothGatt();
         if (gatt == null) {
             return;
         }
-            leDevice.getmBluetoothGatt().connect();
-            broadcastUpdate(ACTION_GATT_RECONNECT,null,gatt.getDevice().getAddress());
-            LogUtil.e(TAG, "reConnect: device is" + leDevice.getmBluetoothGatt().getDevice().getAddress());
+        leDevice.getmBluetoothGatt().connect();
+        broadcastUpdate(ACTION_GATT_RECONNECT,null,gatt.getDevice().getAddress());
+        LogUtil.e(TAG, "reConnect: device is" + leDevice.getmBluetoothGatt().getDevice().getAddress());
     }
 
     /**
@@ -255,7 +258,10 @@ public class BluetoothLeManager {
     }
 
     public BluetoothDevice getDevice(String mac){
-        return mBluetoothAdapter.getRemoteDevice(mac);
+        if (mBluetoothAdapter != null) {
+            return mBluetoothAdapter.getRemoteDevice(mac);
+        }
+        return null;
     }
 
     /********Notification and WriteData********/
@@ -376,7 +382,7 @@ public class BluetoothLeManager {
                     gatt.discoverServices();
                     broadcastUpdate(ACTION_GATT_CONNECT,null,gatt.getDevice().getAddress());
                 }else if (newState == BluetoothProfile.STATE_DISCONNECTED ){
-                    BluetoothLeDevice bluetoothLeDevice = getBluetoothLeDevice(gatt);
+                    final BluetoothLeDevice bluetoothLeDevice = getBluetoothLeDevice(gatt);
                     if (bluetoothLeDevice != null){
                         bluetoothLeDevice.setIsConnect(false);
                         if (disConnectCallback != null) {
@@ -391,6 +397,7 @@ public class BluetoothLeManager {
                         }else{
                             broadcastUpdate(ACTION_GATT_DISCONNECTED,new byte[]{(byte) status},gatt.getDevice().getAddress());
                             if (bluetoothLeDevice.isReConnect()) {
+                                Log.d(TAG, "isReConnect() called ");
                                 reConnect(bluetoothLeDevice);
                             }
                         }

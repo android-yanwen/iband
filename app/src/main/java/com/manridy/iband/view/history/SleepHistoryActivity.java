@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -209,7 +210,7 @@ public class SleepHistoryActivity extends BaseActionActivity {
         String deep = getHour(sleepDeep);
         String light = getHour(sleepLight);
         double dou = TimeUtil.getHourDouble(sleepLight) + TimeUtil.getHourDouble(sleepDeep);
-        String sum = String .format("%.1f", dou);
+        String sum = String .format(Locale.US,"%.1f", dou);
         String state = getString(R.string.hint_sleep_deep)+deep+getString(R.string.hint_sleep_light1) + light;
         float progress = (sleepSum / (float)(target*60)) * 100;
         cvHistorySleep.setText(sum)
@@ -220,10 +221,10 @@ public class SleepHistoryActivity extends BaseActionActivity {
     }
 
     private void setDataItem(){
-        String deep =  String .format("%.1f", (sleepDeep/60.0));
-        String light =  String .format("%.1f", (sleepLight/60.0));
+        String deep =  String.format(Locale.US,"%.1f", (sleepDeep/60.0));
+        String light =  String.format(Locale.US,"%.1f", (sleepLight/60.0));
         double dou = TimeUtil.getHourDouble(sleepLight) + TimeUtil.getHourDouble(sleepDeep);
-        String sum = String .format("%.1f", dou);
+        String sum = String.format(Locale.US,"%.1f", dou);
         diData1.setItemData(getString(R.string.hint_sleep_avg),sum);
         diData2.setItemData(getString(R.string.hint_sleep_deep_avg),deep);
         diData3.setItemData(getString(R.string.hint_sleep_light_avg),light);
@@ -236,10 +237,10 @@ public class SleepHistoryActivity extends BaseActionActivity {
                 DayBean dayBean = sleepList.get((int)e.getX()>0?(int)e.getX()-1:0);
                 int deep = dayBean.getDayMax();
                 int light = dayBean.getDayMin();
-                String strDeep =  String .format("%.1f", ((double)deep/60));
-                String strLight =  String .format("%.1f", ((double)light/60));
+                String strDeep =  String.format(Locale.US,"%.1f", ((double)deep/60));
+                String strLight =  String.format(Locale.US,"%.1f", ((double)light/60));
                 double dou = TimeUtil.getHourDouble(deep) + TimeUtil.getHourDouble(light);
-                String sum = String .format("%.1f", dou);
+                String sum = String .format(Locale.US,"%.1f", dou);
                 String day = dayBean.getDay();
                 diData1.setItemData(day,sum);
                 diData2.setItemData(getString(R.string.hint_sleep_deep),strDeep);
@@ -288,7 +289,7 @@ public class SleepHistoryActivity extends BaseActionActivity {
         if (time<60) {
             str = time + getString(R.string.unit_min);
         }else {
-            str =  String .format("%.1f", ((double)time/60))+getString(R.string.hint_unit_sleep);
+            str =  String .format(Locale.US,"%.1f", ((double)time/60))+getString(R.string.hint_unit_sleep);
         }
         return str;
     }

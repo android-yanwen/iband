@@ -25,7 +25,6 @@ import butterknife.ButterKnife;
 
 public class WristActivity extends BaseActionActivity {
 
-
     @BindView(R.id.tb_menu)
     TextView tbMenu;
     @BindView(R.id.ai_alert)
