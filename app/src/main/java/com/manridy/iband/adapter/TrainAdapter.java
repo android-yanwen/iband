@@ -28,7 +28,6 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.MyViewHolder
         this.list = list;
     }
 
-
     public void setItemList(List<StepModel> list) {
         this.list = list;
         notifyDataSetChanged();
@@ -84,11 +83,11 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.MyViewHolder
             }else if (step.getSportMode() == 3){
                 itemRes =  R.mipmap.train_ic_rs;
                 itemText = R.string.hint_skip;
-                stepText = "";
+                stepText = step.getStepNum() + itemMin.getContext().getResources().getString(R.string.hint_unit_th);
             }else if (step.getSportMode() == 4){
                 itemRes =  R.mipmap.train_ic_pu;
                 itemText = R.string.hint_push;
-                stepText = "";
+                stepText = step.getStepNum() + itemMin.getContext().getResources().getString(R.string.hint_unit_th);
             }
             itemIcon.setImageResource(itemRes);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");

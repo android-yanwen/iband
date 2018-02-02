@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -36,6 +38,8 @@ import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.CircularView;
 import com.manridy.iband.ui.items.DataItems;
+import com.manridy.iband.view.LocationActivity;
+import com.manridy.iband.view.SportActivity;
 import com.manridy.iband.view.TrainActivity;
 import com.manridy.iband.view.base.BaseEventFragment;
 import com.manridy.iband.view.history.StepHistoryActivity;
@@ -77,6 +81,8 @@ public class StepFragment extends BaseEventFragment {
     DataItems diData3;
     @BindView(R.id.bc_step)
     BarChart bcStep;
+    @BindView(R.id.iv_location)
+    ImageView ivLocation;
 
     StepModel curStep;
     List<StepModel> curSectionSteps;
@@ -129,7 +135,7 @@ public class StepFragment extends BaseEventFragment {
         EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_STEP));
     }
 
-    @OnClick({ R.id.iv_menu,R.id.iv_history})
+    @OnClick({ R.id.iv_menu,R.id.iv_history,R.id.iv_location})
     public void onClick(View view) {
         if (isFastDoubleClick()) {
             return;
@@ -140,6 +146,9 @@ public class StepFragment extends BaseEventFragment {
                 break;
             case R.id.iv_menu:
                 startActivity(TrainActivity.class);
+                break;
+            case R.id.iv_location:
+                startActivity(SportActivity.class);
                 break;
         }
     }

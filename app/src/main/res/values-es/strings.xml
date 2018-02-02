@@ -330,6 +330,7 @@
     <string name="hint_langue">Configuración de idioma</string>
     <string name="hint_langue_normal">Lenguaje por defecto</string>
     <string name="hint_switch_langue">Lenguaje por defecto...</string>
+    <string name="hint_unit_th">个</string>
 
     //数据库显示 不需要翻译
     <string-array name="db">

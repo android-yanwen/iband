@@ -329,6 +329,7 @@
     <string name="hint_langue">言語設定</string>
     <string name="hint_langue_normal">デフォルト言語</string>
     <string name="hint_switch_langue">デカルヒカルスイーツ言語</string>
+    <string name="hint_unit_th">个</string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

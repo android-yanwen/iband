@@ -329,6 +329,7 @@
     <string name="hint_langue">Réglage de la langue</string>
     <string name="hint_langue_normal">Langue par défaut</string>
     <string name="hint_switch_langue">Changer de langue, veuillez patienter ...</string>
+    <string name="hint_unit_th">个</string>
 
     //数据库显示 不需要翻译
     <string-array name="db">

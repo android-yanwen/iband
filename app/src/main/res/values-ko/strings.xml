@@ -329,6 +329,7 @@
     <string name="hint_langue">언어 설정</string>
     <string name="hint_langue_normal">기본 언어</string>
     <string name="hint_switch_langue">언어를 전환하는 중입니다. 잠시 기다려주십시오 ...</string>
+    <string name="hint_unit_th">个</string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

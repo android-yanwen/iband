@@ -338,6 +338,7 @@
     <string name="hint_langue">Spracheinstellung</string>
     <string name="hint_langue_normal">Standardsprache</string>
     <string name="hint_switch_langue">Sprachen wechseln, bitte warten ...</string>
+    <string name="hint_unit_th">个</string>
 
     <!-- 最弱 -->
     <string-array name="corrects">

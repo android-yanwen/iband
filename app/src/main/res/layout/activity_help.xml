@@ -6,27 +6,25 @@
               android:layout_height="match_parent"
               android:background="@color/activity_background">
 
-    <include layout="@layout/tab_activity"/>
+        <include layout="@layout/tab_activity"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-       <android.support.v7.widget.RecyclerView
-           android:id="@+id/rv_help"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"/>
-        <TextView
-            android:id="@+id/tv_hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="20dp"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:text="If you have any questions, please email lixy@manridy.com"
-            android:visibility="gone"/>
-    </RelativeLayout>
-
-
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_help"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:id="@+id/tv_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:text="If you have any questions, please email lixy@manridy.com"
+                android:visibility="gone"/>
+        </RelativeLayout>
 </LinearLayout>

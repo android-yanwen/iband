@@ -321,6 +321,7 @@
     <string name="hint_langue">语言设置</string>
     <string name="hint_langue_normal">默认语言</string>
     <string name="hint_switch_langue">正在切换语言，请稍后...</string>
+    <string name="hint_unit_th">个</string>
     //--------------------------17/11/24新增App帮助内容-----------------------------
     <string-array name="helpTitleList">
         <item>Q:提示搜索不到手环怎么办？</item>

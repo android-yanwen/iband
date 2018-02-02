@@ -225,9 +225,6 @@ public class BleParse {
 
     }
 
-
-
-
     public void parseOther(byte[] data){
         int type = data[1];
         switch (type) {
