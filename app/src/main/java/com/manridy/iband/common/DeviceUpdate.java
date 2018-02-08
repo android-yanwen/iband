@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -21,6 +22,8 @@ import java.util.List;
  */
 
 public class DeviceUpdate {
+
+    private static final String TAG = "DeviceUpdate";
     String url = "http://39.108.92.15:12345";
     String version = "/version.xml";
     Context mContext;
@@ -40,10 +43,13 @@ public class DeviceUpdate {
 
 
     public void getOTAVersion(final String deviceType, final String deviceVersion, final boolean isForce){
+
+        Log.d(TAG, "getOTAVersion() called with: deviceType = [" + deviceType + "], deviceVersion = [" + deviceVersion + "], isForce = [" + isForce + "]");
         checkDeviceUpdate(new OnResultCallBack() {
             @Override
             public void onResult(boolean result, Object o) {
                 if (result) {
+                    Log.d(TAG, "onResult() called with: result = [" + result + "], o = [" + o.toString() + "]");
                     if (o != null) {
                         List<DomXmlParse.Image> imageList = (List<DomXmlParse.Image>) o;
                         boolean isShow = false;

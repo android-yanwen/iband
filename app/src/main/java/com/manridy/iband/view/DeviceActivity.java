@@ -162,6 +162,9 @@ public class DeviceActivity extends BaseActionActivity {
                                 :getString(R.string.hint_sync_fail));
                     }
                 });
+//                String firmVersion = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_VERSION,"1.0.0");
+//                boolean isLostDisturb = getLostDisturb(bindName,firmVersion ,filterDeviceList);
+//                SPUtil.put(mContext,AppGlobal.DATA_ALERT_LOST_NAP,isLostDisturb);
             }
         });
     }
@@ -364,6 +367,8 @@ public class DeviceActivity extends BaseActionActivity {
         }
         return "unknown";
     }
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(EventMessage event){

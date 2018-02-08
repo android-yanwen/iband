@@ -123,7 +123,7 @@ public class MainActivity extends BaseActivity {
             int state = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
             boolean otaRun = (boolean) SPUtil.get(mContext, AppGlobal.STATE_APP_OTA_RUN, false);
             Log.d(TAG, "LostHandleMessage() called with: state = [" + state + "]"+"otaRun = ["+otaRun+"]");
-            if (state != AppGlobal.DEVICE_STATE_CONNECTED && !otaRun) {
+            if ((state != AppGlobal.DEVICE_STATE_CONNECTED || otaRun)&& !checkLostDisturb() ) {
                 playAlert(true, alertTime);
                 String time = TimeUtil.getNowYMDHMSTime();
                 showLostNotification(time);
@@ -134,9 +134,37 @@ public class MainActivity extends BaseActivity {
 //            }
         }
     };
+
+    //检测防丢免打扰时间段和开关
+    private boolean checkLostDisturb() {
+        String deviceName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,"");
+        String deviceVersion = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION,"1.0.0");
+        String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST,"");
+        if (strDeviceList!= null && !strDeviceList.isEmpty()) {
+            DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
+            boolean isDisturb = getLostDisturb(deviceName,deviceVersion,filterDeviceList);
+            if (isDisturb) {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH");
+                String hour = simpleDateFormat.format(new Date());
+                int h = Integer.valueOf(hour);
+                return h >= 23 || h< 6;
+            }
+        }
+        return false;
+    }
+
+    //防丢免打扰开关
+    private boolean getLostDisturb(String deviceName,String firmVision,DeviceList filterDeviceList){
+        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+            if (resultBean.getDevice_name().equals(deviceName)) {
+                return resultBean.getNot_disturb().compareTo(firmVision)>=0;
+            }
+        }
+        return false;
+    }
+
     private boolean isShowBp;
     private boolean isShowBo;
-
     @Override
     protected void onResume() {
         super.onResume();

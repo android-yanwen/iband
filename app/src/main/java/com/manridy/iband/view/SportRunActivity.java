@@ -50,6 +50,8 @@ public class SportRunActivity extends BaseActionActivity {
     ImageView ivPause;
     @BindView(R.id.iv_end)
     ImageView ivEnd;
+    @BindView(R.id.iv_map)
+    ImageView ivMap;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -70,12 +72,12 @@ public class SportRunActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 ivStart.setEnabled(false);
-                Animation animation = AnimationUtils.loadAnimation(mContext,R.anim.button_out_left);
-                Animation animation2 = AnimationUtils.loadAnimation(mContext,R.anim.button_out_right);
+                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.button_out_left);
+                Animation animation2 = AnimationUtils.loadAnimation(mContext, R.anim.button_out_right);
                 ivStart.setVisibility(View.GONE);
                 ivPause.startAnimation(animation);
                 ivEnd.startAnimation(animation2);
-                handler.sendEmptyMessageDelayed(0,500);
+                handler.sendEmptyMessageDelayed(0, 500);
             }
         });
 
@@ -83,18 +85,25 @@ public class SportRunActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 ivPause.setEnabled(false);
-                Animation animation2 = AnimationUtils.loadAnimation(mContext,R.anim.button_in_right);
-                Animation animation = AnimationUtils.loadAnimation(mContext,R.anim.button_in_left);
+                Animation animation2 = AnimationUtils.loadAnimation(mContext, R.anim.button_in_right);
+                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.button_in_left);
                 ivPause.setVisibility(View.GONE);
                 ivEnd.setVisibility(View.GONE);
                 ivEnd.startAnimation(animation2);
                 ivPause.startAnimation(animation);
-                handler.sendEmptyMessageDelayed(1,500);
+                handler.sendEmptyMessageDelayed(1, 500);
+            }
+        });
+
+        ivMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(Location2Activity.class);
             }
         });
     }
 
-    Handler handler = new Handler(){
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -102,7 +111,7 @@ public class SportRunActivity extends BaseActionActivity {
                 ivPause.setVisibility(View.VISIBLE);
                 ivEnd.setVisibility(View.VISIBLE);
                 ivStart.setEnabled(true);
-            }else if (msg.what == 1){
+            } else if (msg.what == 1) {
                 ivStart.setVisibility(View.VISIBLE);
                 ivPause.setEnabled(true);
             }
@@ -110,4 +119,10 @@ public class SportRunActivity extends BaseActionActivity {
     };
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

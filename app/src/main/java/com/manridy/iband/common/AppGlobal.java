@@ -24,6 +24,8 @@ public class AppGlobal {
     public static final String DATA_ALERT_APP = "data_alert_app";
     public static final String DATA_ALERT_WRIST = "data_alert_wrist";
     public static final String DATA_APP_VERSINO = "data_app_version";
+    public static final String DATA_WECHAT_QR = "data_wehcat_qr";
+
     //setting
     public static final String DATA_SETTING_LIGHT = "data_setting_light";
     public static final String DATA_SETTING_UNIT= "data_setting_unit";
@@ -47,6 +49,7 @@ public class AppGlobal {
 
     public static final String DATA_DEVICE_LIST = "data_device_list";
     public static final String DATA_DEVICE_FILTER = "data_device_filter";
+    public static final String DATA_ALERT_LOST_NAP = "data_alert_lost_nap";
 
     public static final String STATE_APP_OTA_RUN = "state_app_ota_run";
 

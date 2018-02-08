@@ -40,6 +40,8 @@ public class HttpService {
     public static final String device_list = "http://120.78.138.141:8080/device_list.php";
     public static final String device_img = "http://120.78.138.141:8080/image/";
     public static final String device_ota_record = "http://120.78.138.141:8080/update/update_record.php";
+    public static final String device_wechat_query = "http://120.78.138.141:8080/deviceRegisterQuery.php";
+    public static final String device_wechat_regist = "http://120.78.138.141:8080/wechatRegister.php";
 
     private HttpService() {
     }
@@ -119,9 +121,9 @@ public class HttpService {
     }
 
     public void wechatQuery(String mac,boolean isOld ,OnResultCallBack onResultCallBack){
-        String url = isOld?wechat_old_query:wechat_query;
+//        String url = isOld?wechat_old_query:wechat_query;
         Request request = new Request.Builder()
-                .url(url+"?id="+mac)
+                .url(device_wechat_query+"?device mac="+mac)
 //                .addHeader("Connection", "close")
                 .get()
                 .build();
@@ -155,7 +157,8 @@ public class HttpService {
                 .add("device_mac", mac)
                 .build();
         Request request = new Request.Builder()
-                .url(productID.equals("35788")?wechat_old_regist:wechat_regist)
+//                .url(productID.equals("35788")?wechat_old_regist:wechat_regist)
+                .url(device_wechat_regist)
                 .post(formBody)
                 .build();
         try {

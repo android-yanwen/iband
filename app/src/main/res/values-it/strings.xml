@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">iband</string>
     <string name="hint_title_about">A proposito di questo</string>
@@ -347,9 +348,126 @@
         <item>Il più forte</item>
     </string-array>
 
+
     <string-array name="helpTitleList">
+        <item >If you\’ re informed that iband couldn\’ t be found, tips are as follows？</item>
+        <item >If you’re informed of failing to bind:</item>
+        <item >How can you sync iband\’ s data？If you\’ re prompted for failure to sync the data.</item>
+        <item >Why didn’ t I be reminded for having a phone call though I set Call notification？ (Android)</item>
+        <item >I received messages without reminding though I set Message notification. Why？</item>
+        <item >Why didn’t I be reminded for receiving messages on QQ and WeChat though I set Application reminder？</item>
+        <item >I long pressed on the icon of iband to cancel a phone call when receiving a call notification. But I failed. Why? </item>
+        <item>Why did my HR measurement fail？</item>
     </string-array>
 
     <string-array name="helpContentList">
+        <item>1）Make sure the iband has enough power and the screen of it can be brightened up.
+            2）keep it close to your phone.
+            3）check whether the Bluetooth Icon on iband displays connected. If yes, please reboot your iband once；
+            If the tips above don’t work，try to turn on Bluetooth and your phone again。
+            Tips:
+	        Apple users should go to settings, check your iband’ s information on Bluetooth, and click and ignore the iband. Then turn on Bluetooth again.
+	        Android users with system version at or above 6.0 are required to turn on location service to search for iband in need of location info.
+        </item>
+        <item>
+            1）Make sure the iband has enough power and the screen of it can be brightened up.
+            2）keep it close to your phone.
+            3）check whether the Bluetooth Icon on iband displays connected. If yes, please reboot your iband once;
+            If the tips above don’ t work，try to turn on Bluetooth and your phone again。
+            Tips:
+	        Apple users should go to settings, check your iband’s information on Bluetooth, and click and ignore the iband. Then turn on Bluetooth again.
+        </item>
+        <item>
+             1) When you open iband app, the data can be synced automatically；Also, you can go to the main interface of the app, and slide list down to refresh the interface and to sync.
+2) If you’ re prompted to fail to connect when syncing：
+1) Refresh the main interface again；
+2)Restart the app；
+3) If these tips don’t work, turn on Bluetooth again or reboot your phone.（Before rebooting the phone, you can try eliminating the shared info on Bluetooth. ）
+Tips：
+Apple users should go to settings, check your iband’ s information on Bluetooth, and click and ignore the iband. Then turn on Bluetooth again.
+        </item>
+        <item>
+            1)	Make sure that Bluetooth is turned on and connected to your iband；
+2)	Check if iband app runs normally; (it is okay to run in the background.)
+3)	Check if phone and contacts is authorized.
+Tips:
+	The process of iband app could be cleaned up and blocked up by one-click cleaning up memory or some protecting software. Please add the app into white list.
+        </item>
+        <item>
+            1)	Make sure that Bluetooth is turned on and connected to your iband；
+2)	Check if iband app runs normally; (it is okay to run in the background.)
+3)	Check if messages and contacts is authorized；
+Tips:
+	The process of iband app could be cleaned up and blocked up by one-click cleaning up memory or some protecting software. Please add the app into white list.
+        </item>
+        <item>
+            1）	Make sure that Bluetooth is turned on and connected to your iband；
+2）	Check if iband app runs normally; (it is okay to run in the background.)
+3）	Make sure that you turn on the function of message notifywin on qq and WeChat.
+Tips: If the tips above don’t work, please restart iband app or phone.
+        </item>
+        <item>
+            1)	Make sure that Bluetooth is turned on and connected to your iband；
+2)	Check if iband app runs normally; (it is okay to run in the background.)
+3)	Check if phone call is authorized.
+Operating steps：
+Settings-Authorization-Application authorization-iband-Setting for single authorization-Phone call, please allow phone call authorization.
+
+Tips:
+	The process of iband app could be cleaned up and blocked up by one-click cleaning up memory or some protecting software. Please add the app into white list.
+
+        </item>
+        <item>
+            1）	Keep calm and quiet and your wrist should be close against to the bottom of iband’ s screen. Do not swing your arm when measuring.
+2）	Nonstandard wearing manners influence HR measurement like iband not exactly close against your wrist, arm swinging or iband moving on skin a little. Moreover, tighter wearing, lifted-up arm and clenched fist have bad impact on blood circulation, which can lead to failure on HR measurement. The proper ways to measure your HR are to keep your arm flat and keep yourself relaxed and calm and keep your wrist close against the iband. However, although you wear the iband in the proper ways, HR measurement can be failed by the influence of individual difference like scars on skin.
+        </item>
+    </string-array>
+
+    <string-array name="wechat_titles">
+        <item>The things you need to do before binding WeRun</item>
+        <item>WeRun binding method</item>
+        <item>Do I need to sync the data by myself every time I refresh WeRun data？</item>
+        <item>Why can I check the data updates immediately though WeRun is added？</item>
+        <item>How can I know that WeRun has been added into my device？</item>
+        <item>How can I delete WeRun from my device？</item>
+        <item>Why does my iband stop refreshing and not keep in sync, though I added WeRun？</item>
+        <item>How can I know whether my iband is conneted to WeRun？</item>
+        <item>Do I need to unbind or ignore device every time I use WeRun？</item>
+    </string-array>
+
+    <string-array name="wechat_contents">
+        <item>1.	Unbind device（Apple users should ignore the device on Bluetooth）.\n
+2.	Enable the Bluetooth on your phone.\n
+3.	Make sure that the Bluetooth on iband is disconnected.
+
+       </item>
+        <item>1.The interface of the picture has been stored in the phone album, open WeChat "Scan QR Code"\n
+2. Choose "QR Code from Album" in the upper right corner\n
+3. Find the picture stored in the phone, identify the QR code\n
+4. In the page that is displayed, select Binding Device, enter the public number, and complete the binding.
+
+       </item>
+        <item>No, if WeRun is enabled, it can update every 2 hours automatically.
+Every time you click Ranking, it will update automatically too.
+（But sometimes it doesn’ t work, and you need to click more than once.）
+</item>
+        <item>It relates to mobile systems and WeChat servers. When WeRun is bound with your device, the time you can check the data updates for the first time is different.
+According to our incomplete tests, android users can check the data updates in a minute, while apple users need to wait 3 minutes at most to check them.
+</item>
+        <item>1.	Exit iband app（Apple users should ignore the device on Bluetooth.）.\n
+2.	Turn on WeChat-Me-Settings-Devices, if you see the device of MRD Sports connected, it indicates that you’ve added WeRun.
+
+        </item>
+        <item>Turn on WeChat-Me-Settings-Devices-Choose a device-Delete device</item>
+        <item>Reason 1：If your WeRun not only bind iband, but also bind other devices like your phone, WeRun will only display the data of the device that has most steps.\n
+Reason 2：If WeRun is not connected to your iband, the data cannot be synced either.
+
+        </item>
+        <item>Put your iband close to phone and make sure that the Bluetooth of the phone is enabled.
+Exit iband app（Apple users should ignore the device on Bluetooth.）. At this time, the Bluetooth of the device should be disconnected.  With WeChat turned on, the Bluetooth display “connected”, indicating that WeRun is connected to the device.
+</item>
+        <item>1. No, it is for the first time that you need to do it. In this way, your device can be searched by WeRun successfully. (If the device has been bound with your phone, WeRun will fail to search for the device.)\n
+2. After binding WeRun, you can make iband app and WeRun connected to the device at the same time without interference.
+</item>
     </string-array>
 </resources>

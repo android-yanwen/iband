@@ -178,7 +178,7 @@ public class SettingActivity extends BaseActionActivity {
             tvUserName.setText(curUser.getUserName());
         }
         String path = (String) SPUtil.get(mContext,DATA_USER_HEAD,"");
-        File file = new File(Environment.getExternalStorageDirectory()+"/iwaer"+path);
+        File file = new File(Environment.getExternalStorageDirectory()+"/iband"+path);
         if (file.exists()) {
             ivUserIcon.setImageResource(R.mipmap.set_head);
             ivUserIcon.setImageURI("file://"+file.getPath());
@@ -235,6 +235,10 @@ public class SettingActivity extends BaseActionActivity {
             case R.id.menu_wechat:
                 if (!CheckUtil.isNetworkAvailable(mContext)) {
                     showToast(getString(R.string.hint_network_available));
+                    return;
+                }
+                if (connectState != 1) {
+                    showToast(getString(R.string.hintUnConnect));
                     return;
                 }
                 startActivity(WechatActivity.class);

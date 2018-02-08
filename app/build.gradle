@@ -7,8 +7,9 @@ android {
         applicationId "com.manridy.iband"
         minSdkVersion 18
         targetSdkVersion 24
-        versionCode 61
-        versionName "1.8.2"
+        versionCode 62
+        versionName "1.8.4"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     dexOptions {
@@ -88,6 +89,11 @@ dependencies {
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
     //    compile 'com.tencent.bugly:crashreport:latest.release'//bugly
     //    compile 'skin.support:skin-support:1.2.6'// skin-support 基础控件支持 //换肤
-    compile files('libs/BaiduLBS_Android.jar')
-    compile files('libs/httpmime-4.1.2.jar')
+    //
+//    compile 'com.amap.api:map2d:latest.integration'
+    //定位功能
+//    compile 'com.amap.api:location:latest.integration'
+    //导航功能
+//    compile 'com.amap.api:navi-3dmap:latest.integration'
+//    compile 'com.amap.api:search:latest.integration'
 }

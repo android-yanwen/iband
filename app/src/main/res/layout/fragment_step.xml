@@ -56,7 +56,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="18dp"
-            android:src="@mipmap/sp_ic_locate"/>
+            android:src="@mipmap/sp_ic_locate"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <include layout="@layout/tab_data"/>

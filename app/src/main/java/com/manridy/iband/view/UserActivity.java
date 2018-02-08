@@ -122,7 +122,7 @@ public class UserActivity extends BaseActionActivity {
             hiWeight.setMenuContent(mWeight);
         }
         String path = (String) SPUtil.get(mContext, DATA_USER_HEAD, "");
-        File file = new File(Environment.getExternalStorageDirectory() + "/iwaer" + path);
+        File file = new File(Environment.getExternalStorageDirectory() + "/iband" + path);
         if (file.exists()) {
             ivUserIcon.setImageURI("file://" + file.getPath());
         }

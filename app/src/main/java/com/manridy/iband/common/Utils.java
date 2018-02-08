@@ -1,8 +1,10 @@
 package com.manridy.iband.common;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Environment;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
@@ -76,8 +78,8 @@ public class Utils {
             return;
         }
         FileOutputStream b = null;
-        File file = new File(Environment.getExternalStorageDirectory()+"/iwaer");
-        file.mkdirs();// 创建文件夹
+        File file = new File(Environment.getExternalStorageDirectory()+"/iband");
+        file.mkdir();// 创建文件夹
         File[] files = file.listFiles();
         if (files.length >= 3) {
             for (int i = 0; i < files.length; i++) {
@@ -87,7 +89,7 @@ public class Utils {
         String fileName = file.getPath() + name;// 图片名字
         try {
             b = new FileOutputStream(fileName);
-            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+            mBitmap.compress(Bitmap.CompressFormat.JPEG,100,b);// 把数据写入文件
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
@@ -99,6 +101,8 @@ public class Utils {
             }
         }
     }
+
+
 
     public static boolean checkDeviceHasNavigationBar(Context context) {
         boolean hasNavigationBar = false;

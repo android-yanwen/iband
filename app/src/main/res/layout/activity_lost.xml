@@ -7,8 +7,6 @@
               android:background="@color/activity_background">
     <include layout="@layout/tab_activity"/>
 
-
-
     <com.manridy.iband.ui.items.AlertBigItems
         android:id="@+id/ai_alert"
         android:layout_width="match_parent"
@@ -16,4 +14,13 @@
         app:big_name="@string/hint_alert_lost_open"
         app:big_hint="@string/hint_alert_lost"
         app:big_onoff="true"/>
+
+    <com.manridy.iband.ui.items.AlertBigItems
+        android:id="@+id/ai_nap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:big_name="防丢免打扰"
+        app:big_hint="23:00~06:00不进行提醒"
+        app:big_onoff="false"
+        android:visibility="gone"/>
 </LinearLayout>
