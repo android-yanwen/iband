@@ -5,9 +5,11 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.view.dialog.NumDialog;
 import com.manridy.iband.R;
+import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.ui.items.AlertBigItems;
 import com.manridy.iband.view.base.BaseActionActivity;
@@ -45,13 +47,38 @@ public class TestHrTimingActivity extends BaseActionActivity {
 
     @Override
     protected void initVariables() {
-        setTitleAndMenu("心率定时测量","保存");
-        curOnoff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR,false);
-        curSpace = (int) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR_SPACE,30);
+        setTitleAndMenu(getString(R.string.hint_hr_test_timing),getString(R.string.hint_save));
+        checkMenuVisibility();
+        curOnoff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
+        curSpace = (int) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
         aiAlert.setAlertCheck(curOnoff);
-        tvSpace.setText(curSpace+"分钟");
+        tvSpace.setText(curSpace+getString(R.string.unit_min));
 
     }
+
+    private void checkMenuVisibility() {
+        try {
+            String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST, "");
+            String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE, "");
+            String deviceName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME, "");
+            String deviceFirm = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION, "1.0.0");
+            if (strDeviceList == null || strDeviceList.isEmpty()) {
+                return;
+            }
+            DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
+            for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+                if (resultBean.getDevice_name().equals(deviceName) || resultBean.getDevice_id().equals(deviceType)) {
+                    if (resultBean.getHeartrate_version().compareTo(deviceFirm) <= 0){
+                        curOnoff = resultBean.getHeartrate_isopen().equals("1");
+                        curSpace = Integer.parseInt(resultBean.getHeartrate_interval());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     @Override
@@ -67,11 +94,11 @@ public class TestHrTimingActivity extends BaseActionActivity {
         rlSpace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new NumDialog(mContext, getSpaces(), curSpace+"","测量间隔", new NumDialog.NumDialogListener() {
+                new NumDialog(mContext, getSpaces(), curSpace+"",getString(R.string.hint_space), new NumDialog.NumDialogListener() {
                     @Override
                     public void getNum(String num) {
                         curSpace = Integer.valueOf(num);
-                        tvSpace.setText(num+"分钟");
+                        tvSpace.setText(num+getString(R.string.unit_min));
                     }
                 }).show();
             }

@@ -25,6 +25,7 @@ import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.IbandApplication;
+import com.manridy.sdk.Watch;
 import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.exception.BleException;
@@ -137,13 +138,13 @@ public class AlertService extends Service {
                         phoneReceived(incomingNumber);
                         break;
                     case TelephonyManager.CALL_STATE_OFFHOOK://电话接听
-                        ibandApplication.service.watch.sendCmd(BleCmd.setInfoAlert(3));//发送暂停来电提醒通知
+                        Watch.getInstance().sendCmd(BleCmd.setInfoAlert(3));//发送暂停来电提醒通知
                         LogUtil.i("PhoneReceiver", "CALL IN ACCEPT :" + incomingNumber);
                         break;
                     case TelephonyManager.CALL_STATE_IDLE://电话挂机
                         //增加挂断状态触发判断，少于1秒内手机触发挂断状态不发送挂断状态通知给设备
                         if (System.currentTimeMillis() - callTime >1000) {
-                            ibandApplication.service.watch.sendCmd(BleCmd.setInfoAlert(3));//发送暂停来电提醒通知
+                            Watch.getInstance().sendCmd(BleCmd.setInfoAlert(3));//发送暂停来电提醒通知
                         }
                         LogUtil.i("PhoneReceiver", "CALL IDLE");
                         break;

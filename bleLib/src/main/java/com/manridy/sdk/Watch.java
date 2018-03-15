@@ -1,7 +1,6 @@
 package com.manridy.sdk;
 
 
-import android.content.Context;
 import android.os.Handler;
 
 import com.manridy.sdk.bean.Clock;
@@ -22,8 +21,7 @@ import com.manridy.sdk.type.FindType;
 import com.manridy.sdk.type.InfoType;
 import com.manridy.sdk.type.PhoneType;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -34,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Watch extends BluetoothLeManager implements WatchApi {
     private static Watch instance;
     private static String version = "2.2.4";
-    private List<cmdMessage> messageList = new ArrayList<>();//消息集合
+    private static List<cmdMessage> messageList = new LinkedList<>();//消息集合
     public static long messageTimeOut = 3000;//消息超时时间
     public static int reCount = 0;//重发次数
     private int reSend;//重发计数器
@@ -60,9 +58,11 @@ public class Watch extends BluetoothLeManager implements WatchApi {
         public void run() {
             for (;;){//循环
                 if (!isRun.get()) {//运行状态
-                    if (messageList.size() > 0) {//判断消息队列是否存在消息
-                        cmdMessage cmdMessage = messageList.get(0);//拿到消息
-                        isRun.set(true);//运行状态改变运行中
+                    synchronized (messageList) {
+                        Integer integer = messageList.size();
+                        if (integer > 0) {//判断消息队列是否存在消息
+                            cmdMessage cmdMessage = messageList.get(0);//拿到消息
+                            isRun.set(true);//运行状态改变运行中
 //                        if (sleepIndex-- < 0) {
 //                            sleepIndex = 2;
                             try {//休眠100毫秒
@@ -71,41 +71,42 @@ public class Watch extends BluetoothLeManager implements WatchApi {
                                 e.printStackTrace();
                             }
 //                        }
-                        cmdCallback = cmdMessage.bleCallback;//得到回调
-                        writeCharacteristic(cmdMessage.data, new BleCallback() {//执行发送
-                            @Override
-                            public void onSuccess(Object o) {//执行成功
-                                if (cmdCallback != null) {
-                                    cmdCallback.onSuccess(o);//返回执行结果
-                                    handler.removeCallbacks(timeOutRunnable);//删除超时任务
-                                    if (messageList.size()>0) {
-                                        messageList.remove(0);//删除消息队列消息
+                            cmdCallback = cmdMessage.bleCallback;//得到回调
+                            writeCharacteristic(cmdMessage.data, new BleCallback() {//执行发送
+                                @Override
+                                public void onSuccess(Object o) {//执行成功
+                                    if (cmdCallback != null) {
+                                        cmdCallback.onSuccess(o);//返回执行结果
+                                        handler.removeCallbacks(timeOutRunnable);//删除超时任务
+                                        if (messageList.size() > 0) {
+                                            messageList.remove(0);//删除消息队列消息
+                                        }
+                                        isRun.set(false);//运行状态改变未运行
+                                        reSend = 0;//重发计数归零
                                     }
-                                    isRun.set(false);//运行状态改变未运行
-                                    reSend = 0;//重发计数归零
                                 }
-                            }
 
-                            @Override
-                            public void onFailure(BleException exception) {//执行失败
-                                if (cmdCallback != null) {
-                                    cmdCallback.onFailure(exception);//返回执行结果
-                                    handler.removeCallbacks(timeOutRunnable);//删除超时任务
-                                    if (messageList.size()>0) {
-                                        messageList.remove(0);//删除消息队列消息
+                                @Override
+                                public void onFailure(BleException exception) {//执行失败
+                                    if (cmdCallback != null) {
+                                        cmdCallback.onFailure(exception);//返回执行结果
+                                        handler.removeCallbacks(timeOutRunnable);//删除超时任务
+                                        if (messageList.size() > 0) {
+                                            messageList.remove(0);//删除消息队列消息
+                                        }
+                                        isRun.set(false);//运行状态改变未运行
+                                        reSend = 0;//重发计数归零
                                     }
-                                    isRun.set(false);//运行状态改变未运行
-                                    reSend = 0;//重发计数归零
                                 }
-                            }
-                        });
-                        handler.postDelayed(timeOutRunnable,messageTimeOut);//开始超时计时任务
-                    }else{
-                        synchronized (thread) {
-                            try {
-                                thread.wait();//线程休眠
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                            });
+                            handler.postDelayed(timeOutRunnable, messageTimeOut);//开始超时计时任务
+                        } else {
+                            synchronized (thread) {
+                                try {
+                                    thread.wait();//线程休眠
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }

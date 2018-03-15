@@ -711,16 +711,27 @@ public class BleCmd {
     }
 
 
-    /**
-     * 蓝牙恢复出厂
-     * @return
-     */
-    public static byte[] deviceReset(){
+    public static byte[] deviceClean(){
         type = 0x0F;
         body = new byte[17];
         body[0] = 0x0B;
         return BleProtocol.cmd(head,type,body);
     }
+
+    public static byte[] deviceRestart(){
+        type = 0x0F;
+        body = new byte[17];
+        body[0] = 0x01;
+        return BleProtocol.cmd(head,type,body);
+    }
+
+    public static byte[] deviceReset(){
+        type = 0x0F;
+        body = new byte[17];
+        body[0] = 0x1A;
+        return BleProtocol.cmd(head,type,body);
+    }
+
 
     public static byte[] setTimingHrTest(boolean onOff,int space){
         type = 0x22;

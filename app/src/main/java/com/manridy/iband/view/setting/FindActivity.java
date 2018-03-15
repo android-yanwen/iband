@@ -104,9 +104,9 @@ public class FindActivity extends BaseActionActivity {
     BaseHandler<FindActivity> handler = new BaseHandler<FindActivity>(this) {
         @Override
         public void handleMessage(Message msg, FindActivity mainActivity) {
-            if (findWatch != null) {
+            if (findWatch != null && findWatch.isShowing()) {
                 findWatch.setMessage(getString(R.string.hint_device_findings)+"("+msg.what+")");
-                if (msg.what == 0) {
+                if (msg.what == 0 ) {
                     findWatch.dismiss();
                 }else {
                     if (findWatch.isShowing()) {
@@ -122,9 +122,11 @@ public class FindActivity extends BaseActionActivity {
     public void onEventMainThread(EventMessage event) {
         if (event.getWhat() == EventGlobal.ACTION_FIND_WATCH_STOP) {
             showToast(getString(R.string.hint_device_find_cancel));
-            if (findWatch != null) {
+            if (findWatch != null && findWatch.isShowing()) {
                 findWatch.dismiss();
             }
         }
     }
+
+
 }

@@ -33,7 +33,7 @@
         android:layout_marginLeft="2dp"
         android:textColor="@color/text_content"
         android:textSize="8sp"
-        android:text="公里"
+        android:text=""
         android:visibility="gone"/>
 
 

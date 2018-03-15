@@ -236,6 +236,10 @@ public class IbandDB {
         return DataSupport.findAll(StepModel.class);
     }
 
+    public List<StepModel> getStepSeltionList(){
+        return DataSupport.where("stepType = ?","1").find(StepModel.class);
+    }
+
     public List<SleepModel> getSleepList(){
         return DataSupport.findAll(SleepModel.class);
     }
@@ -262,6 +266,8 @@ public class IbandDB {
             new AppModel(menu.menuId,menu.menuName,menu.menuCheck).save();
         }
     }
+
+
 
     public void resetAppData(){
         DataSupport.deleteAll(StepModel.class);

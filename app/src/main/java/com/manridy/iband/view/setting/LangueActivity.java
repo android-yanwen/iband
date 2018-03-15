@@ -48,6 +48,8 @@ public class LangueActivity extends BaseActionActivity {
     public static final Locale Locale_Ru = new Locale("RU","ru","");//自定义俄语
     public static final Locale Locale_Es = new Locale("ES","es","");//自定义俄语
     public static final Locale Locale_Pt = new Locale("PT","pt","");//自定义俄语
+    public static final Locale Locale_Nl = new Locale("NL","nl","");//自定义俄语
+
     @BindView(R.id.tb_menu)
     TextView tbMenu;
     @BindView(R.id.rv_langue)
@@ -132,6 +134,7 @@ public class LangueActivity extends BaseActionActivity {
         localeList.add(Locale_Ru);
         localeList.add(Locale_Es);
         localeList.add(Locale_Pt);
+        localeList.add(Locale_Nl);
         return localeList.get(position);
     }
 
@@ -152,6 +155,7 @@ public class LangueActivity extends BaseActionActivity {
         menuList.add(new LangueAdapter.Menu("Русский язык",false));
         menuList.add(new LangueAdapter.Menu("español",false));
         menuList.add(new LangueAdapter.Menu("Português",false));
+        menuList.add(new LangueAdapter.Menu("Dutch",false));
         return menuList;
     }
 

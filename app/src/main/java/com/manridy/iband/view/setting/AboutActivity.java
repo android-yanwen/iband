@@ -38,10 +38,10 @@ public class AboutActivity extends BaseActionActivity {
     HelpItems hiLangue;
     @BindView(R.id.hi_help)
     HelpItems hiHelp;
-    @BindView(R.id.hi_about)
-    HelpItems hiAbout;
     @BindView(R.id.tv_version)
     TextView tvVersion;
+    @BindView(R.id.hi_data)
+    HelpItems hiData;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -85,11 +85,18 @@ public class AboutActivity extends BaseActionActivity {
                 return true;
             }
         });
-        hiAbout.setOnLongClickListener(new View.OnLongClickListener() {
+        hiData.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 startActivity(TestMenuActivity.class);
                 return true;
+            }
+        });
+
+        hiData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(DataExportActivity.class);
             }
         });
 

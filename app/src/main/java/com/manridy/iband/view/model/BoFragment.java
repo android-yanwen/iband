@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.gson.Gson;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
@@ -32,8 +35,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -160,6 +165,7 @@ public class BoFragment extends BaseEventFragment {
         chart.setDrawBorders(false);  //是否在折线图上添加边框
         chart.setPinchZoom(false);//设置少量移动
         chart.getLegend().setEnabled(false);
+        chart.setOnChartValueSelectedListener(selectedListener);
         chart.setData(new LineData());
 
     }
@@ -178,10 +184,10 @@ public class BoFragment extends BaseEventFragment {
         xAxis.setGranularity(1f);//设置间隔
         //Y轴坐标
         YAxis yAxis = chart.getAxisLeft();
-        yAxis.setAxisMinimum(90);//设置y轴最小点
+        yAxis.setAxisMinimum(95);//设置y轴最小点
         yAxis.setAxisMaximum(100f);
-        yAxis.setDrawAxisLine(false);//画坐标线
-        yAxis.setDrawLabels(false);//画坐标下标
+        yAxis.setDrawAxisLine(true);//画坐标线
+        yAxis.setDrawLabels(true);//画坐标下标
         yAxis.setDrawGridLines(false);//设置网格线
         yAxis.setDrawZeroLine(false);
         yAxis.setEnabled(true);//显示Y轴
@@ -264,5 +270,34 @@ public class BoFragment extends BaseEventFragment {
     public String getOne(float f) {
         return String.format(Locale.US,"%.1f", f);
     }
+
+
+    OnChartValueSelectedListener selectedListener = new OnChartValueSelectedListener() {
+        @Override
+        public void onValueSelected(Entry e, Highlight h) {
+            int x = e.getX() >0 ? (int) e.getX() : 0;
+            Log.d(TAG, "onValueSelected() called with: e = [" + e.getX() + "], h = [" + x + "]");
+            if (curBoList != null && curBoList.size() >= x) {
+                BoModel boModel = curBoList.get(x > 0 ? x - 1 : 0);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String times = "00:00";
+                try {
+                    Date date = dateFormat.parse(boModel.getboDate());
+                    SimpleDateFormat dateFormat2 = new SimpleDateFormat("HH:mm:ss");
+                    times = dateFormat2.format(date);
+                } catch (Exception e1) {
+
+                }
+                diData1.setItemData(getString(R.string.hint_time), times,false);
+                diData2.setItemData("","",false);
+                diData3.setItemData(getString(R.string.hint_view_bo), String.valueOf(boModel.getboRate()));
+            }
+        }
+
+        @Override
+        public void onNothingSelected() {
+            setDataItem();
+        }
+    };
 
 }

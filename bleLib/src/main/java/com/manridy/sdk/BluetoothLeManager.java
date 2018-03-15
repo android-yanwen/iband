@@ -158,7 +158,7 @@ public class BluetoothLeManager {
      */
     public synchronized void connect(final BluetoothDevice device, final boolean isReConnect,BleConnectCallback connectCallback){
         this.connectCallback = connectCallback;
-        if (null == device || mBluetoothAdapter == null) {
+        if (null == device || mBluetoothAdapter == null || bluetoothLeDevices == null) {
             LogUtil.e(TAG, "connect device or bluetoothAdapter is null" );
             return;
         }
@@ -514,7 +514,7 @@ public class BluetoothLeManager {
      * @return
      */
     public BluetoothLeDevice getBluetoothLeDevice(String mac){
-        if (mac != null) {
+        if (mac != null && bluetoothLeDevices != null) {
             for (BluetoothLeDevice mBluetoothLeGatt : bluetoothLeDevices) {
                 if (mBluetoothLeGatt.getmBluetoothGatt().getDevice().getAddress().equals(mac)){
                     return mBluetoothLeGatt;

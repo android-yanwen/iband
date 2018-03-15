@@ -49,7 +49,7 @@ public class SyncAlert {
 
     private SyncAlert(Context context) {
         mContext = context.getApplicationContext();
-        watch = IbandApplication.getIntance().service.watch;
+        watch = Watch.getInstance();
     }
 
     public static SyncAlert getInstance(Context context) {

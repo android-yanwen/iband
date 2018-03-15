@@ -21,6 +21,10 @@ public class EventGlobal {
     public static final int DATA_LOAD_BO_HISTORY = 1814;
     //运动历史数据同步
     public static final int DATA_SYNC_HISTORY = 1900;
+    public static final int DATA_EXPORT_EXCEL = 1901;
+    public static final int DATA_EXPORT_EXCEL_SUCCES = 1902;
+
+
     //界面刷新
     public static final int REFRESH_VIEW_STEP = 2800;
     public static final int REFRESH_VIEW_SLEEP = 2801;

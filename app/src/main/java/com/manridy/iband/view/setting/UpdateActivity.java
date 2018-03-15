@@ -6,11 +6,13 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.VersionUtil;
 import com.manridy.iband.OnResultCallBack;
 import com.manridy.iband.R;
 import com.manridy.iband.SyncAlert;
+import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.DeviceUpdate;
 import com.manridy.iband.common.DomXmlParse;
@@ -165,9 +167,31 @@ public class UpdateActivity extends BaseActionActivity {
 //                info.append("图片地址：").append(upgradeInfo.imageUrl);
                 break;
             case R.id.hi_update_firm:
-                new DeviceUpdate(mContext).getOTAVersion(deviceType,firm,isForce);
+                if (!checkEditBluetoothName()) {//判断蓝牙名称是否修改过，修改名称的不支持ota升级，以免恢复默认
+                    new DeviceUpdate(mContext).getOTAVersion(deviceType,firm,isForce);
+                }else {
+                    showToast(getString(R.string.hint_ota_newest));
+                }
                 break;
         }
+    }
+
+    private boolean checkEditBluetoothName() {
+        String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST,"");
+        String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
+        String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
+        if (!strDeviceList.isEmpty()) {
+            DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
+            for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+                if (resultBean.getDevice_id().equals(deviceType) &&
+                        resultBean.getEdit_bluetooth_name().equals("1")) {
+                    if (!resultBean.getDevice_name().equals(deviceName)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

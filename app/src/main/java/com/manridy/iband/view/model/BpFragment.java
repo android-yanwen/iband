@@ -192,8 +192,8 @@ public class BpFragment extends BaseEventFragment {
         YAxis yAxis = chart.getAxisLeft();
 //        yAxis.setAxisMaximum(220f);
         yAxis.setAxisMinimum(0);//设置y轴最小点
-        yAxis.setDrawAxisLine(false);//画坐标线
-        yAxis.setDrawLabels(false);//画坐标下标
+        yAxis.setDrawAxisLine(true);//画坐标线
+        yAxis.setDrawLabels(true);//画坐标下标
         yAxis.setDrawGridLines(false);//设置网格线
         yAxis.setDrawZeroLine(false);
         yAxis.setEnabled(true);//显示Y轴
@@ -304,7 +304,7 @@ public class BpFragment extends BaseEventFragment {
 
                 int hp = bpModel.getBpHp();
                 int lp = bpModel.getBpLp();
-                diData1.setItemData(getString(R.string.hint_time), times);
+                diData1.setItemData(getString(R.string.hint_time), times,false);
                 diData2.setItemData(getString(R.string.hint_hp), hp + "");
                 diData3.setItemData(getString(R.string.hint_lp), lp + "");
             }

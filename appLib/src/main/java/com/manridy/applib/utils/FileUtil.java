@@ -1,6 +1,8 @@
 package com.manridy.applib.utils;
 
+import android.content.Context;
 import android.os.Environment;
+import android.os.StatFs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -329,5 +331,16 @@ import java.util.Locale;
         } else {
             return String.format(Locale.US,"%d B", size);
         }
+    }
+
+    /** 获取SD可用容量 */
+    public static long getAvailableStorage(Context context) {
+        String root = context.getExternalFilesDir(null).getPath();
+        StatFs statFs = new StatFs(root);
+        long blockSize = statFs.getBlockSize();
+        long availableBlocks = statFs.getAvailableBlocks();
+        long availableSize = blockSize * availableBlocks;
+        // Formatter.formatFileSize(context, availableSize);
+        return availableSize;
     }
 }

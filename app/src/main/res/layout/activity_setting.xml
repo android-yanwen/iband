@@ -169,12 +169,28 @@
                 app:menus_name="@string/hint_menu_target"/>
 
             <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_hr_test"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_heart_rate"
+                app:menus_name="@string/hint_hr_test_timing"
+                android:visibility="gone"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_clean"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_clear"
+                app:menus_name="@string/hint_clean"
+                android:visibility="gone"/>
+
+            <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_reset"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_restore"
                 app:menus_name="@string/hint_reset"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_about"

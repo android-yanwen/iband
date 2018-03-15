@@ -22,10 +22,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.manridy.iband.R;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
-import com.manridy.iband.R;
 import com.manridy.iband.view.base.BaseActionActivity;
+import com.manridy.sdk.Watch;
 import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.exception.BleException;
@@ -59,6 +60,8 @@ public class CameraActivity extends BaseActionActivity {
     ImageView ivCapture;
     @BindView(R.id.tb_menu)
     TextView tbMenu;
+    @BindView(R.id.iv_switch)
+    ImageView ivSwitch;
 
     private Camera mCamera;
     private SurfaceHolder mSurfaceHolder;
@@ -85,6 +88,7 @@ public class CameraActivity extends BaseActionActivity {
             public void onClick(View v) {
                 svCamera.setVisibility(View.VISIBLE);
                 ivCapture.setVisibility(View.VISIBLE);
+                ivSwitch.setVisibility(View.VISIBLE);
                 ibandApplication.service.watch.sendCmd(BleCmd.setCameraViewOnOff(1), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
@@ -125,7 +129,7 @@ public class CameraActivity extends BaseActionActivity {
         });
     }
 
-    private void open(){
+    private void open() {
 //        File file =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 //        File parentFlie = new File(file.getParent());
 //        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -137,7 +141,7 @@ public class CameraActivity extends BaseActionActivity {
         startActivity(albumIntent);
     }
 
-    SurfaceHolder.Callback SurfaceHolderCallback=  new SurfaceHolder.Callback() {
+    SurfaceHolder.Callback SurfaceHolderCallback = new SurfaceHolder.Callback() {
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
             setStartPreview(mCamera, mSurfaceHolder);
@@ -158,12 +162,15 @@ public class CameraActivity extends BaseActionActivity {
 
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) {
+            //解决java.lang.RuntimeException: Camera is being used after Camera.release() was called异常
+            holder.removeCallback(this);
             releaseCamera();
         }
     };
 
     /**
      * 初始化相机
+     *
      * @return camera
      */
     private Camera getCamera() {
@@ -171,13 +178,14 @@ public class CameraActivity extends BaseActionActivity {
         try {
             camera = Camera.open();
         } catch (Exception e) {
-            camera = Camera.open(Camera.getNumberOfCameras()-1);
+            camera = Camera.open(Camera.getNumberOfCameras() - 1);
         }
         return camera;
     }
 
     /**
      * 检查是否具有相机功能
+     *
      * @param context context
      * @return 是否具有相机功能
      */
@@ -188,6 +196,7 @@ public class CameraActivity extends BaseActionActivity {
 
     /**
      * 在SurfaceView中预览相机内容
+     *
      * @param camera camera
      * @param holder SurfaceHolder
      */
@@ -195,10 +204,10 @@ public class CameraActivity extends BaseActionActivity {
         try {
             camera.setPreviewDisplay(holder);
 //            camera.setDisplayOrientation(180);
-            setCameraDisplayOrientation(this, Camera.CameraInfo.CAMERA_FACING_BACK,camera);
+            setCameraDisplayOrientation(this, Camera.CameraInfo.CAMERA_FACING_BACK, camera);
             Camera.Parameters params = mCamera.getParameters();
             params.setPictureFormat(ImageFormat.JPEG);
-            float height = 0,width = 0;
+            float height = 0, width = 0;
 //        params.setPictureSize(1024,768);
 //        parameters(mCamera);
 //        params.setPreviewSize(1280, 720);
@@ -217,7 +226,7 @@ public class CameraActivity extends BaseActionActivity {
             // 根据选出的PictureSize重新设置SurfaceView大小
             float w = picSize.width;
             float h = picSize.height;
-            params.setPictureSize(1280,720);
+            params.setPictureSize(1280, 720);
 //            svCamera.setLayoutParams(new FrameLayout.LayoutParams((int) (height*(h/w)), (int) height));
 
             // 获取摄像头支持的PreviewSize列表
@@ -233,8 +242,8 @@ public class CameraActivity extends BaseActionActivity {
             }
 
             params.setJpegQuality(100); // 设置照片质量
-            if (params.getSupportedFocusModes().contains(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
-                params.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);// 连续对焦模式
+            if (params.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
+                params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);// 连续对焦模式
             }
 
             mCamera.cancelAutoFocus();//自动对焦。
@@ -325,15 +334,15 @@ public class CameraActivity extends BaseActionActivity {
 
                 }
             });
-            showToast(getString(R.string.hint_save_success)+pictureFile.getPath().toString());
+            showToast(getString(R.string.hint_save_success) + pictureFile.getPath().toString());
         }
     };
 
 
-    private File getOutputMediaFile(){
+    private File getOutputMediaFile() {
         File picDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        return new File(picDir.getPath() + File.separator+"IMG_"+ timeStamp + ".jpg");
+        return new File(picDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
     }
 
     /**
@@ -369,11 +378,10 @@ public class CameraActivity extends BaseActionActivity {
     }
 
 
-
     public static void setCameraDisplayOrientation(Activity activity,
                                                    int cameraId, Camera camera) {
-        android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
-        android.hardware.Camera.getCameraInfo(cameraId, info);
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, info);
         int rotation = activity.getWindowManager().getDefaultDisplay()
                 .getRotation();
         int degrees = 0;
@@ -432,7 +440,7 @@ public class CameraActivity extends BaseActionActivity {
         if (event.getWhat() == EventGlobal.ACTION_CAMERA_CAPTURE) {
             showToast(getString(R.string.hint_camera_start));
             capture();
-        }else if (event.getWhat() == EventGlobal.ACTION_CAMERA_EXIT){
+        } else if (event.getWhat() == EventGlobal.ACTION_CAMERA_EXIT) {
             showToast(getString(R.string.hint_camera_exit));
             finish();
         }
@@ -458,7 +466,7 @@ public class CameraActivity extends BaseActionActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ibandApplication.service.watch.sendCmd(BleCmd.setCameraViewOnOff(0), new BleCallback() {
+        Watch.getInstance().sendCmd(BleCmd.setCameraViewOnOff(0), new BleCallback() {
             @Override
             public void onSuccess(Object o) {
 
@@ -471,4 +479,10 @@ public class CameraActivity extends BaseActionActivity {
         });
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

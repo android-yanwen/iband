@@ -11,8 +11,8 @@
         android:id="@+id/ai_alert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:big_name="心率持续测量"
-        app:big_hint="开启后每间隔一段时间自动进行测量"
+        app:big_name="@string/hint_hr_test_timing"
+        app:big_hint="@string/hint_hr_test_timing_content"
         app:big_onoff="false"/>
     <RelativeLayout
         android:id="@+id/rl_space"
@@ -27,7 +27,7 @@
             android:layout_centerVertical="true"
             android:textColor="@color/text_content"
             android:textSize="16sp"
-            android:text="间隔时间"/>
+            android:text="@string/hint_space"/>
 
         <TextView
             android:id="@+id/tv_space"
@@ -36,7 +36,7 @@
             android:layout_centerInParent="true"
             android:textColor="#de2196f3"
             android:textSize="16sp"
-            android:text="30分钟"/>
+            android:text=""/>
 
         <TextView
             android:layout_width="match_parent"

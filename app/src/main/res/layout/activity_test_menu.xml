@@ -15,14 +15,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_interface"
                 app:menus_name="界面选择"/>
-
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_light"
                 android:layout_width="match_parent"
@@ -30,7 +28,6 @@
                 app:menus_icon="@mipmap/set_dimming"
                 app:menus_name="亮度调节"
                 android:visibility="gone"/>
-
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_hr_test"
                 android:layout_width="match_parent"
@@ -56,7 +53,6 @@
                 app:menus_icon="@mipmap/set_camera"
                 app:menus_name="数据库"
                 android:visibility="gone"/>
-
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_step"
                 android:layout_width="match_parent"

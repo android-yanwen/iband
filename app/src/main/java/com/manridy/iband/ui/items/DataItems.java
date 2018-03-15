@@ -91,6 +91,13 @@ public class DataItems extends RelativeLayout {
     public void setItemData(String hint,String data){
         tvDataHint.setText(hint);
         tvData.setText(data);
+        tvUnit.setVisibility(VISIBLE);
+    }
+
+    public void setItemData(String hint,String data,boolean isVis){
+        tvDataHint.setText(hint);
+        tvData.setText(data);
+        tvUnit.setVisibility(isVis?VISIBLE:GONE);
     }
 
     public void setItemData(String hint,String data,String unit){

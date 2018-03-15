@@ -21,6 +21,7 @@ import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.OnItemClickListener;
 import com.manridy.iband.service.AppNotificationListenerService;
 import com.manridy.iband.ui.items.AlertBigItems;
+import com.manridy.iband.ui.items.AlertItems;
 import com.manridy.iband.view.base.BaseActionActivity;
 
 import java.util.ArrayList;
@@ -49,6 +50,12 @@ public class AppActivity extends BaseActionActivity {
     AppAdapter mAppAdapter;
     List<AppAdapter.Menu> menuList;
     boolean isAppNewShow = false;
+    @BindView(R.id.ai_more)
+    AlertItems aiMore;
+    @BindView(R.id.rv_more)
+    RecyclerView rvMore;
+    AppAdapter moreAdapter;
+    List<AppAdapter.Menu> moreList;
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_app);
@@ -59,7 +66,7 @@ public class AppActivity extends BaseActionActivity {
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));
         setTitleAndMenu(getString(R.string.title_app), getString(R.string.hint_save));
-        onOff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_APP,false);
+        onOff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_APP, false);
         isAppNewShow = getAppNewShow();//判断app通知支持新版
         aiAlert.setAlertCheck(onOff);
         menuList = getMenuList();
@@ -74,15 +81,17 @@ public class AppActivity extends BaseActionActivity {
             }
         }
         mAppAdapter = new AppAdapter(menuList);
-        rvApp.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
+        rvApp.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         rvApp.setAdapter(mAppAdapter);
+
+        
 
     }
 
     private boolean getAppNewShow() {
-        String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST,"");
-        String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
-        String firmVersion = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_VERSION,"1.0.0");
+        String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST, "");
+        String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE, "");
+        String firmVersion = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION, "1.0.0");
         String appVersion = "1.0";
         if (!strDeviceList.isEmpty()) {
             DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
@@ -125,7 +134,7 @@ public class AppActivity extends BaseActionActivity {
         findViewById(R.id.tb_menu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SPUtil.put(mContext, AppGlobal.DATA_ALERT_APP,onOff);
+                SPUtil.put(mContext, AppGlobal.DATA_ALERT_APP, onOff);
                 IbandDB.getInstance().saveAppList(menuList);
                 showToast(getString(R.string.hint_save_success));
                 eventSend(EventGlobal.DATA_CHANGE_MENU);
@@ -134,41 +143,41 @@ public class AppActivity extends BaseActionActivity {
         });
     }
 
-    private void selectApp(boolean isChecked){
+    private void selectApp(boolean isChecked) {
         if (!AppNotificationListenerService.isNotificationListenEnable(mContext)) {
             OpenNotifiactionDialog();
             return;
         }
         if (isChecked) {
             AppNotificationListenerService.startNotificationService(mContext);
-                onOff = true;
-            }else {
+            onOff = true;
+        } else {
             AppNotificationListenerService.stopNotificationService(mContext);
-                onOff = false;
-            }
+            onOff = false;
+        }
         aiAlert.setAlertCheck(onOff);
 
     }
 
-    private List<AppAdapter.Menu> getMenuList(){
+    private List<AppAdapter.Menu> getMenuList() {
         List<AppAdapter.Menu> menuList = new ArrayList<>();
-        menuList.add(new AppAdapter.Menu(4,getString(R.string.hint_app_wechat),R.mipmap.appremind_wechat));
-        menuList.add(new AppAdapter.Menu(2,getString(R.string.hint_app_qq),R.mipmap.appremind_qq));
-        menuList.add(new AppAdapter.Menu(5,getString(R.string.hint_app_whatsapp),R.mipmap.appremind_whatsapp));
-        menuList.add(new AppAdapter.Menu(6,getString(R.string.hint_app_facebook),R.mipmap.appremind_facebook));
-        menuList.add(new AppAdapter.Menu(7,getString(R.string.hint_app_line),R.mipmap.line));
+        menuList.add(new AppAdapter.Menu(4, getString(R.string.hint_app_wechat), R.mipmap.appremind_wechat));
+        menuList.add(new AppAdapter.Menu(2, getString(R.string.hint_app_qq), R.mipmap.appremind_qq));
+        menuList.add(new AppAdapter.Menu(5, getString(R.string.hint_app_whatsapp), R.mipmap.appremind_whatsapp));
+        menuList.add(new AppAdapter.Menu(6, getString(R.string.hint_app_facebook), R.mipmap.appremind_facebook));
+        menuList.add(new AppAdapter.Menu(7, getString(R.string.hint_app_line), R.mipmap.line));
         if (isAppNewShow) {
-            menuList.add(new AppAdapter.Menu(8,"Twiteer",R.mipmap.appremind_twitter));
-            menuList.add(new AppAdapter.Menu(9,"Skype",R.mipmap.appremind_skype));
-            menuList.add(new AppAdapter.Menu(10,"Ins",R.mipmap.appremind_ins));
+            menuList.add(new AppAdapter.Menu(8, "Twiteer", R.mipmap.appremind_twitter));
+            menuList.add(new AppAdapter.Menu(9, "Skype", R.mipmap.appremind_skype));
+            menuList.add(new AppAdapter.Menu(10, "Ins", R.mipmap.appremind_ins));
         }
         return menuList;
     }
 
-    public void OpenNotifiactionDialog(){
+    public void OpenNotifiactionDialog() {
         PermissionView contentView = new PermissionView(this);
         List<PermissionItem> data = new ArrayList<>();
-        data.add(new PermissionItem(getString(R.string.hint_notification),getString(R.string.hint_notification),R.mipmap.permission_ic_notice));
+        data.add(new PermissionItem(getString(R.string.hint_notification), getString(R.string.hint_notification), R.mipmap.permission_ic_notice));
         contentView.setGridViewColum(data.size());
         contentView.setTitle(getString(R.string.hint_alert_open));
         contentView.setMsg(getString(R.string.hint_request_alert_app));
@@ -210,6 +219,13 @@ public class AppActivity extends BaseActionActivity {
         if (isChange) {
             showNotSaveDialog();
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 
     //    @Override

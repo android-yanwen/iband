@@ -3,17 +3,21 @@ package com.manridy.iband.view.test;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.manridy.applib.utils.FileUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.common.AppGlobal;
+import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.ui.items.MenuItems;
 import com.manridy.iband.view.HrCorrectActivity;
 import com.manridy.iband.view.base.BaseActionActivity;
@@ -23,11 +27,20 @@ import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.exception.BleException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jxl.Workbook;
+import jxl.write.WritableWorkbook;
 
 /**
+ *
  * Created by jarLiao on 17/6/13.
  */
 
@@ -47,7 +60,7 @@ public class TestMenuActivity extends BaseActionActivity {
     TextView tbMenu;
     @BindView(R.id.menu_step)
     MenuItems menuStep;
-
+    WritableWorkbook wwb;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -57,13 +70,13 @@ public class TestMenuActivity extends BaseActionActivity {
 
     @Override
     protected void initVariables() {
+//        registerEventBus();
         setTitleBar("实验室");
         tbMenu.setText("隐藏");
         tbMenu.setTextColor(Color.TRANSPARENT);
     }
 
     int clickNum;
-
     @Override
     protected void initListener() {
         tbMenu.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +183,7 @@ public class TestMenuActivity extends BaseActionActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                IbandApplication.getIntance().service.watch.sendCmd(BleCmd.deviceReset(), new BleCallback() {
+                IbandApplication.getIntance().service.watch.sendCmd(BleCmd.deviceClean(), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         try {
@@ -212,5 +225,6 @@ public class TestMenuActivity extends BaseActionActivity {
         SPUtil.remove(mContext,AppGlobal.DATA_SETTING_TARGET_STEP);
         SPUtil.remove(mContext,AppGlobal.DATA_SETTING_TARGET_SLEEP);
     }
+
 
 }

@@ -63,8 +63,8 @@
         app:help_name="@string/hint_menu_help"/>
 
     <com.manridy.iband.ui.items.HelpItems
-        android:id="@+id/hi_about"
+        android:id="@+id/hi_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:help_name="@string/hint_menu_about"/>
+        app:help_name="@string/hint_data_export"/>
 </LinearLayout>

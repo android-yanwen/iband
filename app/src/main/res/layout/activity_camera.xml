@@ -61,6 +61,17 @@
             android:layout_marginBottom="45dp"
             android:src="@mipmap/camera_takephone02"
             android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/iv_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="50dp"
+            android:layout_marginRight="50dp"
+            android:src="@mipmap/camera_takephone_front"
+            android:onClick="switchCamera"
+            android:visibility="gone"/>
     </FrameLayout>
 
 
