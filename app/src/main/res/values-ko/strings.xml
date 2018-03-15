@@ -330,7 +330,23 @@
     <string name="hint_langue">언어 설정</string>
     <string name="hint_langue_normal">기본 언어</string>
     <string name="hint_switch_langue">언어를 전환하는 중입니다. 잠시 기다려주십시오 ...</string>
-    <string name="hint_unit_th">个</string>
+    <string name="hint_unit_th">A</string>
+    <string name="hint_click_save">사진을 클릭하여 앨범에 저장하십시오.</string>
+    <string name="hint_bluetooth_close">블루투스가 꺼져 있습니다.</string>
+    <string name="hint_bluetooth_opening">블루투스 켜짐</string>
+    <string name="hint_data_export">数据导出</string>
+    <string name="hint_data_export_help">数据导出之后在哪里可以查看</string>
+    <string name="hint_click_look">点击查看</string>
+    <string name="hint_data_export_succes">数据已导出完毕，是否立即查看?</string>
+    <string name="hint_hr_test_timing">心率定时测量</string>
+    <string name="hint_clean">清除数据</string>
+    <string name="hint_export_excel">打开手机上的[文件管理]--搜索找到命名为iband的文件夹，打开excel表格即可查看个人的健康记录数据</string>
+    <string name="hint_restart">此操作将会使设备恢复出厂，是否确认?</string>
+    <string name="hint_hr_test_timing_content">开启后每间隔一段时间自动进行测量</string>
+    <string name="hint_space">间隔时间</string>
+    <string name="hint_notify_more">更多通知</string>
+    <string name="hint_lost_nap">防丢免打扰</string>
+    <string name="hint_lost_nap_content">23:00~06:00不进行提醒</string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

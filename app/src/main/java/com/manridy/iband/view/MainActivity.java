@@ -156,7 +156,7 @@ public class MainActivity extends BaseActivity {
     //防丢免打扰开关
     private boolean getLostDisturb(String deviceName,String firmVision,DeviceList filterDeviceList){
         for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
-            if (resultBean.getDevice_name().equals(deviceName)) {
+            if (resultBean.getDevice_name().equals(deviceName) && null !=  resultBean.getNot_disturb()) {
                 return resultBean.getNot_disturb().compareTo(firmVision)>=0;
             }
         }
@@ -181,7 +181,7 @@ public class MainActivity extends BaseActivity {
         isShowBp = isShowBo =true;
         String strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
         String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
-        if (!strDeviceList.isEmpty()) {
+        if (strDeviceList!= null && !strDeviceList.isEmpty()) {
             DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
             for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
                 if (deviceType.equals(resultBean.getDevice_id())){
@@ -516,8 +516,8 @@ public class MainActivity extends BaseActivity {
         if (bindMac == null || bindMac.isEmpty()) {
             tbSync.setText(R.string.hint_un_bind);
             return;
-        }else if (!ibandApplication.service.watch.isBluetoothEnable()){
-            tbSync.setText("蓝牙已关闭");
+        }else if (!Watch.getInstance().isBluetoothEnable()){
+            tbSync.setText(R.string.hint_bluetooth_close);
             return;
         }
         switch (state) {
@@ -546,10 +546,10 @@ public class MainActivity extends BaseActivity {
                 tbSync.setText(R.string.hint_sync_no);
                 break;
             case AppGlobal.DEVICE_STATE_BLUETOOTH_DISENABLE:
-                tbSync.setText("蓝牙已关闭");
+                tbSync.setText(R.string.hint_bluetooth_close);
                 break;
             case AppGlobal.DEVICE_STATE_BLUETOOTH_ENABLEING:
-                tbSync.setText("蓝牙开启中");
+                tbSync.setText(R.string.hint_bluetooth_opening);
                 break;
         }
     }
@@ -579,7 +579,7 @@ public class MainActivity extends BaseActivity {
             }else {
                 tbSync.setText(R.string.hint_un_connect);
             }
-            if (isLostOn && !bindMac.isEmpty() && 0 == bytes[0] || 19 == bytes[0]) {
+            if (isLostOn && !bindMac.isEmpty() && (0 == bytes[0] || 19 == bytes[0]|| 8==bytes[0])) {
                 handler.sendEmptyMessageDelayed(0, 20 * 1000);
                 Log.d(TAG, "onLostThread() called with: event = [STATE_DEVICE_DISCONNECT]");
             }

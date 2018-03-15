@@ -1,12 +1,10 @@
 package com.manridy.iband.service;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
 
 import com.manridy.applib.utils.FileUtil;
 import com.manridy.applib.utils.SPUtil;
-import com.manridy.applib.utils.VersionUtil;
 import com.manridy.iband.OnResultCallBack;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.DomXmlParse;
@@ -15,7 +13,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.FormBody;

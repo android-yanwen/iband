@@ -7,8 +7,8 @@ android {
         applicationId "com.manridy.iband"
         minSdkVersion 18
         targetSdkVersion 24
-        versionCode 62
-        versionName "1.8.4"
+        versionCode 65
+        versionName "1.8.7"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -90,10 +90,11 @@ dependencies {
     //    compile 'com.tencent.bugly:crashreport:latest.release'//bugly
     //    compile 'skin.support:skin-support:1.2.6'// skin-support 基础控件支持 //换肤
     //
-//    compile 'com.amap.api:map2d:latest.integration'
+    //    compile 'com.amap.api:map2d:latest.integration'
     //定位功能
-//    compile 'com.amap.api:location:latest.integration'
+    //    compile 'com.amap.api:location:latest.integration'
     //导航功能
-//    compile 'com.amap.api:navi-3dmap:latest.integration'
-//    compile 'com.amap.api:search:latest.integration'
+    //    compile 'com.amap.api:navi-3dmap:latest.integration'
+    //    compile 'com.amap.api:search:latest.integration'
+    compile files('libs/jxl.jar')
 }

@@ -31,6 +31,7 @@ import com.manridy.iband.common.OnItemClickListener;
 import com.manridy.iband.service.HttpService;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.sdk.BluetoothLeDevice;
+import com.manridy.sdk.Watch;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleConnectCallback;
 import com.manridy.sdk.exception.BleException;
@@ -226,11 +227,11 @@ public class DeviceActivity extends BaseActionActivity {
         showProgress(getString(R.string.hint_device_binding));
         bindName = bindDevice.getName();
         final String mac = bindDevice.getAddress();
-        ibandApplication.service.watch.connect(bindDevice, true, new BleConnectCallback() {
+        Watch.getInstance().connect(bindDevice, true, new BleConnectCallback() {
             @Override
             public void onConnectSuccess() {
                 dismissProgress();//取消弹窗，保存设备名称和地址
-                BluetoothLeDevice leDevice = ibandApplication.service.watch.getBluetoothLeDevice(mac);
+                BluetoothLeDevice leDevice = Watch.getInstance().getBluetoothLeDevice(mac);
                 SPUtil.put(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, mac);
                 if (leDevice != null) {
                     bindName = leDevice.getmBluetoothGatt().getDevice().getName();
@@ -243,7 +244,7 @@ public class DeviceActivity extends BaseActionActivity {
             @Override
             public void onConnectFailure(BleException exception) {
                 dismissProgress();
-                ibandApplication.service.watch.closeBluetoothGatt(mac);
+                Watch.getInstance().closeBluetoothGatt(mac);
                 curPosition = -1;
                 bindName = "";
                 eventSend(EventGlobal.STATE_DEVICE_BIND_FAIL);
@@ -268,6 +269,9 @@ public class DeviceActivity extends BaseActionActivity {
         SPUtil.remove(mContext, AppGlobal.DATA_DEVICE_BIND_IMG);
         SPUtil.remove(mContext, AppGlobal.DATA_FIRMWARE_TYPE);
         SPUtil.remove(mContext, AppGlobal.DATA_FIRMWARE_VERSION);
+        SPUtil.remove(mContext, AppGlobal.DATA_TIMING_HR);
+        SPUtil.remove(mContext, AppGlobal.DATA_TIMING_HR_SPACE);
+
         curPosition = -1;
         bindName = "";
         eventSend(EventGlobal.STATE_DEVICE_UNBIND);

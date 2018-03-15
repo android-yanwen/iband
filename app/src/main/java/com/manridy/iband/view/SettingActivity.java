@@ -8,7 +8,6 @@ import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -18,20 +17,19 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.manridy.applib.utils.CheckUtil;
 import com.manridy.applib.utils.SPUtil;
-import com.manridy.iband.IbandApplication;
+import com.manridy.iband.IbandDB;
+import com.manridy.iband.R;
 import com.manridy.iband.bean.DeviceList;
+import com.manridy.iband.bean.UserModel;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
-import com.manridy.iband.IbandDB;
-import com.manridy.iband.bean.UserModel;
 import com.manridy.iband.service.HttpService;
+import com.manridy.iband.ui.items.MenuItems;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.iband.view.setting.AboutActivity;
 import com.manridy.iband.view.setting.AlertActivity;
 import com.manridy.iband.view.setting.CameraActivity;
-import com.manridy.iband.ui.items.MenuItems;
-import com.manridy.iband.R;
 import com.manridy.iband.view.setting.FindActivity;
 import com.manridy.iband.view.setting.LightActivity;
 import com.manridy.iband.view.setting.TargetActivity;
@@ -40,6 +38,8 @@ import com.manridy.iband.view.setting.UnitActivity;
 import com.manridy.iband.view.setting.ViewActivity;
 import com.manridy.iband.view.setting.WechatActivity;
 import com.manridy.iband.view.setting.WristActivity;
+import com.manridy.iband.view.test.TestHrTimingActivity;
+import com.manridy.sdk.Watch;
 import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.exception.BleException;
@@ -110,6 +110,10 @@ public class SettingActivity extends BaseActionActivity {
     MenuItems menuWrist;
     @BindView(R.id.menu_reset)
     MenuItems menuReset;
+    @BindView(R.id.menu_hr_test)
+    MenuItems menuHrTest;
+    @BindView(R.id.menu_clean)
+    MenuItems menuClean;
 
     private String bindName;
     private int connectState;
@@ -129,9 +133,9 @@ public class SettingActivity extends BaseActionActivity {
         setTitleBar(getString(R.string.hint_set));
         initUser();
         bindName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME, "");
-        connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
-        curBatteryNum = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_NUM,-1);
-        curBatteryState = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_STATE,-1);
+        connectState = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
+        curBatteryNum = (int) SPUtil.get(mContext, AppGlobal.DATA_BATTERY_NUM, -1);
+        curBatteryState = (int) SPUtil.get(mContext, AppGlobal.DATA_BATTERY_STATE, -1);
         if (!bindName.isEmpty()) {
             showBindDevice();
             showConnectState();
@@ -143,51 +147,57 @@ public class SettingActivity extends BaseActionActivity {
     private void checkMenuVisibility() {
         try {
             menuLight.setVisibility(View.VISIBLE);
-            String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST,"");
-            String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
-            String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
+            String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST, "");
+            String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE, "");
+            String deviceName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME, "");
+            String deviceFirm = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION, "1.0.0");
             if (strDeviceList == null || strDeviceList.isEmpty()) {
                 return;
             }
-            DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
+            DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
             for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
-                if (resultBean.getDevice_name().equals(deviceName) || resultBean.getDevice_id().equals(deviceType)){
+                if (resultBean.getDevice_name().equals(deviceName) || resultBean.getDevice_id().equals(deviceType)) {
                     if (resultBean.getBrightness().equals("0")) {
                         menuLight.setVisibility(View.GONE);
+                    }
+                    if (resultBean.getClear_away().compareTo(deviceFirm) <= 0) {
+                        menuClean.setVisibility(View.VISIBLE);
+                    }
+                    if (resultBean.getHeartrate_version().compareTo(deviceFirm) <= 0){
+                        menuHrTest.setVisibility(View.VISIBLE);
                         return;
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void loadDeviceImg() {
-        String deviceImgPath = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_IMG,"");
-        if (!deviceImgPath.isEmpty()&& !deviceImgPath.equals("unknown")) {
-            Uri loadImgUri = Uri.parse(HttpService.device_img+deviceImgPath);
+        String deviceImgPath = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_IMG, "");
+        if (!deviceImgPath.isEmpty() && !deviceImgPath.equals("unknown")) {
+            Uri loadImgUri = Uri.parse(HttpService.device_img + deviceImgPath);
             ivDeviceIcon.setImageURI(loadImgUri);
         }
     }
 
     private void initUser() {
         UserModel curUser = IbandDB.getInstance().getUser();
-
         if (curUser != null) {
             tvUserName.setText(curUser.getUserName());
         }
-        String path = (String) SPUtil.get(mContext,DATA_USER_HEAD,"");
-        File file = new File(Environment.getExternalStorageDirectory()+"/iband"+path);
+        String path = (String) SPUtil.get(mContext, DATA_USER_HEAD, "");
+        File file = new File(Environment.getExternalStorageDirectory() + "/iband" + path);
         if (file.exists()) {
             ivUserIcon.setImageResource(R.mipmap.set_head);
-            ivUserIcon.setImageURI("file://"+file.getPath());
+            ivUserIcon.setImageURI("file://" + file.getPath());
         }
     }
 
     @Override
     protected void initListener() {
-        ibandApplication.service.watch.getBatteryInfo(new BleCallback() {
+        Watch.getInstance().getBatteryInfo(new BleCallback() {
             @Override
             public void onSuccess(Object o) {
 
@@ -203,8 +213,9 @@ public class SettingActivity extends BaseActionActivity {
     @OnClick({R.id.menu_view, R.id.menu_camera, R.id.menu_find,
             R.id.menu_alert, R.id.menu_wechat, R.id.menu_light,
             R.id.menu_unit, R.id.menu_time, R.id.menu_target,
-            R.id.menu_about,R.id.rl_user_info,R.id.rl_device,
-            R.id.iv_user_icon,R.id.menu_wrist,R.id.menu_reset})
+            R.id.menu_about, R.id.rl_user_info, R.id.rl_device,
+            R.id.iv_user_icon, R.id.menu_wrist, R.id.menu_reset
+    ,R.id.menu_hr_test,R.id.menu_clean})
     public void onClick(View view) {
         if (isFastDoubleClick()) {
             return;
@@ -266,47 +277,57 @@ public class SettingActivity extends BaseActionActivity {
                     showToast(getString(R.string.hintUnConnect));
                     return;
                 }
-                showRegistDialog();
+                showResetDialog();
+                break;
+            case R.id.menu_clean:
+                if (connectState != 1) {
+                    showToast(getString(R.string.hintUnConnect));
+                    return;
+                }
+                showCleanDialog();
+                break;
+            case R.id.menu_hr_test:
+                startActivity(TestHrTimingActivity.class);
                 break;
         }
     }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(EventMessage event){
+    public void onEventMainThread(EventMessage event) {
         if (event.getWhat() == EventGlobal.DATA_CHANGE_USER) {
             initUser();
-        }else if (event.getWhat() == EventGlobal.STATE_DEVICE_BIND) {
-            bindName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,"");
+        } else if (event.getWhat() == EventGlobal.STATE_DEVICE_BIND) {
+            bindName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME, "");
             showBindDevice();
             loadDeviceImg();
             checkMenuVisibility();
-        }else if (event.getWhat() == EventGlobal.STATE_DEVICE_UNBIND) {
+        } else if (event.getWhat() == EventGlobal.STATE_DEVICE_UNBIND) {
             rlUnBind.setVisibility(View.VISIBLE);
-        }else if (event.getWhat() == EventGlobal.STATE_DEVICE_CONNECT) {
+        } else if (event.getWhat() == EventGlobal.STATE_DEVICE_CONNECT) {
             tvDeviceConnectState.setText(R.string.hint_state_connected);
-            curBatteryNum = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_NUM,-1);
-            curBatteryState = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_STATE,-1);
+            curBatteryNum = (int) SPUtil.get(mContext, AppGlobal.DATA_BATTERY_NUM, -1);
+            curBatteryState = (int) SPUtil.get(mContext, AppGlobal.DATA_BATTERY_STATE, -1);
             showBattery();
             Log.d(TAG, "onEventMainThread() called with: event = [  已连接  ]");
-        }else if (event.getWhat() == EventGlobal.STATE_DEVICE_DISCONNECT) {
-            connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
+        } else if (event.getWhat() == EventGlobal.STATE_DEVICE_DISCONNECT) {
+            connectState = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
             tvDeviceConnectState.setText(R.string.hint_state_unconnect);
             tvDeviceBattery.setText("");
             Log.d(TAG, "onEventMainThread() called with: event = [  未连接  ]");
-        }else if (event.getWhat() == EventGlobal.STATE_DEVICE_CONNECTING) {
+        } else if (event.getWhat() == EventGlobal.STATE_DEVICE_CONNECTING) {
             tvDeviceConnectState.setText(R.string.hint_state_connecting);
             tvDeviceBattery.setText("");
             Log.d(TAG, "onEventMainThread() called with: event = [  连接中  ]");
-        }else if (event.getWhat() == EventGlobal.ACTION_BATTERY_NOTIFICATION){
-            connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
-            curBatteryNum = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_NUM,-1);
-            curBatteryState = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_STATE,-1);
+        } else if (event.getWhat() == EventGlobal.ACTION_BATTERY_NOTIFICATION) {
+            connectState = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
+            curBatteryNum = (int) SPUtil.get(mContext, AppGlobal.DATA_BATTERY_NUM, -1);
+            curBatteryState = (int) SPUtil.get(mContext, AppGlobal.DATA_BATTERY_STATE, -1);
             showBattery();
         }
     }
 
-    private void showRegistDialog(){
+    private void showCleanDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setMessage(R.string.hint_reset_text);
         builder.setNegativeButton(R.string.hint_cancel, new DialogInterface.OnClickListener() {
@@ -319,13 +340,54 @@ public class SettingActivity extends BaseActionActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                IbandApplication.getIntance().service.watch.sendCmd(BleCmd.deviceReset(), new BleCallback() {
+                Watch.getInstance().sendCmd(BleCmd.deviceClean(), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         try {
                             IbandDB.getInstance().resetAppData();
                             removeSetting();
-                        }catch (Exception e){
+                        } catch (Exception e) {
+                            e.toString();
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showToast(getString(R.string.hint_reset_success));
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(BleException exception) {
+                        showToast(getString(R.string.hint_reset_failure));
+                    }
+                });
+
+            }
+        });
+        builder.create().show();
+    }
+
+    private void showResetDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage(R.string.hint_restart);
+        builder.setNegativeButton(R.string.hint_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton(R.string.hint_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                Watch.getInstance().sendCmd(BleCmd.deviceRestart(), new BleCallback() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        try {
+                            IbandDB.getInstance().resetAppData();
+                            removeSetting();
+                        } catch (Exception e) {
                             e.toString();
                         }
                         runOnUiThread(new Runnable() {
@@ -349,17 +411,17 @@ public class SettingActivity extends BaseActionActivity {
 
     private void removeSetting() {
         SPUtil.remove(mContext, AppGlobal.DATA_ALERT_PHONE);
-        SPUtil.remove(mContext,AppGlobal.DATA_ALERT_SMS);
-        SPUtil.remove(mContext,AppGlobal.DATA_ALERT_SEDENTARY);
-        SPUtil.remove(mContext,AppGlobal.DATA_ALERT_CLOCK);
-        SPUtil.remove(mContext,AppGlobal.DATA_ALERT_LOST);
-        SPUtil.remove(mContext,AppGlobal.DATA_ALERT_APP);
-        SPUtil.remove(mContext,AppGlobal.DATA_ALERT_WRIST);
-        SPUtil.remove(mContext,AppGlobal.DATA_SETTING_LIGHT);
-        SPUtil.remove(mContext,AppGlobal.DATA_SETTING_UNIT);
-        SPUtil.remove(mContext,AppGlobal.DATA_SETTING_UNIT_TIME);
-        SPUtil.remove(mContext,AppGlobal.DATA_SETTING_TARGET_STEP);
-        SPUtil.remove(mContext,AppGlobal.DATA_SETTING_TARGET_SLEEP);
+        SPUtil.remove(mContext, AppGlobal.DATA_ALERT_SMS);
+        SPUtil.remove(mContext, AppGlobal.DATA_ALERT_SEDENTARY);
+        SPUtil.remove(mContext, AppGlobal.DATA_ALERT_CLOCK);
+        SPUtil.remove(mContext, AppGlobal.DATA_ALERT_LOST);
+        SPUtil.remove(mContext, AppGlobal.DATA_ALERT_APP);
+        SPUtil.remove(mContext, AppGlobal.DATA_ALERT_WRIST);
+        SPUtil.remove(mContext, AppGlobal.DATA_SETTING_LIGHT);
+        SPUtil.remove(mContext, AppGlobal.DATA_SETTING_UNIT);
+        SPUtil.remove(mContext, AppGlobal.DATA_SETTING_UNIT_TIME);
+        SPUtil.remove(mContext, AppGlobal.DATA_SETTING_TARGET_STEP);
+        SPUtil.remove(mContext, AppGlobal.DATA_SETTING_TARGET_SLEEP);
     }
 
 
@@ -372,22 +434,24 @@ public class SettingActivity extends BaseActionActivity {
 
     private void showBattery() {
         String battery = "";
-        if (curBatteryState == 1  && connectState ==1) {
+        if (curBatteryState == 1 && connectState == 1) {
             battery = getString(R.string.hint_state_charge);
-        }else if(curBatteryNum != -1 && connectState ==1){
-            battery = getString(R.string.hint_state_battery)+curBatteryNum +"%";
+        } else if (curBatteryNum != -1 && connectState == 1) {
+            battery = getString(R.string.hint_state_battery) + curBatteryNum + "%";
         }
         tvDeviceBattery.setText(battery);
     }
 
-    private void showConnectState(){
+    private void showConnectState() {
         String state = getString(R.string.hint_state_unconnect);
         if (connectState == 1) {
             state = getString(R.string.hint_state_connected);
-        }else if (connectState == 2){
+        } else if (connectState == 2) {
             state = getString(R.string.hint_state_connecting);
         }
         tvDeviceConnectState.setText(state);
         showBattery();
     }
+
+
 }

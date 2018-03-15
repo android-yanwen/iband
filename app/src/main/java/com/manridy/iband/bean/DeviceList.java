@@ -62,6 +62,11 @@ public class DeviceList {
         private String project_number;
         private String notify_version;
         private String not_disturb;//防丢免打扰
+        private String edit_bluetooth_name;//支持编辑蓝牙名称
+        private String clear_away;//支持清除数据
+        private String heartrate_version;
+        private String heartrate_isopen;
+        private String heartrate_interval;
 
         public String getDevice_name() {
             return device_name;
@@ -157,6 +162,46 @@ public class DeviceList {
 
         public void setNot_disturb(String not_disturb) {
             this.not_disturb = not_disturb;
+        }
+
+        public String getEdit_bluetooth_name() {
+            return edit_bluetooth_name;
+        }
+
+        public void setEdit_bluetooth_name(String edit_bluetooth_name) {
+            this.edit_bluetooth_name = edit_bluetooth_name;
+        }
+
+        public String getClear_away() {
+            return clear_away;
+        }
+
+        public void setClear_away(String clear_away) {
+            this.clear_away = clear_away;
+        }
+
+        public String getHeartrate_version() {
+            return heartrate_version;
+        }
+
+        public void setHeartrate_version(String heartrate_version) {
+            this.heartrate_version = heartrate_version;
+        }
+
+        public String getHeartrate_isopen() {
+            return heartrate_isopen;
+        }
+
+        public void setHeartrate_isopen(String heartrate_isopen) {
+            this.heartrate_isopen = heartrate_isopen;
+        }
+
+        public String getHeartrate_interval() {
+            return heartrate_interval;
+        }
+
+        public void setHeartrate_interval(String heartrate_interval) {
+            this.heartrate_interval = heartrate_interval;
         }
     }
 }

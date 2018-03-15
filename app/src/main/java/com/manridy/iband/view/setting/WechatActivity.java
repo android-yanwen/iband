@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.manridy.applib.utils.SPUtil;
+import com.manridy.iband.IbandApplication;
 import com.manridy.iband.OnResultCallBack;
 import com.manridy.iband.R;
 import com.manridy.iband.adapter.WechatAdapter;
@@ -221,7 +222,7 @@ public class WechatActivity extends BaseActionActivity {
                                         if (wechatBean.getResult().size() > 0) {
                                             WechatBean.ResultBean resultBean = wechatBean.getResult().get(0);
                                             qr = resultBean.getDevice_qr();
-                                            SPUtil.put(mContext, AppGlobal.DATA_WECHAT_QR, qr);
+                                            SPUtil.put(IbandApplication.getIntance(), AppGlobal.DATA_WECHAT_QR, qr);
                                             showQrCode();
                                         }
                                     }
@@ -268,7 +269,7 @@ public class WechatActivity extends BaseActionActivity {
                                         dismissProgress();
                                         showToast(getString(R.string.hint_install_success));
                                         qr = jsonObject.getString("device_qr");
-                                        SPUtil.put(mContext, AppGlobal.DATA_WECHAT_QR, qr);
+                                        SPUtil.put(IbandApplication.getIntance(), AppGlobal.DATA_WECHAT_QR, qr);
                                         showQrCode();
                                     } else {
                                         showError();

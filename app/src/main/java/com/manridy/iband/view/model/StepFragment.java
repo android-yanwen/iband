@@ -42,6 +42,7 @@ import com.manridy.iband.view.SportActivity;
 import com.manridy.iband.view.TrainActivity;
 import com.manridy.iband.view.base.BaseEventFragment;
 import com.manridy.iband.view.history.StepHistoryActivity;
+import com.manridy.sdk.Watch;
 import com.manridy.sdk.callback.BleNotifyListener;
 
 import org.greenrobot.eventbus.EventBus;
@@ -119,7 +120,7 @@ public class StepFragment extends BaseEventFragment {
 
     @Override
     protected void initListener() {
-        IbandApplication.getIntance().service.watch.setSportNotifyListener(new BleNotifyListener() {
+        Watch.getInstance().setSportNotifyListener(new BleNotifyListener() {
             @Override
             public void onNotify(Object o) {
                 curStep = mGson.fromJson(o.toString(),StepModel.class);
@@ -213,8 +214,8 @@ public class StepFragment extends BaseEventFragment {
         YAxis yAxis = chart.getAxisLeft();
 //        yAxis.setAxisMaximum(220f);
         yAxis.setAxisMinimum(0);//设置y轴最小点
-        yAxis.setDrawAxisLine(false);//画坐标线
-        yAxis.setDrawLabels(false);//画坐标下标
+        yAxis.setDrawAxisLine(true);//画坐标线
+        yAxis.setDrawLabels(true);//画坐标下标
         yAxis.setDrawGridLines(false);//设置网格线
         yAxis.setDrawZeroLine(false);
         yAxis.setEnabled(true);//显示Y轴

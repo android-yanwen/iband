@@ -19,8 +19,8 @@
         android:id="@+id/ai_nap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:big_name="防丢免打扰"
-        app:big_hint="23:00~06:00不进行提醒"
+        app:big_name="@string/hint_lost_nap"
+        app:big_hint="@string/hint_lost_nap_content"
         app:big_onoff="false"
         android:visibility="gone"/>
 </LinearLayout>
