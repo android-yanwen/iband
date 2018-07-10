@@ -1,5 +1,6 @@
 package com.manridy.iband.bean;
 
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.TimeUtil;
 
 import org.litepal.crud.DataSupport;
@@ -135,4 +136,31 @@ public class BpModel extends DataSupport {
         sb.append('}');
         return sb.toString();
     }
+
+
+
+//    public boolean equalsValues(BpModel bpModel){
+//        boolean flag = true;
+//        if(!getBpDate().equals(bpModel.getBpDate())){
+//            return false;
+//        }
+//        if(!getBpDay().equals(bpModel.getBpDay())){
+//            return false;
+//        }
+//        if(getBpHp()!=bpModel.getBpHp()){
+//            return false;
+//        }
+//        if(getBpHr()!=bpModel.getBpHr()){
+//            return false;
+//        }
+//        if(get){
+//
+//        }
+//        getBpLength();
+//        getBpLp();
+//        getBpNum();
+//        getBpDay();
+//        getBpDate();
+//        getUpdateDate();
+//    }
 }

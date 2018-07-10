@@ -18,6 +18,7 @@ import com.manridy.iband.R;
 public class HelpItems extends RelativeLayout {
     private TextView menuContent;
     private TextView menuBt;
+    private ImageView menuArrows;
     public HelpItems(Context context) {
         super(context);
     }
@@ -32,7 +33,7 @@ public class HelpItems extends RelativeLayout {
         TextView menuName = (TextView) view.findViewById(R.id.tv_menu_name);
         menuContent = (TextView) view.findViewById(R.id.tv_menu_content);
         menuBt = (TextView) view.findViewById(R.id.tv_menu_bt);
-        ImageView menuArrows = (ImageView) view.findViewById(R.id.iv_menu_arrows);
+        menuArrows = (ImageView) view.findViewById(R.id.iv_menu_arrows);
         TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.HelpItems);
         int color = typedArray.getColor(R.styleable.HelpItems_help_name_color,-1);
         int contentColor = typedArray.getColor(R.styleable.HelpItems_help_content_color,-1);
@@ -72,5 +73,21 @@ public class HelpItems extends RelativeLayout {
 
     public void setMenuUnit(String unit) {
         this.menuBt.setText(unit);
+    }
+
+    public TextView getMenuBt(){
+        if(this.menuBt!=null){
+            return this.menuBt;
+        }else{
+            return null;
+        }
+    }
+
+    public ImageView getMenuArrows(){
+        if(this.menuArrows!=null){
+            return this.menuArrows;
+        }else{
+            return null;
+        }
     }
 }

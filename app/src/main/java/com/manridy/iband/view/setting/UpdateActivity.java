@@ -2,38 +2,28 @@ package com.manridy.iband.view.setting;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.google.gson.Gson;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.VersionUtil;
-import com.manridy.iband.OnResultCallBack;
 import com.manridy.iband.R;
 import com.manridy.iband.SyncAlert;
 import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.DeviceUpdate;
-import com.manridy.iband.common.DomXmlParse;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
-import com.manridy.iband.service.HttpService;
 import com.manridy.iband.ui.items.HelpItems;
-import com.manridy.iband.view.OtaActivity;
 import com.manridy.iband.view.base.BaseActionActivity;
-import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.exception.BleException;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.upgrade.UpgradeListener;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,10 +40,17 @@ public class UpdateActivity extends BaseActionActivity {
     HelpItems hiUpdateSoft;
     @BindView(R.id.hi_update_firm)
     HelpItems hiUpdateFirm;
+    @BindView(R.id.hi_device_id)
+    HelpItems hiDeviceID;
     String url = "http://39.108.92.15:12345";
     String version = "/version.xml";
     String firm;
     String deviceType;
+    String deviceName;
+    boolean is_Force_ViewBtUpdate = false;
+
+    public static boolean isGoogle = false;
+
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_update);
@@ -72,17 +69,59 @@ public class UpdateActivity extends BaseActionActivity {
         setStatusBarColor(Color.parseColor("#2196f3"));
         setTitleBar(getString(R.string.hint_menu_update));
         hiUpdateSoft.setMenuContent("v"+ VersionUtil.getVersionName(mContext));
+        if(isGoogle) {
+            hiUpdateSoft.getMenuBt().setVisibility(View.INVISIBLE);
+        }
     }
 
     private void updateFirmView() {
         firm = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION,"");
         String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC,"");
         deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"");
-
+        deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
         if (!firm.isEmpty() && !mac.isEmpty()) {
             hiUpdateFirm.setMenuContent("v"+firm);
             hiUpdateFirm.setVisibility(View.VISIBLE);
         }
+        if(!deviceType.isEmpty()){
+            hiDeviceID.setMenuContent(deviceType);
+            hiDeviceID.setVisibility(View.VISIBLE);
+            hiDeviceID.getMenuArrows().setVisibility(View.INVISIBLE);
+        }
+        //20180505
+        String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST,"");
+        DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
+        boolean isViewBtUpdate = false;
+        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+            if(resultBean.getDevice_name().trim().equals(deviceName.trim())){
+//            if(resultBean.getDevice_id().trim().equals(deviceType.trim())){
+                if("0".equals(resultBean.getNeed_update())){
+                    String firm = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION,"");
+                    if(!"".equals(firm)&&firm.compareTo(resultBean.getSupport_software())<0){
+                        isViewBtUpdate = true;
+                    }else{
+                        isViewBtUpdate = false;
+                    }
+                }else if("1".equals(resultBean.getNeed_update())){
+                    isViewBtUpdate = true;
+                }
+            }
+        }
+
+        if(is_Force_ViewBtUpdate){
+            isViewBtUpdate = true;
+        }
+
+        if(hiUpdateFirm.getMenuBt()!=null){
+            if(isViewBtUpdate){
+                hiUpdateFirm.getMenuBt().setVisibility(View.VISIBLE);
+                hiUpdateFirm.setClickable(true);
+            }else {
+                hiUpdateFirm.getMenuBt().setVisibility(View.INVISIBLE);
+                hiUpdateFirm.setClickable(false);
+            }
+        }
+
 //        if (deviceType.equals("2")){
 //            hiUpdateFirm.setMenuUnit("");
 //            hiUpdateFirm.setEnabled(false);
@@ -139,6 +178,9 @@ public class UpdateActivity extends BaseActionActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.hi_update_soft:
+                if(isGoogle){
+                    break;
+                }
                 Beta.checkUpgrade(true,false);
                 Beta.upgradeListener = new UpgradeListener() {
                     @Override
@@ -183,11 +225,10 @@ public class UpdateActivity extends BaseActionActivity {
         if (!strDeviceList.isEmpty()) {
             DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
             for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
-                if (resultBean.getDevice_id().equals(deviceType) &&
-                        resultBean.getEdit_bluetooth_name().equals("1")) {
-                    if (!resultBean.getDevice_name().equals(deviceName)) {
-                        return true;
-                    }
+                String configName = resultBean.getDevice_name();
+                String configId = resultBean.getDevice_id();
+                if (configId.equals(deviceType) &&configName.equals(deviceName)){
+                    return resultBean.getEdit_bluetooth_name().equals(1);
                 }
             }
         }

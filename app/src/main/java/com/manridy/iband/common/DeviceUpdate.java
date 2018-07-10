@@ -4,16 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.ToastUtil;
-import com.manridy.iband.OnResultCallBack;
 import com.manridy.iband.R;
 import com.manridy.iband.service.HttpService;
-import com.manridy.iband.view.OtaActivity;
+import com.manridy.iband.view.main.OtaActivity;
 
 import java.util.List;
 
@@ -44,12 +43,12 @@ public class DeviceUpdate {
 
     public void getOTAVersion(final String deviceType, final String deviceVersion, final boolean isForce){
 
-        Log.d(TAG, "getOTAVersion() called with: deviceType = [" + deviceType + "], deviceVersion = [" + deviceVersion + "], isForce = [" + isForce + "]");
+        LogUtil.d(TAG, "getOTAVersion() called with: deviceType = [" + deviceType + "], deviceVersion = [" + deviceVersion + "], isForce = [" + isForce + "]");
         checkDeviceUpdate(new OnResultCallBack() {
             @Override
             public void onResult(boolean result, Object o) {
                 if (result) {
-                    Log.d(TAG, "onResult() called with: result = [" + result + "], o = [" + o.toString() + "]");
+                    LogUtil.d(TAG, "onResult() called with: result = [" + result + "], o = [" + o.toString() + "]");
                     if (o != null) {
                         List<DomXmlParse.Image> imageList = (List<DomXmlParse.Image>) o;
                         boolean isShow = false;

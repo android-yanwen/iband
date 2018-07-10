@@ -58,6 +58,7 @@ public class PhoneActivity extends BaseActionActivity {
                 permissonItems.add(new PermissionItem(Manifest.permission.READ_PHONE_STATE, getString(R.string.hint_phone), R.mipmap.permission_ic_phone));
                 permissonItems.add(new PermissionItem(Manifest.permission.CALL_PHONE, getString(R.string.hint_call), R.mipmap.permission_ic_phone_remind));
                 permissonItems.add(new PermissionItem(Manifest.permission.READ_CONTACTS, getString(R.string.hint_contacts), R.mipmap.permission_ic_contacts));
+//                permissonItems.add(new PermissionItem(Manifest.permission.WAKE_LOCK,"WAKE_LOCK",R.mipmap.permission_ic_notice));
                 HiPermission.create(mContext)
                         .title(getString(R.string.hint_alert_open))
                         .msg(getString(R.string.hint_permisson_phone))

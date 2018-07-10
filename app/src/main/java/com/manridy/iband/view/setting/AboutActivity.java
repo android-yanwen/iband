@@ -1,32 +1,22 @@
 package com.manridy.iband.view.setting;
 
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.manridy.applib.utils.VersionUtil;
-import com.manridy.iband.IbandApplication;
-import com.manridy.iband.OnResultCallBack;
 import com.manridy.iband.R;
-import com.manridy.iband.service.HttpService;
 import com.manridy.iband.ui.items.HelpItems;
-import com.manridy.iband.view.test.TestDatabaseActivity;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.iband.view.test.TestMenuActivity;
-
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 /**
- * 遥控拍照页面
+ * 关于页面
  * Created by jarLiao on 17/5/4.
  */
 
@@ -74,7 +64,11 @@ public class AboutActivity extends BaseActionActivity {
         hiHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(HelpActivity.class);
+//                if(UpdateActivity.isGoogle){
+                    startActivity(HelpWebViewActivity.class);
+//                }else {
+//                    startActivity(HelpActivity.class);
+//                }
             }
         });
 

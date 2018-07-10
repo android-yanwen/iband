@@ -1,11 +1,11 @@
 package com.manridy.iband.service;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.manridy.applib.utils.FileUtil;
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
-import com.manridy.iband.OnResultCallBack;
+import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.DomXmlParse;
 
@@ -65,7 +65,7 @@ public class HttpService {
                     inputStream.close();
                 }
             } else {
-                Log.d(TAG, "downloadXml() called with: url = [" + url + "]");
+                LogUtil.d(TAG, "downloadXml() called with: url = [" + url + "]");
                 onResultCallBack.onResult(false,null);
             }
         } catch (IOException e) {

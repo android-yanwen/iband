@@ -3,7 +3,9 @@ package com.manridy.iband.service;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,17 +21,19 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.internal.telephony.ITelephony;
 import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.ToastUtil;
+import com.manridy.iband.IbandApplication;
 import com.manridy.iband.SyncAlert;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.R;
-import com.manridy.iband.view.MainActivity;
+import com.manridy.iband.view.main.MainActivity;
 import com.manridy.sdk.Watch;
 import com.manridy.sdk.callback.BleActionListener;
 import com.manridy.sdk.callback.BleConnectCallback;
@@ -102,6 +106,7 @@ public class BleService extends Service {
      * @param isScan 手否扫描设备
      */
     public void initConnect(boolean isScan){
+        Log.i(TAG,"initConnect(boolean isScan)");
         initConnect(isScan,mBleConnectCallback);
     }
 
@@ -111,15 +116,18 @@ public class BleService extends Service {
      * @param bleConnectCallback 结果回调
      */
     public void initConnect(boolean isScan,final BleConnectCallback bleConnectCallback) {
-        Log.d(TAG, "initConnect() called with: isScan = [" + isScan + "], bleConnectCallback = [" + bleConnectCallback + "]");
+        LogUtil.d(TAG, "initConnect() called with: isScan = [" + isScan + "], bleConnectCallback = [" + bleConnectCallback + "]");
         if (!watch.isBluetoothEnable()) {
             SPUtil.put(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
         }
         final String mac = (String) SPUtil.get(this, AppGlobal.DATA_DEVICE_BIND_MAC,"");
+        Log.i(TAG,"initConnect:mac:"+mac);
         if (mac==null || mac.isEmpty()) {
             bleConnectCallback.onConnectFailure(new BleException(999,"mac is null!"));
             return;
         }
+        Log.i(TAG,"initConnect:scanAndConnect(mac,bleConnectCallback);"+isScan);
+        Log.i(TAG,"initConnect:scanAndConnect(mac,bleConnectCallback);mac:"+mac);
         if (isScan) {
             scanAndConnect(mac,bleConnectCallback);
         }else{
@@ -133,9 +141,11 @@ public class BleService extends Service {
      * @param bleConnectCallback 结果回调
      */
     private void scanAndConnect(final String mac, final BleConnectCallback bleConnectCallback){
-        watch.startScan(new TimeMacScanCallback(mac,5000) {
+        Log.i(TAG,"scanAndConnect");
+        watch.startScan(new TimeMacScanCallback(mac,12000) {
             @Override
             public void onDeviceFound(boolean isFound, BluetoothDevice device) {
+                Log.i(TAG,"onDeviceFound:"+isFound);
                 if (isFound) {
                     Watch.getInstance().connect(mac,true,bleConnectCallback);
                 }else {
@@ -221,6 +231,7 @@ public class BleService extends Service {
                 case ACTION_GATT_CONNECT:
                     LogUtil.e(TAG,"设备地址 "+macStr+" 蓝牙状态----蓝牙已连接");
 //                    EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_CONNECT));
+                    reConnectHandler.removeCallbacksAndMessages(null);
                     break;
                 case ACTION_GATT_RECONNECT:
                     LogUtil.e(TAG,"设备地址 "+macStr+" 蓝牙状态----蓝牙重连中");
@@ -231,6 +242,10 @@ public class BleService extends Service {
                     }
                     EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_CONNECTING));
 //                    connectWardHandler.sendEmptyMessage(0);
+                    reConnect_time_interval = 30;
+                    reConnect_times = 0;
+                    reConnectHandler.removeCallbacksAndMessages(null);
+                    reConnectHandler.postDelayed(reConnectThread,2000);
                     break;
                 case ACTION_GATT_DISCONNECTED:
                     LogUtil.e(TAG,"设备地址 "+macStr+" 蓝牙状态----蓝牙已断开");
@@ -260,6 +275,91 @@ public class BleService extends Service {
             }
         }
     };
+
+    public Handler reConnectHandler = new Handler();
+
+
+    public Runnable reConnectThread = new Runnable() {
+        @Override
+        public void run() {
+            reConnect();
+        }
+    };
+
+    BluetoothAdapter mBluetoothAdapter;
+    BluetoothManager bluetoothManager;
+    public int reConnect_time_interval = 5;
+    public int reConnect_times = 0;
+    private boolean isReConnecting = false;
+    private synchronized void reConnect(){
+        int state = (int) SPUtil.get(this.getBaseContext(), AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
+        String mac = (String) SPUtil.get(this, AppGlobal.DATA_DEVICE_BIND_MAC,"");
+        if("".equals(mac)){
+            reConnectHandler.removeCallbacksAndMessages(null);
+            return;
+        }
+        Log.i(TAG,"reConnect():state:"+state);
+        if(state==AppGlobal.DEVICE_STATE_CONNECTED){
+            reConnectHandler.removeCallbacksAndMessages(null);
+            isReConnecting = false;
+            return;
+        }else{
+            isReConnecting = true;
+        }
+
+//        if(bluetoothManager==null){
+//            bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+//        }
+//        if(mBluetoothAdapter==null){
+//            mBluetoothAdapter = bluetoothManager.getAdapter();
+//        }
+//        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+//            Log.i(TAG,"reConnect():mBluetoothAdapter"+mBluetoothAdapter+";mBluetoothAdapter.isEnabled()"+mBluetoothAdapter.isEnabled());
+//            return;
+//        }
+
+        EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_SEARCHING));
+        IbandApplication.getIntance().service.watch.closeBluetoothGatt(mac);
+        IbandApplication.getIntance().service.initConnect(true,new BleConnectCallback() {
+            @Override
+            public void onConnectSuccess() {
+                Log.i(TAG,"reConnect():onConnectSuccess()");
+                reConnectHandler.removeCallbacksAndMessages(null);
+                EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_CONNECTING));
+                isReConnecting = false;
+                reConnect_times = 0;
+            }
+
+            @Override
+            public void onConnectFailure(final BleException exception) {
+                Log.i(TAG,"reConnect():onConnectFailure()");
+//                int multiple = (reConnect_times/5)+1;
+                int multiple = 1;
+                long delayMillis = reConnect_time_interval*1000*multiple;
+
+//                if(delayMillis>=300*1000){
+//                    delayMillis = 300*1000;
+//                    reConnect_times--;
+//                }
+
+                if(reConnect_times<2){
+                    reConnect_times++;
+                    reConnectHandler.removeCallbacksAndMessages(null);
+                    reConnectHandler.postDelayed(reConnectThread,delayMillis);
+                }else if(reConnect_times==2){
+                    reConnectHandler.removeCallbacksAndMessages(null);
+                    reConnect_times++;
+                    reConnectHandler.postDelayed(reConnectThread,60*1000);
+                    EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_UNFIND));
+                }else if(reConnect_times>=3){
+                    reConnectHandler.removeCallbacksAndMessages(null);
+//                    reConnectHandler.postDelayed(reConnectThread,delayMillis);
+                    EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_UNFIND));
+                }
+
+            }
+        });
+    }
 
     BleActionListener actionListener = new BleActionListener() {
         @Override
@@ -326,7 +426,7 @@ public class BleService extends Service {
         }
     };
 
-    Handler toastHandler = new Handler(Looper.getMainLooper()){
+    public Handler toastHandler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -361,18 +461,18 @@ public class BleService extends Service {
                     (Object[]) null);
             // 拒接来电
             isEnd =mITelephony.endCall();
-            Log.d(TAG, "end() called with: context = [" + isEnd+ "]") ;
+            LogUtil.d(TAG, "end() called with: context = [" + isEnd+ "]") ;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-            Log.d(TAG, "end() called with: context = NoSuchMethodException");
+            LogUtil.d(TAG, "end() called with: context = NoSuchMethodException");
         }catch (IllegalAccessException e) {
             e.printStackTrace();
-            Log.d(TAG, "end() called with: context = IllegalAccessException");
+            LogUtil.d(TAG, "end() called with: context = IllegalAccessException");
         } catch (InvocationTargetException e) {
             e.printStackTrace();
-            Log.d(TAG, "end() called with: context = InvocationTargetException");
+            LogUtil.d(TAG, "end() called with: context = InvocationTargetException");
         }catch (RemoteException e) {
-            Log.d(TAG, "end() called with: context = RemoteException");
+            LogUtil.d(TAG, "end() called with: context = RemoteException");
             e.printStackTrace();
         }
 
@@ -382,7 +482,7 @@ public class BleService extends Service {
 
     public void answerRingingCall(Context context){
         try {
-            Log.d(TAG, "answerRingingCall() called ");
+            LogUtil.d(TAG, "answerRingingCall() called ");
             Method getITelephonyMethod =TelephonyManager.class
                     .getDeclaredMethod("getITelephony", (Class[]) null);
             TelephonyManager tm = (TelephonyManager)context.getSystemService(Service.TELEPHONY_SERVICE);//监听电话服务
@@ -430,7 +530,7 @@ public class BleService extends Service {
 //                    if (connectState != DEVICE_STATE_CONNECTED ) {
 //                        initConnect(false,mBleConnectCallback);
 //                        sendEmptyMessageDelayed(1,15*1000);
-//                        Log.d(TAG, "connectWardHandler() called initConnect = [" + msg + "]");
+//                        LogUtil.d(TAG, "connectWardHandler() called initConnect = [" + msg + "]");
 //                    }
 //                }
 //            }else if (msg.what == 2){//结束任务
@@ -511,13 +611,21 @@ public class BleService extends Service {
         BleConnectCallback mBleConnectCallback = new BleConnectCallback() {
         @Override
         public void onConnectSuccess() {
-            Log.d(TAG, "onConnectSuccess() called");
+            LogUtil.d(TAG, "onConnectSuccess() called");
         }
 
         @Override
         public void onConnectFailure(BleException exception) {
 //            startConnectWardThread();
-            Log.d(TAG, "onConnectFailure() called with: exception = [" + exception.toString() + "]");
+            LogUtil.d(TAG, "onConnectFailure() called with: exception = [" + exception.toString() + "]");
+            reConnect_time_interval = 30;
+            reConnect_times = 0;
+            reConnectHandler.removeCallbacksAndMessages(null);
+            reConnectHandler.postDelayed(reConnectThread,1000);
+//            EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_DEVICE_UNFIND));
+//            reConnect_time_interval = 2;
+//            reConnect_times = 0;
+//            toastHandler.post(reConnectThread);
 //            int connectState = (int) SPUtil.get(BleService.this,AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
 //            String mac = (String) SPUtil.get(BleService.this, AppGlobal.DATA_DEVICE_BIND_MAC,"");
 //            if (connectState != DEVICE_STATE_CONNECTED && !mac.isEmpty()) {

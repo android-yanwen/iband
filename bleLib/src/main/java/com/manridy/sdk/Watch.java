@@ -398,11 +398,13 @@ public class Watch extends BluetoothLeManager implements WatchApi {
             throw new IllegalArgumentException("setSedentatyAlert is null !");
         }
         String[] times = new String[4];
-        times[0] = "12:00";
-        times[1] = "14:00";
+        times[0] = sedentary.getNapStartTime() == null ? "12:00":sedentary.getNapStartTime();
+        times[1] = sedentary.getNapEndTime() == null ? "14:00":sedentary.getNapEndTime() ;
         times[2] = sedentary.getStartTime();
         times[3] = sedentary.getEndTime();
-        sendCmd(BleCmd.setSedentaryAlert(sedentary.isSedentaryOnOff() ? 1 : 0,sedentary.isSedentaryNap() ? 1 : 0 ,60 ,100 ,times ),bleCallback);
+        int space = sedentary.getSpace();
+        int target = (int) (space / 60.0 * 100.0);
+        sendCmd(BleCmd.setSedentaryAlert(sedentary.isSedentaryOnOff() ? 1 : 0,sedentary.isSedentaryNap() ? 1 : 0 ,space ,target ,times ),bleCallback);
     }
 
     /**

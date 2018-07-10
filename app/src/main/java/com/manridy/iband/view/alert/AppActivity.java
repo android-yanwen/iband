@@ -89,19 +89,33 @@ public class AppActivity extends BaseActionActivity {
     }
 
     private boolean getAppNewShow() {
+        boolean isView = false;
         String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST, "");
         String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE, "");
         String firmVersion = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION, "1.0.0");
-        String appVersion = "1.0";
+        String appVersion = "1.0.1";
+        boolean isHaveDevice = false;
         if (!strDeviceList.isEmpty()) {
             DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
             for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
                 if (resultBean.getDevice_id().equals(deviceType)) {
                     appVersion = resultBean.getNotify_version();
+                    isHaveDevice = true;
                 }
             }
         }
-        return appVersion.compareTo(firmVersion) >= 0;
+
+        if(!isHaveDevice){
+           return false;
+        }
+
+        if("0".equals(appVersion)){
+            isView = false;
+        }else{
+            //设备自身的大于或等于网络获取的，就显示
+            isView = firmVersion.compareTo(appVersion) >= 0;
+        }
+        return isView;
     }
 
     @Override
@@ -221,12 +235,7 @@ public class AppActivity extends BaseActionActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
+
 
     //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {

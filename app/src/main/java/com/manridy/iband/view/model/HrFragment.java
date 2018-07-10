@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.gson.Gson;
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
@@ -76,6 +77,8 @@ public class HrFragment extends BaseEventFragment {
     TextView tvStart;
     @BindView(R.id.tv_end)
     TextView tvEnd;
+    @BindView(R.id.tv_empty)
+    TextView tvEmpty;
 
     HeartModel curHeart;
     List<HeartModel> curHeartList;
@@ -161,6 +164,8 @@ public class HrFragment extends BaseEventFragment {
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_HR) {
             setCircularView();
             updateChartView(lcHr, curHeartList);
+            tvEmpty.setVisibility(curHeartList.size() == 0?View.VISIBLE:View.GONE);
+
             setDataItem();
         } else if (event.getWhat() == EventGlobal.ACTION_HR_TEST) {
             btTest.setText(R.string.hint_stop);
@@ -210,7 +215,7 @@ public class HrFragment extends BaseEventFragment {
         xAxis.setTextColor(Color.BLACK);//x轴文字颜色
         xAxis.setTextSize(12f);//x轴文字大小
         xAxis.setDrawGridLines(false);//取消网格线
-        xAxis.setDrawAxisLine(false);//取消x轴底线
+        xAxis.setDrawAxisLine(true);//取消x轴底线
         xAxis.setDrawLabels(false);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//x轴位置
         xAxis.setAxisMinimum(0);//设置最小点
@@ -304,7 +309,7 @@ public class HrFragment extends BaseEventFragment {
         @Override
         public void onValueSelected(Entry e, Highlight h) {
             int x = e.getX() >0 ? (int) e.getX() : 0;
-            Log.d(TAG, "onValueSelected() called with: e = [" + e.getX() + "], h = [" + x + "]");
+            LogUtil.d(TAG, "onValueSelected() called with: e = [" + e.getX() + "], h = [" + x + "]");
             if (curHeartList != null && curHeartList.size() >= x) {
                 HeartModel heartModel = curHeartList.get(x > 0 ? x - 1 : 0);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -14,7 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * 心率/血压/血氧历史适配器
+ * 微信运动适配器
  * Created by jarLiao on 17/5/4.
  */
 

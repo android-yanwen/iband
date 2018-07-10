@@ -161,6 +161,8 @@ public class BitmapUtil {
      */
     public static Intent getCameraIntent(Uri srcUri){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra("return-data", false);
+        intent.putExtra("noFaceDetection", true);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, srcUri);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
         return intent;
@@ -171,7 +173,7 @@ public class BitmapUtil {
      * @param tempUri
      * @return
      */
-    public static Intent startPhotoZoom(Uri tempUri) {
+    public static Intent startPhotoZoom(Uri tempUri,Uri outputUri) {
         if (tempUri == null) {
             return null;
         }
@@ -185,7 +187,11 @@ public class BitmapUtil {
         // outputX outputY 是裁剪图片宽高
         intent.putExtra("outputX", 300);
         intent.putExtra("outputY", 300);
-        intent.putExtra("return-data", true);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("noFaceDetection", true);
+        intent.putExtra("return-data", false);
+//        intent.putExtra("return-data", true);
         return intent;
     }
 

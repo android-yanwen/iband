@@ -41,7 +41,7 @@
 
 
     <application
-        android:name=".IbandApplication"
+        android:name="com.manridy.iband.IbandApplication"
         android:allowBackup="true"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
@@ -54,16 +54,16 @@
         <meta-data android:name="com.amap.api.v2.apikey"
                    android:value="88320cd7932980d6219b1f4bebb4cf70">
         </meta-data>
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote" >
-            <intent-filter>
-                <action
-                    android:name="com.baidu.location.service_v2.2">
-                </action>
-            </intent-filter>
-        </service>
+        <!--<service-->
+            <!--android:name="com.baidu.location.f"-->
+            <!--android:enabled="true"-->
+            <!--android:process=":remote" >-->
+            <!--<intent-filter>-->
+                <!--<action-->
+                    <!--android:name="com.baidu.location.service_v2.2">-->
+                <!--</action>-->
+            <!--</intent-filter>-->
+        <!--</service>-->
         <service android:name=".service.BleService"/>
         <service android:name=".service.AlertService"/>
         <service android:name=".service.DfuService"/>
@@ -90,7 +90,7 @@
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent" />
-        <activity android:name=".view.StartActivity"
+        <activity android:name=".view.main.StartActivity"
                   android:theme="@style/startActivityTheme"
                   android:screenOrientation="portrait">
             <intent-filter>
@@ -99,14 +99,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".view.MainActivity"
+        <activity android:name=".view.main.MainActivity"
                   android:theme="@style/Theme.NoBackgroundAndTitleMain"
                   android:launchMode="singleTask"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".view.SettingActivity"/>
-        <activity android:name=".view.WelcomeActivity"/>
+        <activity android:name=".view.main.SettingActivity"/>
+        <activity android:name=".view.main.WelcomeActivity"/>
         <activity android:name=".view.setting.ViewActivity"/>
-        <activity android:name=".view.setting.CameraActivity"/>
+        <activity android:name=".view.setting.CameraActivity" />
         <activity android:name=".view.setting.FindActivity"/>
         <activity android:name=".view.setting.AlertActivity"/>
         <activity android:name=".view.setting.WechatActivity"/>
@@ -125,27 +125,28 @@
         <activity android:name=".view.alert.LostActivity"/>
         <activity android:name=".view.alert.AppActivity"/>
 
-        <activity android:name=".view.TrainActivity"/>
+        <activity android:name=".view.main.TrainActivity"/>
         <activity android:name=".view.test.TestHrTimingActivity"/>
-        <activity android:name=".view.UserActivity"/>
-        <activity android:name=".view.DeviceActivity"/>
-        <activity android:name=".view.OtaActivity"
+        <activity android:name=".view.main.UserActivity"/>
+        <activity android:name=".view.main.DeviceActivity"/>
+        <activity android:name=".view.main.OtaActivity"
                   android:launchMode="singleTask"/>
         <activity android:name=".view.history.HrHistoryActivity"/>
         <activity android:name=".view.history.StepHistoryActivity"/>
         <activity android:name=".view.history.SleepHistoryActivity"/>
         <activity android:name=".view.test.TestDatabaseActivity"/>
         <activity android:name=".view.test.TestMenuActivity"/>
-        <activity android:name=".view.HrCorrectActivity"/>
+        <activity android:name=".view.main.HrCorrectActivity"/>
         <activity android:name=".view.setting.HelpActivity"/>
         <activity android:name=".view.setting.HelpItemActivity"/>
-        <activity android:name=".view.QrActivity"/>
+        <activity android:name=".view.main.QrActivity"/>
         <activity android:name=".view.setting.LangueActivity"/>
-        <activity android:name=".view.LocationActivity"/>
-        <activity android:name=".view.Location2Activity"/>
-        <activity android:name=".view.SportActivity"/>
-        <activity android:name=".view.SportRunActivity"/>
+        <activity android:name=".view.main.LocationActivity"/>
+        <activity android:name=".view.main.Location2Activity"/>
+        <activity android:name=".view.main.SportActivity"/>
+        <activity android:name=".view.main.SportRunActivity"/>
         <activity android:name=".view.setting.DataExportActivity"/>
+        <activity android:name=".view.setting.HelpWebViewActivity"/>
     </application>
 
 </manifest>

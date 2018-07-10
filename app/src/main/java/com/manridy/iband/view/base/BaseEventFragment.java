@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.manridy.applib.base.BaseFragment;
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.iband.R;
 
 import org.greenrobot.eventbus.EventBus;
@@ -24,20 +25,21 @@ public abstract class BaseEventFragment extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i(TAG, "onAttach");
+        LogUtil.i(TAG, "onAttach");
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-        Log.i(TAG, "onCreate");
+//        EventBus.getDefault().register(this);
+        LogUtil.i(TAG, "onCreate");
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView");
+        LogUtil.i(TAG, "onCreateView");
+        EventBus.getDefault().register(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -45,51 +47,51 @@ public abstract class BaseEventFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i(TAG, "onActivityCreated");
+        LogUtil.i(TAG, "onActivityCreated");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.i(TAG, "onStart");
+        LogUtil.i(TAG, "onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume");
+        LogUtil.i(TAG, "onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.i(TAG, "onPause");
+        LogUtil.i(TAG, "onPause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.i(TAG, "onStop");
+        LogUtil.i(TAG, "onStop");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
-        Log.i(TAG, "onDestroyView");
+        LogUtil.i(TAG, "onDestroyView");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 //        EventBus.getDefault().unregister(this);
-        Log.i(TAG, "onDestroy");
+        LogUtil.i(TAG, "onDestroy");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.i(TAG, "onDetach");
+        LogUtil.i(TAG, "onDetach");
     }
 
     public String getSafetyString(int resId){

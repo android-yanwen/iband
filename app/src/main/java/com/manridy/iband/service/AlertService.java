@@ -100,11 +100,11 @@ public class AlertService extends Service {
             String action = intent.getAction();
             if (action.equals("android.provider.Telephony.SMS_RECEIVED")){//收到短信通知
                 smsReceived(context, intent);
-                Log.d(TAG, "onReceive() called with: SMS_RECEIVED = [" + context + "], intent = [" + intent + "]");
+                LogUtil.d(TAG, "onReceive() called with: SMS_RECEIVED = [" + context + "], intent = [" + intent + "]");
             }else if(action.equals("android.intent.action.PHONE_STATE")){//电话状态监听
                 TelephonyManager tm = (TelephonyManager)context.getSystemService(Service.TELEPHONY_SERVICE);//设置监听电话回调
                 tm.listen(listener,PhoneStateListener.LISTEN_CALL_STATE);
-                Log.d(TAG, "onReceive() called with: PHONE_STATE = [" + context + "], intent = [" + intent + "]");
+                LogUtil.d(TAG, "onReceive() called with: PHONE_STATE = [" + context + "], intent = [" + intent + "]");
             }else if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {//蓝牙状态监听
                 int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF);
                 if (state == BluetoothAdapter.STATE_OFF) {//蓝牙关闭
@@ -114,7 +114,7 @@ public class AlertService extends Service {
                 }else if (state == BluetoothAdapter.STATE_ON) {//蓝牙已开启
                     EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_CHANGE_BLUETOOTH_ON));
                 }
-                Log.e(TAG, "onReceive() called with: ACTION_STATE_CHANGED, state = [" + state + "]");
+                LogUtil.e(TAG, "onReceive() called with: ACTION_STATE_CHANGED, state = [" + state + "]");
             }else if (action.equals(Intent.ACTION_LOCALE_CHANGED)){
                 EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_LOCALE_CHANGED));
             }
@@ -208,7 +208,7 @@ public class AlertService extends Service {
         }catch (Exception e){
             e.printStackTrace();
             SPUtil.put(AlertService.this,AppGlobal.DATA_ALERT_SMS,false);
-            Log.e(TAG, "短信提醒: 没有获得通讯录权限异常");
+            LogUtil.e(TAG, "短信提醒: 没有获得通讯录权限异常");
         }
     }
 
@@ -232,7 +232,7 @@ public class AlertService extends Service {
             }catch (Exception e){
                 e.printStackTrace();
                 SPUtil.put(AlertService.this, AppGlobal.DATA_ALERT_PHONE,false);
-                Log.e(TAG, "来电提醒: 没有获得通讯录权限异常");
+                LogUtil.e(TAG, "来电提醒: 没有获得通讯录权限异常");
             }
         }
     }
@@ -300,13 +300,13 @@ public class AlertService extends Service {
             if (smsList.size()>0) {
                 ibandApplication.service.watch.setSmsAlertContent(smsId,smsList.get(0),smsBleCallback);
             }else {
-                Log.d(TAG, "短信发送完成");
+                LogUtil.d(TAG, "短信发送完成");
             }
         }
 
         @Override
         public void onFailure(BleException exception) {
-            Log.d(TAG, "onFailure() called with: exception = [" + exception.toString() + "]");
+            LogUtil.d(TAG, "onFailure() called with: exception = [" + exception.toString() + "]");
         }
     };
 

@@ -1,11 +1,10 @@
-package com.manridy.iband.view;
+package com.manridy.iband.view.main;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -13,8 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.manridy.applib.utils.FileUtil;
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
-import com.manridy.iband.OnResultCallBack;
+import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.R;
 import com.manridy.iband.SyncAlert;
 import com.manridy.iband.common.AppGlobal;
@@ -51,7 +51,7 @@ public class OtaActivity extends BaseActionActivity {
     @BindView(R.id.tv_ota_progress)
     TextView tvOtaProgress;
     private DfuServiceController controller;
-    private boolean isInfiniti;
+    private boolean isInfiniti;//无限升级开关
 
 //    Handler handler = new Handler(){
 //        @Override
@@ -140,7 +140,7 @@ public class OtaActivity extends BaseActionActivity {
                 HttpService.getInstance().sendOtaData(getApplicationContext(), new OnResultCallBack() {
                     @Override
                     public void onResult(boolean result, Object o) {
-                        Log.d(TAG, "onResult() called with: result = [" + result + "], o = [" + o + "]");
+                        LogUtil.d(TAG, "onResult() called with: result = [" + result + "], o = [" + o + "]");
                     }
                 });
             }
@@ -224,13 +224,13 @@ public class OtaActivity extends BaseActionActivity {
     private DfuProgressListener mDfuProgressListener = new DfuProgressListenerAdapter() {
         @Override
         public void onDeviceConnecting(final String deviceAddress) {
-            Log.d(TAG, "onDeviceConnecting() called with: deviceAddress = [" + deviceAddress + "]");
+            LogUtil.d(TAG, "onDeviceConnecting() called with: deviceAddress = [" + deviceAddress + "]");
         }
 
         @Override
         public void onDfuProcessStarting(final String deviceAddress) {
             tvOtaProgress.setVisibility(View.VISIBLE);
-            Log.d(TAG, "onDfuProcessStarting() called with: deviceAddress = [" + deviceAddress + "]");
+            LogUtil.d(TAG, "onDfuProcessStarting() called with: deviceAddress = [" + deviceAddress + "]");
         }
 
         @Override
@@ -249,7 +249,7 @@ public class OtaActivity extends BaseActionActivity {
                 resetTime = isInfiniti ? 10:5;
                 progressHandler.sendEmptyMessage(0);
             }
-            Log.d(TAG, "onProgressChanged() called with: deviceAddress = [" + deviceAddress + "], percent = [" + percent + "], speed = [" + speed + "], avgSpeed = [" + avgSpeed + "], currentPart = [" + currentPart + "], partsTotal = [" + partsTotal + "]");
+            LogUtil.d(TAG, "onProgressChanged() called with: deviceAddress = [" + deviceAddress + "], percent = [" + percent + "], speed = [" + speed + "], avgSpeed = [" + avgSpeed + "], currentPart = [" + currentPart + "], partsTotal = [" + partsTotal + "]");
         }
 
         @Override
@@ -262,7 +262,7 @@ public class OtaActivity extends BaseActionActivity {
             tvOtaResult.setVisibility(View.VISIBLE);
             tvOtaResult.setTextColor(Color.parseColor("#e64a19"));
             tvOtaResult.setText(R.string.error_ota_fail);
-            Log.d(TAG, "onError() called with: deviceAddress = [" + deviceAddress + "], error = [" + error + "], errorType = [" + errorType + "], message = [" + message + "]");
+            LogUtil.d(TAG, "onError() called with: deviceAddress = [" + deviceAddress + "], error = [" + error + "], errorType = [" + errorType + "], message = [" + message + "]");
         }
     };
 

@@ -63,6 +63,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements SwipeBa
         loadData();
     }
 
+
     protected void initBack() {
         isBack = true;
         mHelper = new SwipeBackActivityHelper(this);
@@ -99,6 +100,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements SwipeBa
     protected abstract void initListener();
 
     protected void loadData(){}
+
 
 
 

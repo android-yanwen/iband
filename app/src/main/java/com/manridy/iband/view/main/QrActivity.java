@@ -1,4 +1,4 @@
-package com.manridy.iband.view;
+package com.manridy.iband.view.main;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,11 +7,9 @@ import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.manridy.iband.R;
 import com.manridy.iband.view.base.BaseActionActivity;
-import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CaptureFragment;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;

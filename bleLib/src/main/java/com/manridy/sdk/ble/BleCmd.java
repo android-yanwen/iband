@@ -1,6 +1,8 @@
 package com.manridy.sdk.ble;
 
 
+import android.util.Log;
+
 import com.manridy.sdk.common.BitUtil;
 import com.manridy.sdk.common.TimeUtil;
 

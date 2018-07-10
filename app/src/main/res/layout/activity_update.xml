@@ -28,4 +28,13 @@
         android:visibility="gone"/>
 
 
+    <com.manridy.iband.ui.items.HelpItems
+        android:id="@+id/hi_device_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:help_name_color="@color/text_content"
+        app:help_name="ID"
+        app:help_content="0000"
+        android:visibility="gone"/>
+
 </LinearLayout>

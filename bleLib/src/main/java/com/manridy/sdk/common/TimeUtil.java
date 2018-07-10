@@ -131,6 +131,20 @@ public class TimeUtil {
         return time;
     }
 
+    public static int[] getNowYMDHMStoInt2(){
+        int[] time = new int[7];
+        SimpleDateFormat mDateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd-HH-mm-ss");
+        String[] timeStrs = mDateFormat.format(new Date()).split("-");
+        Calendar cal = Calendar.getInstance();//使用默认时区和语言环境获得一个日历。
+        time[6] =cal.get(Calendar.DAY_OF_WEEK)-1;
+        for (int i = 0; i < timeStrs.length; i++) {
+            time[i] = Integer.parseInt(timeStrs[i]);
+        }
+
+        return time;
+    }
+
     public static int[] getYMDtoInt(String s){
         int[] time = new int[3];
         String[] strings = s.split("-");

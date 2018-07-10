@@ -56,7 +56,15 @@ public class LostActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 showProgress(getString(R.string.hint_saveing));
-                ibandApplication.service.watch.sendCmd(BleCmd.setLostDeviceAlert(onOff ? 1 : 0, 20), new BleCallback() {
+                String deviceName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,"");
+                int time = 20;
+                String devices[]={"F07","F07A","F10","F10A"};
+                for(int i=0;i<devices.length;i++){
+                    if(deviceName!=null&&devices[i].equals(deviceName.trim())){
+                        time = 120;
+                    }
+                }
+                ibandApplication.service.watch.sendCmd(BleCmd.setLostDeviceAlert(onOff ? 1 : 0, time), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         dismissProgress();

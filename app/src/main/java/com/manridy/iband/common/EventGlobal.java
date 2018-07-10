@@ -39,6 +39,8 @@ public class EventGlobal {
     public static final int REFRESH_VIEW_HR_HISTORY  = 2812;
     public static final int REFRESH_VIEW_BP_HISTORY  = 2813;
     public static final int REFRESH_VIEW_BO_HISTORY  = 2814;
+    public static final int REFRESH_VIEW_DEVICE  = 2815;
+
     //设备状态改变
     public static final int STATE_DEVICE_BIND = 2000;
     public static final int STATE_DEVICE_UNBIND = 2001;
@@ -46,6 +48,9 @@ public class EventGlobal {
     public static final int STATE_DEVICE_DISCONNECT = 2003;
     public static final int STATE_DEVICE_CONNECTING = 2004;
     public static final int STATE_DEVICE_BIND_FAIL = 2005;
+    public static final int STATE_DEVICE_SEARCHING = 2006;
+    public static final int STATE_DEVICE_UNFIND = 2007;
+
     //设备动作触发
     public static final int ACTION_CAMERA_EXIT = 2580;
     public static final int ACTION_CAMERA_CAPTURE = 2581;

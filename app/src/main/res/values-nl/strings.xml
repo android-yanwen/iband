@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="hint_bluetooth_close">Bluetooth is uitgeschakeld</string>
     <string name="hint_alert_app">Bij ontvangst van waarschuwingen zal je horloge trillen </string>
     <string name="hint_ota_progress">Update voorbereiden, even geduld aub..</string>
     <string name="hint_menu_wrist">Scherm wordt verlicht bij beweging van pols</string>
     <string name="app_name">iBand</string>
     <string name="hint_sleep_deep_avg">Gemiddelde Diepe slaap</string>
+    <string name="hint_bluetooth_opening">Bluetooth is ingeschakeld</string>
     <string name="hint_wechat_query">Controleren, even geduld aub</string>
     <string name="hint_save">Bewaren</string>
     <string name="hint_stop">Stop</string>
@@ -34,6 +36,7 @@
     <string name="hint_bluetooth_open">Activeer Bluetooth</string>
     <string name="hint_clock">Je kan maximaal 3 alarmen instellen</string>
     <string name="hint_test">Metingen</string>
+    <string name="hint_lost_nap_content">23:00~06:00Sluit herinnering</string>
     <string name="hint_unit_mi">km</string>
     <string name="hint_step_history_mi">Totale afstand</string>
     <string name="title_app">Waarschuwingen uit apps</string>
@@ -51,6 +54,7 @@
     <string name="hint_photo">Albums</string>
     <string name="hint_device_unbind">geen toestel verbonden</string>
     <string name="hint_reset">Reset naar fabrieksinstellingen</string>
+    <string name="hint_data_export_succes">Gegevens exporteren voltooid, opent u het bestand?</string>
     <string name="hint_action_connect">Verbinding</string>
     <string name="hint_year">Jaar</string>
     <string name="hint_activateing">Je horloge wordt geactiveerd. Even wachten…</string>
@@ -78,8 +82,10 @@
     <string name="hint_net_error">Netwerk probleem, herstel verbinding met netwerk en probeer opnieuw</string>
     <string name="hint_sleep_end">Ontwaken</string>
     <string name="error_end_before">Eindtijd kan niet vroeger zijn dan starttijd</string>
+    <string name="hint_data_export">Gegevens exporteren</string>
     <string name="hint_hr_correct1">Waarschuwing: NIET aanpassen als uw horloge op correcte wijze je hartslag kan opmeten.</string>
     <string name="hint_alert_lost1">Detecteer uw horloge</string>
+    <string name="hint_lost_nap">Anti-verloren Niet storen</string>
     <string name="title_test">Zorg er tijdens metingen altijd goed voor dat de verbinding niet verbroken wordt</string>
     <string name="hint_ota_success">Update suksesvol</string>
     <string name="hint_time_12">12 -Uren</string>
@@ -90,6 +96,7 @@
     <string name="hint_view_mac">MAC QR code</string>
     <string name="hint_device_unconnect">Het horloge is niet verbonden</string>
     <string name="hint_unit_th">meer</string>
+    <string name="hint_restart">Met deze handeling wordt het apparaat teruggezet in de oorspronkelijke modus en worden alle gegevens gewist. Doorgaan?</string>
     <string name="hint_finding_phone">Een toestel zoekt verbinding met uw telefoon</string>
     <string name="title_bp_history">Geschiedenis van de bloeddrukmetingen</string>
     <string name="hint_sleep_today">Slaap vandaag</string>
@@ -127,10 +134,12 @@
     <string name="hint_check_version">Controleer de versie</string>
     <string name="hint_step_history_avg">Dagelijks gemiddelde stappen</string>
     <string name="hint_sync_fail">Synchronizatie niet geslaagd!</string>
+    <string name="hint_hr_test_timing_content">Nadat deze functie is ingeschakeld, zal het apparaat regelmatig de hartslag meten.</string>
     <string name="hint_alert_sms_open">SMS waarschuwingen</string>
     <string name="hint_view_stand">Stand-By</string>
     <string name="hint_ka">Caloriën</string>
     <string name="hint_device_activate">Activatie suksesvol</string>
+    <string name="hint_click_look">Klik om te bekijken</string>
     <string name="hint_menu_time">Tijdsformaat</string>
     <string name="hint_menu_alert_phone">Oproep Waarschuwingen</string>
     <string name="hint_menu_help">Hulp</string>
@@ -163,6 +172,7 @@
     <string name="hint_now">Upgrade / Aktualizeer</string>
     <string name="hint_step_everyday">Dagelijkse stappen</string>
     <string name="hint_alert_sedentary_time_end">Eind Tijd</string>
+    <string name="hint_space">Intervaltijd</string>
     <string name="hint_sync_success">Synchronizarie suksesvol</string>
     <string name="error_start_after">Tijd kan niet later gestart worden dan de eindtijd</string>
     <string name="hint_device_searching">Zoek naar alle beschikbare toestellen</string>
@@ -195,11 +205,13 @@
     <string name="hint_request_sms_alert">Om gebruik te maken van sms waarschuwingen moet je eerst toestemmingen aanvinken bij instellingen </string>
     <string name="hint_day_max">Geen nieuwe gegevens beschikbaar. Kies opnieuw</string>
     <string name="hint_menu_update">Controleer op updates</string>
+    <string name="hint_notify_more">Meer toepassingen</string>
     <string name="hint_langue">Taalinstellingen</string>
     <string name="hint_network_available">Het huidige netwerk is niet beschikbaar</string>
     <string name="hint_sex">Geslacht</string>
     <string name="camera">Fotos nemen</string>
     <string name="hint_request_alert_app">Om gebruik te maken van waarschuwingen moet je eerst toestemming aanvinken in instellingen.</string>
+    <string name="hint_click_save">Klik op de afbeelding om op te slaan in het album</string>
     <string name="hint_start">Start</string>
     <string name="hint_swim">Zwemmen</string>
     <string name="hint_current_version">Huidige versie V</string>
@@ -238,11 +250,13 @@
     <string name="hint_min">Minimale waarde</string>
     <string name="hint_step_today">Stappen vandaag</string>
     <string name="hint_menu_find">Vind mijn horloge</string>
+    <string name="hint_clean">Gegevens wissen</string>
     <string name="title_camera">Camera op afstand</string>
     <string name="hint_activate">Activeer</string>
     <string name="hint_view_info">Informatie</string>
     <string name="hint_run">Lopen</string>
     <string name="unit_min">minuten</string>
+    <string name="hint_data_export_help">Data-opslag locatie</string>
     <string name="hint_find_phone">Vind mijn telefoon</string>
     <string name="hint_sleep_history">Geschiedenis</string>
     <string name="hint_set_correct">Intensiteit van hartslagmeting aanpassen</string>
@@ -297,6 +311,7 @@
     <string name="hint_state_connecting">Verbinding maken</string>
     <string name="hint_view_step">Stap</string>
     <string name="title_clock">Wekkers</string>
+    <string name="hint_export_excel">Mobile - Bestandsbeheer - iband-map - database.xls met gegevens in Excel-formaat</string>
     <string name="hint_alert_lost_open">Anti-verlies waarschuwing instellen </string>
     <string name="hint_menu_alert_lost">Anti-Verlies waarschuwing</string>
     <string name="hint_menu_alert">Instellingen voor waarschuwingen</string>
@@ -319,23 +334,8 @@
     <string name="hint_ota_file_fail">Download mislukt</string>
     <string name="hint_view_hill">Klimmen</string>
     <string name="hint_state_charge">Laden</string>
+    <string name="hint_hr_test_timing">Hartslag automatische meting</string>
     <string name="hint_menu_camera">Camera op afstand</string>
-    <string name="hint_click_save">Klik op de afbeelding om op te slaan in het album</string>
-    <string name="hint_bluetooth_close">Bluetooth is uitgeschakeld</string>
-    <string name="hint_bluetooth_opening">Bluetooth is ingeschakeld</string>
-    <string name="hint_data_export">数据导出</string>
-    <string name="hint_data_export_help">数据导出之后在哪里可以查看</string>
-    <string name="hint_click_look">点击查看</string>
-    <string name="hint_data_export_succes">数据已导出完毕，是否立即查看?</string>
-    <string name="hint_hr_test_timing">心率定时测量</string>
-    <string name="hint_clean">清除数据</string>
-    <string name="hint_export_excel">打开手机上的[文件管理]--搜索找到命名为iband的文件夹，打开excel表格即可查看个人的健康记录数据</string>
-    <string name="hint_restart">此操作将会使设备恢复出厂，是否确认?</string>
-    <string name="hint_hr_test_timing_content">开启后每间隔一段时间自动进行测量</string>
-    <string name="hint_space">间隔时间</string>
-    <string name="hint_notify_more">更多通知</string>
-    <string name="hint_lost_nap">防丢免打扰</string>
-    <string name="hint_lost_nap_content">23:00~06:00不进行提醒</string>
 
     //数据库显示 不需要翻译
     <string-array name="db">
@@ -476,4 +476,6 @@ Exit iband app（Apple users should ignore the device on Bluetooth.）. At this 
 2. After binding WeRun, you can make iband app and WeRun connected to the device at the same time without interference.
 </item>
     </string-array>
+    <string name="hint_empty_data">No activity data</string>
+    <string name="hint_alert_space">Herinner interval</string>
 </resources>

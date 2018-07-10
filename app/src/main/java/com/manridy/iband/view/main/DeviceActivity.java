@@ -1,9 +1,9 @@
-package com.manridy.iband.view;
+package com.manridy.iband.view.main;
 
 import android.bluetooth.BluetoothDevice;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -17,8 +17,8 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.manridy.applib.utils.CheckUtil;
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
-import com.manridy.iband.OnResultCallBack;
 import com.manridy.iband.SyncAlert;
 import com.manridy.iband.SyncData;
 import com.manridy.iband.bean.DeviceList;
@@ -28,10 +28,10 @@ import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.R;
 import com.manridy.iband.adapter.DeviceAdapter;
 import com.manridy.iband.common.OnItemClickListener;
-import com.manridy.iband.service.HttpService;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.sdk.BluetoothLeDevice;
 import com.manridy.sdk.Watch;
+import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleConnectCallback;
 import com.manridy.sdk.exception.BleException;
@@ -153,7 +153,7 @@ public class DeviceActivity extends BaseActionActivity {
         SyncAlert.getInstance(mContext).setSyncAlertListener(new SyncAlert.OnSyncAlertListener() {
             @Override
             public void onResult(final boolean isSuccess) {
-                dismissProgress();
+//                dismissProgress();
                 SyncData.getInstance().setRun(false);
                 EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));
                 runOnUiThread(new Runnable() {
@@ -237,7 +237,8 @@ public class DeviceActivity extends BaseActionActivity {
                     bindName = leDevice.getmBluetoothGatt().getDevice().getName();
                 }
                 SPUtil.put(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,bindName == null ? "UNKONW":bindName);
-                SPUtil.put(mContext,AppGlobal.DATA_DEVICE_BIND_IMG,getDeviceImgRes(bindName,filterDeviceList));
+                String deviceImgRes = getDeviceImgRes(bindName,filterDeviceList);
+                SPUtil.put(mContext,AppGlobal.DATA_DEVICE_BIND_IMG,deviceImgRes);
                 eventSend(EventGlobal.STATE_DEVICE_BIND);//发送绑定成功广播
             }
 
@@ -313,14 +314,21 @@ public class DeviceActivity extends BaseActionActivity {
             }
             return;
         }
-        showProgress(getString(R.string.hint_device_searching), new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                ibandApplication.service.watch.stopScan(mTimeScanCallback);
-            }
-        });
+        if (ibandApplication.service.watch.isScaning()) {
+            showToast(getString(R.string.hint_device_searching));
+            return;
+        }
+//        showProgress(getString(R.string.hint_device_searching), new DialogInterface.OnCancelListener() {
+//            @Override
+//            public void onCancel(DialogInterface dialog) {
+//                ibandApplication.service.watch.stopScan(mTimeScanCallback);
+//            }
+//        });
+        showToast(getString(R.string.hint_device_searching));
         ivRefresh.setVisibility(View.GONE);
         mDeviceList.clear();
+        mDeviceAdapter.notifyDataSetChanged();
+        dataIndex = 0;
         ibandApplication.service.watch.startScan(mTimeScanCallback);
     }
 
@@ -328,24 +336,13 @@ public class DeviceActivity extends BaseActionActivity {
     TimeScanCallback mTimeScanCallback = new TimeScanCallback(5000, null) {
         @Override
         public void onScanEnd() {
-            dismissProgress();
+            showToast(getString(R.string.hint_searched));
         }
 
         @Override
         public void onFilterLeScan(final BluetoothDevice device, final int rssi, final byte[] scanRecord) {
-            Log.d(TAG, "onFilterLeScan() called with: device = [" + device.getName() + "], rssi = [" + rssi + "], mac = [" + device.getAddress() + "]");
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    String deviceName = device.getName();
-//                    Log.d(TAG, "mTimeScanCallback() deviceName ==== "+deviceName==null?"null":deviceName);
-                    if ((deviceName != null && checkFilter(deviceName,deviceFilters))||isDebug) {
-                        mDeviceList.add(new DeviceAdapter.DeviceModel(device, rssi, scanRecord));
-                        mDeviceAdapter.notifyDataSetChanged();
-                    }
-                }
-            });
-
+            LogUtil.d(TAG, "onFilterLeScan() called with: device = [" + device.getName() + "], rssi = [" + rssi + "], mac = [" + device.getAddress() + "]");
+            EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_DEVICE,device));
         }
     };
 
@@ -380,16 +377,21 @@ public class DeviceActivity extends BaseActionActivity {
             //绑定成功显示已绑定视图，清空列表，弹出提示
             showBindView();
             mDeviceList.clear();
+            dataIndex = 0;
             mDeviceAdapter.notifyDataSetChanged();
             showToast(getString(R.string.hint_bind_success));
-
-            showProgress(getString(R.string.hint_sync_data));
+            showToast(getString(R.string.hint_sync_data));
             tvBindName.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     SyncAlert.getInstance(mContext).sync();
+                    SyncAlert.getInstance(mContext).isGetCallbackSetTimingHrTest = true;
+//                    SyncAlert.getInstance(mContext).setTimingHrTest();
+
                 }
             },1000);
+//            handler.post(SetTimingHrTest);
+
         }else if (event.getWhat() == EventGlobal.STATE_DEVICE_UNBIND) {
             //解绑成功显示未绑定视图，弹出提示
             showUnBindView();
@@ -398,11 +400,23 @@ public class DeviceActivity extends BaseActionActivity {
         }else if (event.getWhat() == EventGlobal.STATE_DEVICE_BIND_FAIL){
             //绑定失败清空列表，弹出提示
             mDeviceList.clear();
+            dataIndex = 0;
             mDeviceAdapter.notifyDataSetChanged();
             showUnBindView();
             showToast(getString(R.string.hint_un_bind_fail));
+        }else if (event.getWhat() == EventGlobal.REFRESH_VIEW_DEVICE){
+            BluetoothDevice device = (BluetoothDevice) event.getObject();
+            String deviceName = device.getName();
+            if ((deviceName != null && checkFilter(deviceName,deviceFilters))||isDebug) {
+                mDeviceList.add(dataIndex,new DeviceAdapter.DeviceModel(device,deviceName));
+                Log.d(TAG, "onEventMainThread() called with: event = [" + dataIndex + "]");
+                mDeviceAdapter.notifyItemInserted(dataIndex);
+                dataIndex++;
+            }
         }
     }
+
+    private int dataIndex = 0;
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onEventBackroundThread(EventMessage event){
@@ -435,9 +449,48 @@ public class DeviceActivity extends BaseActionActivity {
         }
     }
 
+//    boolean isGetCallbackSetTimingHrTest = false;
+//
+//    Runnable SetTimingHrTest = new Runnable() {
+//        @Override
+//        public void run() {
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if(!isGetCallbackSetTimingHrTest){
+//                        showToast( "设置心率定时测量失败，请手动设置！");
+//                        Log.i(TAG,"SetTimingHrTest:timeout");
+//                    }
+//                }
+//            },10*1000 );
+//            Log.i(TAG,"SetTimingHrTest:sendCmd");
+//            ibandApplication.service.watch.sendCmd(BleCmd.setTimingHrTest(true, 30), new BleCallback() {
+//                @Override
+//                public void onSuccess(Object o) {
+//                    isGetCallbackSetTimingHrTest = true;
+//                    SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,true);
+//                    SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,30);
+//                    Log.i(TAG,"SetTimingHrTest:onSuccess");
+//                }
+//
+//                @Override
+//                public void onFailure(BleException exception) {
+//                    isGetCallbackSetTimingHrTest = true;
+//                    showToast( "设置心率定时测量失败，请手动设置！");
+//                    Log.i(TAG,"SetTimingHrTest:onFailure");
+//                }
+//            });
+//        }
+//    };
+
+    Handler handler = new Handler(){};
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         dismissProgress();
     }
+
+
+
 }

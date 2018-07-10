@@ -10,6 +10,8 @@ import android.os.IBinder;
 import android.os.Process;
 import android.util.Log;
 
+import com.manridy.applib.utils.LogUtil;
+
 import java.util.List;
 
 /**
@@ -33,7 +35,7 @@ public class NotificationCollectorMonitorService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "onCreate() called");
+        LogUtil.d(TAG, "onCreate() called");
         ensureCollectorRunning();
     }
 
@@ -44,17 +46,17 @@ public class NotificationCollectorMonitorService extends Service {
 
     private void ensureCollectorRunning() {
         ComponentName collectorComponent = new ComponentName(this, com.manridy.iband.service.AppNotificationListenerService.class);
-        Log.v(TAG, "ensureCollectorRunning collectorComponent: " + collectorComponent);
+        LogUtil.v(TAG, "ensureCollectorRunning collectorComponent: " + collectorComponent);
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         boolean collectorRunning = false;
         List<ActivityManager.RunningServiceInfo> runningServices = manager.getRunningServices(Integer.MAX_VALUE);
         if (runningServices == null ) {
-            Log.w(TAG, "ensureCollectorRunning() runningServices is NULL");
+            LogUtil.w(TAG, "ensureCollectorRunning() runningServices is NULL");
             return;
         }
         for (ActivityManager.RunningServiceInfo service : runningServices) {
             if (service.service.equals(collectorComponent)) {
-                Log.w(TAG, "ensureCollectorRunning service - pid: " + service.pid + ", currentPID: " + Process.myPid() + ", clientPackage: " + service.clientPackage + ", clientCount: " + service.clientCount
+                LogUtil.w(TAG, "ensureCollectorRunning service - pid: " + service.pid + ", currentPID: " + Process.myPid() + ", clientPackage: " + service.clientPackage + ", clientCount: " + service.clientCount
                         + ", clientLabel: " + ((service.clientLabel == 0) ? "0" : "(" + getResources().getString(service.clientLabel) + ")"));
                 if (service.pid == Process.myPid() /*&& service.clientCount > 0 && !TextUtils.isEmpty(service.clientPackage)*/) {
                     collectorRunning = true;
@@ -62,15 +64,15 @@ public class NotificationCollectorMonitorService extends Service {
             }
         }
         if (collectorRunning) {
-            Log.d(TAG, "ensureCollectorRunning: collector is running");
+            LogUtil.d(TAG, "ensureCollectorRunning: collector is running");
             return;
         }
-        Log.d(TAG, "ensureCollectorRunning: collector not running, reviving...");
+        LogUtil.d(TAG, "ensureCollectorRunning: collector not running, reviving...");
         toggleNotificationListenerService();
     }
 
     private void toggleNotificationListenerService() {
-        Log.d(TAG, "toggleNotificationListenerService() called");
+        LogUtil.d(TAG, "toggleNotificationListenerService() called");
         ComponentName thisComponent = new ComponentName(this, com.manridy.iband.service.AppNotificationListenerService.class);
         PackageManager pm = getPackageManager();
         pm.setComponentEnabledSetting(thisComponent, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);

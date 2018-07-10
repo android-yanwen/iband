@@ -64,6 +64,8 @@ public class StepHistoryActivity extends BaseActionActivity {
     DataItems diData3;
     @BindView(R.id.bc_history_step)
     BarChart bcHistoryStep;
+    @BindView(R.id.tv_empty)
+    TextView tvEmpty;
 
     private Calendar mCalendar;
     private SimpleDateFormat mDateFormat;
@@ -152,7 +154,7 @@ public class StepHistoryActivity extends BaseActionActivity {
         xAxis.setTextSize(12f);//x轴文字大小
         xAxis.setLabelCount(7,true);
         xAxis.setDrawGridLines(false);//取消网格线
-        xAxis.setDrawAxisLine(false);//取消x轴底线
+        xAxis.setDrawAxisLine(true);//取消x轴底线
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//x轴位置
         xAxis.setAxisMinimum(1);//设置最小点
         xAxis.setGranularity(1f);//设置间隔
@@ -168,8 +170,8 @@ public class StepHistoryActivity extends BaseActionActivity {
         yAxis.setAxisMinimum(0);//设置y轴最小点
 //        yAxis.setAxisMaximum(24*60);
 //        yAxis.setLabelCount(7,false);
-        yAxis.setDrawAxisLine(false);//画坐标线
-        yAxis.setDrawLabels(false);//画坐标下标
+        yAxis.setDrawAxisLine(true);//画坐标线
+        yAxis.setDrawLabels(true);//画坐标下标
         yAxis.setDrawGridLines(false);//设置网格线
 //        yAxis.setValueFormatter(new HourValueFormatter());
         yAxis.setDrawZeroLine(false);
@@ -272,6 +274,7 @@ public class StepHistoryActivity extends BaseActionActivity {
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_STEP_HISTORY) {
             setCircularView();
             updateChartView(bcHistoryStep,stepList);
+            tvEmpty.setVisibility(stepCount == 0?View.VISIBLE:View.GONE);
             setDataItem();
         }
     }

@@ -1,7 +1,8 @@
-package com.manridy.iband.view;
+package com.manridy.iband.view.main;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.exception.BleException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -76,6 +78,7 @@ public class UserActivity extends BaseActionActivity {
     private File imgFile;
     private UserModel curUser;
     private int unit;
+    private File outputFile;
 
     @Override
 
@@ -127,6 +130,7 @@ public class UserActivity extends BaseActionActivity {
             ivUserIcon.setImageURI("file://" + file.getPath());
         }
         imgFile = new File(Environment.getExternalStorageDirectory(), "image.jpg");
+        outputFile = new File(Environment.getExternalStorageDirectory(), "image_temp.jpg");
     }
 
     @Override
@@ -232,19 +236,22 @@ public class UserActivity extends BaseActionActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE_GALLERY:
-                    startActivityForResult(BitmapUtil.startPhotoZoom(data.getData()), REQUEST_CODE_CROP);
+                    startActivityForResult(BitmapUtil.startPhotoZoom(data.getData(),Uri.fromFile(outputFile)), REQUEST_CODE_CROP);
                     break;
                 case REQUEST_CODE_CAMERA:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        startActivityForResult(BitmapUtil.startPhotoZoom(mContext, imgFile), REQUEST_CODE_CROP);
+                        startActivityForResult(BitmapUtil.startPhotoZoom(mContext,imgFile), REQUEST_CODE_CROP);
                     } else {
-                        startActivityForResult(BitmapUtil.startPhotoZoom(uriSrc), REQUEST_CODE_CROP);
+                        startActivityForResult(BitmapUtil.startPhotoZoom(uriSrc,Uri.fromFile(outputFile)), REQUEST_CODE_CROP);
                     }
                     break;
                 case REQUEST_CODE_CROP:
                     Bundle extras = data.getExtras();
-                    if (extras != null) {
-                        Bitmap bitmap = extras.getParcelable("data");
+//                    if (extras != null) {
+//                        Bitmap bitmap = extras.getParcelable("data");
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(Uri.fromFile(outputFile)));
                         Bitmap photo = BitmapUtil.toRoundBitmap(bitmap);
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd_HHmmss");
                         String name = "/IMG_" + simpleDateFormat.format(new Date()) + ".jpg";
@@ -252,7 +259,11 @@ public class UserActivity extends BaseActionActivity {
                         SPUtil.put(mContext,DATA_USER_HEAD, name);
                         eventSend(EventGlobal.DATA_CHANGE_USER);
                         ivUserIcon.setImageBitmap(photo);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
                     }
+
+//                    }
                     break;
             }
         }

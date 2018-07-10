@@ -1,5 +1,7 @@
 package com.manridy.iband;
 
+import android.nfc.Tag;
+import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -34,15 +36,17 @@ import java.util.Date;
 public class SyncData {
 
     private Watch watch;
-    private int syncIndex;
-    private int progressIndex;
-    private int progressSum;
-    private int errorNum;
-    private int stepSum,runSum,sleepSum,hrSum,bpSum,boSum;
+    private int syncIndex;//同步当前
+    private int progressIndex;//进度当前
+    private int progressSum;//进度总数
+    private int errorNum;//错误计数器
+    private int stepSum,runSum,sleepSum,hrSum,bpSum,boSum;//数据记录
     private OnSyncAlertListener syncAlertListener;
     private static SyncData instance;
     private Gson mGson;
     private boolean isRun;
+    private long updateDate = 0;
+
 
     public interface OnSyncAlertListener{
         void onResult(boolean isSuccess);
@@ -82,7 +86,6 @@ public class SyncData {
         progressSum = progressIndex = syncIndex = errorNum = 0;
         stepSum =runSum = sleepSum = hrSum = bpSum = boSum = 0;
 
-        watch.sendCmd(BleCmd.getSleepStats());
 
         BleParse.getInstance().setStepHistoryListener(new BleHistoryListener() {
             @Override
@@ -229,6 +232,7 @@ public class SyncData {
         }else {
             if (syncAlertListener != null) {
                 syncAlertListener.onResult(true);
+                watch.sendCmd(BleCmd.getSleepStats());
                 isRun = false;
                 LogUtil.d("SyncData", "next() called onResult true");
             }

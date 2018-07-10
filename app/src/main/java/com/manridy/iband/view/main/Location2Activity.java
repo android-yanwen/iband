@@ -1,4 +1,4 @@
-package com.manridy.iband.view;
+package com.manridy.iband.view.main;
 
 import android.location.Location;
 import android.os.Bundle;

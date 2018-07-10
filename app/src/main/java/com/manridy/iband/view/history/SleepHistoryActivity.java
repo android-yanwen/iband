@@ -62,12 +62,14 @@ public class SleepHistoryActivity extends BaseActionActivity {
     DataItems diData3;
     @BindView(R.id.bc_history_sleep)
     BarChart bcHistorySleep;
+    @BindView(R.id.tv_empty)
+    TextView tvEmpty;
 
     private Calendar mCalendar;
     private SimpleDateFormat mDateFormat;
     private List<String> days = new ArrayList<>();
     private List<DayBean> sleepList = new ArrayList<>();
-    private int sleepSum = 0,sleepLight = 0,sleepDeep = 0,sleepCount = 0;
+    private int sleepSum = 0, sleepLight = 0, sleepDeep = 0, sleepCount = 0;
     private String curMac;
 
     @Override
@@ -79,7 +81,7 @@ public class SleepHistoryActivity extends BaseActionActivity {
     @Override
     protected void initVariables() {
         registerEventBus();
-        curMac = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_MAC,"");
+        curMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
         setTitleBar(getString(R.string.hint_sleep_history));
         mCalendar = Calendar.getInstance();
         mDateFormat = new SimpleDateFormat("yyyy-MM");
@@ -94,25 +96,25 @@ public class SleepHistoryActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 String time;
-                int[] times = new int[]{1999,07,01};
+                int[] times = new int[]{1999, 07, 01};
                 if (tvMonth.getText().equals(getString(R.string.hint_month_current))) {
                     time = mDateFormat.format(new Date());
-                }else {
+                } else {
                     time = tvMonth.getText().toString();
                 }
                 if (time.length() >= 7) {
-                    int year = Integer.parseInt(time.substring(0,4));
-                    int month = Integer.parseInt(time.substring(6,7));
-                    times = new int[]{year,month-1};
+                    int year = Integer.parseInt(time.substring(0, 4));
+                    int month = Integer.parseInt(time.substring(6, 7));
+                    times = new int[]{year, month - 1};
                 }
-                new DateDialog(mContext,times ,getString(R.string.hint_select_month), new DateDialog.DateDialogListener() {
+                new DateDialog(mContext, times, getString(R.string.hint_select_month), new DateDialog.DateDialogListener() {
                     @Override
                     public void getTime(int year, int monthOfYear, int dayOfMonth) {
-                        String time = year + "-" + TimeUtil.zero(monthOfYear+1);
+                        String time = year + "-" + TimeUtil.zero(monthOfYear + 1);
                         mCalendar.set(year, monthOfYear, dayOfMonth);
                         if (time.equals(mDateFormat.format(new Date()))) {
                             tvMonth.setText(getString(R.string.hint_month_current));
-                        }else {
+                        } else {
                             tvMonth.setText(time);
                         }
                         EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_SLEEP_HISTORY));
@@ -147,16 +149,16 @@ public class SleepHistoryActivity extends BaseActionActivity {
         xAxis.setEnabled(true);//显示x轴
         xAxis.setTextColor(Color.BLACK);//x轴文字颜色
         xAxis.setTextSize(12f);//x轴文字大小
-        xAxis.setLabelCount(7,true);
+        xAxis.setLabelCount(7, true);
         xAxis.setDrawGridLines(false);//取消网格线
-        xAxis.setDrawAxisLine(false);//取消x轴底线
+        xAxis.setDrawAxisLine(true);//取消x轴底线
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//x轴位置
         xAxis.setAxisMinimum(1);//设置最小点
         xAxis.setGranularity(1f);//设置间隔
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return String.valueOf((int)value);
+                return String.valueOf((int) value);
             }
 
         });
@@ -174,7 +176,7 @@ public class SleepHistoryActivity extends BaseActionActivity {
         chart.getAxisRight().setEnabled(false);//不显示右侧
     }
 
-    private void updateChartView(BarChart chart,List<DayBean> dayData){
+    private void updateChartView(BarChart chart, List<DayBean> dayData) {
         if (chart.getData() != null) {
             chart.clearValues();
         }
@@ -183,7 +185,7 @@ public class SleepHistoryActivity extends BaseActionActivity {
         }
         List<BarEntry> sumList = new ArrayList<>();
         for (int i = 0; i < dayData.size(); i++) {
-            sumList.add(new BarEntry(i+1,new float[]{dayData.get(i).getDayMax(),dayData.get(i).getDayMin()}));
+            sumList.add(new BarEntry(i + 1, new float[]{dayData.get(i).getDayMax(), dayData.get(i).getDayMin()}));
         }
         BarData barData = new BarData(getInitChartDataSet(sumList));
         chart.setData(barData);
@@ -192,7 +194,7 @@ public class SleepHistoryActivity extends BaseActionActivity {
     }
 
     private BarDataSet getInitChartDataSet(List<BarEntry> entryList) {
-        BarDataSet set = new BarDataSet(entryList,"");//初始化折线数据源
+        BarDataSet set = new BarDataSet(entryList, "");//初始化折线数据源
         set.setColors(new int[]{Color.parseColor("#8a512da8"),
                 Color.parseColor("#8a9575cd")});//折线颜色
         set.setBarBorderWidth(2f);//
@@ -202,17 +204,17 @@ public class SleepHistoryActivity extends BaseActionActivity {
         return set;
     }
 
-    private void setCircularView(){
-        if (sleepList == null || sleepList.size()== 0) {
+    private void setCircularView() {
+        if (sleepList == null || sleepList.size() == 0) {
             return;
         }
-        int target = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_TARGET_SLEEP,8);
+        int target = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_TARGET_SLEEP, 8);
         String deep = getHour(sleepDeep);
         String light = getHour(sleepLight);
         double dou = TimeUtil.getHourDouble(sleepLight) + TimeUtil.getHourDouble(sleepDeep);
-        String sum = String .format(Locale.US,"%.1f", dou);
-        String state = getString(R.string.hint_sleep_deep)+deep+getString(R.string.hint_sleep_light1) + light;
-        float progress = (sleepSum / (float)(target*60)) * 100;
+        String sum = String.format(Locale.US, "%.1f", dou);
+        String state = getString(R.string.hint_sleep_deep) + deep + getString(R.string.hint_sleep_light1) + light;
+        float progress = (sleepSum / (float) (target * 60)) * 100;
         cvHistorySleep.setText(sum)
                 .setState(state)
                 .setProgress(progress)
@@ -220,31 +222,31 @@ public class SleepHistoryActivity extends BaseActionActivity {
 //        cvHistorySleep.setProgressWithAnimation(progress);
     }
 
-    private void setDataItem(){
-        String deep =  String.format(Locale.US,"%.1f", (sleepDeep/60.0));
-        String light =  String.format(Locale.US,"%.1f", (sleepLight/60.0));
+    private void setDataItem() {
+        String deep = String.format(Locale.US, "%.1f", (sleepDeep / 60.0));
+        String light = String.format(Locale.US, "%.1f", (sleepLight / 60.0));
         double dou = TimeUtil.getHourDouble(sleepLight) + TimeUtil.getHourDouble(sleepDeep);
-        String sum = String.format(Locale.US,"%.1f", dou);
-        diData1.setItemData(getString(R.string.hint_sleep_avg),sum);
-        diData2.setItemData(getString(R.string.hint_sleep_deep_avg),deep);
-        diData3.setItemData(getString(R.string.hint_sleep_light_avg),light);
+        String sum = String.format(Locale.US, "%.1f", dou);
+        diData1.setItemData(getString(R.string.hint_sleep_avg), sum);
+        diData2.setItemData(getString(R.string.hint_sleep_deep_avg), deep);
+        diData3.setItemData(getString(R.string.hint_sleep_light_avg), light);
     }
 
     OnChartValueSelectedListener selectedListener = new OnChartValueSelectedListener() {
         @Override
         public void onValueSelected(Entry e, Highlight h) {
-            if (sleepList != null&&sleepList.size()>=e.getX()) {
-                DayBean dayBean = sleepList.get((int)e.getX()>0?(int)e.getX()-1:0);
+            if (sleepList != null && sleepList.size() >= e.getX()) {
+                DayBean dayBean = sleepList.get((int) e.getX() > 0 ? (int) e.getX() - 1 : 0);
                 int deep = dayBean.getDayMax();
                 int light = dayBean.getDayMin();
-                String strDeep =  String.format(Locale.US,"%.1f", ((double)deep/60));
-                String strLight =  String.format(Locale.US,"%.1f", ((double)light/60));
+                String strDeep = String.format(Locale.US, "%.1f", ((double) deep / 60));
+                String strLight = String.format(Locale.US, "%.1f", ((double) light / 60));
                 double dou = TimeUtil.getHourDouble(deep) + TimeUtil.getHourDouble(light);
-                String sum = String .format(Locale.US,"%.1f", dou);
+                String sum = String.format(Locale.US, "%.1f", dou);
                 String day = dayBean.getDay();
-                diData1.setItemData(day,sum);
-                diData2.setItemData(getString(R.string.hint_sleep_deep),strDeep);
-                diData3.setItemData(getString(R.string.hint_sleep_light),strLight);
+                diData1.setItemData(day, sum);
+                diData2.setItemData(getString(R.string.hint_sleep_deep), strDeep);
+                diData3.setItemData(getString(R.string.hint_sleep_light), strLight);
             }
         }
 
@@ -257,12 +259,12 @@ public class SleepHistoryActivity extends BaseActionActivity {
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onBackgroundEvent(EventMessage event) {
         if (event.getWhat() == EventGlobal.DATA_LOAD_SLEEP_HISTORY) {
-            sleepSum = sleepDeep = sleepLight = sleepCount =0;
+            sleepSum = sleepDeep = sleepLight = sleepCount = 0;
             days = TimeUtil.getMonthToDay(mCalendar);
 //            sleepList = IbandDB.getInstance().getMonthSleep(days);
             sleepList = new ArrayList<>();
             for (String day : days) {//遍历数据 如果有统计数据默认优先拿统计数据
-                DayBean dayBean = IbandDB.getInstance().getMonthSleepStats(day,curMac);
+                DayBean dayBean = IbandDB.getInstance().getMonthSleepStats(day, curMac);
                 if (dayBean.getDayCount() == 0) {
                     dayBean = IbandDB.getInstance().getMonthSleep(day);
                 }
@@ -270,12 +272,12 @@ public class SleepHistoryActivity extends BaseActionActivity {
             }
             for (DayBean dayBean : sleepList) {
                 sleepLight += dayBean.getDayMin();
-                sleepDeep +=dayBean.getDayMax();
-                if (dayBean.getDayCount()!= 0) {
+                sleepDeep += dayBean.getDayMax();
+                if (dayBean.getDayCount() != 0) {
                     sleepCount++;
                 }
             }
-            if (sleepCount!=0) {
+            if (sleepCount != 0) {
                 sleepLight /= sleepCount;
                 sleepDeep /= sleepCount;
             }
@@ -285,11 +287,11 @@ public class SleepHistoryActivity extends BaseActionActivity {
     }
 
     private String getHour(int time) {
-        String str ;
-        if (time<60) {
+        String str;
+        if (time < 60) {
             str = time + getString(R.string.unit_min);
-        }else {
-            str =  String .format(Locale.US,"%.1f", ((double)time/60))+getString(R.string.hint_unit_sleep);
+        } else {
+            str = String.format(Locale.US, "%.1f", ((double) time / 60)) + getString(R.string.hint_unit_sleep);
         }
         return str;
     }
@@ -298,7 +300,8 @@ public class SleepHistoryActivity extends BaseActionActivity {
     public void onMainEvent(EventMessage event) {
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_SLEEP_HISTORY) {
             setCircularView();
-            updateChartView(bcHistorySleep,sleepList);
+            updateChartView(bcHistorySleep, sleepList);
+            tvEmpty.setVisibility(sleepCount == 0?View.VISIBLE:View.GONE);
             setDataItem();
         }
     }

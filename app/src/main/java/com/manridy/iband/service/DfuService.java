@@ -3,7 +3,7 @@ package com.manridy.iband.service;
 import android.app.Activity;
 
 
-import com.manridy.iband.view.OtaActivity;
+import com.manridy.iband.view.main.OtaActivity;
 
 import no.nordicsemi.android.dfu.DfuBaseService;
 

@@ -110,7 +110,6 @@ public class BluetoothLeManager {
      */
     public synchronized boolean startScan(TimeScanCallback callback){
         callback.setBluetoothLeManager(this).notifyScanStated();//开始倒计时暂停
-        mBluetoothAdapter.stopLeScan(callback);
         boolean suc = mBluetoothAdapter.startLeScan(callback);
         if (suc){
             isScaning.set(true);
@@ -382,6 +381,9 @@ public class BluetoothLeManager {
                     gatt.discoverServices();
                     broadcastUpdate(ACTION_GATT_CONNECT,null,gatt.getDevice().getAddress());
                 }else if (newState == BluetoothProfile.STATE_DISCONNECTED ){
+
+                    Log.i(TAG,"BluetoothProfile.STATE_DISCONNECTED");
+
                     final BluetoothLeDevice bluetoothLeDevice = getBluetoothLeDevice(gatt);
                     if (bluetoothLeDevice != null){
                         bluetoothLeDevice.setIsConnect(false);
@@ -397,7 +399,7 @@ public class BluetoothLeManager {
                         }else{
                             broadcastUpdate(ACTION_GATT_DISCONNECTED,new byte[]{(byte) status},gatt.getDevice().getAddress());
                             if (bluetoothLeDevice.isReConnect()) {
-                                Log.d(TAG, "isReConnect() called ");
+                                LogUtil.d(TAG, "isReConnect() called ");
                                 reConnect(bluetoothLeDevice);
                             }
                         }
@@ -553,13 +555,17 @@ public class BluetoothLeManager {
         if (gatt != null) {
             refreshDeviceCache(gatt);
             gatt.close();
+//            gatt.disconnect();
         }
     }
 
     public void closeBluetoothGatt(String mac){
         BluetoothLeDevice leDevice = getBluetoothLeDevice(mac);
+        Log.i("closeBluetoothGatt","leDevice:"+leDevice);
         if (leDevice != null) {
-            closeBluetoothGatt(leDevice.getmBluetoothGatt());
+            BluetoothGatt bluetoothGatt = leDevice.getmBluetoothGatt();
+            Log.i("closeBluetoothGatt","getmBluetoothGatt():"+bluetoothGatt);
+            closeBluetoothGatt(bluetoothGatt);
         }
     }
 

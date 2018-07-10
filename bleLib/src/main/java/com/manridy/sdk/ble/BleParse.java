@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -83,7 +84,6 @@ public class BleParse {
 
     private BleActionListener actionListener;
 
-
     public synchronized static BleParse getInstance() {
         if (instance == null) {
             instance = new BleParse();
@@ -95,9 +95,16 @@ public class BleParse {
         gson = new Gson();
     }
 
+
+
     BleCallback bleCallback;
     //传入数据与结果回调
     public void setBleParseData( byte[] data,BleCallback bleCallback) {
+//        if(this.data!=null){
+//            if(Arrays.equals(this.data,data)){
+//                return;
+//            }
+//        }
         this.data = data;
         this.bleCallback = bleCallback;
         bodyParse();
@@ -799,7 +806,7 @@ public class BleParse {
         byte[] bsSports = new byte[7];
         System.arraycopy(body,5,bsSports,0,bsSports.length);
         String dd = BitUtil.bitToString(bsSports);
-        Log.e(TAG, "sport bits == "+dd);
+        LogUtil.e(TAG, "sport bits == "+dd);
         int step = Integer.parseInt(dd.substring(5,22),2);
         int ka = Integer.parseInt(dd.substring(22,39),2);
         int mi = Integer.parseInt(dd.substring(39,56),2);

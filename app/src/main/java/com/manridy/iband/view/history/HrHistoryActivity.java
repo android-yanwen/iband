@@ -251,6 +251,7 @@ public class HrHistoryActivity extends BaseActionActivity {
                 lineColor = Color.parseColor("#26ef5350");
                 setTitleBar(getString(R.string.title_hr_history), color);
                 setStatusBarColor(color);
+                tvDate.setTextColor(color);
                 break;
             case 1:
                 color = Color.parseColor("#43a047");
@@ -259,6 +260,7 @@ public class HrHistoryActivity extends BaseActionActivity {
                 setStatusBarColor(color);
                 ivIcon.setImageResource(R.mipmap.bloodpressure_ic02);
                 tvUnit.setText("mmHg");
+                tvDate.setTextColor(color);
                 break;
             case 2:
                 color = Color.parseColor("#ff4081");
@@ -267,6 +269,7 @@ public class HrHistoryActivity extends BaseActionActivity {
                 setStatusBarColor(color);
                 ivIcon.setImageResource(R.mipmap.bloodoxygen_ic02);
                 tvUnit.setText("%");
+                tvDate.setTextColor(color);
                 break;
         }
     }

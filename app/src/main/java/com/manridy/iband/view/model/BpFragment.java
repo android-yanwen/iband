@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.gson.Gson;
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
@@ -70,6 +71,8 @@ public class BpFragment extends BaseEventFragment {
     TextView tvStart;
     @BindView(R.id.tv_end)
     TextView tvEnd;
+    @BindView(R.id.tv_empty)
+    TextView tvEmpty;
 
 
     BpModel curBp;
@@ -134,6 +137,8 @@ public class BpFragment extends BaseEventFragment {
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_BP) {
             setCircularView();
             updateBarChartView(bcBp, curBpList);
+            tvEmpty.setVisibility(curBpList.size() == 0?View.VISIBLE:View.GONE);
+
             setDataItem();
         } else if (event.getWhat() == EventGlobal.ACTION_BP_TEST) {
             cvBp.setTitle(getString(R.string.hint_hr_testing)).invaliDate();
@@ -181,7 +186,7 @@ public class BpFragment extends BaseEventFragment {
         xAxis.setTextColor(Color.BLACK);//x轴文字颜色
         xAxis.setTextSize(12f);//x轴文字大小
         xAxis.setDrawGridLines(false);//取消网格线
-        xAxis.setDrawAxisLine(false);//取消x轴底线
+        xAxis.setDrawLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//x轴位置
         xAxis.setDrawLabels(false);
 //        xAxis.setAxisMinimum(1);//设置最小点
@@ -289,7 +294,7 @@ public class BpFragment extends BaseEventFragment {
             if (e.getX()>1 && e.getX()<2) {
                 x = 2 ;
             }
-            Log.d(TAG, "onValueSelected() called with: e = [" + e.getX() + "], h = [" + x + "]");
+            LogUtil.d(TAG, "onValueSelected() called with: e = [" + e.getX() + "], h = [" + x + "]");
             if (curBpList != null && curBpList.size() >= x) {
                 BpModel bpModel = curBpList.get(x > 0 ? x - 1 : 0);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

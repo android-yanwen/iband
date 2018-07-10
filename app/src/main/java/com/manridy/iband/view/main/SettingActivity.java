@@ -1,4 +1,4 @@
-package com.manridy.iband.view;
+package com.manridy.iband.view.main;
 
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.manridy.applib.utils.CheckUtil;
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
@@ -56,6 +56,7 @@ import butterknife.OnClick;
 import static com.manridy.iband.common.AppGlobal.DATA_USER_HEAD;
 
 /**
+ *
  * 设置
  * Created by jarLiao on 17/5/4.
  */
@@ -144,6 +145,12 @@ public class SettingActivity extends BaseActionActivity {
         checkMenuVisibility();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkMenuVisibility();
+    }
+
     private void checkMenuVisibility() {
         try {
             menuLight.setVisibility(View.VISIBLE);
@@ -163,8 +170,13 @@ public class SettingActivity extends BaseActionActivity {
                     if (resultBean.getClear_away().compareTo(deviceFirm) <= 0) {
                         menuClean.setVisibility(View.VISIBLE);
                     }
-                    if (resultBean.getHeartrate_version().compareTo(deviceFirm) <= 0){
-                        menuHrTest.setVisibility(View.VISIBLE);
+                    if ("0".equals(resultBean.getHeartrate_version())){
+                        menuHrTest.setVisibility(View.GONE);
+                        return;
+                    }else{
+                        if((resultBean.getHeartrate_version().compareTo(deviceFirm) <= 0)) {
+                            menuHrTest.setVisibility(View.VISIBLE);
+                        }
                         return;
                     }
                 }
@@ -248,6 +260,7 @@ public class SettingActivity extends BaseActionActivity {
                     showToast(getString(R.string.hint_network_available));
                     return;
                 }
+                connectState = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
                 if (connectState != 1) {
                     showToast(getString(R.string.hintUnConnect));
                     return;
@@ -273,6 +286,7 @@ public class SettingActivity extends BaseActionActivity {
                 startActivity(WristActivity.class);
                 break;
             case R.id.menu_reset:
+                connectState = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
                 if (connectState != 1) {
                     showToast(getString(R.string.hintUnConnect));
                     return;
@@ -280,6 +294,7 @@ public class SettingActivity extends BaseActionActivity {
                 showResetDialog();
                 break;
             case R.id.menu_clean:
+                connectState = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
                 if (connectState != 1) {
                     showToast(getString(R.string.hintUnConnect));
                     return;
@@ -309,21 +324,24 @@ public class SettingActivity extends BaseActionActivity {
             curBatteryNum = (int) SPUtil.get(mContext, AppGlobal.DATA_BATTERY_NUM, -1);
             curBatteryState = (int) SPUtil.get(mContext, AppGlobal.DATA_BATTERY_STATE, -1);
             showBattery();
-            Log.d(TAG, "onEventMainThread() called with: event = [  已连接  ]");
+            LogUtil.d(TAG, "onEventMainThread() called with: event = [  已连接  ]");
         } else if (event.getWhat() == EventGlobal.STATE_DEVICE_DISCONNECT) {
             connectState = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
             tvDeviceConnectState.setText(R.string.hint_state_unconnect);
             tvDeviceBattery.setText("");
-            Log.d(TAG, "onEventMainThread() called with: event = [  未连接  ]");
+            LogUtil.d(TAG, "onEventMainThread() called with: event = [  未连接  ]");
         } else if (event.getWhat() == EventGlobal.STATE_DEVICE_CONNECTING) {
             tvDeviceConnectState.setText(R.string.hint_state_connecting);
             tvDeviceBattery.setText("");
-            Log.d(TAG, "onEventMainThread() called with: event = [  连接中  ]");
+            LogUtil.d(TAG, "onEventMainThread() called with: event = [  连接中  ]");
         } else if (event.getWhat() == EventGlobal.ACTION_BATTERY_NOTIFICATION) {
             connectState = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
             curBatteryNum = (int) SPUtil.get(mContext, AppGlobal.DATA_BATTERY_NUM, -1);
             curBatteryState = (int) SPUtil.get(mContext, AppGlobal.DATA_BATTERY_STATE, -1);
             showBattery();
+        } else if (event.getWhat() == EventGlobal.STATE_DEVICE_SEARCHING){
+            tvDeviceConnectState.setText(R.string.hint_state_unconnect);
+            tvDeviceBattery.setText("");
         }
     }
 
@@ -385,8 +403,6 @@ public class SettingActivity extends BaseActionActivity {
                     @Override
                     public void onSuccess(Object o) {
                         try {
-                            IbandDB.getInstance().resetAppData();
-                            removeSetting();
                         } catch (Exception e) {
                             e.toString();
                         }
@@ -400,7 +416,7 @@ public class SettingActivity extends BaseActionActivity {
 
                     @Override
                     public void onFailure(BleException exception) {
-                        showToast(getString(R.string.hint_reset_failure));
+//                        showToast(getString(R.string.hint_reset_failure));
                     }
                 });
 

@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.gson.Gson;
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
@@ -29,6 +30,7 @@ import com.manridy.iband.ui.CircularView;
 import com.manridy.iband.ui.items.DataItems;
 import com.manridy.iband.view.base.BaseEventFragment;
 import com.manridy.iband.view.history.HrHistoryActivity;
+import com.manridy.iband.view.main.MainActivity;
 import com.manridy.sdk.callback.BleNotifyListener;
 
 import org.greenrobot.eventbus.EventBus;
@@ -65,6 +67,8 @@ public class BoFragment extends BaseEventFragment {
     CircularView cvBo;
     @BindView(R.id.lc_bo)
     LineChart lcBo;
+    @BindView(R.id.tv_empty)
+    TextView tvEmpty;
 
     BoModel curBo;
     List<BoModel> curBoList;
@@ -130,6 +134,7 @@ public class BoFragment extends BaseEventFragment {
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_BO) {
             setCircularView();
             updateChartView(lcBo, curBoList);
+            tvEmpty.setVisibility(curBoList.size() == 0?View.VISIBLE:View.GONE);
             setDataItem();
         } else if (event.getWhat() == EventGlobal.ACTION_BO_TEST) {
             cvBo.setTitle(getString(R.string.hint_hr_testing)).invaliDate();
@@ -177,7 +182,7 @@ public class BoFragment extends BaseEventFragment {
         xAxis.setTextColor(Color.BLACK);//x轴文字颜色
         xAxis.setTextSize(12f);//x轴文字大小
         xAxis.setDrawGridLines(false);//取消网格线
-        xAxis.setDrawAxisLine(false);//取消x轴底线
+        xAxis.setDrawLabels(true);
         xAxis.setDrawLabels(false);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//x轴位置
         xAxis.setAxisMinimum(0);//设置最小点
@@ -276,7 +281,7 @@ public class BoFragment extends BaseEventFragment {
         @Override
         public void onValueSelected(Entry e, Highlight h) {
             int x = e.getX() >0 ? (int) e.getX() : 0;
-            Log.d(TAG, "onValueSelected() called with: e = [" + e.getX() + "], h = [" + x + "]");
+            LogUtil.d(TAG, "onValueSelected() called with: e = [" + e.getX() + "], h = [" + x + "]");
             if (curBoList != null && curBoList.size() >= x) {
                 BoModel boModel = curBoList.get(x > 0 ? x - 1 : 0);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -299,5 +304,4 @@ public class BoFragment extends BaseEventFragment {
             setDataItem();
         }
     };
-
 }

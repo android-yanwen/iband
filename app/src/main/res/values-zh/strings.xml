@@ -338,6 +338,10 @@
     <string name="hint_space">间隔时间</string>
     <string name="hint_notify_more">更多通知</string>
     <string name="hint_lost_nap">防丢免打扰</string>
+    <string name="hint_exporting">正在导出数据，请稍等</string>
+    <string name="hint_searched">搜索完成</string>
+
+
     <string name="hint_lost_nap_content">23:00~06:00不进行提醒</string>
     //--------------------------17/11/24新增App帮助内容-----------------------------
     <string-array name="helpTitleList">
@@ -449,4 +453,6 @@
               2.绑定微信运动后，APP和微信运动可以同时连接设备，互不影响。
         </item>
     </string-array>
+    <string name="hint_empty_data">暂无活动数据</string>
+    <string name="hint_alert_space">提醒间隔</string>
 </resources>

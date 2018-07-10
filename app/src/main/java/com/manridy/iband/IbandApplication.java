@@ -12,6 +12,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.service.AlertService;
@@ -48,8 +49,8 @@ public class IbandApplication extends Application {
         initBleSevrice();//初始化蓝牙服务
         initAlertService();//初始化提醒服务
         initBugly();//初始化bugly
-        initNotificationService();
-        initLangue();
+        initNotificationService();//初始化通知
+        initLangue();//初始化语言
 //        CrashHandler.getInstance().init(intance);
     }
 
@@ -104,7 +105,7 @@ public class IbandApplication extends Application {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(TAG, "onServiceDisconnected() called with: name = [" + name + "]");
+            LogUtil.d(TAG, "onServiceDisconnected() called with: name = [" + name + "]");
         }
     };
 }

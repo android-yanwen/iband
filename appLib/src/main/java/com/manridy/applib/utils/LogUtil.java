@@ -123,4 +123,8 @@ public class LogUtil {
         }
         return true;
     }
+
+    public static void setLogOnOff(boolean isOnOff){
+        LOGV = LOGD = LOGE = LOGW = LOGI = isOnOff;
+    }
 }

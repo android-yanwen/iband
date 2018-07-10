@@ -33,7 +33,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_heart_rate"
-                app:menus_name="心率定时测量"/>
+                app:menus_name="心率定时测量"
+                android:visibility="gone"/>
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_hr_correct"
                 android:layout_width="match_parent"
@@ -45,7 +46,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_restore"
-                app:menus_name="恢复出厂"/>
+                app:menus_name="恢复出厂"
+                android:visibility="gone"/>
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_db"
                 android:layout_width="match_parent"

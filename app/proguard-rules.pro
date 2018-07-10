@@ -19,3 +19,4 @@
 -keep public class com.tencent.bugly.**{*;}
 -keep class android.support.**{*;}
 -keep class no.nordicsemi.android.dfu.** { *; }
+-keep class com.manridy.iband

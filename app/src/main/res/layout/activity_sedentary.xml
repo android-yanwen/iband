@@ -53,7 +53,8 @@
                 android:layout_height="wrap_content"
                 app:alert_names="@string/hint_alert_sedentary_time_start"
                 app:alert_text="09:00"
-                app:alert_img="@mipmap/ic_chevron_right"/>
+                app:alert_img="@mipmap/ic_chevron_right"
+                android:visibility="gone"/>
 
             <com.manridy.iband.ui.items.AlertItems
                 android:id="@+id/ai_end_time"
@@ -61,7 +62,8 @@
                 android:layout_height="wrap_content"
                 app:alert_names="@string/hint_alert_sedentary_time_end"
                 app:alert_text="21:00"
-                app:alert_img="@mipmap/ic_chevron_right"/>
+                app:alert_img="@mipmap/ic_chevron_right"
+                android:visibility="gone"/>
 
             <com.manridy.iband.ui.items.AlertBigItems
                 android:id="@+id/ai_nap"
@@ -70,6 +72,39 @@
                 app:big_name="@string/hint_alert_sedentary_title_nap"
                 app:big_hint="@string/hint_alert_sedentary_nap"
                 app:big_onoff="false"/>
+
+            <!--<com.manridy.iband.ui.items.AlertItems-->
+                <!--android:id="@+id/ai_nap_onoff"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:alert_names="免打扰时间"-->
+                <!--app:alert_img="@mipmap/ic_off"/>-->
+
+            <!--<com.manridy.iband.ui.items.AlertItems-->
+                <!--android:id="@+id/ai_nap_start_time"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:alert_names="@string/hint_alert_sedentary_time_start"-->
+                <!--app:alert_text="09:00"-->
+                <!--app:alert_img="@mipmap/ic_chevron_right"-->
+                <!--android:visibility="gone"/>-->
+
+            <!--<com.manridy.iband.ui.items.AlertItems-->
+                <!--android:id="@+id/ai_nap_end_time"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:alert_names="@string/hint_alert_sedentary_time_end"-->
+                <!--app:alert_text="21:00"-->
+                <!--app:alert_img="@mipmap/ic_chevron_right"-->
+                <!--android:visibility="gone"/>-->
+
+            <com.manridy.iband.ui.items.AlertItems
+                android:id="@+id/ai_space"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:alert_names="@string/hint_alert_space"
+                app:alert_text="30分钟"
+                app:alert_img="@mipmap/ic_chevron_right"/>
         </LinearLayout>
     </ScrollView>
 

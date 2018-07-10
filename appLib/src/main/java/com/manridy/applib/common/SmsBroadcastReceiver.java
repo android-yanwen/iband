@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
+import com.manridy.applib.utils.LogUtil;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,7 +51,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                 phone = sms.getDisplayOriginatingAddress();
                 content.append(sms.getDisplayMessageBody());
             }
-            Log.e(TAG, "phone:" + phone + "\ncontent:" + content.toString());
+            LogUtil.e(TAG, "phone:" + phone + "\ncontent:" + content.toString());
             checkCodeAndSend(content.toString());//得到内容验证码
         }
     }
@@ -59,11 +61,11 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
         Matcher matcher = pattern.matcher(content);
         if (matcher.find()){
             String code = matcher.group(0);
-            Log.e(TAG, "短信中找到了符合规则的验证码:" + code);
+            LogUtil.e(TAG, "短信中找到了符合规则的验证码:" + code);
             handler.obtainMessage(FIND_PHONE_CODE, code).sendToTarget();
-            Log.e(TAG, "广播接收器接收到短信的时间:" + System.currentTimeMillis());
+            LogUtil.e(TAG, "广播接收器接收到短信的时间:" + System.currentTimeMillis());
         } else {
-            Log.e(TAG, "短信中没有找到符合规则的验证码");
+            LogUtil.e(TAG, "短信中没有找到符合规则的验证码");
         }
     }
 }

@@ -1,17 +1,16 @@
-package com.manridy.iband.view;
+package com.manridy.iband.view.main;
 
 import android.Manifest;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
 import com.manridy.applib.base.BaseActivity;
 import com.manridy.applib.common.AppManage;
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.R;
 import com.manridy.iband.common.AppGlobal;
@@ -89,7 +88,7 @@ public class StartActivity extends BaseActivity {
     PermissionCallback permissionCallback =  new PermissionCallback() {
         @Override
         public void onClose() {//未授权
-            Log.i(TAG, "onClose");
+            LogUtil.i(TAG, "onClose");
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -112,12 +111,12 @@ public class StartActivity extends BaseActivity {
 
         @Override
         public void onDeny(String permisson, int position) {
-            Log.i(TAG, "onDeny");
+            LogUtil.i(TAG, "onDeny");
         }
 
         @Override
         public void onGuarantee(String permisson, int position) {
-            Log.i(TAG, "onGuarantee");
+            LogUtil.i(TAG, "onGuarantee");
         }
     };
 

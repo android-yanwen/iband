@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+import android.support.v4.app.NotificationManagerCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
@@ -63,7 +65,7 @@ public class AppNotificationListenerService extends NotificationListenerService 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "onCreate() called");
+        LogUtil.d(TAG, "onCreate() called");
     }
 
     /*----------------- 静态方法 -----------------*/
@@ -118,9 +120,11 @@ public class AppNotificationListenerService extends NotificationListenerService 
     }
 
     private synchronized void sendAppAlert(StatusBarNotification sbn) {
-        cmdFirst = true;
         String packageName = sbn.getPackageName();
         Notification notification = sbn.getNotification();
+        if(!isHandleNotification(packageName)){
+            return;
+        }
         String content = String.valueOf(notification.tickerText);
 
         //通过以下方式可以获取Notification的详细信息
@@ -129,15 +133,15 @@ public class AppNotificationListenerService extends NotificationListenerService 
             String notificationTitle = extras.getString(Notification.EXTRA_TITLE);
             CharSequence notificationText = extras.getCharSequence(Notification.EXTRA_TEXT);
             CharSequence notificationSubText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT);
-            Log.i("SevenNLS", "notificationTitle:"+notificationTitle);
-            Log.i("SevenNLS", "notificationText:"+notificationText);
-            Log.i("SevenNLS", "notificationSubText:"+notificationSubText);
+            LogUtil.i("SevenNLS", "notificationTitle:"+notificationTitle);
+            LogUtil.i("SevenNLS", "notificationText:"+notificationText);
+            LogUtil.i("SevenNLS", "notificationSubText:"+notificationSubText);
             if (packageName.equals(APP_ID_TWITTER) || isSkypePackage(packageName)){
                 content = notificationTitle +":"+ notificationText;
             }
         }
-        Log.i(TAG,"sbn"+ sbn.toString());
-        Log.i(TAG,"sbn"+  content);
+        LogUtil.i(TAG,"sbn"+ sbn.toString());
+        LogUtil.i(TAG,"sbn"+  content);
         boolean appOnOff = (boolean) SPUtil.get(this, AppGlobal.DATA_ALERT_APP,false);
         if (appOnOff && !content.equals("null")) {
             List<AppModel> appList = IbandDB.getInstance().getAppList();
@@ -174,6 +178,7 @@ public class AppNotificationListenerService extends NotificationListenerService 
                 appAlert = APP_ID_INS;
             }
             if (appAlert != -1) {
+                cmdFirst = true;
                 infoId = infoId > 63 ? 1 : infoId++;
                 IbandApplication.getIntance().service.watch.sendCmd(BleCmd.setAppAlertName(infoId,appAlert), AppleCallback);
             }
@@ -198,13 +203,13 @@ public class AppNotificationListenerService extends NotificationListenerService 
             if (cmdList.size()>0 && appAlert!= -1) {
                 IbandApplication.getIntance().service.watch.sendCmd(BleCmd.setAppAlertContext(infoId,appAlert,cmdList.get(0)), AppleCallback);
             }else {
-                Log.d(TAG, "app提醒发送完成");
+                LogUtil.d(TAG, "app提醒发送完成");
             }
         }
 
         @Override
         public void onFailure(BleException exception) {
-            Log.d(TAG, "onFailure() called with: exception = [" + exception.toString() + "]");
+            LogUtil.d(TAG, "onFailure() called with: exception = [" + exception.toString() + "]");
         }
     };
 
@@ -228,5 +233,27 @@ public class AppNotificationListenerService extends NotificationListenerService 
         return bytes;
     }
 
+
+    public boolean isHandleNotification(String packageName){
+        boolean flag = false;
+        if (isQQPackage(packageName)) {
+            flag = true;
+        }else if (packageName.equals(PAGE_NAME_WX)){
+            flag = true;
+        }else if (packageName.equals(PAGE_NAME_WHATSAPP)){
+            flag = true;
+        }else if (packageName.equals(PAGE_NAME_FACEBOOK)){
+            flag = true;
+        }else if (packageName.equals(PAGE_NAME_LINE)) {
+            flag = true;
+        }else if (packageName.equals(PAGE_NAME_TWITTER)) {
+            flag = true;
+        }else if (isSkypePackage(packageName)) {
+            flag = true;
+        }else if (packageName.equals(PAGE_NAME_INS)) {
+            flag = true;
+        }
+        return flag;
+    }
 
 }

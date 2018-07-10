@@ -67,6 +67,9 @@ public class DeviceList {
         private String heartrate_version;
         private String heartrate_isopen;
         private String heartrate_interval;
+        private String need_update;
+        private String support_software;
+        private String need_autoUpdate;
 
         public String getDevice_name() {
             return device_name;
@@ -202,6 +205,31 @@ public class DeviceList {
 
         public void setHeartrate_interval(String heartrate_interval) {
             this.heartrate_interval = heartrate_interval;
+        }
+
+
+        public String getSupport_software() {
+            return support_software;
+        }
+
+        public void setSupport_software(String support_software) {
+            this.support_software = support_software;
+        }
+
+        public String getNeed_update() {
+            return need_update;
+        }
+
+        public void setNeed_update(String need_update) {
+            this.need_update = need_update;
+        }
+
+        public String getNeed_autoUpdate() {
+            return need_autoUpdate;
+        }
+
+        public void setNeed_autoUpdate(String need_autoUpdate) {
+            this.need_autoUpdate = need_autoUpdate;
         }
     }
 }

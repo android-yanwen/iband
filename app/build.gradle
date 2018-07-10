@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.0'
     defaultConfig {
         applicationId "com.manridy.iband"
         minSdkVersion 18
-        targetSdkVersion 24
-        versionCode 65
-        versionName "1.8.7"
+        targetSdkVersion 26
+        versionCode 85
+        versionName "1.9.19"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -37,10 +37,16 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-//        debug {
-//            signingConfig signingConfigs.release
-//        }
+        debug {
+            pseudoLocalesEnabled true
+        }
     }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
 }
 
 apply plugin: 'com.neenbedankt.android-apt'//增加这一句
@@ -51,8 +57,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:appcompat-v7:26.0.0'
+    compile 'com.android.support:design:26.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     compile project(':appLib')
     compile project(':bleLib')
@@ -66,8 +72,8 @@ dependencies {
     //数据库
     compile 'cn.yipianfengye.android:zxing-library:2.2'
     //二维码
-    apt 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'com.jakewharton:butterknife:8.4.0'
+    apt 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.jakewharton:butterknife:8.5.1'
     //view注释
     compile 'me.weyye.hipermission:library:1.0.7'
     //权限
@@ -97,4 +103,9 @@ dependencies {
     //    compile 'com.amap.api:navi-3dmap:latest.integration'
     //    compile 'com.amap.api:search:latest.integration'
     compile files('libs/jxl.jar')
+}
+
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
 }

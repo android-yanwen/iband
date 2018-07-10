@@ -15,7 +15,6 @@ import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -23,9 +22,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.IbandApplication;
-import com.manridy.iband.OnResultCallBack;
+import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.R;
 import com.manridy.iband.adapter.WechatAdapter;
 import com.manridy.iband.bean.WechatBean;
@@ -208,7 +208,7 @@ public class WechatActivity extends BaseActionActivity {
                     if (result) {
                         try {
                             JSONObject jsonObject = new JSONObject(o.toString());
-                            Log.d(TAG, "onResult() called with: result = [" + result + "], o = [" + o + "]");
+                            LogUtil.d(TAG, "onResult() called with: result = [" + result + "], o = [" + o + "]");
                             final int count = jsonObject.getInt("count");
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -241,7 +241,7 @@ public class WechatActivity extends BaseActionActivity {
                         });
                     }
 
-                    Log.d(TAG, "wechatQuery() called with: result = [" + result + "], o = [" + o == null ? "null" : o.toString() + "]");
+                    LogUtil.d(TAG, "wechatQuery() called with: result = [" + result + "], o = [" + o == null ? "null" : o.toString() + "]");
                 }
             });
         } else if (event.getWhat() == EventGlobal.ACTION_WECHAT_REGIST) {
@@ -282,7 +282,7 @@ public class WechatActivity extends BaseActionActivity {
                             }
                         }
                     });
-                    Log.d(TAG, "wechatRegister() called with: result = [" + result + "], o = [" + o == null ? "null" : o.toString() + "]");
+                    LogUtil.d(TAG, "wechatRegister() called with: result = [" + result + "], o = [" + o == null ? "null" : o.toString() + "]");
                 }
             });
         }

@@ -1,5 +1,6 @@
 package com.manridy.iband.bean;
 
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.TimeUtil;
 
 import org.litepal.crud.DataSupport;

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,8 @@ public class SleepFragment extends BaseEventFragment {
     CircularView cvSleep;
     @BindView(R.id.chart_sleep)
     ChartView chartSleep;
+    @BindView(R.id.tv_empty)
+    TextView tvEmpty;
 
     List<SleepModel> curSleeps;
     int[] colors, selectColors;
@@ -136,6 +139,7 @@ public class SleepFragment extends BaseEventFragment {
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_SLEEP) {
             setCircularView();
             chartSleep.setChartData(colors, selectColors, curSleeps).invaliDate();
+            tvEmpty.setVisibility(curSleeps.size() == 0?View.VISIBLE:View.GONE);
             setDataItem();
         } else if (event.getWhat() == EventGlobal.STATE_DEVICE_UNBIND) {
             EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_SLEEP));

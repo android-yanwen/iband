@@ -88,7 +88,7 @@ public class ClockItems extends RelativeLayout {
         if (curLocale.getLanguage().equals(Locale.ENGLISH) || curLocale.toString().equals("en_US")) {
             tvHint.setText(getContext().getString(R.string.hint_time_after)+" "+ formatTime(ms));
         }else {
-            tvHint.setText(formatTime(ms)+getContext().getString(R.string.hint_time_after));
+            tvHint.setText(formatTime(ms)+" "+getContext().getString(R.string.hint_time_after));
         }
         return this;
     }
@@ -116,10 +116,10 @@ public class ClockItems extends RelativeLayout {
             sb.append(day+"天");
         }
         if(hour > 0) {
-            sb.append(hour+mContext.getString(R.string.hint_unit_sleep));
+            sb.append(hour+mContext.getString(R.string.hint_unit_sleep)+" ");
         }
         if(minute > 0) {
-            sb.append(minute+mContext.getString(R.string.unit_min));
+            sb.append(minute+mContext.getString(R.string.unit_min)+" ");
         }
         if(second > 0) {
             sb.append(second+"秒");

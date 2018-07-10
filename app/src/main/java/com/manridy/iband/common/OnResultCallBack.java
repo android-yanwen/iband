@@ -1,4 +1,4 @@
-package com.manridy.iband;
+package com.manridy.iband.common;
 
 /**
  * 结果回调

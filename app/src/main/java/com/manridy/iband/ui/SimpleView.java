@@ -16,7 +16,7 @@ import com.manridy.applib.common.AppManage;
 import com.manridy.iband.R;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
-import com.manridy.iband.view.DeviceActivity;
+import com.manridy.iband.view.main.DeviceActivity;
 
 import org.greenrobot.eventbus.EventBus;
 

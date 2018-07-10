@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/appLib/appLib.iml" filepath="$PROJECT_DIR$/appLib/appLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/bleLib/bleLib.iml" filepath="$PROJECT_DIR$/bleLib/bleLib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/iwaer New.iml" filepath="$PROJECT_DIR$/iwaer New.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iband.iml" filepath="$PROJECT_DIR$/iband.iml" />
     </modules>
   </component>
 </project>

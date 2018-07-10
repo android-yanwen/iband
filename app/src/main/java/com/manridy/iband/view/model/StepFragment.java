@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -27,7 +28,6 @@ import com.google.gson.JsonParseException;
 import com.manridy.applib.utils.CheckUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.TimeUtil;
-import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.SyncData;
@@ -37,9 +37,8 @@ import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.CircularView;
 import com.manridy.iband.ui.items.DataItems;
-import com.manridy.iband.view.LocationActivity;
-import com.manridy.iband.view.SportActivity;
-import com.manridy.iband.view.TrainActivity;
+import com.manridy.iband.view.main.SportActivity;
+import com.manridy.iband.view.main.TrainActivity;
 import com.manridy.iband.view.base.BaseEventFragment;
 import com.manridy.iband.view.history.StepHistoryActivity;
 import com.manridy.sdk.Watch;
@@ -83,6 +82,8 @@ public class StepFragment extends BaseEventFragment {
     BarChart bcStep;
     @BindView(R.id.iv_location)
     ImageView ivLocation;
+    @BindView(R.id.tv_empty)
+    TextView tvEmpty;
 
     StepModel curStep;
     List<StepModel> curSectionSteps;
@@ -135,6 +136,11 @@ public class StepFragment extends BaseEventFragment {
         EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_STEP));
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     @OnClick({ R.id.iv_menu,R.id.iv_history,R.id.iv_location})
     public void onClick(View view) {
         if (isFastDoubleClick()) {
@@ -159,6 +165,7 @@ public class StepFragment extends BaseEventFragment {
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_STEP) {
             setCircularView();
             updateBarChartView(bcStep,curSectionSteps);
+            tvEmpty.setVisibility(curSectionSteps.size() == 0?View.VISIBLE:View.GONE);
             setDataItem();
         }
     }
@@ -166,12 +173,15 @@ public class StepFragment extends BaseEventFragment {
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onBackgroundEvent(EventMessage event){
         if (event.getWhat() == EventGlobal.DATA_LOAD_STEP) {
+            Log.i("StepFragment","REFRESH_VIEW_ALL");
             curStep = IbandDB.getInstance().getCurStep();
             curSectionSteps = IbandDB.getInstance().getCurSectionStep();
             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_STEP));
         }else if (event.getWhat() == EventGlobal.REFRESH_VIEW_ALL){
+            Log.i("StepFragment","REFRESH_VIEW_ALL");
             EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_STEP));
         }else if (event.getWhat() == EventGlobal.DATA_CHANGE_UNIT){
+            Log.i("StepFragment","DATA_CHANGE_UNIT");
             unit = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_UNIT,0);
             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_STEP));
         }
@@ -203,9 +213,11 @@ public class StepFragment extends BaseEventFragment {
         xAxis.setTextColor(Color.BLACK);//x轴文字颜色
         xAxis.setTextSize(12f);//x轴文字大小
         xAxis.setDrawGridLines(false);//取消网格线
-        xAxis.setDrawAxisLine(false);//取消x轴底线
+        xAxis.setDrawAxisLine(true);//取消x轴底线
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//x轴位置
         xAxis.setDrawLabels(false);
+
+
 //        xAxis.setAxisMinimum(1);//设置最小点
 //        xAxis.setCenterAxisLabels(true);
 //        xAxis.setLabelCount(7, false);
@@ -219,6 +231,7 @@ public class StepFragment extends BaseEventFragment {
         yAxis.setDrawGridLines(false);//设置网格线
         yAxis.setDrawZeroLine(false);
         yAxis.setEnabled(true);//显示Y轴
+
         chart.getAxisRight().setEnabled(false);//不显示右侧
     }
 
@@ -335,7 +348,12 @@ public class StepFragment extends BaseEventFragment {
     };
 
 
-    public String miToKm(int mi,int unit){
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    public String miToKm(int mi, int unit){
         if (unit == 1) {
             return String .format(Locale.US,"%.1f",CheckUtil.kmToMi(mi/1000.0));
         }

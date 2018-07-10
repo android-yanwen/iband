@@ -13,6 +13,7 @@ import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.R;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.view.base.BaseActionActivity;
+import com.manridy.sdk.Watch;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.exception.BleException;
 
@@ -49,8 +50,8 @@ public class TargetActivity extends BaseActionActivity {
         curSleep = (int) SPUtil.get(mContext,AppGlobal.DATA_SETTING_TARGET_SLEEP,8);
         setUnderline(tvStep);
         setUnderline(tvSleep);
-        tvStep.setText(curStep+ getString(R.string.hint_unit_step));
-        tvSleep.setText(curSleep+getString(R.string.hint_unit_sleep));
+        tvStep.setText(curStep+" " +getString(R.string.hint_unit_step));
+        tvSleep.setText(curSleep+" "+getString(R.string.hint_unit_sleep));
     }
 
     @Override
@@ -59,7 +60,7 @@ public class TargetActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 showProgress( getString(R.string.hint_saveing));
-                ibandApplication.service.watch.setSportTarget(curStep, new BleCallback() {
+                Watch.getInstance().setSportTarget(curStep, new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
                         SPUtil.put(mContext, AppGlobal.DATA_SETTING_TARGET_STEP,curStep);
@@ -100,7 +101,7 @@ public class TargetActivity extends BaseActionActivity {
                     @Override
                     public void getNum(String num) {
                         curStep = Integer.valueOf(num);
-                        tvStep.setText(num+getString(R.string.hint_unit_step));
+                        tvStep.setText(num+" "+getString(R.string.hint_unit_step));
                         isChange = true;
                     }
                 }).show();
@@ -110,7 +111,7 @@ public class TargetActivity extends BaseActionActivity {
                     @Override
                     public void getNum(String num) {
                         curSleep = Integer.valueOf(num);
-                        tvSleep.setText(num+getString(R.string.hint_unit_sleep));
+                        tvSleep.setText(num+" "+getString(R.string.hint_unit_sleep));
                         isChange = true;
                     }
                 }).show();

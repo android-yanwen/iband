@@ -1,4 +1,4 @@
-package com.manridy.iband.view;
+package com.manridy.iband.view.main;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.jaygoo.widget.RangeSeekbar;
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.R;
 import com.manridy.iband.common.AppGlobal;
@@ -63,7 +64,7 @@ public class HrCorrectActivity extends BaseActionActivity implements View.OnClic
         rsLight.setOnRangeChangedListener(new RangeSeekbar.OnRangeChangedListener() {
             @Override
             public void onRangeChanged(RangeSeekbar rangeSeekbar, float v, float v1, boolean b) {
-                Log.d(TAG, "onRangeChanged() called with: rangeSeekbar = [" + rangeSeekbar + "], v = [" + v + "], v1 = [" + v1 + "], b = [" + b + "]");
+                LogUtil.d(TAG, "onRangeChanged() called with: rangeSeekbar = [" + rangeSeekbar + "], v = [" + v + "], v1 = [" + v1 + "], b = [" + b + "]");
                 if (b) {
                     curLight = (int) v;
                     isChange = true;
@@ -95,7 +96,7 @@ public class HrCorrectActivity extends BaseActionActivity implements View.OnClic
 
                     }
                 });
-                Log.d(TAG, "onClick() called with: correctNum = [" + correctNum + "]");
+                LogUtil.d(TAG, "onClick() called with: correctNum = [" + correctNum + "]");
 
             }
         });

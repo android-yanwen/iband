@@ -1,9 +1,12 @@
 package com.manridy.iband;
 
+import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
+import com.manridy.applib.utils.ToastUtil;
 import com.manridy.iband.bean.ClockModel;
 import com.manridy.iband.bean.SedentaryModel;
 import com.manridy.iband.bean.UserModel;
@@ -33,8 +36,8 @@ public class SyncAlert {
 
     private Context mContext;
     private Watch watch;
-    private int syncIndex;
-    private int errorNum;
+    private int syncIndex;//同步序号
+    private int errorNum;//错误计数
     private OnSyncAlertListener syncAlertListener;
     private static SyncAlert instance;
 
@@ -81,9 +84,11 @@ public class SyncAlert {
                     syncAlertListener.onResult(false);
                 }
             }
-            Log.d("syncAlert", "onFailure() called with: errorNum = [" + errorNum + "]");
+            LogUtil.d("syncAlert", "onFailure() called with: errorNum = [" + errorNum + "]");
         }
     };
+
+    public boolean isGetCallbackSetTimingHrTest=false;
 
     private synchronized void next(){
         if (syncIndex < 12) {
@@ -92,10 +97,13 @@ public class SyncAlert {
         }else {
             if (syncAlertListener != null) {
                 syncAlertListener.onResult(true);
-                Log.d("syncAlert", "next() called onResult true");
+                LogUtil.d("syncAlert", "next() called onResult true");
+                if(isGetCallbackSetTimingHrTest){
+                    setTimingHrTest();
+                }
             }
         }
-        Log.d("syncAlert", "next() called syncIndex == "+syncIndex);
+        LogUtil.d("syncAlert", "next() called syncIndex == "+syncIndex);
     }
 
     private void send(){
@@ -150,12 +158,21 @@ public class SyncAlert {
                     sedentaryModel = new SedentaryModel(false, false, "09:00", "21:00");
                 }
                 Sedentary sedentary = new Sedentary(sedentaryModel.isSedentaryOnOff(), sedentaryModel.isSedentaryNap()
-                        , sedentaryModel.getStartTime(), sedentaryModel.getEndTime());
+                        , sedentaryModel.getStartTime(), sedentaryModel.getEndTime(),sedentaryModel.getNapStartTime(),
+                        sedentaryModel.getNapEndTime(),sedentaryModel.getSpace());
                 watch.setSedentaryAlert(sedentary,bleCallback);
                 break;
             case 7:
                 boolean lostOn = (boolean) SPUtil.get(mContext,AppGlobal.DATA_ALERT_LOST,false);
-                watch.setLostAlert(lostOn,20,bleCallback);
+                String deviceName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,"");
+                int time = 20;
+                String devices[]={"F07","F07A","F10","F10A"};
+                for(int i=0;i<devices.length;i++){
+                    if(deviceName!=null&&devices[i].equals(deviceName.trim())){
+                        time = 120;
+                    }
+                }
+                    watch.setLostAlert(lostOn,time,bleCallback);
                 break;
             case 8:
                 List<ClockModel> clockList = IbandDB.getInstance().getClock();
@@ -186,8 +203,8 @@ public class SyncAlert {
             case 12:
                boolean onOff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_WRIST, true);
                 watch.sendCmd(BleCmd.setWristOnOff(onOff ? 1 : 0),bleCallback);
+                Log.i("SetTimingHrTest","1");
                 break;
-
         }
     }
 
@@ -235,4 +252,72 @@ public class SyncAlert {
         }
         return result;
     }
+
+
+    public void setTimingHrTest(){
+        watch.sendCmd(BleCmd.setTimingHrTest(true, 30),new BleCallback(){
+            @Override
+            public void onFailure(BleException exception) {
+                    SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,true);
+                    SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,30);
+                    Log.i("SetTimingHrTest","SetTimingHrTest:onFailure");
+                watch.sendCmd(BleCmd.setTimingHrTest(true, 30),new BleCallback(){
+                    @Override
+                    public void onFailure(BleException exception) {
+                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,true);
+                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,30);
+                        Log.i("SetTimingHrTest","SetTimingHrTest:onFailure");
+
+                    }
+                    @Override
+                    public void onSuccess(Object o) {
+                        isGetCallbackSetTimingHrTest = false;
+//                ToastUtil.showToast("设置心率定时测量失败，请手动设置！");
+                        Log.i("SetTimingHrTest","SetTimingHrTest:onSuccess");
+                    }
+                });
+            }
+            @Override
+            public void onSuccess(Object o) {
+                    isGetCallbackSetTimingHrTest = false;
+//                ToastUtil.showToast("设置心率定时测量失败，请手动设置！");
+                    Log.i("SetTimingHrTest","SetTimingHrTest:onSuccess");
+            }
+        });
+    }
+//    boolean isGetCallbackSetTimingHrTest = false;
+//
+//    Runnable SetTimingHrTest = new Runnable() {
+//        @Override
+//        public void run() {
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if(!isGetCallbackSetTimingHrTest){
+//                        showToast( "设置心率定时测量失败，请手动设置！");
+//                        Log.i(TAG,"SetTimingHrTest:timeout");
+//                    }
+//                }
+//            },10*1000 );
+//            Log.i(TAG,"SetTimingHrTest:sendCmd");
+//            ibandApplication.service.watch.sendCmd(BleCmd.setTimingHrTest(true, 30), new BleCallback() {
+//                @Override
+//                public void onSuccess(Object o) {
+//                    isGetCallbackSetTimingHrTest = true;
+//                    SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,true);
+//                    SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,30);
+//                    Log.i(TAG,"SetTimingHrTest:onSuccess");
+//                }
+//
+//                @Override
+//                public void onFailure(BleException exception) {
+//                    isGetCallbackSetTimingHrTest = true;
+//                    showToast( "设置心率定时测量失败，请手动设置！");
+//                    Log.i(TAG,"SetTimingHrTest:onFailure");
+//                }
+//            });
+//        }
+//    };
+
+
 }

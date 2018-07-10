@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -19,16 +18,10 @@ import com.manridy.applib.common.AppManage;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.R;
 import com.manridy.iband.adapter.LangueAdapter;
-import com.manridy.iband.adapter.ViewAdapter;
-import com.manridy.iband.bean.ViewModel;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.OnItemClickListener;
-import com.manridy.iband.ui.items.UnitItems;
-import com.manridy.iband.view.MainActivity;
+import com.manridy.iband.view.main.MainActivity;
 import com.manridy.iband.view.base.BaseActionActivity;
-import com.manridy.sdk.ble.BleCmd;
-import com.manridy.sdk.callback.BleCallback;
-import com.manridy.sdk.exception.BleException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +29,6 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * 遥控拍照页面

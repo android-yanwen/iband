@@ -1,4 +1,4 @@
-package com.manridy.iband.view;
+package com.manridy.iband.view.main;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -66,6 +66,8 @@ public class TrainActivity extends BaseActionActivity {
     RecyclerView rvTrain;
     @BindView(R.id.bc_run)
     BarChart bcRun;
+    @BindView(R.id.tv_empty)
+    TextView tvEmpty;
 
     List<StepModel> curRunList = new ArrayList<>();
     TrainAdapter trainAdapter;
@@ -73,6 +75,8 @@ public class TrainActivity extends BaseActionActivity {
     SimpleDateFormat hourFormat;
     SimpleDateFormat dayFormat;
     Calendar mCalendar;
+
+
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_train);
@@ -86,10 +90,9 @@ public class TrainActivity extends BaseActionActivity {
         dayFormat = new SimpleDateFormat("yyyy-MM-dd");
         mCalendar = Calendar.getInstance();
         setTitleBar(getString(R.string.hint_tarin), Color.parseColor("#009688"));
-        setStatusBarColor( Color.parseColor("#009688"));
-        setTitleAndMenu(getString(R.string.hint_tarin),R.mipmap.train_share);
+        setStatusBarColor(Color.parseColor("#009688"));
         trainAdapter = new TrainAdapter(curRunList);
-        rvTrain.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
+        rvTrain.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         rvTrain.setAdapter(trainAdapter);
         initChartView(bcRun);
         initChartAxis(bcRun);
@@ -104,21 +107,22 @@ public class TrainActivity extends BaseActionActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMainEvent(EventMessage event){
+    public void onMainEvent(EventMessage event) {
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_RUN) {
             List<StepModel> RunList = new ArrayList<>(curRunList);
             Collections.reverse(RunList); // 倒序排列
             trainAdapter.setItemList(RunList);
-            updateChartView(bcRun,curRunList);
+            tvEmpty.setVisibility(RunList.size() == 0?View.VISIBLE:View.GONE);
+            updateChartView(bcRun, curRunList);
         }
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onBackgroundEvent(EventMessage event){
+    public void onBackgroundEvent(EventMessage event) {
         if (event.getWhat() == EventGlobal.DATA_LOAD_RUN) {
             curRunList = IbandDB.getInstance().getCurRunStep(day);
             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_RUN));
-        }else if (event.getWhat() == EventGlobal.REFRESH_VIEW_ALL){
+        } else if (event.getWhat() == EventGlobal.REFRESH_VIEW_ALL) {
             EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_RUN));
         }
     }
@@ -140,10 +144,10 @@ public class TrainActivity extends BaseActionActivity {
             public void onClick(View v) {
                 mCalendar.add(Calendar.DAY_OF_MONTH, +1);//取当前日期的前一天.
                 day = dayFormat.format(mCalendar.getTime());
-                if (!TimeUtil.compareNowYMD(mCalendar.getTime())){
+                if (!TimeUtil.compareNowYMD(mCalendar.getTime())) {
                     tvTime.setText(day);
                     EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_RUN));
-                }else {
+                } else {
                     mCalendar.add(Calendar.DAY_OF_MONTH, -1);
                     showToast(getString(R.string.hint_day_max));
                 }
@@ -154,10 +158,10 @@ public class TrainActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 int[] times = TimeUtil.getYMDtoInt(day);
-                new DateDialog(mContext,times ,getString(R.string.hint_select_day), new DateDialog.DateDialogListener() {
+                new DateDialog(mContext, times, getString(R.string.hint_select_day), new DateDialog.DateDialogListener() {
                     @Override
                     public void getTime(int year, int monthOfYear, int dayOfMonth) {
-                        String time = year +"-"+TimeUtil.zero(monthOfYear+1)+"-"+TimeUtil.zero(dayOfMonth);
+                        String time = year + "-" + TimeUtil.zero(monthOfYear + 1) + "-" + TimeUtil.zero(dayOfMonth);
                         mCalendar.set(year, monthOfYear, dayOfMonth);
                         tvTime.setText(time);
                         day = time;
@@ -167,7 +171,6 @@ public class TrainActivity extends BaseActionActivity {
             }
         });
     }
-
 
     private void initChartView(BarChart chart) {
         chart.getDescription().setEnabled(false);//描述设置
@@ -203,7 +206,7 @@ public class TrainActivity extends BaseActionActivity {
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return String.valueOf((int)value);
+                return String.valueOf((int) value);
             }
 
         });
@@ -221,7 +224,7 @@ public class TrainActivity extends BaseActionActivity {
         chart.getAxisRight().setEnabled(false);//不显示右侧
     }
 
-    private void updateChartView(BarChart chart,List<StepModel> dayData){
+    private void updateChartView(BarChart chart, List<StepModel> dayData) {
         if (chart.getData() != null) {
             chart.clearValues();
         }
@@ -232,16 +235,16 @@ public class TrainActivity extends BaseActionActivity {
         BarDataSet set = getInitChartDataSet();
         int[] colors = new int[dayData.size()];
         for (int i = 0; i < dayData.size(); i++) {
-            BarEntry barEntry = new BarEntry(i+1,new float[]{dayData.get(i).getStepCalorie()});
+            BarEntry barEntry = new BarEntry(i + 1, new float[]{dayData.get(i).getStepCalorie()});
             if (dayData.get(i).getSportMode() == 0) {
-                colors[i] =Color.parseColor("#ab00d6f9");
-            }else if (dayData.get(i).getSportMode() == 1) {
+                colors[i] = Color.parseColor("#ab00d6f9");
+            } else if (dayData.get(i).getSportMode() == 1) {
                 colors[i] = Color.parseColor("#abf45334");
-            }else if (dayData.get(i).getSportMode() == 2){
+            } else if (dayData.get(i).getSportMode() == 2) {
                 colors[i] = Color.parseColor("#ab0736e2");
-            }else if (dayData.get(i).getSportMode() == 3){
+            } else if (dayData.get(i).getSportMode() == 3) {
                 colors[i] = Color.parseColor("#abd83232");
-            }else if (dayData.get(i).getSportMode() == 4){
+            } else if (dayData.get(i).getSportMode() == 4) {
                 colors[i] = Color.parseColor("#abc65e18");
             }
             set.addEntry(barEntry);
@@ -251,11 +254,11 @@ public class TrainActivity extends BaseActionActivity {
         chart.setData(barData);
         chart.setVisibleXRangeMinimum(15);
         chart.notifyDataSetChanged();
-        chart.moveViewToX(barData.getEntryCount()-15);
+        chart.moveViewToX(barData.getEntryCount() - 15);
     }
 
     private BarDataSet getInitChartDataSet() {
-        BarDataSet set = new BarDataSet(new ArrayList<BarEntry>(),"");//初始化折线数据源
+        BarDataSet set = new BarDataSet(new ArrayList<BarEntry>(), "");//初始化折线数据源
 //        set.setColor(Color.parseColor("#8affffff"));//折线颜色
         set.setBarBorderWidth(2f);//
         set.setBarBorderColor(Color.TRANSPARENT);
@@ -268,21 +271,21 @@ public class TrainActivity extends BaseActionActivity {
     OnChartValueSelectedListener selectedListener = new OnChartValueSelectedListener() {
         @Override
         public void onValueSelected(Entry e, Highlight h) {
-            if (curRunList != null&&curRunList.size()>=e.getX()) {
-                StepModel stepModel = curRunList.get((int)e.getX()>0?(int)e.getX()-1:0);
+            if (curRunList != null && curRunList.size() >= e.getX()) {
+                StepModel stepModel = curRunList.get((int) e.getX() > 0 ? (int) e.getX() - 1 : 0);
                 String start = hourFormat.format(stepModel.getStepDate());
-                String end = hourFormat.format((stepModel.getStepDate().getTime()+stepModel.getStepTime()*60*1000));
+                String end = hourFormat.format((stepModel.getStepDate().getTime() + stepModel.getStepTime() * 60 * 1000));
 
-                String num = stepModel.getStepNum()+getString(R.string.hint_unit_step);
+                String num = stepModel.getStepNum() + getString(R.string.hint_unit_step);
                 String mode = getString(R.string.hint_run);
                 if (stepModel.getSportMode() == 1) {
                     num = stepModel.getStepCalorie() + getString(R.string.hint_unit_ka);
                     mode = getString(R.string.hint_cycling);
-                }else if (stepModel.getSportMode() == 2) {
+                } else if (stepModel.getSportMode() == 2) {
                     num = stepModel.getStepCalorie() + getString(R.string.hint_unit_ka);
                     mode = getString(R.string.hint_swim);
                 }
-                tvHint.setText(mode+" "+start+"~"+end +" "+ num);
+                tvHint.setText(mode + " " + start + "~" + end + " " + num);
             }
         }
 
@@ -291,4 +294,5 @@ public class TrainActivity extends BaseActionActivity {
             tvHint.setText("");
         }
     };
+
 }

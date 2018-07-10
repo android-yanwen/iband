@@ -66,7 +66,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.MyViewHold
         }
 
         public void bindData(DeviceModel device, final int position) {
-            String name = device.leDevice.getName();
+            String name = device.deviceName;
             if (name == null || name.isEmpty()) {
                 name = "UNKNOW DEVICE";
             }
@@ -89,16 +89,22 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.MyViewHold
         public int rssi;
         public byte[] scanRecord;
         public boolean isSelect;
+        public String deviceName;
 
         public DeviceModel() {
         }
 
-        public DeviceModel(BluetoothDevice leDevice, int rssi, byte[] scanRecord) {
+        public DeviceModel(BluetoothDevice leDevice,String deviceName, int rssi, byte[] scanRecord) {
             this.leDevice = leDevice;
             this.rssi = rssi;
             this.scanRecord = scanRecord;
+            this.deviceName = deviceName;
         }
 
+        public DeviceModel(BluetoothDevice leDevice, String deviceName) {
+            this.leDevice = leDevice;
+            this.deviceName = deviceName;
+        }
     }
 
 }

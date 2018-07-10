@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.manridy.applib.utils.FileUtil;
+import com.manridy.applib.utils.LogUtil;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.bean.BoModel;
@@ -71,7 +72,7 @@ public class DataExportActivity extends BaseActionActivity {
         setTitleBar(getString(R.string.hint_data_export));
         registerEventBus();
         String path = Environment.getExternalStorageDirectory().getPath();
-        Log.e(TAG, "内置SD卡路径 = " + path );
+        LogUtil.e(TAG, "内置SD卡路径 = " + path );
         File dir = new File(path, "/iband");
         FileUtil.mkDir(dir.getPath());
         file = new File(dir, "database" + ".xls");
@@ -84,7 +85,7 @@ public class DataExportActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 if (FileUtil.getAvailableStorage(mContext) > 1024 * 1024) {
-                    showProgress("正在导出数据，请稍等");
+                    showProgress(getString(R.string.hint_exporting));
                     try {
 
                         OutputStream os = new FileOutputStream(file);
@@ -146,7 +147,7 @@ public class DataExportActivity extends BaseActionActivity {
             datas.add(getBpList(bpList));
             datas.add(getBoList(boList));
             saveData(sheets, loadTitleData(), datas);
-            Log.d(TAG, "onBackgroundEvent() called with: saveData ");
+            LogUtil.d(TAG, "onBackgroundEvent() called with: saveData ");
             eventSend(EventGlobal.DATA_EXPORT_EXCEL_SUCCES);
         }
     }
@@ -299,7 +300,7 @@ public class DataExportActivity extends BaseActionActivity {
                 for (int i1 = 0; i1 < stringList.size(); i1++) {
                     String str = stringList.get(i1);
                     sheet.addCell(new Label(i1, i + 1, str));
-                    Log.d(TAG, "saveSheetData() called with: i = [" + i + "], i1 = [" + i1 + "]");
+                    LogUtil.d(TAG, "saveSheetData() called with: i = [" + i + "], i1 = [" + i1 + "]");
                 }
             }
         } catch (WriteException e) {

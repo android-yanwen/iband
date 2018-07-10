@@ -33,3 +33,7 @@ dependencies {
     compile 'skin.support:skin-support:1.2.6'
     compile 'me.imid.swipebacklayout.lib:library:1.0.0'
 }
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}

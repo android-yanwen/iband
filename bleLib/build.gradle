@@ -30,3 +30,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     provided files('libs/gson-2.7.jar')
 }
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}

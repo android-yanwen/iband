@@ -3,23 +3,19 @@ package com.manridy.iband.view.test;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.manridy.applib.utils.FileUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.common.AppGlobal;
-import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.ui.items.MenuItems;
-import com.manridy.iband.view.HrCorrectActivity;
+import com.manridy.iband.view.main.HrCorrectActivity;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.iband.view.setting.LightActivity;
 import com.manridy.iband.view.setting.ViewActivity;
@@ -27,16 +23,9 @@ import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.exception.BleException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jxl.Workbook;
 import jxl.write.WritableWorkbook;
 
 /**

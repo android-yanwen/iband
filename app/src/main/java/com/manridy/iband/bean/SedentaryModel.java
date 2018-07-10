@@ -14,6 +14,9 @@ public class SedentaryModel extends DataSupport {
     private boolean sedentaryNap;
     private String startTime;
     private String endTime;
+    private String napStartTime;
+    private String napEndTime;
+    private int space;
 
     public SedentaryModel() {
     }
@@ -23,6 +26,16 @@ public class SedentaryModel extends DataSupport {
         this.sedentaryNap = sedentaryNap;
         this.startTime = startTime;
         this.endTime = endTime;
+    }
+
+    public SedentaryModel(boolean sedentaryOnOff, boolean sedentaryNap, String startTime, String endTime, String napStartTime, String napEndTime, int space) {
+        this.sedentaryOnOff = sedentaryOnOff;
+        this.sedentaryNap = sedentaryNap;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.napStartTime = napStartTime;
+        this.napEndTime = napEndTime;
+        this.space = space;
     }
 
     public int getId() {
@@ -63,6 +76,30 @@ public class SedentaryModel extends DataSupport {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getNapStartTime() {
+        return napStartTime;
+    }
+
+    public void setNapStartTime(String napStartTime) {
+        this.napStartTime = napStartTime;
+    }
+
+    public String getNapEndTime() {
+        return napEndTime;
+    }
+
+    public void setNapEndTime(String napEndTime) {
+        this.napEndTime = napEndTime;
+    }
+
+    public int getSpace() {
+        return space;
+    }
+
+    public void setSpace(int space) {
+        this.space = space;
     }
 
     @Override

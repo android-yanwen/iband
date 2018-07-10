@@ -138,7 +138,8 @@ public class TestHrTimingActivity extends BaseActionActivity {
     }
 
     private String[] getSpaces() {
-        return new String[]{"5","15","30","60","90","120"};
+//        return new String[]{"5","15","30","60","90","120"};
+        return new String[]{"30"};
     }
 
 

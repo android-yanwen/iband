@@ -28,12 +28,14 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG,"onCreate()");
         mContext = getActivity();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.i(TAG,"onCreateView()");
         root = initView(inflater,container);
         initVariables();
         initListener();
@@ -42,6 +44,7 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        Log.i(TAG,"onActivityCreated()");
         super.onActivityCreated(savedInstanceState);
         initData(savedInstanceState);
     }
@@ -49,6 +52,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        Log.i(TAG,"onActivityCreated()");
         if (hidden){
             saveData();
         }
