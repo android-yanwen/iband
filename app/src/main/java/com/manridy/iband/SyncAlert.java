@@ -3,6 +3,7 @@ package com.manridy.iband;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 
 import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
@@ -12,6 +13,7 @@ import com.manridy.iband.bean.SedentaryModel;
 import com.manridy.iband.bean.UserModel;
 import com.manridy.iband.bean.ViewModel;
 import com.manridy.iband.common.AppGlobal;
+import com.manridy.iband.common.EventGlobal;
 import com.manridy.sdk.Watch;
 import com.manridy.sdk.bean.Clock;
 import com.manridy.sdk.bean.Sedentary;
@@ -175,18 +177,78 @@ public class SyncAlert {
                     watch.setLostAlert(lostOn,time,bleCallback);
                 break;
             case 8:
-                List<ClockModel> clockList = IbandDB.getInstance().getClock();
-                if (clockList == null || clockList.size()==0) {
-                    clockList = new ArrayList<>();
-                    clockList.add(new ClockModel("08:00",false));
-                    clockList.add(new ClockModel("08:30",false));
-                    clockList.add(new ClockModel("09:00",false));
+                int clockNum = 0;
+                String deviceType1 = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE, "");
+                String deviceName1 = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME, "");
+                String deviceFirm1 = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION, "1.0.0");
+                if("K2".equals(deviceName1)&&"8007".equals(deviceType1)&&deviceFirm1.compareTo("1.5.6")>=0){
+                    clockNum = 12;
+                }else{
+                    clockNum = 3;
                 }
+
+                List<ClockModel> clockList = IbandDB.getInstance().getClock();
+//                if (clockList == null || clockList.size()==0) {
+//                    clockList = new ArrayList<>();
+//                    clockList.add(new ClockModel("08:00",false));
+//                    clockList.add(new ClockModel("08:30",false));
+//                    clockList.add(new ClockModel("09:00",false));
+//                }
+
+                if(clockNum==3) {
+                    if (clockList == null || clockList.size() == 0) {
+                        clockList = new ArrayList<>();
+                        clockList.add(new ClockModel("08:00", false));
+                        clockList.add(new ClockModel("08:30", false));
+                        clockList.add(new ClockModel("09:00", false));
+                    }
+                }else if(clockNum==12){
+                    if (clockList == null || clockList.size()==0) {
+                        clockList = new ArrayList<>();
+                        clockList.add(new ClockModel("08:00",false));
+                        clockList.add(new ClockModel("08:30",false));
+                        clockList.add(new ClockModel("09:00",false));
+                        clockList.add(new ClockModel("09:30",false));
+                        clockList.add(new ClockModel("10:00",false));
+                        clockList.add(new ClockModel("10:30",false));
+                        clockList.add(new ClockModel("11:00",false));
+                        clockList.add(new ClockModel("11:30",false));
+                        clockList.add(new ClockModel("12:00",false));
+                        clockList.add(new ClockModel("12:30",false));
+                        clockList.add(new ClockModel("13:00",false));
+                        clockList.add(new ClockModel("13:30",false));
+                    }else if(clockList.size()==3){
+                        clockList.add(new ClockModel("09:30",false));
+                        clockList.add(new ClockModel("10:00",false));
+                        clockList.add(new ClockModel("10:30",false));
+                        clockList.add(new ClockModel("11:00",false));
+                        clockList.add(new ClockModel("11:30",false));
+                        clockList.add(new ClockModel("12:00",false));
+                        clockList.add(new ClockModel("12:30",false));
+                        clockList.add(new ClockModel("13:00",false));
+                        clockList.add(new ClockModel("13:30",false));
+                    }
+                }
+
+
+
+
                 List<Clock> clocks = new ArrayList<>();
                 for (ClockModel model : clockList) {
                     clocks.add(new Clock(model.getTime(),model.isClockOnOFF()));
                 }
-                watch.setClock(ClockType.SET_CLOCK,clocks,bleCallback);
+//                watch.setClock(ClockType.SET_CLOCK,clocks,bleCallback);
+
+
+
+                if(clockNum<=3){
+                    watch.setClock(ClockType.SET_CLOCK, clocks, bleCallback);
+                }else{
+                    watch.set15Clock(ClockType.SET_CLOCK, clocks, bleCallback);
+                }
+
+
+
                 break;
             case 9:
                 int light = (int) SPUtil.get(mContext,AppGlobal.DATA_SETTING_LIGHT,2);
