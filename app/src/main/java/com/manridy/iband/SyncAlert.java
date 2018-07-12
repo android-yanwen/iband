@@ -234,9 +234,16 @@ public class SyncAlert {
 
 
                 List<Clock> clocks = new ArrayList<>();
-                for (ClockModel model : clockList) {
+
+
+                for(int i = 0 ; i<clockNum&&i<clockList.size() ;i++){
+                    ClockModel model = clockList.get(i);
                     clocks.add(new Clock(model.getTime(),model.isClockOnOFF()));
                 }
+
+//                for (ClockModel model : clockList) {
+//                    clocks.add(new Clock(model.getTime(),model.isClockOnOFF()));
+//                }
 //                watch.setClock(ClockType.SET_CLOCK,clocks,bleCallback);
 
 

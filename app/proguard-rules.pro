@@ -16,7 +16,22 @@
 #   public *;
 #}
 -dontwarn com.tencent.bugly.**
+#shareSDK#
+-dontwarn cn.sharesdk.**
+-dontwarn com.sina.**
+-dontwarn com.mob.**
+-dontwarn **.R$*
+#shareSDK#
+
 -keep public class com.tencent.bugly.**{*;}
 -keep class android.support.**{*;}
 -keep class no.nordicsemi.android.dfu.** { *; }
 -keep class com.manridy.iband
+-keep class cn.sharesdk.**{*;}
+-keep class com.sina.**{*;}
+#shareSDK#
+-keep class **.R$* {*;}
+-keep class **.R{*;}
+-keep class com.mob.**{*;}
+-keep class m.framework.**{*;}
+#shareSDK#

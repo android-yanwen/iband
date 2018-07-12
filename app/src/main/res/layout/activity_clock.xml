@@ -22,6 +22,13 @@
             android:layout_height="1px"
             android:background="@color/line_background"/>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <com.manridy.iband.ui.items.ClockItems
             android:id="@+id/ci_clock1"
             android:layout_width="match_parent"
@@ -30,19 +37,99 @@
             app:clock_hint=""
             app:clock_onoff="true"/>
 
+        <com.manridy.iband.ui.items.ClockItems
+            android:id="@+id/ci_clock2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:clock_time="08:30"
+            app:clock_hint=""
+            app:clock_onoff="true"/>
+
+        <com.manridy.iband.ui.items.ClockItems
+            android:id="@+id/ci_clock3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:clock_time="09:00"
+            app:clock_hint=""
+            app:clock_onoff="true"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ll_additional_clock"
+            android:visibility="gone"
+            >
     <com.manridy.iband.ui.items.ClockItems
-        android:id="@+id/ci_clock2"
+            android:id="@+id/ci_clock4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:clock_time="09:30"
+            app:clock_hint=""
+            app:clock_onoff="true"
+        />
+
+    <com.manridy.iband.ui.items.ClockItems
+        android:id="@+id/ci_clock5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:clock_time="08:30"
+        app:clock_time="10:00"
         app:clock_hint=""
         app:clock_onoff="true"/>
 
     <com.manridy.iband.ui.items.ClockItems
-        android:id="@+id/ci_clock3"
+        android:id="@+id/ci_clock6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:clock_time="09:00"
+        app:clock_time="10:30"
         app:clock_hint=""
         app:clock_onoff="true"/>
+        <com.manridy.iband.ui.items.ClockItems
+            android:id="@+id/ci_clock7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:clock_time="11:00"
+            app:clock_hint=""
+            app:clock_onoff="true"/>
+
+        <com.manridy.iband.ui.items.ClockItems
+            android:id="@+id/ci_clock8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:clock_time="11:30"
+            app:clock_hint=""
+            app:clock_onoff="true"/>
+
+        <com.manridy.iband.ui.items.ClockItems
+            android:id="@+id/ci_clock9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:clock_time="12:00"
+            app:clock_hint=""
+            app:clock_onoff="true"/>
+
+        <com.manridy.iband.ui.items.ClockItems
+            android:id="@+id/ci_clock10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:clock_time="12:30"
+            app:clock_hint=""
+            app:clock_onoff="true"/>
+
+        <com.manridy.iband.ui.items.ClockItems
+            android:id="@+id/ci_clock11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:clock_time="13:00"
+            app:clock_hint=""
+            app:clock_onoff="true"/>
+        <com.manridy.iband.ui.items.ClockItems
+            android:id="@+id/ci_clock12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:clock_time="13:30"
+            app:clock_hint=""
+            app:clock_onoff="true"/>
+        </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

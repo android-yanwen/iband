@@ -1,7 +1,9 @@
 package com.manridy.iband.view.model;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,6 +50,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -95,6 +99,7 @@ public class StepFragment extends BaseEventFragment {
     public View initView(LayoutInflater inflater, @Nullable ViewGroup container) {
         root = inflater.inflate(R.layout.fragment_step, container, false);
         ButterKnife.bind(this,root);
+
         return root;
     }
 
@@ -139,6 +144,85 @@ public class StepFragment extends BaseEventFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+
+
+    }
+
+    public void screenShot(){
+        View dView = getActivity().getWindow().getDecorView();
+        dView.setDrawingCacheEnabled(true);
+        dView.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(dView.getDrawingCache());
+        if (bitmap != null) {
+            try {
+                // 获取内置SD卡路径
+                String sdCardPath = Environment.getExternalStorageDirectory().getPath();
+                // 图片文件路径
+                String filePath = sdCardPath + File.separator + "screenshot.png";
+                File file = new File(filePath);
+                FileOutputStream os = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+                os.flush();
+                os.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+
+    public void screenShot(View view, String fileName) throws Exception {
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        //上面2行必须加入，如果不加如view.getDrawingCache()返回null
+        Bitmap bitmap = view.getDrawingCache();
+        FileOutputStream fos = null;
+        try {
+            //判断sd卡是否存在
+            boolean sdCardExist = Environment.getExternalStorageState()
+                    .equals(android.os.Environment.MEDIA_MOUNTED);
+            if(sdCardExist){
+                //获取sdcard的根目录
+                String sdPath = Environment.getExternalStorageDirectory().getPath();
+
+                //创建程序自己创建的文件夹
+                File tempFile= new File(sdPath+File.separator +fileName);
+                if(!tempFile.exists()){
+                    tempFile.mkdirs();
+                }
+                //创建图片文件
+                File file = new File(sdPath + File.separator+fileName+File.separator+ "screen" + ".png");
+                if(!file.exists()){
+                    file.createNewFile();
+                }
+
+//                image.setImageBitmap(bitmap);
+//                fos = new FileOutputStream(file);
+//                if (fos != null) {
+//
+//                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
+//                    fos.close();
+//                }
+
+
+
+
+                view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+                view.setDrawingCacheEnabled(true);
+                view.buildDrawingCache();
+                fos = new FileOutputStream(file);
+                if (fos != null) {
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
+                    fos.close();
+                }
+
+            }
+
+
+        } catch (Exception e) {
+            Log.e(TAG, "cause for "+e.getMessage());
+        }
     }
 
     @OnClick({ R.id.iv_menu,R.id.iv_history,R.id.iv_location})

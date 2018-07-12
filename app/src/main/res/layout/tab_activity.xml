@@ -52,7 +52,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="16dp"
-        android:src="@mipmap/all_share"
+        android:src="@mipmap/train_share"
         android:visibility="gone"/>
     </RelativeLayout>
 </LinearLayout>

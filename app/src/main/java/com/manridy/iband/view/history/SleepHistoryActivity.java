@@ -1,8 +1,13 @@
 package com.manridy.iband.view.history;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -33,15 +38,21 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 
 /**
  * 睡眠历史
@@ -64,6 +75,8 @@ public class SleepHistoryActivity extends BaseActionActivity {
     BarChart bcHistorySleep;
     @BindView(R.id.tv_empty)
     TextView tvEmpty;
+    @BindView(R.id.tb_share)
+    ImageView ivShare;
 
     private Calendar mCalendar;
     private SimpleDateFormat mDateFormat;
@@ -72,10 +85,139 @@ public class SleepHistoryActivity extends BaseActionActivity {
     private int sleepSum = 0, sleepLight = 0, sleepDeep = 0, sleepCount = 0;
     private String curMac;
 
+    private String filePath;
+
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_history_sleep);
         ButterKnife.bind(this);
+        ivShare.setVisibility(View.VISIBLE);
+    }
+
+    private Handler handler2 = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 1:
+                    ivShare.setEnabled(false);
+                    Message message = handler2.obtainMessage();
+                    message.what = 2;
+                    handler2.sendMessageDelayed(message,1500);
+                    showShare();
+                    break;
+                case 2:
+                    ivShare.setEnabled(true);
+                    break;
+            }
+        }
+    };
+
+    public void screenShot(){
+        handler2.post(new Runnable() {
+            @Override
+            public void run() {
+                View dView = getWindow().getDecorView();
+                dView.setDrawingCacheEnabled(false);
+                dView.destroyDrawingCache();
+                dView.buildDrawingCache();
+                Bitmap bitmap = Bitmap.createBitmap(dView.getDrawingCache());
+                if (bitmap != null) {
+                    try {
+                        // 获取内置SD卡路径
+                        String sdCardPath = Environment.getExternalStorageDirectory().getPath()+"/manridy/";
+//                        String sdCardPath = getBaseContext().getCacheDir().getPath();
+                        // 图片文件路径
+                        filePath = sdCardPath + File.separator + "share_screenshot_"+System.currentTimeMillis()+".png";
+                        File file = new File(filePath);
+                        if (!file.getParentFile().exists()) {
+                            file.getParentFile().mkdirs();
+                        }
+//                        if(file.exists()){
+//                            file.delete();
+//                        }
+                        FileOutputStream os = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+                        os.flush();
+                        os.close();
+                        Message message = handler2.obtainMessage();
+                        message.what = 1;
+                        handler2.sendMessageDelayed(message,500);
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        });
+
+
+    }
+
+    private void showShare() {
+
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+        // title标题，微信、QQ和QQ空间等平台使用
+//        oks.setTitle(getString(R.string.share));
+//        oks.setTitle("分享");
+        // titleUrl QQ和QQ空间跳转链接
+//        oks.setTitleUrl("http://sharesdk.cn");
+        // text是分享文本，所有平台都需要这个字段
+//        oks.setText("我是分享文本");
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+//        oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+
+//        String sdCardPath = Environment.getExternalStorageDirectory().getPath()+"/manridy/";
+//        // 图片文件路径
+//        String filePath = sdCardPath + File.separator + "share_screenshot_"+new Date()+".png";
+        File file = new File(filePath);
+        if(file.exists()){
+            oks.setImagePath(filePath);//确保SDcard下面存在此张图片
+            // url在微信、微博，Facebook等平台中使用
+//        oks.setUrl("http://sharesdk.cn");
+            // comment是我对这条分享的评论，仅在人人网使用
+//        oks.setComment("我是测试评论文本");
+            // 启动分享GUI
+
+//            oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
+//                @Override
+//                public void onShare(Platform platform, Platform.ShareParams paramsToShare) {
+//                    if (platform.getName().equalsIgnoreCase(QQ.NAME)) {
+//                        paramsToShare.setText(null);
+//                        paramsToShare.setTitle(null);
+//                        paramsToShare.setTitleUrl(null);
+//
+////                        String sdCardPath = Environment.getExternalStorageDirectory().getPath()+"/manridy/";
+////                        // 图片文件路径
+////                        String filePath = sdCardPath + File.separator + "share_screenshot_"+new Date()+".png";
+//                        paramsToShare.setImagePath(filePath);
+//                    }
+//                }
+//            });
+            oks.setCallback(new PlatformActionListener() {
+                @Override
+                public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+                    Message message = handler2.obtainMessage();
+                    message.what = 2;
+                    handler2.sendMessage(message);
+                }
+
+                @Override
+                public void onError(Platform platform, int i, Throwable throwable) {
+                    Message message = handler2.obtainMessage();
+                    message.what = 2;
+                    handler2.sendMessage(message);
+                }
+
+                @Override
+                public void onCancel(Platform platform, int i) {
+                    Message message = handler2.obtainMessage();
+                    message.what = 2;
+                    handler2.sendMessage(message);
+                }
+            });
+            oks.show(this);
+        }
+
     }
 
     @Override
@@ -92,6 +234,14 @@ public class SleepHistoryActivity extends BaseActionActivity {
 
     @Override
     protected void initListener() {
+        ivShare.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                screenShot();
+//                showShare();
+            }
+        });
+
         tvMonth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

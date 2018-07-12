@@ -63,6 +63,19 @@
                 android:src="@mipmap/all_set"
                 style="@style/ToolBarButton"/>
 
+            <ImageView
+                android:id="@+id/iv_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:layout_alignParentRight="true"
+                android:scaleType="fitCenter"
+                style="@style/ToolBarButton"
+                android:src="@mipmap/train_share"
+                />
+
             <TextView
                 android:id="@+id/tb_sync"
                 android:layout_width="wrap_content"

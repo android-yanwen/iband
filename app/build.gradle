@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.mob.sdk'
 
 android {
     compileSdkVersion 26
@@ -7,8 +8,8 @@ android {
         applicationId "com.manridy.iband"
         minSdkVersion 18
         targetSdkVersion 26
-        versionCode 85
-        versionName "1.9.19"
+        versionCode 86
+        versionName "1.9.19b"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -103,9 +104,89 @@ dependencies {
     //    compile 'com.amap.api:navi-3dmap:latest.integration'
     //    compile 'com.amap.api:search:latest.integration'
     compile files('libs/jxl.jar')
+
+
 }
 
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+}
+
+MobSDK {
+    appKey "26c9e3e8c0fce"
+    appSecret "accb91e62e0df1621d0583bc4fde6bd4"
+    ShareSDK {
+        //平台配置信息
+        devInfo {
+            Wechat {
+                sortId 1
+                appId "wx4868b35061f87885"
+                appSecret "64020361b8ec4c99936c0e3999a9f249"
+                shareByAppClient true
+                bypassApproval true
+            }
+            WechatMoments {
+                sortId 2
+                appId "wx4868b35061f87885"
+                appSecret "64020361b8ec4c99936c0e3999a9f249"
+                shareByAppClient true
+                bypassApproval true
+            }
+            QQ {
+                sortId 3
+                appId "1106152234"
+                appKey "GGS8hmPdOig4Ey6b"
+                shareByAppClient true
+                bypassApproval false
+            }
+            Facebook {
+                sortId 4
+                appKey "1412473428822331"
+                appSecret "a42f4f3f867dc947b9ed6020c2e93558"
+                shareByAppClient true
+            }
+            WhatsApp {
+                sortId 5
+            }
+            Instagram {
+                sortId 6
+                appId "ff68e3216b4f4f989121aa1c2962d058"
+                appSecret "1b2e82f110264869b3505c3fe34e31a1"
+                callbackUri "http://www.manridy.com/"
+                shareByAppClient true
+            }
+            GooglePlus {
+                sortId 7
+                appId "236300675100-am5pm8km7md1memjevq8rl9pg5c4s4b8.apps.googleusercontent.com"
+                callbackUri "http://www.manridy.com/"
+                shareByAppClient true
+            }
+            Line {
+                sortId 8
+                appId "1477692153"
+                appSecret "f30c036370f2e04ade71c52eef73a9af"
+                shareByAppClient true
+            }
+            SinaWeibo {
+                sortId 9
+                appKey "568898243"
+                appSecret "38a4f8204cc784f81f9f0daaf31e02e3"
+                callbackUri "http://www.manridy.com/"
+                shareByAppClient true
+            }
+            Twitter {
+                sortId 10
+                appKey "LRBM0H75rWrU9gNHvlEAA2aOy"
+                appSecret "gbeWsZvA9ELJSdoBzJ5oLKX0TU09UOwrzdGfo9Tg7DjyGuMe8G"
+                callbackUri "http://www.manridy.com/"
+            }
+
+            Email {
+                sortId 11
+            }
+
+        }
+    }
+
 }

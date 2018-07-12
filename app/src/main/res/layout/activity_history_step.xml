@@ -30,6 +30,16 @@
         android:layout_marginLeft="16dp"
         android:scaleType="fitCenter"
         android:src="@mipmap/ic_back"/>
+
+        <ImageView
+            android:id="@+id/tb_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:src="@mipmap/train_share"
+            android:visibility="gone"/>
     </RelativeLayout>
     <!--<TextView-->
         <!--android:layout_width="match_parent"-->

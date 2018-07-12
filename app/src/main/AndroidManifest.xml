@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.manridy.iband">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.manridy.iband">
 
     <!-- 蓝牙操作权限 -->
     <uses-permission android:name="android.permission.BLUETOOTH"/>
@@ -47,7 +48,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:configChanges="locale|layoutDirection"
-        android:theme="@style/AppThemes">
+        android:theme="@style/AppThemes"
+        tools:replace="android:name"
+        >
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="c1cZbjfjD7euO4Pz6WnhDDkKH5624Pdn" />

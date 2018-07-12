@@ -19,6 +19,7 @@ import com.manridy.iband.service.AlertService;
 import com.manridy.iband.service.BleService;
 import com.manridy.iband.service.NotificationCollectorMonitorService;
 import com.manridy.iband.service.AppNotificationListenerService;
+import com.mob.MobSDK;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 
@@ -52,6 +53,7 @@ public class IbandApplication extends Application {
         initNotificationService();//初始化通知
         initLangue();//初始化语言
 //        CrashHandler.getInstance().init(intance);
+        MobSDK.init(this);
     }
 
     private void initLangue() {
