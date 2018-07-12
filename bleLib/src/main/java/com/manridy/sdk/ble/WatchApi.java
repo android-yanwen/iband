@@ -22,6 +22,8 @@ public interface WatchApi {
 
     void setClock(ClockType clockType, List<Clock> clock, BleCallback bleCallback);
 
+    void set15Clock(ClockType clockType, List<Clock> clock,BleCallback bleCallback);
+
     void getClockInfo(BleCallback bleCallback);
 
     void getSportInfo(InfoType infoType, BleCallback bleCallback);

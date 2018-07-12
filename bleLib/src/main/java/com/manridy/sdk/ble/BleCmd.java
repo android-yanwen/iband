@@ -59,6 +59,32 @@ public class BleCmd {
     }
 
     /**
+     * 设置15个闹钟
+     * @param data 闹钟数据[h][m]
+     * @param onOff 0关，1开
+     * @return
+     */
+    public static byte[] set15Alarm(String[] data,int[] onOff ,byte set){
+        type = 0x01;
+        body= new byte[17];
+        body[0] = set;
+        //计算开关
+        for (int i = 0; i < onOff.length; i++) {
+            body[i+1] = (byte) onOff[i];
+        }
+        //计算闹钟
+        for (int i = 0; i < data.length; i++) {
+            if (!data[i].equals("")) {
+                String[] t = data[i].split(":");
+                body[(2*i)+6] = BitUtil.str2Bcd(t[0],true)[0];
+                body[(2*i)+7] = BitUtil.str2Bcd(t[1],true)[0];
+            }
+        }
+        return BleProtocol.cmd(head,type,body);
+    }
+
+
+    /**
      * 得到闹钟
      * @return
      */

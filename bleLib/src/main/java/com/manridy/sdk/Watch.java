@@ -227,6 +227,41 @@ public class Watch extends BluetoothLeManager implements WatchApi {
     }
 
     /**
+     * 设置15个闹钟
+     * @param clocks 闹钟集合
+     */
+    @Override
+    public void set15Clock(ClockType clockType, List<Clock> clocks,BleCallback bleCallback) {
+//        if (clocks == null || clocks.size() > 5) {
+//            throw new IllegalArgumentException("clocks data is null or size > 5 !");
+//        }
+        int size = clocks.size();
+        String[] times1 = new String[5];
+        int[] onOffs1 =new int[5];
+        for (int i = 0; i<5; i++) {
+            times1[i] = clocks.get(i).getTime();
+            onOffs1[i] = clocks.get(i).getOnOff() ? 1 : 2;
+        }
+        sendCmd(BleCmd.set15Alarm(times1,onOffs1,(byte)0x80),bleCallback);
+
+        String[] times2 = new String[5];
+        int[] onOffs2 =new int[5];
+        for (int i = 0; i<5; i++) {
+            times2[i] = clocks.get(i+5).getTime();
+            onOffs2[i] = clocks.get(i+5).getOnOff() ? 1 : 2;
+        }
+        sendCmd(BleCmd.set15Alarm(times2,onOffs2,(byte)0x81),bleCallback);
+
+        String[] times3 = new String[2];
+        int[] onOffs3 =new int[2];
+        for (int i = 0; i<2; i++) {
+            times3[i] = clocks.get(i+10).getTime();
+            onOffs3[i] = clocks.get(i+10).getOnOff() ? 1 : 2;
+        }
+        sendCmd(BleCmd.set15Alarm(times3,onOffs3,(byte)0x82),bleCallback);
+    }
+
+    /**
      * 获取腕表闹钟数据
      */
     @Override
