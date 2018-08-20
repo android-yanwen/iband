@@ -117,9 +117,17 @@ public class UserActivity extends BaseActionActivity {
             hiHeight.setMenuUnit("(in)");
             hiWeight.setMenuUnit("(lb)");
             hiHeight.setMenuContent(in);
-            hiWeight.setMenuContent(lb);
+            if(curUser.getUserPound()!=0){
+                hiWeight.setMenuContent(curUser.getUserPound()+"");
+            }else {
+                hiWeight.setMenuContent(lb);
+            }
             mHeight = in;
-            mWeight = lb;
+            if(curUser.getUserPound()!=0){
+                mWeight = curUser.getUserPound()+"";
+            }else {
+                mWeight = lb;
+            }
         }else{
             hiHeight.setMenuContent(mHeight);
             hiWeight.setMenuContent(mWeight);
@@ -207,8 +215,11 @@ public class UserActivity extends BaseActionActivity {
                 curUser.setUserSex(mSex);
                 curUser.setUserAge(mAge);
                 if (unit == 1) {
+                    curUser.setUserPound(Integer.parseInt(mWeight));
                     mHeight = CheckUtil.inToCm(Double.parseDouble(mHeight))+"";
                     mWeight = CheckUtil.lbToKg(Double.parseDouble(mWeight))+"";
+                }else{
+                    curUser.setUserPound(CheckUtil.kgToLb(Double.parseDouble(mWeight)));
                 }
                 curUser.setUserHeight(mHeight);
                 curUser.setUserWeight(mWeight);

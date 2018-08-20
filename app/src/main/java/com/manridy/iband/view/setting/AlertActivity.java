@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.R;
@@ -48,6 +49,8 @@ public class AlertActivity extends BaseActionActivity {
     AlertMenuItems menuLost;
     @BindView(R.id.menu_app)
     AlertMenuItems menuApp;
+    @BindView(R.id.menu_lost_rightline)
+    TextView menuLostRightline;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -115,6 +118,23 @@ public class AlertActivity extends BaseActionActivity {
         menuClock.setAlertState(clockEnable);
         menuLost.setAlertState(lostEnable);
         menuApp.setAlertState(appEnable);
+
+        menuLost.setVisibility(View.VISIBLE);
+        menuLostRightline.setVisibility(View.VISIBLE);
+        String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"");
+        String deviceIDs[] = {"8077","8078","8079","8080"};
+        if(deviceType==null||"".equals(deviceType)){
+            menuLost.setAlertState(false);
+            menuLost.setVisibility(View.GONE);
+            menuLostRightline.setVisibility(View.GONE);
+        }
+        for(int i = 0;i<deviceIDs.length;i++){
+            if(deviceType!=null&&deviceIDs[i].equals(deviceType.trim())){
+                menuLost.setAlertState(false);
+                menuLost.setVisibility(View.GONE);
+                menuLostRightline.setVisibility(View.GONE);
+            }
+        }
     }
 
 

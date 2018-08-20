@@ -2,8 +2,11 @@ package com.manridy.iband.view.setting;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.manridy.applib.utils.VersionUtil;
 import com.manridy.iband.R;
@@ -32,6 +35,12 @@ public class AboutActivity extends BaseActionActivity {
     TextView tvVersion;
     @BindView(R.id.hi_data)
     HelpItems hiData;
+    @BindView(R.id.iv_icon)
+    ImageView ivIcon;
+
+    final static int COUNTS = 20;//点击次数
+    final static long DURATION = 30 * 1000;//规定有效时间
+    long[] mHits = new long[COUNTS];
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -91,6 +100,20 @@ public class AboutActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 startActivity(DataExportActivity.class);
+            }
+        });
+
+        ivIcon.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
+                //实现左移，然后最后一个位置更新距离开机的时间，如果最后一个时间和最开始时间小于DURATION，即连续5次点击
+                mHits[mHits.length - 1] = SystemClock.uptimeMillis();
+                if (mHits[0] >= (SystemClock.uptimeMillis() - DURATION)) {
+//                    String tips = "您已在[" + DURATION + "]ms内连续点击【" + mHits.length + "】次了！！！";
+//                    Toast.makeText(AboutActivity.this, tips, Toast.LENGTH_SHORT).show();
+                    hiLangue.setVisibility(View.VISIBLE);
+                }
             }
         });
 

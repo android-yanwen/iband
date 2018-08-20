@@ -167,11 +167,18 @@ public class SyncAlert {
             case 7:
                 boolean lostOn = (boolean) SPUtil.get(mContext,AppGlobal.DATA_ALERT_LOST,false);
                 String deviceName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,"");
+                String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"");
                 int time = 20;
                 String devices[]={"F07","F07A","F10","F10A"};
                 for(int i=0;i<devices.length;i++){
                     if(deviceName!=null&&devices[i].equals(deviceName.trim())){
                         time = 120;
+                    }
+                }
+                String deviceIDs[] = {"8077","8078","8079","8080"};
+                for(int i = 0;i<deviceIDs.length;i++){
+                    if(deviceType!=null&&deviceIDs[i].equals(deviceType.trim())){
+                        lostOn = false;
                     }
                 }
                     watch.setLostAlert(lostOn,time,bleCallback);

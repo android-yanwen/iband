@@ -73,7 +73,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="2"
+        >
         <com.manridy.iband.ui.items.AlertMenuItems
             android:id="@+id/menu_lost"
             android:layout_width="0dp"
@@ -83,6 +85,7 @@
             app:alert_name="@string/hint_menu_alert_lost"/>
 
         <TextView
+            android:id="@+id/menu_lost_rightline"
             android:layout_width="1px"
             android:layout_height="match_parent"
             android:background="@color/line_background"/>
@@ -94,7 +97,12 @@
             android:layout_weight="1"
             app:alert_icon="@mipmap/remind_app02"
             app:alert_name="@string/hint_menu_alert_app"/>
+        <TextView
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/line_background"/>
     </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1px"

@@ -15,6 +15,16 @@ public class UserModel extends DataSupport {
     private String userWeight;//体重
     private String userStep;//步长
 
+    public int getUserPound() {
+        return userPound;
+    }
+
+    public void setUserPound(int userPound) {
+        this.userPound = userPound;
+    }
+
+    private int userPound;
+
     public UserModel() {
     }
 

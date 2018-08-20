@@ -158,10 +158,10 @@ public class MainActivity extends BaseActivity {
             switch (msg.what){
                 case 1:
                     ivShare.setEnabled(false);
+                    showShare();
                     Message message = handler2.obtainMessage();
                     message.what = 2;
                     handler2.sendMessageDelayed(message,1500);
-                    showShare();
                     break;
                 case 2:
                     ivShare.setEnabled(true);
@@ -223,7 +223,9 @@ public class MainActivity extends BaseActivity {
 
 
 
-        isShowBp = isShowBo =true;
+//        isShowBp = isShowBo =false;
+        isShowBp = (boolean) SPUtil.get(mContext,"isShowBp",false);
+        isShowBo = (boolean) SPUtil.get(mContext,"isShowBo",false);
         String strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
         String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
         String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
@@ -232,13 +234,19 @@ public class MainActivity extends BaseActivity {
         if (strDeviceList!= null && !strDeviceList.isEmpty()) {
             DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
             for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
-                if (deviceName.trim().equals(resultBean.getDevice_name().trim())){
+                if (deviceType.trim().equals(resultBean.getDevice_id().trim())){
                     if ("0".equals(resultBean.getBlood_pressure())) {
                         isShowBp = false;
+                    }else{
+                        isShowBp = true;
                     }
+                    SPUtil.put(mContext,"isShowBp",isShowBp);
                     if ("0".equals(resultBean.getOxygen_pressure())) {
                         isShowBo = false;
+                    }else{
+                        isShowBo = true;
                     }
+                    SPUtil.put(mContext,"isShowBo",isShowBp);
 //                    if ("0".equals("0")) {
 //                        isShowBp = false;
 //                    }
@@ -887,13 +895,23 @@ public class MainActivity extends BaseActivity {
             if (isLostOn && !bindMac.isEmpty() && (0 == bytes[0] || 19 == bytes[0]|| 8==bytes[0])) {
                 String deviceName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,"");
                 int time = 20;
+                boolean isOn = true;
                 String devices[]={"F07","F07A","F10","F10A"};
                 for(int i=0;i<devices.length;i++){
                     if(deviceName!=null&&devices[i].equals(deviceName.trim())){
                         time = 120;
                     }
                 }
-                handler.sendEmptyMessageDelayed(0, time * 1000);
+                String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"");
+                String deviceIDs[] = {"8077","8078","8079","8080"};
+                for(int i = 0;i<deviceIDs.length;i++){
+                    if(deviceType!=null&&deviceIDs[i].equals(deviceType.trim())){
+                        isOn = false;
+                    }
+                }
+                if(isOn){
+                    handler.sendEmptyMessageDelayed(0, time * 1000);
+                }
                 LogUtil.d(TAG, "onLostThread() called with: event = [STATE_DEVICE_DISCONNECT]");
             }
         } else if (event.getWhat() == EventGlobal.STATE_DEVICE_CONNECTING) {
@@ -903,6 +921,7 @@ public class MainActivity extends BaseActivity {
 //                handler.sendEmptyMessageDelayed(0, 20 * 1000);
 //                LogUtil.d(TAG, "onLostThread() called with: event = [STATE_DEVICE_CONNECTING]");
 //            }
+            //蓝牙重连
             tbSync.setText(getString(R.string.hint_connecting));
         } else if (event.getWhat() == EventGlobal.STATE_DEVICE_CONNECT) {
             handler.removeMessages(0);

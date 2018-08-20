@@ -95,7 +95,7 @@
     <string name="hint_find_title">If the watch is found, it will vibrate.</string>
     <string name="hint_view_mac">MAC QR Code</string>
     <string name="hint_device_unconnect">The watch is unconnected. </string>
-    <string name="hint_unit_th">A</string>
+    <string name="hint_unit_th">times</string>
     <string name="hint_restart">This operation will restore the device to its original mode and clear all data. Continue?</string>
     <string name="hint_finding_phone">A device is searching for your phone...</string>
     <string name="title_bp_history">History</string>

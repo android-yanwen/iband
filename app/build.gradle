@@ -8,8 +8,8 @@ android {
         applicationId "com.manridy.iband"
         minSdkVersion 18
         targetSdkVersion 26
-        versionCode 86
-        versionName "1.9.19b"
+        versionCode 92
+        versionName "1.9.24(Beta1)"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -148,6 +148,7 @@ MobSDK {
             }
             WhatsApp {
                 sortId 5
+                shareByAppClient true
             }
             Instagram {
                 sortId 6
@@ -156,34 +157,24 @@ MobSDK {
                 callbackUri "http://www.manridy.com/"
                 shareByAppClient true
             }
-            GooglePlus {
-                sortId 7
-                appId "236300675100-am5pm8km7md1memjevq8rl9pg5c4s4b8.apps.googleusercontent.com"
-                callbackUri "http://www.manridy.com/"
-                shareByAppClient true
-            }
             Line {
-                sortId 8
+                sortId 7
                 appId "1477692153"
                 appSecret "f30c036370f2e04ade71c52eef73a9af"
                 shareByAppClient true
             }
             SinaWeibo {
-                sortId 9
+                sortId 8
                 appKey "568898243"
                 appSecret "38a4f8204cc784f81f9f0daaf31e02e3"
                 callbackUri "http://www.manridy.com/"
                 shareByAppClient true
             }
             Twitter {
-                sortId 10
+                sortId 9
                 appKey "LRBM0H75rWrU9gNHvlEAA2aOy"
                 appSecret "gbeWsZvA9ELJSdoBzJ5oLKX0TU09UOwrzdGfo9Tg7DjyGuMe8G"
                 callbackUri "http://www.manridy.com/"
-            }
-
-            Email {
-                sortId 11
             }
 
         }

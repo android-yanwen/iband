@@ -95,7 +95,7 @@
     <string name="hint_find_title">ブレスレットが見つかると、ブレスレットが振動して点滅</string>
     <string name="hint_view_mac">MAC QR</string>
     <string name="hint_device_unconnect">ブレスレットが接続されていません</string>
-    <string name="hint_unit_th">A</string>
+    <string name="hint_unit_th">次</string>
     <string name="hint_restart">この操作は、デバイスを元のモードに戻し、すべてのデータを消去します。</string>
     <string name="hint_finding_phone">携帯を探し…...</string>
     <string name="title_bp_history">血圧記録</string>

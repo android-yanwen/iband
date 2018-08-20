@@ -168,11 +168,14 @@ public class ClockActivity extends BaseActionActivity {
         }
     }
 
+    static int errorSum_clock15 = 0;
+
     @Override
     protected void initListener() {
         tbMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                errorSum_clock15 = 0;
                 showProgress(getString(R.string.hint_saveing));
                 List<Clock> clocks = new ArrayList<>();
 //                for (ClockModel model : clockList) {
@@ -210,6 +213,7 @@ public class ClockActivity extends BaseActionActivity {
                     ibandApplication.service.watch.set15Clock(ClockType.SET_CLOCK, clocks, new BleCallback() {
                         @Override
                         public void onSuccess(Object o) {
+                            errorSum_clock15 = 0;
                             int openNum = 0;
                             for (ClockModel clockModel : clockList) {
                                 if (clockModel.isClockOnOFF()) {
@@ -226,7 +230,11 @@ public class ClockActivity extends BaseActionActivity {
 
                         @Override
                         public void onFailure(BleException exception) {
-                            eventSend(EventGlobal.MSG_CLOCK_TOAST, getString(R.string.hint_save_fail));
+                            errorSum_clock15++;
+                            if(errorSum_clock15>=3) {
+                                eventSend(EventGlobal.MSG_CLOCK_TOAST, getString(R.string.hint_save_fail));
+                                errorSum_clock15 = 0;
+                            }
                             dismissProgress();
                         }
                     });

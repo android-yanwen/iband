@@ -64,6 +64,13 @@ public class LostActivity extends BaseActionActivity {
                         time = 120;
                     }
                 }
+                String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"");
+                String deviceIDs[] = {"8077","8078","8079","8080"};
+                for(int i = 0;i<deviceIDs.length;i++){
+                    if(deviceType!=null&&deviceIDs[i].equals(deviceType.trim())){
+                        onOff = false;
+                    }
+                }
                 ibandApplication.service.watch.sendCmd(BleCmd.setLostDeviceAlert(onOff ? 1 : 0, time), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {

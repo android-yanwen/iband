@@ -242,7 +242,7 @@ public class Watch extends BluetoothLeManager implements WatchApi {
             times1[i] = clocks.get(i).getTime();
             onOffs1[i] = clocks.get(i).getOnOff() ? 1 : 2;
         }
-        sendCmd(BleCmd.set15Alarm(times1,onOffs1,(byte)0x80),bleCallback);
+        sendCmd(BleCmd.set15Alarm(times1, onOffs1, (byte) 0x80),bleCallback);
 
         String[] times2 = new String[5];
         int[] onOffs2 =new int[5];

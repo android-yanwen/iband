@@ -33,6 +33,10 @@ import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.CircularView;
 import com.manridy.iband.ui.items.DataItems;
 import com.manridy.iband.view.base.BaseActionActivity;
+import com.manridy.sdk.Watch;
+import com.manridy.sdk.callback.BleCallback;
+import com.manridy.sdk.exception.BleException;
+import com.manridy.sdk.type.InfoType;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -370,6 +374,22 @@ public class SleepHistoryActivity extends BaseActionActivity {
                 .setProgress(progress)
                 .invaliDate();
 //        cvHistorySleep.setProgressWithAnimation(progress);
+        cvHistorySleep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Watch.getInstance().getSleepInfo(InfoType.HISTORY_TESTDATA, new BleCallback() {
+                    @Override
+                    public void onSuccess(Object o) {
+
+                    }
+
+                    @Override
+                    public void onFailure(BleException exception) {
+
+                    }
+                });
+            }
+        });
     }
 
     private void setDataItem() {
