@@ -93,7 +93,7 @@ public class UpdateActivity extends BaseActionActivity {
         DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
         boolean isViewBtUpdate = false;
         for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
-            if(resultBean.getDevice_name().trim().equals(deviceName.trim())){
+            if(resultBean.getDevice_id().trim().equals(deviceType.trim())){
 //            if(resultBean.getDevice_id().trim().equals(deviceType.trim())){
                 if("0".equals(resultBean.getNeed_update())){
                     String firm = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION,"");

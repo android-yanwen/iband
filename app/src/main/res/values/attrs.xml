@@ -43,6 +43,10 @@
         <attr name="big_line" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="AlertBigItemsButton">
+        <attr name="tv_function" format="string"/>
+    </declare-styleable>
+
     <declare-styleable name="DataItems">
         <attr name="data_hint" format="string"/>
         <attr name="data_unit" format="string"/>

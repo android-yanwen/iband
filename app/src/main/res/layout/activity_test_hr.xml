@@ -7,13 +7,30 @@
               android:background="#f5f5f5">
     <include layout="@layout/tab_activity"/>
 
+    <com.manridy.iband.ui.items.AlertBigItems2
+        android:id="@+id/ai_hr_correcting"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:big_name="心率校验"
+        app:big_hint=""
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/ai_hr_correcting_baseline"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="#26000000"
+        android:visibility="gone"
+        />
+
     <com.manridy.iband.ui.items.AlertBigItems
         android:id="@+id/ai_alert"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:big_name="@string/hint_hr_test_timing"
-        app:big_hint="@string/hint_hr_test_timing_content"
+        android:layout_height="60dp"
+        app:big_name="心率定时测量"
         app:big_onoff="false"/>
+    <!--app:big_hint="@string/hint_hr_test_timing_content"-->
     <RelativeLayout
         android:id="@+id/rl_space"
         android:layout_width="match_parent"

@@ -374,7 +374,7 @@ public class MainActivity extends BaseActivity {
 
         for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
 //            if(resultBean.getDevice_id().trim().equals(deviceType.trim())){
-            if(resultBean.getDevice_name().trim().equals(deviceName.trim())){
+            if(resultBean.getDevice_id().trim().equals(deviceType.trim())){
                 if("0".equals(resultBean.getNeed_autoUpdate())){
                     isShow = false;
                 }else if("1".equals(resultBean.getNeed_autoUpdate())){

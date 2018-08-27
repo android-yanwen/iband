@@ -261,6 +261,11 @@ public class Watch extends BluetoothLeManager implements WatchApi {
         sendCmd(BleCmd.set15Alarm(times3,onOffs3,(byte)0x82),bleCallback);
     }
 
+    @Override
+    public void setHrCorrecting(boolean onOff, BleCallback bleCallback) {
+        sendCmd(BleCmd.setHrCorrecting(onOff),bleCallback);
+    }
+
     /**
      * 获取腕表闹钟数据
      */

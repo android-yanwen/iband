@@ -70,6 +70,10 @@ public class DeviceList {
         private String need_update;
         private String support_software;
         private String need_autoUpdate;
+        private String is_chk_heart_rate;
+        private String is_heart_rate_timing_chk;
+        private String is_heart_rate_call_police;
+
 
         public String getDevice_name() {
             return device_name;
@@ -230,6 +234,30 @@ public class DeviceList {
 
         public void setNeed_autoUpdate(String need_autoUpdate) {
             this.need_autoUpdate = need_autoUpdate;
+        }
+
+        public String getIs_chk_heart_rate() {
+            return is_chk_heart_rate;
+        }
+
+        public void setIs_chk_heart_rate(String is_chk_heart_rate) {
+            this.is_chk_heart_rate = is_chk_heart_rate;
+        }
+
+        public String getIs_heart_rate_timing_chk() {
+            return is_heart_rate_timing_chk;
+        }
+
+        public void setIs_heart_rate_timing_chk(String is_heart_rate_timing_chk) {
+            this.is_heart_rate_timing_chk = is_heart_rate_timing_chk;
+        }
+
+        public String getIs_heart_rate_call_police() {
+            return is_heart_rate_call_police;
+        }
+
+        public void setIs_heart_rate_call_police(String is_heart_rate_call_police) {
+            this.is_heart_rate_call_police = is_heart_rate_call_police;
         }
     }
 }

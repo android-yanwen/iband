@@ -24,6 +24,8 @@ public interface WatchApi {
 
     void set15Clock(ClockType clockType, List<Clock> clock,BleCallback bleCallback);
 
+    void setHrCorrecting(boolean onOff,BleCallback bleCallback);
+
     void getClockInfo(BleCallback bleCallback);
 
     void getSportInfo(InfoType infoType, BleCallback bleCallback);

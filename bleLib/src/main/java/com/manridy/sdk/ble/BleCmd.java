@@ -790,6 +790,16 @@ public class BleCmd {
         body[3] = (byte) (corrent & 0xff);
         return BleProtocol.cmd(head,type,body);
     }
+
+    public static byte[] setHrCorrecting(boolean onOff){
+        type = 0x0F;
+        body = new byte[17];
+        body[0] = 0x50;
+        body[1] = (byte) (onOff?1:0);
+        return BleProtocol.cmd(head,type,body);
+    }
+
+
 ///fc 08 f0 ff
     public static byte[] getPair(){
         type = 0x08;

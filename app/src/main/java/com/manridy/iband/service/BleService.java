@@ -49,6 +49,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.manridy.iband.common.AppGlobal.DEVICE_STATE_CONNECTED;
@@ -654,5 +655,8 @@ public class BleService extends Service {
         EventBus.getDefault().unregister(this);
         return super.onUnbind(intent);
     }
+
+
+
 
 }

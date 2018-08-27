@@ -149,6 +149,7 @@ public class SettingActivity extends BaseActionActivity {
     protected void onResume() {
         super.onResume();
         checkMenuVisibility();
+//        menuHrTest.setVisibility(View.VISIBLE);
     }
 
     private void checkMenuVisibility() {
@@ -163,7 +164,8 @@ public class SettingActivity extends BaseActionActivity {
             }
             DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
             for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
-                if (resultBean.getDevice_name().equals(deviceName) || resultBean.getDevice_id().equals(deviceType)) {
+//                if (resultBean.getDevice_name().equals(deviceName) || resultBean.getDevice_id().equals(deviceType)) {
+                if (resultBean.getDevice_id().equals(deviceType)) {
                     if (resultBean.getBrightness().equals("0")) {
                         menuLight.setVisibility(View.GONE);
                     }

@@ -2,6 +2,7 @@ package com.manridy.iband.view.test;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -12,9 +13,8 @@ import com.manridy.iband.R;
 import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.ui.items.AlertBigItems;
-import com.manridy.iband.ui.items.AlertBigItems2;
 import com.manridy.iband.view.base.BaseActionActivity;
-import com.manridy.iband.view.main.HrCorrectActivity;
+import com.manridy.iband.view.toast.HrCorrectingResultToast;
 import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.exception.BleException;
@@ -27,41 +27,35 @@ import butterknife.ButterKnife;
  * Created by jarLiao on 17/5/11.
  */
 
-public class TestHrTimingActivity extends BaseActionActivity {
+public class HrCorrectingActivity extends BaseActionActivity {
 
 
-    @BindView(R.id.ai_alert)
-    AlertBigItems aiAlert;
-    @BindView(R.id.tv_space)
-    TextView tvSpace;
-    @BindView(R.id.rl_space)
-    RelativeLayout rlSpace;
+
     @BindView(R.id.tb_menu)
     TextView tbMenu;
-    @BindView(R.id.ai_hr_correcting)
-    AlertBigItems2 aiCorrecting;
-    @BindView(R.id.ai_hr_correcting_baseline)
-    TextView aiHrCorrectingBaseline;
+    @BindView(R.id.bt_correcting)
+    Button rlCorrecting;
+    @BindView(R.id.bt_reset)
+    Button rlReset;
+
     private boolean curOnoff;
     private int curSpace;
 
-
-
     @Override
     protected void initView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_test_hr);
+        setContentView(R.layout.activity_hr_correcting);
         ButterKnife.bind(this);
     }
 
     @Override
     protected void initVariables() {
 //        setTitleAndMenu(getString(R.string.hint_hr_test_timing),getString(R.string.hint_save));
-        setTitleBar(getString(R.string.hint_hr_test_timing));
-        checkMenuVisibility();
-        curOnoff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
-        curSpace = (int) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
-        aiAlert.setAlertCheck(curOnoff);
-        tvSpace.setText(curSpace+getString(R.string.unit_min));
+        setTitleBar("心率校验");
+//        checkMenuVisibility();
+//        curOnoff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
+//        curSpace = (int) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
+//        aiAlert.setAlertCheck(curOnoff);
+//        tvSpace.setText(curSpace+getString(R.string.unit_min));
 
     }
 
@@ -78,12 +72,9 @@ public class TestHrTimingActivity extends BaseActionActivity {
             for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
                 if (resultBean.getDevice_id().equals(deviceType)) {
                     if (resultBean.getHeartrate_version().compareTo(deviceFirm) <= 0){
-                        curOnoff = resultBean.getHeartrate_isopen().equals("1");
-                        curSpace = Integer.parseInt(resultBean.getHeartrate_interval());
-                    }
-                    if(!"0".equals(resultBean.getIs_chk_heart_rate())&&resultBean.getIs_chk_heart_rate().compareTo(deviceFirm) <=0 ){
-                        aiCorrecting.setVisibility(View.VISIBLE);
-                        aiHrCorrectingBaseline.setVisibility(View.VISIBLE);
+//                        curOnoff = resultBean.getHeartrate_isopen().equals("1");
+//                        curSpace = Integer.parseInt(resultBean.getHeartrate_interval());
+
                     }
                 }
             }
@@ -96,34 +87,21 @@ public class TestHrTimingActivity extends BaseActionActivity {
 
     @Override
     protected void initListener() {
-
-        aiCorrecting.setOnClickListener(new View.OnClickListener(){
-
+        rlCorrecting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(HrCorrectingActivity.class);
-            }
-        });
-
-        aiAlert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                curOnoff = !curOnoff;
-                aiAlert.setAlertCheck(curOnoff);
-
-
-
-                showProgress( getString(R.string.hint_saveing));
-                ibandApplication.service.watch.sendCmd(BleCmd.setTimingHrTest(curOnoff,curSpace), new BleCallback() {
+                showProgress("心率校验中，请稍等");
+                ibandApplication.service.watch.setHrCorrecting(true,new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
-                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
-                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
+//                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
+//                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
                         dismissProgress();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast( getString(R.string.hint_save_success));
+//                                showToast("心率校验完成");
+                                HrCorrectingResultToast.getToastEmail().ToastShow(getBaseContext(), null,"心率校验完成");
                             }
                         });
 //                        finish();
@@ -131,32 +109,80 @@ public class TestHrTimingActivity extends BaseActionActivity {
 
                     @Override
                     public void onFailure(BleException exception) {
+//                        dismissProgress();
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showToast( "心率校验失败");
+//                            }
+//                        });
+                    }
+                });
+            }
+        });
+
+        rlReset.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                showProgress("心率复位中，请稍等");
+                ibandApplication.service.watch.setHrCorrecting(true,new BleCallback()  {
+                    @Override
+                    public void onSuccess(Object o) {
                         dismissProgress();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast( getString(R.string.hint_save_fail));
+                                showToast("心率复位完成");
                             }
                         });
+
+//                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
+//                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
+//                        dismissProgress();
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showToast( getString(R.string.hint_save_success));
+//                            }
+//                        });
+//                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(BleException exception) {
+//                        dismissProgress();
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showToast( getString(R.string.hint_save_fail));
+//                            }
+//                        });
                     }
                 });
-
-
-
             }
         });
-        rlSpace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new NumDialog(mContext, getSpaces(), curSpace+"",getString(R.string.hint_space), new NumDialog.NumDialogListener() {
-                    @Override
-                    public void getNum(String num) {
-                        curSpace = Integer.valueOf(num);
-                        tvSpace.setText(num+getString(R.string.unit_min));
-                    }
-                }).show();
-            }
-        });
+
+//
+//        aiAlert.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                curOnoff = !curOnoff;
+//                aiAlert.setAlertCheck(curOnoff);
+//            }
+//        });
+//        rlSpace.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                new NumDialog(mContext, getSpaces(), curSpace+"",getString(R.string.hint_space), new NumDialog.NumDialogListener() {
+//                    @Override
+//                    public void getNum(String num) {
+//                        curSpace = Integer.valueOf(num);
+//                        tvSpace.setText(num+getString(R.string.unit_min));
+//                    }
+//                }).show();
+//            }
+//        });
         tbMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

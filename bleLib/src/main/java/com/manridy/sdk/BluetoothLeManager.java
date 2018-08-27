@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.manridy.sdk.ble.BleParse;
 import com.manridy.sdk.callback.BleCallback;
@@ -33,6 +34,7 @@ import com.manridy.sdk.scan.TimeScanCallback;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -380,7 +382,8 @@ public class BluetoothLeManager {
                     }
                     gatt.discoverServices();
                     broadcastUpdate(ACTION_GATT_CONNECT,null,gatt.getDevice().getAddress());
-                }else if (newState == BluetoothProfile.STATE_DISCONNECTED ){
+                }
+                else if (newState == BluetoothProfile.STATE_DISCONNECTED ){
 
                     Log.i(TAG,"BluetoothProfile.STATE_DISCONNECTED");
 
@@ -594,4 +597,24 @@ public class BluetoothLeManager {
         }
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
+
+
+    public void checkPairDevice(){
+        Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
+        for (BluetoothDevice device : bondedDevices) {
+            unpairDevice(device);
+        }
+//        Toast.makeText(mContext,"123",Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void unpairDevice(BluetoothDevice device) {
+        try {
+            Method m = device.getClass().getMethod("removeBond", (Class[]) null);
+            m.invoke(device, (Object[]) null);
+        } catch (Exception e) {
+            Log.e("mate", e.getMessage());
+        }
+    }
+
 }

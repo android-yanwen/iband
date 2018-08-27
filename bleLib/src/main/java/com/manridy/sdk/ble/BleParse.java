@@ -2,6 +2,7 @@ package com.manridy.sdk.ble;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.manridy.sdk.bean.BloodOxygen;
@@ -593,6 +594,7 @@ public class BleParse {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            LogUtil.i(TAG,"固件信息："+result);
         }else if (body[0] == 0x06){//电池电量
             byte[] date = new byte[6];
             System.arraycopy(body,1,date,0,date.length);
@@ -602,8 +604,13 @@ public class BleParse {
             if (actionListener != null) {
                 actionListener.onAction(1660,result);
             }
+            LogUtil.i(TAG,"固件信息："+result);
+        }else if (body[0] == 0x50){
+            byte date = body[1];
+            result = ""+date;
+            Log.i(TAG,"0x50:"+date);
         }
-        LogUtil.i(TAG,"固件信息："+result);
+
         return result;
     }
 
