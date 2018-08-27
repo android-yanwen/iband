@@ -16,7 +16,9 @@ import com.manridy.iband.ui.items.AlertBigItems2;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.iband.view.main.HrCorrectActivity;
 import com.manridy.sdk.ble.BleCmd;
+import com.manridy.sdk.ble.BleParse;
 import com.manridy.sdk.callback.BleCallback;
+import com.manridy.sdk.callback.BleNotifyListener;
 import com.manridy.sdk.exception.BleException;
 
 import butterknife.BindView;
@@ -51,6 +53,7 @@ public class TestHrTimingActivity extends BaseActionActivity {
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_test_hr);
         ButterKnife.bind(this);
+
     }
 
     @Override

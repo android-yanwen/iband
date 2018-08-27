@@ -16,7 +16,9 @@ import com.manridy.iband.ui.items.AlertBigItems;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.iband.view.toast.HrCorrectingResultToast;
 import com.manridy.sdk.ble.BleCmd;
+import com.manridy.sdk.ble.BleParse;
 import com.manridy.sdk.callback.BleCallback;
+import com.manridy.sdk.callback.BleNotifyListener;
 import com.manridy.sdk.exception.BleException;
 
 import butterknife.BindView;
@@ -41,10 +43,35 @@ public class HrCorrectingActivity extends BaseActionActivity {
     private boolean curOnoff;
     private int curSpace;
 
+    private int requstType = 0;
+
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_hr_correcting);
         ButterKnife.bind(this);
+        BleParse.getInstance().setHrCorrectingNotifyListener(new BleNotifyListener() {
+            @Override
+            public void onNotify(Object o) {
+                if(requstType==1){
+                    dismissProgress();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+//                                showToast("心率校验完成");
+                            HrCorrectingResultToast.getToastEmail().ToastShow(getBaseContext(), null,"心率校验完成");
+                        }
+                    });
+                }else if(requstType==2){
+                    dismissProgress();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            HrCorrectingResultToast.getToastEmail().ToastShow(getBaseContext(), null,"心率复位完成");
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @Override
@@ -91,19 +118,13 @@ public class HrCorrectingActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 showProgress("心率校验中，请稍等");
+                requstType = 1;
                 ibandApplication.service.watch.setHrCorrecting(true,new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
 //                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
 //                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
-                        dismissProgress();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-//                                showToast("心率校验完成");
-                                HrCorrectingResultToast.getToastEmail().ToastShow(getBaseContext(), null,"心率校验完成");
-                            }
-                        });
+
 //                        finish();
                     }
 
@@ -126,16 +147,11 @@ public class HrCorrectingActivity extends BaseActionActivity {
             @Override
             public void onClick(View v) {
                 showProgress("心率复位中，请稍等");
+                requstType = 2;
                 ibandApplication.service.watch.setHrCorrecting(true,new BleCallback()  {
                     @Override
                     public void onSuccess(Object o) {
-                        dismissProgress();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showToast("心率复位完成");
-                            }
-                        });
+
 
 //                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
 //                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);

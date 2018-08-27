@@ -75,6 +75,7 @@ public class BleParse {
     private BleNotifyListener stepNotifyListener;
     private BleNotifyListener runNotifyListener;
     private BleNotifyListener sleepStatsNotifyListener;
+    private BleNotifyListener hrCorrectingNotifyListener;
 
     private BleHistoryListener stepHistoryListener;
     private BleHistoryListener sleepHistoryListener;
@@ -608,6 +609,9 @@ public class BleParse {
         }else if (body[0] == 0x50){
             byte date = body[1];
             result = ""+date;
+            if(hrCorrectingNotifyListener!=null){
+                hrCorrectingNotifyListener.onNotify(result);
+            }
             Log.i(TAG,"0x50:"+date);
         }
 
@@ -915,6 +919,10 @@ public class BleParse {
 
     public void setSleepStatsNotifyListener(BleNotifyListener sleepStatsNotifyListener) {
         this.sleepStatsNotifyListener = sleepStatsNotifyListener;
+    }
+
+    public void setHrCorrectingNotifyListener(BleNotifyListener hrCorrectingNotifyListener){
+        this.hrCorrectingNotifyListener = hrCorrectingNotifyListener;
     }
 
     private String putIntJson(String key, int value){
