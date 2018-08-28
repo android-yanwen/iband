@@ -172,15 +172,21 @@ public class SettingActivity extends BaseActionActivity {
                     if (resultBean.getClear_away().compareTo(deviceFirm) <= 0) {
                         menuClean.setVisibility(View.VISIBLE);
                     }
-                    if ("0".equals(resultBean.getHeartrate_version())){
-                        menuHrTest.setVisibility(View.GONE);
-                        return;
-                    }else{
-                        if((resultBean.getHeartrate_version().compareTo(deviceFirm) <= 0)) {
-                            menuHrTest.setVisibility(View.VISIBLE);
-                        }
-                        return;
+
+                    boolean isViewMenuHeartrate = false;
+                    if (!"0".equals(resultBean.getHeartrate_version())&&resultBean.getHeartrate_version().compareTo(deviceFirm) <= 0){
+                        isViewMenuHeartrate = true;
                     }
+
+                    if(!"0".equals(resultBean.getIs_chk_heart_rate())&&resultBean.getIs_chk_heart_rate().compareTo(deviceFirm) <= 0) {
+                        isViewMenuHeartrate = true;
+                        }
+                    if(isViewMenuHeartrate) {
+                        menuHrTest.setVisibility(View.VISIBLE);
+                    }else{
+                        menuHrTest.setVisibility(View.GONE);
+                    }
+                        return;
                 }
             }
         } catch (Exception e) {

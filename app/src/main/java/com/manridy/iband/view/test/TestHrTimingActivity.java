@@ -16,9 +16,7 @@ import com.manridy.iband.ui.items.AlertBigItems2;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.iband.view.main.HrCorrectActivity;
 import com.manridy.sdk.ble.BleCmd;
-import com.manridy.sdk.ble.BleParse;
 import com.manridy.sdk.callback.BleCallback;
-import com.manridy.sdk.callback.BleNotifyListener;
 import com.manridy.sdk.exception.BleException;
 
 import butterknife.BindView;
@@ -53,7 +51,6 @@ public class TestHrTimingActivity extends BaseActionActivity {
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_test_hr);
         ButterKnife.bind(this);
-
     }
 
     @Override
@@ -80,6 +77,9 @@ public class TestHrTimingActivity extends BaseActionActivity {
             DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
             for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
                 if (resultBean.getDevice_id().equals(deviceType)) {
+                    if(!"0".equals(resultBean.getHeartrate_version())&&resultBean.getHeartrate_version().compareTo(deviceFirm)<=0){
+                        aiAlert.setVisibility(View.VISIBLE);
+                    }
                     if (resultBean.getHeartrate_version().compareTo(deviceFirm) <= 0){
                         curOnoff = resultBean.getHeartrate_isopen().equals("1");
                         curSpace = Integer.parseInt(resultBean.getHeartrate_interval());

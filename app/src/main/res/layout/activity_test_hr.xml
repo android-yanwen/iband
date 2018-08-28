@@ -29,7 +29,9 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:big_name="心率定时测量"
-        app:big_onoff="false"/>
+        app:big_onoff="false"
+        android:visibility="gone"
+        />
     <!--app:big_hint="@string/hint_hr_test_timing_content"-->
     <RelativeLayout
         android:id="@+id/rl_space"
