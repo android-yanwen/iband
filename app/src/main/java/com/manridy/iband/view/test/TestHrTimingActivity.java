@@ -79,8 +79,6 @@ public class TestHrTimingActivity extends BaseActionActivity {
                 if (resultBean.getDevice_id().equals(deviceType)) {
                     if(!"0".equals(resultBean.getHeartrate_version())&&resultBean.getHeartrate_version().compareTo(deviceFirm)<=0){
                         aiAlert.setVisibility(View.VISIBLE);
-                    }
-                    if (resultBean.getHeartrate_version().compareTo(deviceFirm) <= 0){
                         curOnoff = resultBean.getHeartrate_isopen().equals("1");
                         curSpace = Integer.parseInt(resultBean.getHeartrate_interval());
                     }
