@@ -11,7 +11,7 @@
         android:id="@+id/ai_hr_correcting"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        app:big_name="心率校验"
+        app:big_name="@string/hint_hr_correcting"
         app:big_hint=""
         android:visibility="gone"
         />
@@ -28,7 +28,7 @@
         android:id="@+id/ai_alert"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        app:big_name="心率定时测量"
+        app:big_name="@string/hint_test_hr_timing"
         app:big_onoff="false"
         android:visibility="gone"
         />

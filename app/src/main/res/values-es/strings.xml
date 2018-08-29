@@ -336,7 +336,44 @@
     <string name="hint_state_charge">Cargando</string>
     <string name="hint_hr_test_timing">Medida automática de frecuencia cardíaca</string>
     <string name="hint_menu_camera">cámara remota</string>
+    <string name="hint_hr_set">Ajuste de frecuencia cardíaca</string>
 
+    <string name="hint_test_hr_timing">Medición de tiempo</string>
+
+    <string name="hint_hr_correcting">Calibración de la frecuencia cardíaca</string>
+
+    <string name="hint_hr_reseting">Reinicio de frecuencia cardíaca</string>
+
+    <string name="hint_hr_police">Alarma de frecuencia cardíaca</string>
+
+    <string name="hr_correcting">Calibración, por favor espere</string>
+
+    <string name="hr_reseting">Restablecer, por favor espere</string>
+
+    <string name="hr_correcting_success">Calibración completa</string>
+
+    <string name="hr_reseting_success">Restablecer completado</string>
+
+    <string name="hr_correcting_fail">Calibración fallida</string>
+
+    <string name="hr_reseting_fail">Reinicio fallido</string>
+
+    <string name="button_correcting">Calibración</string>
+
+    <string name="button_reseting">reajustar</string>
+    <string name="heart_rate_instructions">
+    Calibración: utilice la función de calibración cuando descubra que no puede medir su frecuencia cardíaca, o si su medición es propensa a fallar.\n
+    Restablecer: restablece la función de frecuencia cardíaca a la configuración de fábrica.\n
+    Método de operación:\n\n
+
+    1. Use el reloj y asegúrese de que el reloj esté conectado correctamente a la aplicación.\n
+    2. Quédese quieto y haga clic en el botón "Calibrar" / "Restablecer"\n
+    3. Después de que la aplicación se muestre con éxito, se puede realizar el efecto de verificación de la medición.\n
+    4. Si falla el mensaje de la APLICACIÓN, confirme que la APLICACIÓN esté conectada al dispositivo y vuelva a intentarlo.\n\n
+
+
+    Nota: asegúrese de mantenerse quieto al calibrar o restablecer, y asegúrese de que la aplicación esté conectada al reloj.\n\n
+    </string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

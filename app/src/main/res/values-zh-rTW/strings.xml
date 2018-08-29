@@ -336,6 +336,44 @@
     <string name="hint_state_charge">充電中</string>
     <string name="hint_hr_test_timing">心率定時量測</string>
     <string name="hint_menu_camera">遙控拍照</string>
+    <string name="hint_hr_set">心率設置</string>
+
+    <string name="hint_test_hr_timing">定時測量心率</string>
+
+    <string name="hint_hr_correcting">心率校準</string>
+
+    <string name="hint_hr_reseting">心率復位</string>
+
+    <string name="hint_hr_police">心率報警</string>
+
+    <string name="hr_correcting">校準中，請稍等</string>
+
+    <string name="hr_reseting">復位中，請稍等</string>
+
+    <string name="hr_correcting_success">校準完成</string>
+
+    <string name="hr_reseting_success">復位完成</string>
+
+    <string name="hr_correcting_fail">校準失敗</string>
+
+    <string name="hr_reseting_fail">復位失敗</string>
+
+    <string name="button_correcting">校準</string>
+
+    <string name="button_reseting">復位</string>
+    <string name="heart_rate_instructions">
+        校準：當發現無法測量心率，或者測量容易失敗時，請使用校準功能。\n
+復位：使心率功能恢復到出廠設置。\n
+操作方法：\n\n
+
+1.佩戴好手錶，並確保手錶與APP正常連接\n
+2.保持靜止，點擊“校準”/“復位”按鈕\n
+3.APP 提示成功後，可以進行測量驗證效果\n
+4.若APP提示失敗，請確認APP與設備是否連接後重新嘗試一次。\n\n
+
+
+注意：校准或者復位時請一定確保靜止，並且確認APP與手錶連接。\n\n
+    </string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

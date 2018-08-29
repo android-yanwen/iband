@@ -58,7 +58,7 @@ public class HrCorrectingActivity extends BaseActionActivity {
                         @Override
                         public void run() {
 //                                showToast("心率校验完成");
-                            HrCorrectingResultToast.getToastEmail().ToastShow(getBaseContext(), null,"心率校验完成");
+                            HrCorrectingResultToast.getToastEmail().ToastShow(getBaseContext(), null,getString(R.string.hr_correcting_success));
                         }
                     });
                 }else if(requstType==2){
@@ -66,18 +66,19 @@ public class HrCorrectingActivity extends BaseActionActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            HrCorrectingResultToast.getToastEmail().ToastShow(getBaseContext(), null,"心率复位完成");
+                            HrCorrectingResultToast.getToastEmail().ToastShow(getBaseContext(), null,getString(R.string.hr_reseting_success));
                         }
                     });
                 }
             }
         });
+
     }
 
     @Override
     protected void initVariables() {
 //        setTitleAndMenu(getString(R.string.hint_hr_test_timing),getString(R.string.hint_save));
-        setTitleBar("心率校验");
+        setTitleBar(getString(R.string.hint_hr_correcting));
 //        checkMenuVisibility();
 //        curOnoff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
 //        curSpace = (int) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
@@ -117,7 +118,7 @@ public class HrCorrectingActivity extends BaseActionActivity {
         rlCorrecting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showProgress("心率校验中，请稍等");
+                showProgress(getString(R.string.hr_correcting));
                 requstType = 1;
                 ibandApplication.service.watch.setHrCorrecting(true,new BleCallback() {
                     @Override
@@ -146,9 +147,9 @@ public class HrCorrectingActivity extends BaseActionActivity {
 
             @Override
             public void onClick(View v) {
-                showProgress("心率复位中，请稍等");
+                showProgress(getString(R.string.hr_reseting));
                 requstType = 2;
-                ibandApplication.service.watch.setHrCorrecting(true,new BleCallback()  {
+                ibandApplication.service.watch.setHrCorrecting(false,new BleCallback()  {
                     @Override
                     public void onSuccess(Object o) {
 

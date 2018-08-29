@@ -336,6 +336,45 @@
     <string name="hint_state_charge">Cobrando</string>
     <string name="hint_hr_test_timing">Medição automática da frequência cardíaca</string>
     <string name="hint_menu_camera">câmera remota</string>
+    <string name="hint_hr_set">configurações de ritmo cardíaco</string>
+
+    <string name="hint_test_hr_timing">temporização medições</string>
+
+    <string name="hint_hr_correcting">Calibração da frequência cardíaca</string>
+
+    <string name="hint_hr_reseting">freqüência cardíaca de reset</string>
+
+    <string name="hint_hr_police">Alarme de frequência cardíaca</string>
+
+    <string name="hr_correcting">Calibração, por favor espere</string>
+
+    <string name="hr_reseting">Reset, por favor espere</string>
+
+    <string name="hr_correcting_success">Calibração concluída</string>
+
+    <string name="hr_reseting_success">Redefinir concluído</string>
+
+    <string name="hr_correcting_fail">falha de calibração</string>
+
+    <string name="hr_reseting_fail">repor falhar</string>
+
+    <string name="button_correcting">Calibração</string>
+
+    <string name="button_reseting">Reset</string>
+    <string name="heart_rate_instructions">
+        Calibração: Use a função de calibração quando achar que não é possível medir sua frequência cardíaca ou se sua medição está sujeita a falhas.\n
+Redefinir: restaura a função de frequência cardíaca para as configurações de fábrica.\n
+Método de operação:\n\n
+
+1. Use o relógio e verifique se o relógio está conectado corretamente ao aplicativo.\n
+2. Fique parado e clique no botão "Calibration" / "Reset"\n
+3. Depois que o aplicativo solicitar com êxito, o efeito de verificação de medição pode ser executado.\n
+4. Se o prompt do APP falhar, confirme se o APP está conectado ao dispositivo e tente novamente.\n\n
+
+
+Nota: Certifique-se de manter-se imóvel ao calibrar ou redefinir e verifique se o APP está conectado ao relógio.\n\n
+    </string>
+
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

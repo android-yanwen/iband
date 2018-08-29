@@ -173,7 +173,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/set_heart_rate"
-                app:menus_name="@string/hint_hr_test_timing"
+                app:menus_name="@string/hint_hr_set"
                 android:visibility="gone"/>
 
             <com.manridy.iband.ui.items.MenuItems

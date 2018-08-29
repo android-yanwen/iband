@@ -336,7 +336,45 @@
     <string name="hint_state_charge">Laden</string>
     <string name="hint_hr_test_timing">Hartslag automatische meting</string>
     <string name="hint_menu_camera">Camera op afstand</string>
+    <string name="hint_hr_set">Hartslaginstelling</string>
 
+    <string name="hint_test_hr_timing">Timing meting</string>
+
+    <string name="hint_hr_correcting">Hartslagkalibratie</string>
+
+    <string name="hint_hr_reseting">Hartslag opnieuw ingesteld</string>
+
+    <string name="hint_hr_police">Hartslag alarm</string>
+
+    <string name="hr_correcting">Kalibratie, even geduld aub</string>
+
+    <string name="hr_reseting">Reset, even geduld aub</string>
+
+    <string name="hr_correcting_success">Kalibratie voltooid</string>
+
+    <string name="hr_reseting_success">Reset voltooid</string>
+
+    <string name="hr_correcting_fail">Kalibratie mislukt</string>
+
+    <string name="hr_reseting_fail">Reset mislukt</string>
+
+    <string name="button_correcting">ijking</string>
+
+    <string name="button_reseting">Reset</string>
+
+    <string name="heart_rate_instructions">
+        Kalibratie: gebruik de kalibratiefunctie wanneer u constateert dat u uw hartslag niet kunt meten of dat uw meting gevoelig is voor uitval.\n
+Reset: herstelt de hartslagfunctie naar de fabrieksinstellingen.\n
+Operatie methode:\n\n
+
+1. Draag het horloge en zorg ervoor dat het horloge correct is aangesloten op de app.\n
+2. Blijf stil en klik op de knop "Kalibratie" / "Reset"\n
+3. Nadat de APP-prompt is gevraagd, kan het meetverificatie-effect worden uitgevoerd.\n
+4. Als de APP-prompt mislukt, controleer dan of de APP is verbonden met het apparaat en probeer het opnieuw.\n\n
+
+
+Opmerking: Zorg ervoor dat u stil blijft tijdens het kalibreren of opnieuw instellen en zorg ervoor dat de APP is verbonden met het horloge.\n\n
+    </string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>steps counting</item>

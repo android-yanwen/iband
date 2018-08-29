@@ -340,6 +340,43 @@
     <string name="hint_alert_space">Remind interval</string>
     <string name="hint_exporting">Exporting data, please wait ...</string>
     <string name="hint_searched">Search complete</string>
+    <string name="hint_hr_set">Heart rate settings</string>
+    <string name="hint_test_hr_timing">Timing measurement</string>
+    <string name="hint_hr_correcting">Heart rate calibration</string>
+    <string name="hint_hr_reseting">Heart rate reset</string>
+    <string name="hint_hr_police">Heart rate alarm</string>
+    <string name="hr_correcting">Calibration, please wait</string>
+    <string name="hr_reseting">Reset, please wait</string>
+    <string name="hr_correcting_success">Calibration complete</string>
+    <string name="hr_reseting_success">Reset completed</string>
+    <string name="hr_correcting_fail">Calibration failed</string>
+    <string name="hr_reseting_fail">Reset failed</string>
+    <string name="button_correcting">Calibration</string>
+    <string name="button_reseting">Reset</string>
+    <string name="heart_rate_instructions">
+        Calibration: Use the calibration function when you find that you cannot measure your heart rate, or if your measurement is prone to failure.\n
+Reset: Restores the heart rate function to the factory settings.\n
+Operation method:\n\n
+
+1. Wear the watch and make sure the watch is properly connected to the app.\n
+2. Stay still and click the "Calibration" / "Reset" button\n
+3. After the APP prompts successfully, the measurement verification effect can be performed.\n
+4. If the APP prompt fails, please confirm that the APP is connected to the device and try again.\n\n
+
+Note: Be sure to keep still when calibrating or resetting, and make sure the APP is connected to the watch.\n\n</string>
+    <!--<string name="hint_hr_set">心率设置</string>-->
+    <!--<string name="hint_test_hr_timing">心率定时测量</string>-->
+    <!--<string name="hint_hr_correcting">心率校验</string>-->
+    <!--<string name="hint_hr_reset">心率复位</string>-->
+    <!--<string name="hr_correcting">心率校验中，请稍等</string>-->
+    <!--<string name="hr_reseting">心率复位中，请稍等</string>-->
+    <!--<string name="hr_correcting_success">心率校验完成</string>-->
+    <!--<string name="hr_reseting_success">心率复位完成</string>-->
+    <!--<string name="hr_correcting_fail">心率校验完成</string>-->
+    <!--<string name="hr_reseting_fail">心率复位完成</string>-->
+    <!--<string name="button_correcting">校验</string>-->
+    <!--<string name="button_reseting">复位</string>-->
+
 
     //数据库显示 不需要翻译
     <string-array name="db">

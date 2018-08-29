@@ -336,6 +336,44 @@
     <string name="hint_state_charge">ricarica</string>
     <string name="hint_hr_test_timing">Misurazione automatica della frequenza cardiaca</string>
     <string name="hint_menu_camera">fotocamera a distanza</string>
+    <string name="hint_hr_set">impostazioni di frequenza cardiaca</string>
+
+    <string name="hint_test_hr_timing">Timing misurazioni</string>
+
+    <string name="hint_hr_correcting">Calibrazione della frequenza cardiaca</string>
+
+    <string name="hint_hr_reseting">Ripristino della frequenza cardiaca</string>
+
+    <string name="hint_hr_police">Allarme della frequenza cardiaca</string>
+
+    <string name="hr_correcting">Calibrazione, attendere prego</string>
+
+    <string name="hr_reseting">Reset, si prega di attendere</string>
+
+    <string name="hr_correcting_success">Calibrazione completata</string>
+
+    <string name="hr_reseting_success">Ripristina completato</string>
+
+    <string name="hr_correcting_fail">Calibrazione fallita</string>
+
+    <string name="hr_reseting_fail">Ripristino fallito</string>
+
+    <string name="button_correcting">taratura</string>
+
+    <string name="button_reseting">reset</string>
+    <string name="heart_rate_instructions">
+        Calibrazione: utilizzare la funzione di calibrazione quando si scopre che non è possibile misurare la frequenza cardiaca o se la misurazione è soggetta a cedimenti.\n
+Ripristina: ripristina la funzione frequenza cardiaca alle impostazioni di fabbrica.\n
+Metodo di operazione:\n\n
+
+1. Indossare l\'orologio e assicurarsi che l\'orologio sia collegato correttamente all\'app.\n
+2. Rimanere immobili e fare clic sul pulsante "Calibration" / "Reset"\n
+3. Dopo che l\'APP ha richiesto correttamente, è possibile eseguire l\'effetto di verifica della misurazione.\n
+4. Se il prompt APP fallisce, si prega di confermare che l\'APP è connessa al dispositivo e riprovare.\n\n
+
+
+Nota: assicurati di rimanere fermo durante la calibrazione o il ripristino e assicurati che l\'APP sia collegata all\'orologio.\n\n
+    </string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

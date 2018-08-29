@@ -19,6 +19,7 @@ import com.manridy.iband.service.AlertService;
 import com.manridy.iband.service.BleService;
 import com.manridy.iband.service.NotificationCollectorMonitorService;
 import com.manridy.iband.service.AppNotificationListenerService;
+import com.manridy.iband.view.setting.UpdateActivity;
 import com.mob.MobSDK;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
@@ -49,7 +50,9 @@ public class IbandApplication extends Application {
         Fresco.initialize(this);//初始化图片加载
         initBleSevrice();//初始化蓝牙服务
         initAlertService();//初始化提醒服务
-        initBugly();//初始化bugly
+        if(!UpdateActivity.isGoogle) {
+            initBugly();//初始化bugly
+        }
         initNotificationService();//初始化通知
         initLangue();//初始化语言
 //        CrashHandler.getInstance().init(intance);

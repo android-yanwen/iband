@@ -340,6 +340,45 @@
     <string name="hint_lost_nap">Trennungsalarm ist ausgeschaltet</string>
     <string name="hint_exporting">Daten werden exportiert</string>
     <string name="hint_searched">Abgeschlossen</string>
+    <string name="hint_hr_set">Herzfrequenzeinstellung</string>
+
+    <string name="hint_test_hr_timing">Timing-Messung</string>
+
+    <string name="hint_hr_correcting">Herzfrequenz-Kalibrierung</string>
+
+    <string name="hint_hr_reseting">Herzfrequenz zurückgesetzt</string>
+
+    <string name="hint_hr_police">Herzfrequenzalarm</string>
+
+    <string name="hr_correcting">Kalibrierung, bitte warten</string>
+
+    <string name="hr_reseting">Reset, bitte warten</string>
+
+    <string name="hr_correcting_success">Kalibrierung abgeschlossen</string>
+
+    <string name="hr_reseting_success">Reset abgeschlossen</string>
+
+    <string name="hr_correcting_fail">Kalibrierung fehlgeschlagen</string>
+
+    <string name="hr_reseting_fail">Zurücksetzen fehlgeschlagen</string>
+
+    <string name="button_correcting">Kalibrierung</string>
+
+    <string name="button_reseting">rücksetzen</string>
+
+    <string name="heart_rate_instructions">
+        Kalibrierung: Verwenden Sie die Kalibrierungsfunktion, wenn Sie feststellen, dass Sie Ihre Herzfrequenz nicht messen können oder wenn Ihre Messung fehleranfällig ist.\n
+Reset: Stellt die Herzfrequenzfunktion auf die Werkseinstellungen zurück.\n
+Betriebsmethode:\n\n
+
+1. Tragen Sie die Uhr und vergewissern Sie sich, dass die Uhr ordnungsgemäß an die App angeschlossen ist.\n
+2. Bleiben Sie ruhig und klicken Sie auf die Schaltfläche "Calibration" / "Reset"\n
+3. Nachdem die APP erfolgreich aufgefordert wurde, kann der Messverifizierungseffekt ausgeführt werden.\n
+4. Wenn die APP-Eingabeaufforderung fehlschlägt, überprüfen Sie, ob die APP mit dem Gerät verbunden ist, und versuchen Sie es erneut.\n\n
+
+
+Hinweis: Stellen Sie sicher, dass Sie beim Kalibrieren oder Zurücksetzen nicht stehen bleiben und vergewissern Sie sich, dass die APP mit der Uhr verbunden ist.\n\n</string>
+
 
     //数据库显示 不需要翻译
     <string-array name="db">

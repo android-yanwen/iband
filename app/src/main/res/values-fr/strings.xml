@@ -336,6 +336,46 @@
     <string name="hint_state_charge">Charger</string>
     <string name="hint_hr_test_timing">Mesure automatique de la fréquence cardiaque</string>
     <string name="hint_menu_camera">caméra à distance</string>
+    <string name="hint_hr_set">réglages de fréquence cardiaque</string>
+
+    <string name="hint_test_hr_timing">Mesure du temps</string>
+
+    <string name="hint_hr_correcting">étalonnage de la fréquence cardiaque</string>
+
+    <string name="hint_hr_reseting">Réinitialisation de la fréquence cardiaque</string>
+
+    <string name="hint_hr_police">Alarme de fréquence cardiaque</string>
+
+    <string name="hr_correcting">L\'étalonnage, s\'il vous plaît attendre</string>
+
+    <string name="hr_reseting">Reset, s\'il vous plaît attendre</string>
+
+    <string name="hr_correcting_success">Etalonnage terminé</string>
+
+    <string name="hr_reseting_success">Réinitialiser terminé</string>
+
+    <string name="hr_correcting_fail">Le calibrage a échoué</string>
+
+    <string name="hr_reseting_fail">Réinitialiser échoué</string>
+
+    <string name="button_correcting">Étalonnage</string>
+
+    <string name="button_reseting">Réinitialiser</string>
+
+    <string name="heart_rate_instructions">
+        Calibration: Use the calibration function when you find that you cannot measure your heart rate, or if your measurement is prone to failure.\n
+Reset: Restores the heart rate function to the factory settings.\n
+Operation method:\n\n
+
+1. Wear the watch and make sure the watch is properly connected to the app.\n
+2. Stay still and click the "Calibration" / "Reset" button\n
+3. After the APP prompts successfully, the measurement verification effect can be performed.\n
+4. If the APP prompt fails, please confirm that the APP is connected to the device and try again.\n\n
+
+
+Note: Be sure to keep still when calibrating or resetting, and make sure the APP is connected to the watch....\n\n
+    </string>
+
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

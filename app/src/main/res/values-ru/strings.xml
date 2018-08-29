@@ -336,6 +336,45 @@
     <string name="hint_state_charge">зарядка...</string>
     <string name="hint_hr_test_timing">Автоматическое измерение сердечного ритма</string>
     <string name="hint_menu_camera">Дистанционная Камера</string>
+    <string name="hint_hr_set">Настройки частоты пульса</string>
+
+    <string name="hint_test_hr_timing">Измерение времени</string>
+
+    <string name="hint_hr_correcting">калибровка Частота сердечных сокращений</string>
+
+    <string name="hint_hr_reseting">Сброс частоты сердечных сокращений</string>
+
+    <string name="hint_hr_police">сигнализация сердечного ритма</string>
+
+    <string name="hr_correcting">Калибровка, пожалуйста, подождите</string>
+
+    <string name="hr_reseting">Сброс，пожалуйста，подождите</string>
+
+    <string name="hr_correcting_success">Калибровка завершена</string>
+
+    <string name="hr_reseting_success">Сброс завершен</string>
+
+    <string name="hr_correcting_fail">отказ калибровки</string>
+
+    <string name="hr_reseting_fail">Сбросить сбой</string>
+
+    <string name="button_correcting">калибровка</string>
+
+    <string name="button_reseting">сброс</string>
+
+    <string name="heart_rate_instructions">
+        Калибровка: используйте функцию калибровки, если вы обнаружите, что вы не можете измерить частоту сердечных сокращений, или если ваши измерения подвержены провалу.\n
+Сброс: восстанавливает функцию сердечного ритма до заводских настроек.\n
+Способ работы:\n\n
+
+1. Наденьте часы и убедитесь, что часы правильно подключены к приложению.\n
+2. Оставайтесь на месте и нажмите кнопку «Калибровка» / «Сброс»\n
+3. После успешного запуска APP можно выполнить эффект проверки измерений.\n
+4. Если запрос APP не работает, убедитесь, что APP подключен к устройству и повторите попытку.\n\n
+
+
+Примечание. Обязательно сохраняйте при калибровке или сбросе и убедитесь, что APP подключен к часам.\n\n
+    </string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

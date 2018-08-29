@@ -336,8 +336,44 @@
     <string name="hint_state_charge">充電中...</string>
     <string name="hint_hr_test_timing">心拍自動測定</string>
     <string name="hint_menu_camera">リモートカメラ</string>
+    <string name="hint_hr_set">心拍数の設定</string>
+
+    <string name="hint_test_hr_timing">タイミング測定</string>
+
+    <string name="hint_hr_correcting">心拍数較正</string>
+
+    <string name="hint_hr_reseting">心拍数リセット</string>
+
+    <string name="hint_hr_police">心拍数アラーム</string>
+
+    <string name="hr_correcting">校正中にお待ちください</string>
+
+    <string name="hr_reseting">待って、お待ちください</string>
+
+    <string name="hr_correcting_success">キャリブレーション完了</string>
+
+    <string name="hr_reseting_success">リセット完了</string>
+
+    <string name="hr_correcting_fail">較正に失敗しました</string>
+
+    <string name="hr_reseting_fail">リセットに失敗しました</string>
+
+    <string name="button_correcting">較正</string>
+
+    <string name="button_reseting">リセット</string>
+    <string name="heart_rate_instructions">
+        校正：心拍数を測定できない場合、または測定が失敗する傾向がある場合は、校正機能を使用してください。\n
+リセット：心拍機能を工場出荷時の設定に戻します。\n
+操作方法：\n\n
+
+1.時計を装着し、時計がアプリに正しく接続されていることを確認します。\n
+2.まだキャリブレーション/リセットボタンをクリックします。\n
+3. APPからのプロンプトが正常に表示された後、測定検証効果を実行できます。\n
+4. APPプロンプトが表示されない場合は、APPがデバイスに接続されていることを確認して、もう一度試してください。\n\n
 
 
+注：キャリブレーションやリセット時には、常にAPPを時計に接続してください。\n\n
+    </string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

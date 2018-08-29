@@ -342,6 +342,39 @@
     <string name="hint_searched">搜索完成</string>
 
 
+    <string name="hint_hr_set">心率设置</string>
+
+    <string name="hint_test_hr_timing">心率定时测量</string>
+
+    <string name="hint_hr_correcting">心率校准</string>
+
+    <string name="hint_hr_reseting">心率复位</string>
+
+    <string name="hint_hr_police">心率报警</string>
+
+    <string name="hr_correcting">校准中，请稍等</string>
+
+    <string name="hr_reseting">复位中，请稍等</string>
+
+    <string name="hr_correcting_success">校准完成</string>
+
+    <string name="hr_reseting_success">复位完成</string>
+
+    <string name="hr_correcting_fail">校准失败</string>
+
+    <string name="hr_reseting_fail">复位失败</string>
+
+    <string name="button_correcting">校准</string>
+
+    <string name="button_reseting">复位</string>
+    <string name="heart_rate_instructions">
+校准：当发现无法测量心率，或者测量容易失败时，请使用校准功能。\n复位：使心率功能恢复到出厂设置。\n操作方法：\n\n
+    1.佩戴好手表，并确保手表与APP正常连接\n
+    2.保持静止，点击“校准”/“复位”按钮\n
+    3.APP 提示成功后，可以进行测量验证效果\n
+    4.若APP提示失败，请确认APP与设备是否连接后重新尝试一次。\n\n
+注意：校准或者复位时请一定确保静止，并且确认APP与手表连接。\n\n</string>
+
     <string name="hint_lost_nap_content">23:00~06:00不进行提醒</string>
     //--------------------------17/11/24新增App帮助内容-----------------------------
     <string-array name="helpTitleList">

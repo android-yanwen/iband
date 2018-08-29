@@ -336,6 +336,44 @@
     <string name="hint_state_charge">충전 중...</string>
     <string name="hint_hr_test_timing">심박수 자동 측정</string>
     <string name="hint_menu_camera">원격 카메라</string>
+    <string name="hint_hr_set">심박수 설정</string>
+
+    <string name="hint_test_hr_timing">타이밍 측정</string>
+
+    <string name="hint_hr_correcting">심박수 보정</string>
+
+    <string name="hint_hr_reseting">심박수 재설정</string>
+
+    <string name="hint_hr_police">심박수 경보</string>
+
+    <string name="hr_correcting">교정을 기다리는 중입니다.</string>
+
+    <string name="hr_reseting">잠시만 기다려주세요.</string>
+
+    <string name="hr_correcting_success">보정 완료</string>
+
+    <string name="hr_reseting_success">초기화가 완료되었습니다.</string>
+
+    <string name="hr_correcting_fail">보정 실패</string>
+
+    <string name="hr_reseting_fail">재설정하지 못했습니다.</string>
+
+    <string name="button_correcting">교정</string>
+
+    <string name="button_reseting">재설정</string>
+    <string name="heart_rate_instructions">
+        보정 : 심박수를 측정 할 수 없거나 측정이 실패 할 가능성이있는 경우 보정 기능을 사용하십시오.\n
+Reset : 심박수 기능을 초기 설정으로 복원합니다.\n
+운영 방법 :\n\n
+
+1. 시계를 착용하고 시계가 앱에 제대로 연결되어 있는지 확인하십시오.\n
+2. 멈추고 "교정"/ "재설정"버튼을 클릭하십시오.\n
+3. APP가 성공적으로 프롬프트 한 후에 측정 확인 효과를 수행 할 수 있습니다.\n
+4. APP 프롬프트가 실패하면 APP가 장치에 연결되어 있는지 확인한 후 다시 시도하십시오.\n\n
+
+
+참고 : 캘리브레이션 또는 리셋 할 때 계속 유지하고 APP가 시계에 연결되어 있는지 확인하십시오.\n\n
+    </string>
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

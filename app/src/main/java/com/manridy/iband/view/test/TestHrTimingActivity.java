@@ -16,6 +16,7 @@ import com.manridy.iband.ui.items.AlertBigItems2;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.iband.view.main.HrCorrectActivity;
 import com.manridy.sdk.ble.BleCmd;
+import com.manridy.sdk.ble.BleParse;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.exception.BleException;
 
@@ -51,12 +52,40 @@ public class TestHrTimingActivity extends BaseActionActivity {
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_test_hr);
         ButterKnife.bind(this);
+
+        BleParse.getInstance().setTimingHrTestListener(new BleCallback() {
+            @Override
+            public void onSuccess(Object o) {
+                SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
+                SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
+                dismissProgress();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast( getString(R.string.hint_save_success));
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(BleException exception) {
+                dismissProgress();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast( getString(R.string.hint_save_fail));
+                    }
+                });
+                curOnoff = !curOnoff;
+                aiAlert.setAlertCheck(curOnoff);
+            }
+        });
     }
 
     @Override
     protected void initVariables() {
 //        setTitleAndMenu(getString(R.string.hint_hr_test_timing),getString(R.string.hint_save));
-        setTitleBar(getString(R.string.hint_hr_test_timing));
+        setTitleBar(getString(R.string.hint_hr_set));
         checkMenuVisibility();
         curOnoff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
         curSpace = (int) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
@@ -118,27 +147,27 @@ public class TestHrTimingActivity extends BaseActionActivity {
                 ibandApplication.service.watch.sendCmd(BleCmd.setTimingHrTest(curOnoff,curSpace), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
-                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
-                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
-                        dismissProgress();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showToast( getString(R.string.hint_save_success));
-                            }
-                        });
+//                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
+//                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
+//                        dismissProgress();
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showToast( getString(R.string.hint_save_success));
+//                            }
+//                        });
 //                        finish();
                     }
 
                     @Override
                     public void onFailure(BleException exception) {
-                        dismissProgress();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showToast( getString(R.string.hint_save_fail));
-                            }
-                        });
+//                        dismissProgress();
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showToast( getString(R.string.hint_save_fail));
+//                            }
+//                        });
                     }
                 });
 
