@@ -2,6 +2,7 @@ package com.manridy.sdk;
 
 
 import android.os.Handler;
+import android.util.Log;
 
 import com.manridy.sdk.bean.Clock;
 import com.manridy.sdk.bean.Sedentary;
@@ -163,11 +164,18 @@ public class Watch extends BluetoothLeManager implements WatchApi {
 
     //发送命令
     public synchronized void sendCmd(byte[] data, BleCallback bleCallback){
+        String datas = "";
+        for (int i = 0;i<data.length;i++){
+            datas+="["+i+"]:"+data[i];
+        }
+        Log.i("sendCmd","sendCmd:"+datas);
         messageList.add(new cmdMessage(data, bleCallback));
         synchronized (thread) {
             thread.notify();
         }
     }
+
+
 
     //写入特征值
     private synchronized void writeCharacteristic(byte[] data, BleCallback bleCallback){

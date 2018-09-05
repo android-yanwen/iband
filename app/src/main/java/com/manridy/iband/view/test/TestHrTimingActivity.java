@@ -53,33 +53,33 @@ public class TestHrTimingActivity extends BaseActionActivity {
         setContentView(R.layout.activity_test_hr);
         ButterKnife.bind(this);
 
-        BleParse.getInstance().setTimingHrTestListener(new BleCallback() {
-            @Override
-            public void onSuccess(Object o) {
-                SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
-                SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
-                dismissProgress();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showToast( getString(R.string.hint_save_success));
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(BleException exception) {
-                dismissProgress();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showToast( getString(R.string.hint_save_fail));
-                    }
-                });
-                curOnoff = !curOnoff;
-                aiAlert.setAlertCheck(curOnoff);
-            }
-        });
+//        BleParse.getInstance().setTimingHrTestListener(new BleCallback() {
+//            @Override
+//            public void onSuccess(Object o) {
+//                SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
+//                SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
+//                dismissProgress();
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        showToast( getString(R.string.hint_save_success));
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onFailure(BleException exception) {
+//                dismissProgress();
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        showToast( getString(R.string.hint_save_fail));
+//                    }
+//                });
+//                curOnoff = !curOnoff;
+//                aiAlert.setAlertCheck(curOnoff);
+//            }
+//        });
     }
 
     @Override
@@ -140,34 +140,31 @@ public class TestHrTimingActivity extends BaseActionActivity {
             public void onClick(View v) {
                 curOnoff = !curOnoff;
                 aiAlert.setAlertCheck(curOnoff);
-
-
-
                 showProgress( getString(R.string.hint_saveing));
                 ibandApplication.service.watch.sendCmd(BleCmd.setTimingHrTest(curOnoff,curSpace), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
-//                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
-//                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
-//                        dismissProgress();
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                showToast( getString(R.string.hint_save_success));
-//                            }
-//                        });
+                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
+                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
+                        dismissProgress();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showToast( getString(R.string.hint_save_success));
+                            }
+                        });
 //                        finish();
                     }
 
                     @Override
                     public void onFailure(BleException exception) {
-//                        dismissProgress();
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                showToast( getString(R.string.hint_save_fail));
-//                            }
-//                        });
+                        dismissProgress();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showToast( getString(R.string.hint_save_fail));
+                            }
+                        });
                     }
                 });
 

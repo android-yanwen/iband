@@ -86,6 +86,8 @@ public class BleParse {
 
     private BleActionListener actionListener;
 
+    private BleCallback timingHrTestListener;
+
     public synchronized static BleParse getInstance() {
         if (instance == null) {
             instance = new BleParse();
@@ -133,6 +135,7 @@ public class BleParse {
             suc = false;
         }
         infoType = BitUtil.getInfoType(bits);//剩余7个位为消息类型
+        Log.i(TAG,""+suc+":"+infoType+":"+Integer.toHexString(head)+":"+Integer.toBinaryString(head));
         return suc;
     }
 
@@ -220,6 +223,16 @@ public class BleParse {
                 case 0x23:
                     result = parseStatsSleep();
                     break;
+                case 0x22:
+                    if(timingHrTestListener!=null){
+                        timingHrTestListener.onSuccess(null);
+                    }
+                    String datas = "";
+                    for (int i = 0;i<data.length;i++){
+                        datas+="["+i+"]:"+data[i];
+                    }
+                    Log.i("sendCmd:re","sendCmd:"+datas);
+                    break;
             }
             if (bleCallback == null) {
                 return;
@@ -229,6 +242,18 @@ public class BleParse {
         }else {
 //            if (bleCallback == null) return;
 //            bleCallback.onFailure(new BleException(ERROR_CODE_PARSE,"解析数据失败"));
+            switch (infoType){
+                case 0x22:
+                    if(timingHrTestListener!=null){
+                        timingHrTestListener.onFailure(null);
+                    }
+                    String datas = "";
+                    for (int i = 0;i<data.length;i++){
+                        datas+="["+i+"]:"+data[i];
+                    }
+                    Log.i("sendCmd:re","sendCmd:"+datas);
+                    break;
+            }
             parseOther(data);
         }
 
@@ -283,6 +308,7 @@ public class BleParse {
                     }
                 }
                 break;
+
         }
     }
 
@@ -955,6 +981,10 @@ public class BleParse {
             e.printStackTrace();
         }
         return jsonObject.toString();
+    }
+
+    public void setTimingHrTestListener(BleCallback timingHrTestListener) {
+        this.timingHrTestListener = timingHrTestListener;
     }
 }
 

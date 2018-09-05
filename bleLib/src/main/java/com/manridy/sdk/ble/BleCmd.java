@@ -766,7 +766,8 @@ public class BleCmd {
         body = new byte[17];
         body[0] = 0x01;
         body[2] = (byte) (onOff?1:0);
-        body[4] = (byte) space;
+        body[4] = (byte) 30;
+        Log.i("sendCmd:setTimingHrTest","onOff:"+onOff+";space:"+space);
         return BleProtocol.cmd(head,type,body);
     }
 
