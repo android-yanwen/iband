@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.manridy.sdk.Watch;
 import com.manridy.sdk.bean.BloodOxygen;
 import com.manridy.sdk.bean.BloodPressure;
 import com.manridy.sdk.bean.Clock;

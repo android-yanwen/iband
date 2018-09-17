@@ -74,6 +74,7 @@ public class Watch extends BluetoothLeManager implements WatchApi {
 //                        }
                             cmdCallback = cmdMessage.bleCallback;//得到回调
                             writeCharacteristic(cmdMessage.data, new BleCallback() {//执行发送
+
                                 @Override
                                 public void onSuccess(Object o) {//执行成功
                                     if (cmdCallback != null) {
@@ -150,6 +151,7 @@ public class Watch extends BluetoothLeManager implements WatchApi {
 
     public void sendCmd(byte[] data){
         sendCmd(data, new BleCallback() {
+
             @Override
             public void onSuccess(Object o) {
 
@@ -197,7 +199,7 @@ public class Watch extends BluetoothLeManager implements WatchApi {
         if (leDevice == null) {
             bleCallback.onFailure(new OtherException("sendCmd leDevice is null!"));
             return;
-        }
+        };
         writeCharacteristic(leDevice.getmBluetoothGatt(),data,bleCallback);
     }
 

@@ -16,16 +16,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.manridy.sdk.ble.BleParse;
+
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleConnectCallback;
-import com.manridy.sdk.common.BitUtil;
 import com.manridy.sdk.common.LogUtil;
 import com.manridy.sdk.exception.BleException;
 import com.manridy.sdk.exception.GattException;
-import com.manridy.sdk.exception.InitiatedException;
 import com.manridy.sdk.exception.OtherException;
 import com.manridy.sdk.exception.TimeOutException;
 import com.manridy.sdk.scan.TimeMacScanCallback;
@@ -34,7 +31,6 @@ import com.manridy.sdk.scan.TimeScanCallback;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -49,16 +45,12 @@ public class BluetoothLeManager {
     private static final String TAG = BluetoothLeManager.class.getSimpleName();
     private AtomicBoolean isScaning = new AtomicBoolean(false);
 
-    private static final int CONNECT_TIME_OUT = 10000;
-    private static final int DISCONNECT_TIME_OUT = 5000;
-
-    public Context mContext;
+    private Context mContext;
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private Handler handler = new Handler(Looper.getMainLooper());
     public List<BluetoothLeDevice> bluetoothLeDevices = new ArrayList<>();
     private mBluetoothGattCallback mBluetoothGattCallback;
-    private BleConnectCallback connectCallback;
 
     private UUID service = UUID.fromString("f000efe0-0451-4000-0000-00000000b000");
     private UUID notify = UUID.fromString("f000efe3-0451-4000-0000-00000000b000");
@@ -77,11 +69,13 @@ public class BluetoothLeManager {
         mBluetoothAdapter = mBluetoothManager.getAdapter();
     }
 
+
+
     /**
      * 蓝牙BLE支持状态
      * @return true 支持
      */
-    public boolean BluetoothLeSupport(){
+    public boolean bluetoothLeSupport(){
         return mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
     }
 
@@ -99,7 +93,7 @@ public class BluetoothLeManager {
     /**
      * 开启蓝牙
      */
-    public void BluetoothEnable(Context context){
+    public void bluetoothEnable(Context context){
         if (!isBluetoothEnable()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             context.startActivity(enableIntent);
@@ -135,8 +129,8 @@ public class BluetoothLeManager {
     /**
      * 查找指定设备
      */
-    public boolean findDevice(TimeMacScanCallback callback){
-        return startScan(callback);
+    public void findDevice(TimeMacScanCallback callback){
+        startScan(callback);
     }
 
     /**
@@ -147,21 +141,15 @@ public class BluetoothLeManager {
     }
 
     /********BLE连接********/
-
-    public void connect(String mac,boolean isReConnect,BleConnectCallback bleCallback){
-        connect(getDevice(mac),isReConnect,bleCallback);
-    }
-
     /**
      * 连接BLE设备
      * @param device 扫描返回设备
      * @param isReConnect 意外断开是否重连
      */
-    public synchronized void connect(final BluetoothDevice device, final boolean isReConnect,BleConnectCallback connectCallback){
+    public synchronized void connect(final BluetoothDevice device, final boolean isReConnect, final BleConnectCallback connectCallback){
         this.connectCallback = connectCallback;
-        if (null == device || mBluetoothAdapter == null || bluetoothLeDevices == null) {
-            LogUtil.e(TAG, "connect device or bluetoothAdapter is null" );
-            return;
+        if (null == device || mBluetoothAdapter == null) {
+            Log.e(TAG, "connect device or bluetoothAdapter is null" );
         }
         mBluetoothGattCallback = new mBluetoothGattCallback();
         int index = -1;
@@ -170,25 +158,31 @@ public class BluetoothLeManager {
                 index = i;
             }
         }
+        Log.i(TAG, "connect() bluetoothLeDevices.size()==== "+ bluetoothLeDevices.size());
         if (index != -1) {
             BluetoothGatt getmBluetoothGatt = bluetoothLeDevices.get(index).getmBluetoothGatt();
             closeBluetoothGatt(getmBluetoothGatt);
             removeBluetoothLe(getmBluetoothGatt);
-            LogUtil.e(TAG, "connect bluetoothGatt remove index is"+index);
+            Log.e(TAG, "connect bluetoothGatt remove index is"+index);
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     BluetoothGatt gatt = device.connectGatt(mContext,false,mBluetoothGattCallback);
+
                     bluetoothLeDevices.add(new BluetoothLeDevice(gatt,isReConnect));
+//                    connectCallback.setBluetoothGatt(gatt);
                 }
             },1000);
+            Log.i(TAG, "connected() bluetoothLeDevices.size()==== "+ bluetoothLeDevices.size());
         }else{
             BluetoothGatt gatt = device.connectGatt(mContext,false,mBluetoothGattCallback);
+//            connectCallback.setBluetoothGatt(gatt);
             bluetoothLeDevices.add(new BluetoothLeDevice(gatt,isReConnect));
+            Log.i(TAG, "connected2() bluetoothLeDevices.size()==== "+ bluetoothLeDevices.size());
         }
-        handler.postDelayed(connectTimeoutRunnable,CONNECT_TIME_OUT);
+        handler.postDelayed(connectTimeoutRunnable,10000);
     }
-
+    BleConnectCallback connectCallback;
     Runnable connectTimeoutRunnable = new Runnable() {
         @Override
         public void run() {
@@ -200,69 +194,45 @@ public class BluetoothLeManager {
     };
     /**
      * 断开Ble设备连接
-     * @param leDevice 蓝牙中央
+     * @param gatt 蓝牙中央
      */
-    BleCallback disConnectCallback;
-    public synchronized void disconnect(String mac,BleCallback disConnectCallback){
-        BluetoothLeDevice leDevice = getBluetoothLeDevice(mac);
-        if (leDevice == null) {
-            disConnectCallback.onFailure(new OtherException("disconnect leDevice is null!"));
-            return;
+    public synchronized void disconnect(BluetoothGatt gatt){
+        if (gatt != null) {
+            refreshDeviceCache(gatt);
+            gatt.close();
         }
-        BluetoothGatt gatt = leDevice.getmBluetoothGatt();
-        if (gatt == null) {
-            disConnectCallback.onFailure(new OtherException("disconnect gatt is null!"));
-            return;
-        }
-        this.disConnectCallback = disConnectCallback;
-        handler.postDelayed(disConnectTimeoutRunnable,DISCONNECT_TIME_OUT);
-        gatt.disconnect();
     }
 
-    Runnable disConnectTimeoutRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (disConnectCallback != null) {
-                disConnectCallback.onFailure(new TimeOutException());
-                disConnectCallback = null;
-            }
-        }
-    };
+
+
 
     /**
      * 重连设备
-     * @param leDevice 设备
+     * @param gatt 蓝牙中央
      */
-    private synchronized void reConnect(final BluetoothLeDevice leDevice){
-        if (leDevice == null) {
-            return;
+    public synchronized void reConnect(BluetoothGatt gatt){
+        if (gatt != null) {
+            gatt.connect();
+            broadcastUpdate(ACTION_GATT_RECONNECT,null,gatt.getDevice().getAddress());
+            Log.e(TAG, "reConnect: device is" + gatt.getDevice().getAddress() );
         }
-            final BluetoothGatt gatt = leDevice.getmBluetoothGatt();
-        if (gatt == null) {
-            return;
-        }
-        leDevice.getmBluetoothGatt().connect();
-        broadcastUpdate(ACTION_GATT_RECONNECT,null,gatt.getDevice().getAddress());
-        LogUtil.e(TAG, "reConnect: device is" + leDevice.getmBluetoothGatt().getDevice().getAddress());
     }
 
     /**
      * 设备连接状态
-     * @param leDevice 设备
+     * @param gatt 蓝牙中央
      * @return
      */
-    public boolean isConnect(BluetoothLeDevice leDevice){
-        if (leDevice != null) {
-            return leDevice.IsConnect();
+    public boolean isConnect(BluetoothGatt gatt){
+        BluetoothLeDevice bluetoothLeDevice =  getBluetoothLeDevice(gatt);
+        if (bluetoothLeDevice != null) {
+            return bluetoothLeDevice.IsConnect();
         }
         throw new IllegalArgumentException("no find gatt");
     }
 
     public BluetoothDevice getDevice(String mac){
-        if (mBluetoothAdapter != null) {
-            return mBluetoothAdapter.getRemoteDevice(mac);
-        }
-        return null;
+        return mBluetoothAdapter.getRemoteDevice(mac);
     }
 
     /********Notification and WriteData********/
@@ -273,19 +243,19 @@ public class BluetoothLeManager {
      * @param characteristic 蓝牙特征id
      * @return
      */
-    private synchronized boolean enableNotification(BluetoothGatt gatt,UUID service,UUID characteristic){
+    public synchronized boolean enableNotification(BluetoothGatt gatt,UUID service,UUID characteristic){
         if (gatt == null) {
-            LogUtil.e(TAG, "enableNotification BluetoothGatt is null" );
+            Log.e(TAG, "enableNotification BluetoothGatt is null" );
             return false;
         }
         BluetoothGattService gattServer = gatt.getService(service);
         if (gattServer == null) {
-            LogUtil.e(TAG, "enableNotification BluetoothGattService is null");
+            Log.e(TAG, "enableNotification BluetoothGattService is null");
             return false;
         }
         BluetoothGattCharacteristic gattCharacteristic = gattServer.getCharacteristic(characteristic);
         if (gattCharacteristic == null) {
-            LogUtil.e(TAG, "enableNotification BluetoothGattCharacteristic is null");
+            Log.e(TAG, "enableNotification BluetoothGattCharacteristic is null");
             return false;
         }
         boolean status = gatt.setCharacteristicNotification(gattCharacteristic,true);
@@ -318,13 +288,22 @@ public class BluetoothLeManager {
      * @param value 值
      * @return
      */
+    public boolean writeCharacteristic(BluetoothGatt gatt,byte[] value){
+        return writeCharacteristic(gatt,service,write,value);
+    }
+    /**
+     * 写入特征值数据（默认特征值）
+     * @param gatt 蓝牙中央
+     * @param value 值
+     * @return
+     */
     protected boolean writeCharacteristic(BluetoothGatt gatt, byte[] value, BleCallback bleCallback){
         return writeCharacteristic(gatt,service,write,value,bleCallback);
     }
 
     /**
      * 写入特征值数据
-      * @param gatt 蓝牙中央
+     * @param gatt 蓝牙中央
      * @param service 蓝牙服务id
      * @param characteristic 蓝牙特征值id
      * @param value 值
@@ -365,52 +344,73 @@ public class BluetoothLeManager {
         return status;
     }
 
+    /**
+     * 写入特征值数据
+      * @param gatt 蓝牙中央
+     * @param service 蓝牙服务id
+     * @param characteristic 蓝牙特征值id
+     * @param value 值
+     * @return
+     */
+    public synchronized boolean writeCharacteristic(BluetoothGatt gatt,UUID service,UUID characteristic,byte[] value){
+        if (gatt == null) {
+            Log.e(TAG, "writeCharacteristic BluetoothGatt is null" );
+            return false;
+        }
+        BluetoothGattService gattServer = gatt.getService(service);
+        if (gattServer == null) {
+            Log.e(TAG, "writeCharacteristic BluetoothGattService is null");
+            return false;
+        }
+        BluetoothGattCharacteristic gattCharacteristic = gattServer.getCharacteristic(characteristic);
+        if (gattCharacteristic == null) {
+            Log.e(TAG, "writeCharacteristic BluetoothGattCharacteristic is null");
+            return false;
+        }
+        if (value.length == 0 || value.length>20) {
+            Log.e(TAG, "writeCharacteristic value count is error ");
+            return false;
+        }
+        gattCharacteristic.setValue(value);
+        boolean status = gatt.writeCharacteristic(gattCharacteristic);
+        if (!status) {
+            Log.e(TAG, "writeCharacteristic status is false");
+        }
+        return status;
+    }
+
     /********BluetoothGatt********/
     /**
      * 蓝牙BLE回调
      */
-     class mBluetoothGattCallback extends BluetoothGattCallback {
+    class mBluetoothGattCallback extends BluetoothGattCallback{
         @Override
-        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+        public void onConnectionStateChange(final BluetoothGatt gatt, int status, int newState) {
             try{
                 super.onConnectionStateChange(gatt, status, newState);
-                LogUtil.e(TAG, "onConnectionStateChange: device is "+gatt.getDevice().getAddress()+",status is "+status+", new state "+newState );
-                if (newState == BluetoothProfile.STATE_CONNECTED    ) {
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
                     BluetoothLeDevice bluetoothLeDevice = getBluetoothLeDevice(gatt);
                     if (bluetoothLeDevice != null){
                         bluetoothLeDevice.setIsConnect(true);
                     }
                     gatt.discoverServices();
                     broadcastUpdate(ACTION_GATT_CONNECT,null,gatt.getDevice().getAddress());
-                }
-                else if (newState == BluetoothProfile.STATE_DISCONNECTED ){
-
-                    Log.i(TAG,"BluetoothProfile.STATE_DISCONNECTED");
-
-                    final BluetoothLeDevice bluetoothLeDevice = getBluetoothLeDevice(gatt);
+                    Log.e(TAG, "onConnectionStateChange: connected device is "+gatt.getDevice().getAddress()+",status is "+status );
+                }else if (newState == BluetoothProfile.STATE_DISCONNECTED){
+                    BluetoothLeDevice bluetoothLeDevice = getBluetoothLeDevice(gatt);
                     if (bluetoothLeDevice != null){
                         bluetoothLeDevice.setIsConnect(false);
-                        if (disConnectCallback != null) {
-                            handler.removeCallbacks(disConnectTimeoutRunnable);
-                            refreshDeviceCache(gatt);
-                            gatt.close();
-                            removeBluetoothLe(gatt);
-                            disConnectCallback.onSuccess(null);
-                            disConnectCallback = null;
-                            mBluetoothGattCallback = null;
-                            broadcastUpdate(ACTION_GATT_DISCONNECTED,null,gatt.getDevice().getAddress());
-                        }else{
-                            broadcastUpdate(ACTION_GATT_DISCONNECTED,new byte[]{(byte) status},gatt.getDevice().getAddress());
-                            if (bluetoothLeDevice.isReConnect()) {
-                                LogUtil.d(TAG, "isReConnect() called ");
-                                reConnect(bluetoothLeDevice);
-                            }
+                        if (bluetoothLeDevice.isReConnect()) {
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    reConnect(gatt);
+                                }
+                            },4000);
                         }
                     }
-                }else {//连接异常状态处理
-                    refreshDeviceCache(gatt);
-                    gatt.close();
-                    removeBluetoothLe(gatt);
+                    broadcastUpdate(ACTION_GATT_DISCONNECTED,null,gatt.getDevice().getAddress());
+                    Log.e(TAG, "onConnectionStateChange: disconnected device is"+gatt.getDevice().getAddress());
                 }
             }catch (Exception e){
                 e.printStackTrace();
@@ -423,13 +423,8 @@ public class BluetoothLeManager {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 enableNotification(gatt,service,notify);
                 broadcastUpdate(ACTION_SERVICES_DISCOVERED,null,gatt.getDevice().getAddress());
-            }else{
-                if (connectCallback != null) {
-                    connectCallback.onConnectFailure(new GattException(status));
-                    connectCallback = null;
-                }
-                LogUtil.e(TAG, "onServicesDiscovered: error code is"+status);
             }
+            Log.e(TAG, "onServicesDiscovered:code is"+status);
         }
 
         @Override
@@ -440,17 +435,13 @@ public class BluetoothLeManager {
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicWrite(gatt, characteristic, status);
-//            LogUtil.e(TAG, "onCharacteristicWrite: gatt is"+ gatt.getDevice().getAddress() );
-            LogUtil.e(TAG,"写入数据; "+ BitUtil.parseByte2HexStr(characteristic.getValue()));
+//            Log.e(TAG, "onCharacteristicWrite: data = "+characteristic.getValue()+" device= " + gatt.getDevice().getAddress() );
         }
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
-//            LogUtil.e(TAG, "onCharacteristicChanged: gatt is " +gatt.getDevice().getAddress() );
-            LogUtil.e(TAG,"返回数据; "+ BitUtil.parseByte2HexStr(characteristic.getValue()));
-            BleParse.getInstance().setBleParseData(characteristic.getValue(),bleCallback);
-            bleCallback = null;
+//            Log.e(TAG, "onCharacteristicChanged: data = "+characteristic.getValue()+" device= " + gatt.getDevice().getAddress()  );
             broadcastUpdate(ACTION_DATA_AVAILABLE,characteristic.getValue(),gatt.getDevice().getAddress());
         }
 
@@ -485,12 +476,13 @@ public class BluetoothLeManager {
      * 删除蓝牙BLE设备
      * @param gatt
      */
-    private void removeBluetoothLe(BluetoothGatt gatt){
+    public void removeBluetoothLe(BluetoothGatt gatt){
         if (gatt != null) {
             for (BluetoothLeDevice mBluetoothLeGatt : bluetoothLeDevices) {
                 if (mBluetoothLeGatt.getmBluetoothGatt().getDevice().getAddress().equals(gatt.getDevice().getAddress())){
                     bluetoothLeDevices.remove(mBluetoothLeGatt);
-                    LogUtil.e(TAG, "removeBluetoothLeGatt: true"+"size is "+bluetoothLeDevices.size());
+                    Log.e(TAG, "removeBluetoothLeGatt: true"+"size is "+bluetoothLeDevices.size());
+                    Log.i(TAG, "removeBluetoothLe() bluetoothLeDevices.size()==== "+ bluetoothLeDevices.size());
                     return;
                 }
             }
@@ -502,7 +494,7 @@ public class BluetoothLeManager {
      * @param gatt
      * @return
      */
-    private BluetoothLeDevice getBluetoothLeDevice(BluetoothGatt gatt){
+    public BluetoothLeDevice getBluetoothLeDevice(BluetoothGatt gatt){
         if (gatt != null) {
             for (BluetoothLeDevice mBluetoothLeGatt : bluetoothLeDevices) {
                 if (mBluetoothLeGatt.getmBluetoothGatt().getDevice().getAddress().equals(gatt.getDevice().getAddress())){
@@ -519,7 +511,7 @@ public class BluetoothLeManager {
      * @return
      */
     public BluetoothLeDevice getBluetoothLeDevice(String mac){
-        if (mac != null && bluetoothLeDevices != null) {
+        if (mac != null) {
             for (BluetoothLeDevice mBluetoothLeGatt : bluetoothLeDevices) {
                 if (mBluetoothLeGatt.getmBluetoothGatt().getDevice().getAddress().equals(mac)){
                     return mBluetoothLeGatt;
@@ -537,15 +529,14 @@ public class BluetoothLeManager {
      */
     public boolean refreshDeviceCache(BluetoothGatt gatt) {
         try {
-
             final Method refresh = BluetoothGatt.class.getMethod("refresh");
             if (refresh != null) {
                 final boolean success = (Boolean) refresh.invoke(gatt);
-                LogUtil.e(TAG, "Refreshing result: " + success);
+                Log.i(TAG, "Refreshing result: " + success);
                 return success;
             }
         } catch (Exception e) {
-            LogUtil.e(TAG, "An exception occured while refreshing device"+e);
+            Log.e(TAG, "An exception occured while refreshing device", e);
         }
         return false;
     }
@@ -558,17 +549,6 @@ public class BluetoothLeManager {
         if (gatt != null) {
             refreshDeviceCache(gatt);
             gatt.close();
-//            gatt.disconnect();
-        }
-    }
-
-    public void closeBluetoothGatt(String mac){
-        BluetoothLeDevice leDevice = getBluetoothLeDevice(mac);
-        Log.i("closeBluetoothGatt","leDevice:"+leDevice);
-        if (leDevice != null) {
-            BluetoothGatt bluetoothGatt = leDevice.getmBluetoothGatt();
-            Log.i("closeBluetoothGatt","getmBluetoothGatt():"+bluetoothGatt);
-            closeBluetoothGatt(bluetoothGatt);
         }
     }
 
@@ -576,10 +556,13 @@ public class BluetoothLeManager {
      * 关闭所有蓝牙BLE设备
      */
     public void closeALLBluetoothLe(){
+        Log.i(TAG, "closeALLBluetoothLe() bluetoothLeDevices.size()==== "+ bluetoothLeDevices.size());
+
         for (BluetoothLeDevice mBluetoothLeGatt : bluetoothLeDevices) {
             closeBluetoothGatt(mBluetoothLeGatt.getmBluetoothGatt());
         }
         bluetoothLeDevices.clear();
+        bluetoothLeDevices = null;
     }
 
     public void clearBluetoothLe(){
@@ -597,24 +580,4 @@ public class BluetoothLeManager {
         }
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
-
-
-    public void checkPairDevice(){
-        Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
-        for (BluetoothDevice device : bondedDevices) {
-            unpairDevice(device);
-        }
-//        Toast.makeText(mContext,"123",Toast.LENGTH_SHORT).show();
-    }
-
-
-    private void unpairDevice(BluetoothDevice device) {
-        try {
-            Method m = device.getClass().getMethod("removeBond", (Class[]) null);
-            m.invoke(device, (Object[]) null);
-        } catch (Exception e) {
-            Log.e("mate", e.getMessage());
-        }
-    }
-
 }
