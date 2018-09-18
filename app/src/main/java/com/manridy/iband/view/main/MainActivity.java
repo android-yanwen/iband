@@ -374,10 +374,10 @@ public class MainActivity extends BaseActivity {
         if(state==AppGlobal.DEVICE_STATE_UNCONNECT||state==AppGlobal.DEVICE_STATE_CONNECTED) {
             return;
         }
-        IbandApplication.getIntance().service.reConnect_time_interval = 18;
-        IbandApplication.getIntance().service.reConnect_times = 0;
-        IbandApplication.getIntance().service.reConnectHandler.removeCallbacksAndMessages(null);
-        IbandApplication.getIntance().service.reConnectHandler.postDelayed(IbandApplication.getIntance().service.reConnectThread,4000);
+//        IbandApplication.getIntance().service.reConnect_time_interval = 18;
+//        IbandApplication.getIntance().service.reConnect_times = 0;
+//        IbandApplication.getIntance().service.reConnectHandler.removeCallbacksAndMessages(null);
+//        IbandApplication.getIntance().service.reConnectHandler.postDelayed(IbandApplication.getIntance().service.reConnectThread,4000);
 
 
 

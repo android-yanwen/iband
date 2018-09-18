@@ -14,12 +14,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 
+import com.manridy.sdk.ble.BleParse;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleConnectCallback;
+import com.manridy.sdk.common.BitUtil;
 import com.manridy.sdk.common.LogUtil;
 import com.manridy.sdk.exception.BleException;
 import com.manridy.sdk.exception.GattException;
@@ -45,7 +48,10 @@ public class BluetoothLeManager {
     private static final String TAG = BluetoothLeManager.class.getSimpleName();
     private AtomicBoolean isScaning = new AtomicBoolean(false);
 
-    private Context mContext;
+    private static final int CONNECT_TIME_OUT = 10000;
+    private static final int DISCONNECT_TIME_OUT = 5000;
+
+    public Context mContext;
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -93,7 +99,7 @@ public class BluetoothLeManager {
     /**
      * 开启蓝牙
      */
-    public void bluetoothEnable(Context context){
+    public void BluetoothEnable(Context context){
         if (!isBluetoothEnable()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             context.startActivity(enableIntent);
@@ -141,6 +147,11 @@ public class BluetoothLeManager {
     }
 
     /********BLE连接********/
+
+    public void connect(String mac,boolean isReConnect,BleConnectCallback bleCallback){
+        connect(getDevice(mac),isReConnect,bleCallback);
+    }
+
     /**
      * 连接BLE设备
      * @param device 扫描返回设备
@@ -175,7 +186,7 @@ public class BluetoothLeManager {
             },1000);
             Log.i(TAG, "connected() bluetoothLeDevices.size()==== "+ bluetoothLeDevices.size());
         }else{
-            BluetoothGatt gatt = device.connectGatt(mContext,false,mBluetoothGattCallback);
+            BluetoothGatt gatt = device.connectGatt(mContext,true,mBluetoothGattCallback);
 //            connectCallback.setBluetoothGatt(gatt);
             bluetoothLeDevices.add(new BluetoothLeDevice(gatt,isReConnect));
             Log.i(TAG, "connected2() bluetoothLeDevices.size()==== "+ bluetoothLeDevices.size());
@@ -203,8 +214,32 @@ public class BluetoothLeManager {
         }
     }
 
+    BleCallback disConnectCallback;
+    public synchronized void disconnect(String mac,BleCallback disConnectCallback){
+        BluetoothLeDevice leDevice = getBluetoothLeDevice(mac);
+        if (leDevice == null) {
+            disConnectCallback.onFailure(new OtherException("disconnect leDevice is null!"));
+            return;
+        }
+        BluetoothGatt gatt = leDevice.getmBluetoothGatt();
+        if (gatt == null) {
+            disConnectCallback.onFailure(new OtherException("disconnect gatt is null!"));
+            return;
+        }
+        this.disConnectCallback = disConnectCallback;
+        handler.postDelayed(disConnectTimeoutRunnable,DISCONNECT_TIME_OUT);
+        gatt.disconnect();
+    }
 
-
+    Runnable disConnectTimeoutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (disConnectCallback != null) {
+                disConnectCallback.onFailure(new TimeOutException());
+                disConnectCallback = null;
+            }
+        }
+    };
 
     /**
      * 重连设备
@@ -400,13 +435,24 @@ public class BluetoothLeManager {
                     BluetoothLeDevice bluetoothLeDevice = getBluetoothLeDevice(gatt);
                     if (bluetoothLeDevice != null){
                         bluetoothLeDevice.setIsConnect(false);
-                        if (bluetoothLeDevice.isReConnect()) {
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    reConnect(gatt);
-                                }
-                            },4000);
+                        if (disConnectCallback != null) {
+                            handler.removeCallbacks(disConnectTimeoutRunnable);
+                            refreshDeviceCache(gatt);
+                            gatt.close();
+                            removeBluetoothLe(gatt);
+                            disConnectCallback.onSuccess(null);
+                            disConnectCallback = null;
+                            mBluetoothGattCallback = null;
+                            broadcastUpdate(ACTION_GATT_DISCONNECTED,null,gatt.getDevice().getAddress());
+                        }else {
+                            if (bluetoothLeDevice.isReConnect()) {
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        reConnect(gatt);
+                                    }
+                                }, 4000);
+                            }
                         }
                     }
                     broadcastUpdate(ACTION_GATT_DISCONNECTED,null,gatt.getDevice().getAddress());
@@ -441,7 +487,10 @@ public class BluetoothLeManager {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
-//            Log.e(TAG, "onCharacteristicChanged: data = "+characteristic.getValue()+" device= " + gatt.getDevice().getAddress()  );
+//            LogUtil.e(TAG, "onCharacteristicChanged: gatt is " +gatt.getDevice().getAddress() );
+            LogUtil.e(TAG,"返回数据; "+ BitUtil.parseByte2HexStr(characteristic.getValue()));
+            BleParse.getInstance().setBleParseData(characteristic.getValue(),bleCallback);
+            bleCallback = null;
             broadcastUpdate(ACTION_DATA_AVAILABLE,characteristic.getValue(),gatt.getDevice().getAddress());
         }
 
@@ -549,6 +598,16 @@ public class BluetoothLeManager {
         if (gatt != null) {
             refreshDeviceCache(gatt);
             gatt.close();
+        }
+    }
+
+    public void closeBluetoothGatt(String mac){
+        BluetoothLeDevice leDevice = getBluetoothLeDevice(mac);
+        Log.i("closeBluetoothGatt","leDevice:"+leDevice);
+        if (leDevice != null) {
+            BluetoothGatt bluetoothGatt = leDevice.getmBluetoothGatt();
+            Log.i("closeBluetoothGatt","getmBluetoothGatt():"+bluetoothGatt);
+            closeBluetoothGatt(bluetoothGatt);
         }
     }
 
