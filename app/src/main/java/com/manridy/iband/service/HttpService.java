@@ -1,6 +1,7 @@
 package com.manridy.iband.service;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.manridy.applib.utils.FileUtil;
 import com.manridy.applib.utils.LogUtil;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -176,22 +179,43 @@ public class HttpService {
         }
     }
 
-    public void getDeviceList(OnResultCallBack onResultCallBack){
+//    public void getDeviceList(OnResultCallBack onResultCallBack){
+//        Log.i("strDeviceList","strDeviceList:getDeviceList");
+//        Request request = new Request.Builder().url(device_list).build();
+//        OkHttpClient client = new OkHttpClient();
+//        try {
+//            Response response = client.newCall(request).execute();
+//            Log.i("strDeviceList","strDeviceList:response:"+response.isSuccessful());
+//            if (response.isSuccessful()) {
+//                String result = response.body().string();
+//                onResultCallBack.onResult(true,result);
+//            }else {
+//                onResultCallBack.onResult(false,"");
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
+    public void getDeviceList(final OnResultCallBack onResultCallBack){
         Request request = new Request.Builder().url(device_list).build();
         OkHttpClient client = new OkHttpClient();
-        try {
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
-                String result = response.body().string();
-                onResultCallBack.onResult(true,result);
-            }else {
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i("strDeviceList","strDeviceList:onFailure");
                 onResultCallBack.onResult(false,"");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.i("strDeviceList","strDeviceList:onResponse");
+                String result = response.body().string();
+                onResultCallBack.onResult(true,result);
+            }
+        });
     }
+
 
     public void sendOtaData(Context mContext,OnResultCallBack onResultCallBack){
         String name = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,"");

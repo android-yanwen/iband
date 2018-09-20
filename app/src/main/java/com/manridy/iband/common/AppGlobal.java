@@ -53,6 +53,9 @@ public class AppGlobal {
 
     public static final String STATE_APP_OTA_RUN = "state_app_ota_run";
 
+    public static final String DATA_DEVICEUPDATE_DELAY_FILEURL  = "data_deviceupdate_delay_fileurl";
+    public static final String DATA_DEVICEUPDATE_DELAY_DATE = "data_deviceupdate_delay_date";
+
     //device state
     public static final int DEVICE_STATE_UNCONNECT = 0;//未连接
     public static final int DEVICE_STATE_CONNECTED = 1;//已连接

@@ -10,6 +10,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -24,15 +27,18 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.internal.telephony.ITelephony;
+import com.google.gson.Gson;
 import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.ToastUtil;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.SyncAlert;
+import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.R;
+import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.view.main.MainActivity;
 import com.manridy.sdk.Watch;
 import com.manridy.sdk.callback.BleActionListener;
@@ -217,7 +223,91 @@ public class BleService extends Service {
         filter.addAction(ACTION_NOTIFICATION_ENABLE);
         filter.addAction(ACTION_DATA_AVAILABLE);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(bleReceiver,filter);
+        IntentFilter filter1 = new IntentFilter();
+        filter1.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(netWorkStateReceiver, filter1);
+
     }
+
+    private BroadcastReceiver  netWorkStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP) {
+                //获得ConnectivityManager对象
+                ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                //获取ConnectivityManager对象对应的NetworkInfo对象
+                //获取WIFI连接的信息
+                NetworkInfo wifiNetworkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                //获取移动数据连接的信息
+                NetworkInfo dataNetworkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+                if (wifiNetworkInfo.isConnected() || dataNetworkInfo.isConnected()) {
+                    HttpService.getInstance().getDeviceList(new OnResultCallBack() {
+                        @Override
+                        public void onResult(boolean result, Object o) {
+                            if (result) {
+                                String strDeviceList = o.toString();
+                                //解析服务器设备列表数据
+                                SPUtil.put(getApplication(),AppGlobal.DATA_DEVICE_LIST, strDeviceList);
+                                DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
+                                //筛选iband设备数据
+                                ArrayList<String> nameList = new ArrayList<>();
+                                for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+                                    if (resultBean.getIdentifier().equals("iband")) {
+                                        nameList.add(resultBean.getDevice_name());
+                                    }
+                                }
+                                String str =new Gson().toJson(nameList);
+                                SPUtil.put(getApplication(),AppGlobal.DATA_DEVICE_FILTER,str);
+                                IbandApplication.isNeedRefresh = true;
+                            }
+                        }
+                    });
+                }
+                //API大于23时使用下面的方式进行网络监听
+            }else {
+                //获得ConnectivityManager对象
+                ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                //获取所有网络连接的信息
+                Network[] networks = connMgr.getAllNetworks();
+                //用于存放网络连接信息
+                StringBuilder sb = new StringBuilder();
+                boolean isConnected = false;
+                //通过循环将网络信息逐个取出来
+                for (int i=0; i < networks.length; i++){
+                    //获取ConnectivityManager对象对应的NetworkInfo对象
+                    NetworkInfo networkInfo = connMgr.getNetworkInfo(networks[i]);
+                    if(networkInfo.isConnected()) {
+                        isConnected = true;
+                    }
+                }
+                if(isConnected) {
+                    HttpService.getInstance().getDeviceList(new OnResultCallBack() {
+                        @Override
+                        public void onResult(boolean result, Object o) {
+                            if (result) {
+                                String strDeviceList = o.toString();
+                                //解析服务器设备列表数据
+                                SPUtil.put(getApplication(),AppGlobal.DATA_DEVICE_LIST, strDeviceList);
+                                DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
+                                //筛选iband设备数据
+                                ArrayList<String> nameList = new ArrayList<>();
+                                for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+                                    if (resultBean.getIdentifier().equals("iband")) {
+                                        nameList.add(resultBean.getDevice_name());
+                                    }
+                                }
+                                String str =new Gson().toJson(nameList);
+                                SPUtil.put(getApplication(),AppGlobal.DATA_DEVICE_FILTER,str);
+                                IbandApplication.isNeedRefresh = true;
+                            }
+                        }
+                    });
+                }
+
+            }
+        }
+    };
 
     /**
      *
@@ -271,6 +361,7 @@ public class BleService extends Service {
                     final byte[] data = intent.getByteArrayExtra("BLUETOOTH_DATA");
 //                    LogUtil.e(TAG,"蓝牙状态----数据:"+ BitUtil.parseByte2HexStr(data));
                     break;
+
                 default:
                     break;
             }

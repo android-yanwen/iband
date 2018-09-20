@@ -1,9 +1,13 @@
 package com.manridy.iband.view.main;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -24,12 +28,18 @@ import com.manridy.iband.SyncAlert;
 import com.manridy.iband.SyncData;
 import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.common.AppGlobal;
+import com.manridy.iband.common.DeviceUpdate;
+import com.manridy.iband.common.DomXmlParse;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.R;
 import com.manridy.iband.adapter.DeviceAdapter;
 import com.manridy.iband.common.OnItemClickListener;
+import com.manridy.iband.common.OnResultCallBack;
+import com.manridy.iband.service.HttpService;
 import com.manridy.iband.view.base.BaseActionActivity;
+import com.manridy.iband.view.model.BoFragment;
+import com.manridy.iband.view.model.BpFragment;
 import com.manridy.sdk.BluetoothLeDevice;
 import com.manridy.sdk.Watch;
 import com.manridy.sdk.ble.BleCmd;
@@ -45,6 +55,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -85,6 +96,8 @@ public class DeviceActivity extends BaseActionActivity {
     public static String identifier = "iband";
     public String localFilters = "[\"HB\",\"F07Lite\",\"CB606\",\"L8\",\"HM\",\"M7\",\"CB606\",\"R11\",\"HB-M1\",\"N67\",\"watch\",\"F07\",\"F1Pro\",\"HB08\",\"Smart\",\"K2\",\"N68\",\"Smart B\",\"N109\",\"Smart-2\",\"TF1\"]";
     DeviceList filterDeviceList;
+    private String url = "http://39.108.92.15:12345";
+
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -393,6 +406,32 @@ public class DeviceActivity extends BaseActionActivity {
             },1000);
 //            handler.post(SetTimingHrTest);
 
+            ibandApplication.isNeedRefresh = true;
+//            HttpService.getInstance().getDeviceList(new OnResultCallBack() {
+//                @Override
+//                public void onResult(boolean result, Object o) {
+//                    if (result) {
+//                        String strDeviceList = o.toString();
+//                        //解析服务器设备列表数据
+//                        SPUtil.put(ibandApplication,AppGlobal.DATA_DEVICE_LIST, strDeviceList);
+//                        DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
+//                        //筛选iband设备数据
+//                        ArrayList<String> nameList = new ArrayList<>();
+//                        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+//                            if (resultBean.getIdentifier().equals("iband")) {
+//                                nameList.add(resultBean.getDevice_name());
+//                            }
+//                        }
+//                        String str =new Gson().toJson(nameList);
+//                        SPUtil.put(ibandApplication,AppGlobal.DATA_DEVICE_FILTER,str);
+//                        handler2.sendMessage(handler2.obtainMessage(4));
+//                    }else{
+//                        Message message = handler2.obtainMessage(3);
+//                        handler2.sendMessage(message);
+//                    }
+//                }
+//            });
+
         }else if (event.getWhat() == EventGlobal.STATE_DEVICE_UNBIND) {
             //解绑成功显示未绑定视图，弹出提示
             showUnBindView();
@@ -492,6 +531,124 @@ public class DeviceActivity extends BaseActionActivity {
         dismissProgress();
     }
 
+    /**
+     * 当判断当前手机没有网络时选择是否打开网络设置
+     * @param context
+     */
+    public static void showNoNetWorkDlg(final Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setIcon(R.mipmap.app_icon)         //
+                .setTitle(R.string.app_name)            //
+                .setMessage(R.string.hint_network_available).setPositiveButton(R.string.hint_set, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 跳转到系统的网络设置界面
+                Intent intent = null;
+                // 先判断当前系统版本
+                if (android.os.Build.VERSION.SDK_INT > 10) {  // 3.0以上
+//                    intent = new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+                    intent = new Intent(android.provider.Settings.ACTION_SETTINGS);
+                } else {
+                    intent = new Intent();
+                    intent.setClassName("com.android.settings", "com.android.settings.WirelessSettings");
+                }
+                context.startActivity(intent);
+
+            }
+        }).setNegativeButton(R.string.hint_cancel, null).show();
+    }
+
+    private Handler handler2 = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 3:
+                    showNoNetWorkDlg(DeviceActivity.this);
+                    break;
+                case 4:
+                    initDeviceUpdate();
+                    break;
+            }
+        }
+    };
+
+
+    private void initDeviceUpdate() {
+        String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC,"");
+        if (mac.isEmpty()) {
+            return;
+        }
+        final String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"");
+        final String deviceVersion = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION,"1.0.0");
+        final String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
+
+        //20180620
+        String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST,"");
+        DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
+
+        boolean isShow = false;
+
+        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+//            if(resultBean.getDevice_id().trim().equals(deviceType.trim())){
+            if(resultBean.getDevice_id().trim().equals(deviceType.trim())){
+                if("0".equals(resultBean.getNeed_autoUpdate())){
+                    isShow = false;
+                }else if("1".equals(resultBean.getNeed_autoUpdate())){
+                    if("0".equals(resultBean.getNeed_update())){
+                        String firm = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION,"");
+                        if(!"".equals(firm)&&firm.compareTo(resultBean.getSupport_software())<0){
+                            isShow = true;
+                        }else{
+                            isShow = false;
+                        }
+                    }else if("1".equals(resultBean.getNeed_update())){
+                        isShow = true;
+                    }
+                }
+            }
+        }
+
+
+
+
+        if(!isShow){
+            return;
+        }
+
+        new DeviceUpdate(mContext).checkDeviceUpdate(new OnResultCallBack() {
+            @Override
+            public void onResult(boolean result, Object o) {
+                if (result) {
+                    if (o != null) {
+                        List<DomXmlParse.Image> imageList = (List<DomXmlParse.Image>) o;
+                        for (DomXmlParse.Image image : imageList) {
+                            if (image.id.equals(deviceType)) {
+                                if (image.least.compareTo(deviceVersion) > 0) {
+                                    final String fileUrl = url + "/" + image.id + "/" + image.file;
+                                    boolean isShow = true;
+                                    if(SPUtil.get(mContext,AppGlobal.DATA_DEVICEUPDATE_DELAY_FILEURL,"").equals(fileUrl)){
+                                        long date = (long)SPUtil.get(mContext,AppGlobal.DATA_DEVICEUPDATE_DELAY_DATE,0L);
+                                        if(System.currentTimeMillis()<date){
+                                            isShow = false;
+                                        }
+                                    }
+                                    if(isShow) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                new DeviceUpdate(mContext).show_delay(fileUrl);
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
 
 
 }

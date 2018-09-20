@@ -39,6 +39,8 @@ public class IbandApplication extends Application {
     private static IbandApplication intance;
     public BleService service;
 
+    public static boolean isNeedRefresh = false;
+
     @Override
     public void onCreate() {
         super.onCreate();

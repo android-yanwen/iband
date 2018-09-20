@@ -186,7 +186,7 @@ public class BluetoothLeManager {
             },1000);
             Log.i(TAG, "connected() bluetoothLeDevices.size()==== "+ bluetoothLeDevices.size());
         }else{
-            BluetoothGatt gatt = device.connectGatt(mContext,true,mBluetoothGattCallback);
+            BluetoothGatt gatt = device.connectGatt(mContext,false,mBluetoothGattCallback);
 //            connectCallback.setBluetoothGatt(gatt);
             bluetoothLeDevices.add(new BluetoothLeDevice(gatt,isReConnect));
             Log.i(TAG, "connected2() bluetoothLeDevices.size()==== "+ bluetoothLeDevices.size());
