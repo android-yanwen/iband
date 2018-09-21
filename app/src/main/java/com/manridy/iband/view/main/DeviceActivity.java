@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -564,7 +566,9 @@ public class DeviceActivity extends BaseActionActivity {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 3:
-                    showNoNetWorkDlg(DeviceActivity.this);
+                    if(!isConn(DeviceActivity.this)){
+                        showNoNetWorkDlg(DeviceActivity.this);
+                    }
                     break;
                 case 4:
                     initDeviceUpdate();
@@ -573,6 +577,20 @@ public class DeviceActivity extends BaseActionActivity {
         }
     };
 
+
+    /*
+     * 判断网络连接是否已开
+     * true 已打开  false 未打开
+     * */
+    public static boolean isConn(Context context){
+        boolean bisConnFlag=false;
+        ConnectivityManager conManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo network = conManager.getActiveNetworkInfo();
+        if(network!=null){
+            bisConnFlag=conManager.getActiveNetworkInfo().isAvailable();
+        }
+        return bisConnFlag;
+    }
 
     private void initDeviceUpdate() {
         String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC,"");

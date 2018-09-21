@@ -242,6 +242,7 @@ public class BleService extends Service {
                 //获取移动数据连接的信息
                 NetworkInfo dataNetworkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
                 if (wifiNetworkInfo.isConnected() || dataNetworkInfo.isConnected()) {
+                    EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_CHANGE_NETWOOK_ON));
                     HttpService.getInstance().getDeviceList(new OnResultCallBack() {
                         @Override
                         public void onResult(boolean result, Object o) {
@@ -282,6 +283,7 @@ public class BleService extends Service {
                     }
                 }
                 if(isConnected) {
+                    EventBus.getDefault().post(new EventMessage(EventGlobal.STATE_CHANGE_NETWOOK_ON));
                     HttpService.getInstance().getDeviceList(new OnResultCallBack() {
                         @Override
                         public void onResult(boolean result, Object o) {

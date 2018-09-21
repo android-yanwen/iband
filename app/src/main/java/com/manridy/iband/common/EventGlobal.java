@@ -88,6 +88,9 @@ public class EventGlobal {
     public static final int STATE_CHANGE_BLUETOOTH_OFF = 4001;
     public static final int STATE_CHANGE_BLUETOOTH_ON_RUNING = 4002;
 
+    //网络连接
+    public static final int STATE_CHANGE_NETWOOK_ON = 5001;
+
 
 
 }

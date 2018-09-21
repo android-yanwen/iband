@@ -135,6 +135,7 @@ public class MainActivity extends BaseActivity {
     private Notification notification;
     private AlertDialog findPhone;
     private AlertDialog lostAlert;
+    private AlertDialog noNetWorkDlg;
     private Vibrator vibrator;
     private MediaPlayer mp;
     private String url = "http://39.108.92.15:12345";
@@ -174,8 +175,10 @@ public class MainActivity extends BaseActivity {
                     ivShare.setEnabled(true);
                     break;
                 case 3:
+                    if(!isConn(MainActivity.this)){
+                        showNoNetWorkDlg(MainActivity.this);
+                    }
 
-                    showNoNetWorkDlg(MainActivity.this);
                     break;
                 case 4:
                     //        isShowBp = isShowBo =false;
@@ -272,6 +275,11 @@ public class MainActivity extends BaseActivity {
                 case 5:
                     initDeviceUpdate();
                     break;
+                case 6:
+                    if ( noNetWorkDlg!= null) {
+                        noNetWorkDlg.dismiss();
+                    }
+                    break;
             }
         }
     };
@@ -291,15 +299,16 @@ public class MainActivity extends BaseActivity {
         return bisConnFlag;
     }
 
-
-
     /**
      * 当判断当前手机没有网络时选择是否打开网络设置
      * @param context
      */
-    public static void showNoNetWorkDlg(final Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setCancelable(false).setIcon(R.mipmap.app_icon)         //
+    public void showNoNetWorkDlg(final Context context) {
+        if ( noNetWorkDlg!= null) {
+            noNetWorkDlg.dismiss();
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(AppManage.getInstance().currentActivity());
+        builder.setIcon(R.mipmap.app_icon)         //
                 .setTitle(R.string.app_name)            //
                 .setMessage(R.string.hint_network_available).setPositiveButton(R.string.hint_set, new DialogInterface.OnClickListener() {
 
@@ -318,7 +327,10 @@ public class MainActivity extends BaseActivity {
                 context.startActivity(intent);
 
             }
-        }).setNegativeButton(R.string.hint_cancel, null).show();
+        }).setNegativeButton(R.string.hint_cancel, null);
+        noNetWorkDlg = builder.create();
+        noNetWorkDlg.setCanceledOnTouchOutside(false);
+        noNetWorkDlg.show();
     }
 
         //检测防丢免打扰时间段和开关
@@ -887,6 +899,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private void updateDeviceList(){
+        if ( noNetWorkDlg!= null) {
+            noNetWorkDlg.dismiss();
+        }
         String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST,"");
         if("".equals(strDeviceList)) {
             strDeviceList = DeviceListDataSpare.strDeviceList;
@@ -1085,6 +1100,9 @@ public class MainActivity extends BaseActivity {
             tbSync.setText(getString(R.string.hint_device_searching));
         } else if (event.getWhat() == EventGlobal.STATE_DEVICE_UNFIND) {
             tbSync.setText(getString(R.string.hint_un_find));
+        } else if (event.getWhat() == EventGlobal.STATE_CHANGE_NETWOOK_ON){
+            Message message = handler2.obtainMessage(6);
+            handler2.sendMessage(message);
         }
     }
 

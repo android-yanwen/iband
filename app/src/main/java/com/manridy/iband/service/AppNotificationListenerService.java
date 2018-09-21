@@ -118,7 +118,10 @@ public class AppNotificationListenerService extends NotificationListenerService 
     public void onNotificationRemoved(StatusBarNotification sbn) {
 
     }
-
+    String lastContentSkype = "";
+    boolean isSendSkype = false;
+    String lastContentLINE = "";
+    boolean isSendLINE = false;
     private synchronized void sendAppAlert(StatusBarNotification sbn) {
         String packageName = sbn.getPackageName();
         Notification notification = sbn.getNotification();
@@ -170,13 +173,30 @@ public class AppNotificationListenerService extends NotificationListenerService 
                 appAlert = APP_ID_FACEBOOK;
             }else if (packageName.equals(PAGE_NAME_LINE) && lineAlert) {
                 appAlert = APP_ID_LINE;
+                if(lastContentLINE.equals(content)){
+                    if(isSendLINE) {
+                        isSendLINE = false;
+                        return;
+                    }
+                }
+                lastContentLINE = content;
+                isSendLINE = true;
             }else if (packageName.equals(PAGE_NAME_TWITTER) && twitterAlert) {
                 appAlert = APP_ID_TWITTER;
             }else if (isSkypePackage(packageName) && skypeAlert) {
                 appAlert = APP_ID_SKYPE;
+                if(lastContentSkype.equals(content)){
+                    if(isSendSkype) {
+                        isSendSkype = false;
+                        return;
+                    }
+                }
+                lastContentSkype = content;
+                isSendSkype = true;
             }else if (packageName.equals(PAGE_NAME_INS) && insAlert) {
                 appAlert = APP_ID_INS;
             }
+
             if (appAlert != -1) {
                 cmdFirst = true;
                 infoId = infoId > 63 ? 1 : infoId++;
