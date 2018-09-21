@@ -307,7 +307,7 @@ public class MainActivity extends BaseActivity {
         if ( noNetWorkDlg!= null) {
             noNetWorkDlg.dismiss();
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(AppManage.getInstance().currentActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setIcon(R.mipmap.app_icon)         //
                 .setTitle(R.string.app_name)            //
                 .setMessage(R.string.hint_network_available).setPositiveButton(R.string.hint_set, new DialogInterface.OnClickListener() {

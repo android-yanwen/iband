@@ -26,6 +26,7 @@ import com.google.gson.reflect.TypeToken;
 import com.manridy.applib.utils.CheckUtil;
 import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
+import com.manridy.iband.IbandApplication;
 import com.manridy.iband.SyncAlert;
 import com.manridy.iband.SyncData;
 import com.manridy.iband.bean.DeviceList;
@@ -408,7 +409,7 @@ public class DeviceActivity extends BaseActionActivity {
             },1000);
 //            handler.post(SetTimingHrTest);
 
-            ibandApplication.isNeedRefresh = true;
+            IbandApplication.isNeedRefresh = true;
 //            HttpService.getInstance().getDeviceList(new OnResultCallBack() {
 //                @Override
 //                public void onResult(boolean result, Object o) {
