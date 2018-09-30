@@ -361,6 +361,8 @@
     <string name="button_correcting">校準</string>
 
     <string name="button_reseting">復位</string>
+    <string name="hint_not_get_devicelist">未能獲取設備列表</string>
+
     <string name="heart_rate_instructions">
         校準：當發現無法測量心率，或者測量容易失敗時，請使用校準功能。\n
 復位：使心率功能恢復到出廠設置。\n

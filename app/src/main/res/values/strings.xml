@@ -354,6 +354,7 @@
     <string name="button_correcting">Calibration</string>
     <string name="button_reseting">Reset</string>
     <string name="hint_update_delay">一个星期内不重复提醒</string>
+    <string name="hint_not_get_devicelist">Failed to get device list</string>
 
     <string name="heart_rate_instructions">
         Calibration: Use the calibration function when you find that you cannot measure your heart rate, or if your measurement is prone to failure.\n

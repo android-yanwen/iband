@@ -3,9 +3,11 @@ package com.manridy.iband.service;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.manridy.applib.utils.FileUtil;
 import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
+import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.DomXmlParse;
@@ -37,7 +39,9 @@ public class HttpService {
     public static final String wechat_regist ="http://39.108.92.15:12348/wx/device_authorize";
     public static final String wechat_old_query = "http://39.108.92.15:12347/wx/device_query";
     public static final String wechat_old_regist = "http://39.108.92.15:12347/wx/device_authorize";
-    public static final String device_list = "http://120.78.138.141:8080/device_list.php";
+    public static final String device_list2 = "http://120.78.138.141:8080/device_list.php";
+//    public static final String device_list2 = "http://120.78.138.141:8080/device_list.php";
+    public static final String device_list = "http://112.74.54.235/devicelist/index.php/Home/Index/device_list_test";
     public static final String device_img = "http://120.78.138.141:8080/image/";
     public static final String device_ota_record = "http://120.78.138.141:8080/update/update_record.php";
     public static final String device_wechat_query = "http://120.78.138.141:8080/deviceRegisterQuery.php";
@@ -203,15 +207,62 @@ public class HttpService {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+//                Log.i("strDeviceList","strDeviceList:onFailure");
+//                onResultCallBack.onResult(false,"");
+                Request request = new Request.Builder().url(device_list2).build();
+                OkHttpClient client = new OkHttpClient();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
                 Log.i("strDeviceList","strDeviceList:onFailure");
                 onResultCallBack.onResult(false,"");
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        try{
+                            Log.i("strDeviceList","strDeviceList:onResponse");
+                            String result = response.body().string();
+                            DeviceList filterDeviceList = new Gson().fromJson(result, DeviceList.class);
+                            onResultCallBack.onResult(true,result);
+                        }catch(Exception exception){
+                            onResultCallBack.onResult(false,"");
+                        }
+
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 Log.i("strDeviceList","strDeviceList:onResponse");
-                String result = response.body().string();
-                onResultCallBack.onResult(true,result);
+                try{
+                    String result = response.body().string();
+                    DeviceList filterDeviceList = new Gson().fromJson(result, DeviceList.class);
+                    onResultCallBack.onResult(true,result);
+                }catch(Exception exception){
+                    Request request = new Request.Builder().url(device_list2).build();
+                    OkHttpClient client = new OkHttpClient();
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Log.i("strDeviceList","strDeviceList:onFailure");
+                            onResultCallBack.onResult(false,"");
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            try{
+                                Log.i("strDeviceList","strDeviceList:onResponse");
+                                String result = response.body().string();
+                                DeviceList filterDeviceList = new Gson().fromJson(result, DeviceList.class);
+                                onResultCallBack.onResult(true,result);
+                            }catch(Exception exception){
+                                onResultCallBack.onResult(false,"");
+                            }
+                        }
+                    });
+                }
             }
         });
     }

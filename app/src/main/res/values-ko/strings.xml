@@ -374,6 +374,9 @@ Reset : 심박수 기능을 초기 설정으로 복원합니다.\n
 
 참고 : 캘리브레이션 또는 리셋 할 때 계속 유지하고 APP가 시계에 연결되어 있는지 확인하십시오.\n\n
     </string>
+
+    <string name="hint_not_get_devicelist">기기 목록을 가져 오지 못했습니다.</string>
+
     //数据库显示 不需要翻译
     <string-array name="db">
         <item>计步</item>

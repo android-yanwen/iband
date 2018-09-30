@@ -362,6 +362,8 @@
 
     <string name="button_reseting">Reset</string>
 
+    <string name="hint_not_get_devicelist">Kan apparaatlijst niet ophalen</string>
+
     <string name="heart_rate_instructions">
         Kalibratie: gebruik de kalibratiefunctie wanneer u constateert dat u uw hartslag niet kunt meten of dat uw meting gevoelig is voor uitval.\n
 Reset: herstelt de hartslagfunctie naar de fabrieksinstellingen.\n

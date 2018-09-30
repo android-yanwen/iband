@@ -366,6 +366,9 @@
 
     <string name="button_reseting">rücksetzen</string>
 
+    <string name="hint_not_get_devicelist">Fehler beim Abrufen der Geräteliste</string>
+
+
     <string name="heart_rate_instructions">
         Kalibrierung: Verwenden Sie die Kalibrierungsfunktion, wenn Sie feststellen, dass Sie Ihre Herzfrequenz nicht messen können oder wenn Ihre Messung fehleranfällig ist.\n
 Reset: Stellt die Herzfrequenzfunktion auf die Werkseinstellungen zurück.\n

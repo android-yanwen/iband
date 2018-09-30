@@ -361,6 +361,9 @@
     <string name="button_correcting">taratura</string>
 
     <string name="button_reseting">reset</string>
+
+    <string name="hint_not_get_devicelist">Impossibile ottenere l\'elenco dei dispositivi</string>
+
     <string name="heart_rate_instructions">
         Calibrazione: utilizzare la funzione di calibrazione quando si scopre che non è possibile misurare la frequenza cardiaca o se la misurazione è soggetta a cedimenti.\n
 Ripristina: ripristina la funzione frequenza cardiaca alle impostazioni di fabbrica.\n

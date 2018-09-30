@@ -175,102 +175,165 @@ public class MainActivity extends BaseActivity {
                     ivShare.setEnabled(true);
                     break;
                 case 3:
+                    Toast.makeText(MainActivity.this,R.string.hint_not_get_devicelist,Toast.LENGTH_SHORT).show();
                     if(!isConn(MainActivity.this)){
                         showNoNetWorkDlg(MainActivity.this);
                     }
 
                     break;
                 case 4:
-                    //        isShowBp = isShowBo =false;
-                    isShowBp = (boolean) SPUtil.get(mContext,"isShowBp",false);
-                    isShowBo = (boolean) SPUtil.get(mContext,"isShowBo",false);
-                    String strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
-                    String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
-                    String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
-                    Log.i("deviceType",deviceType);
-                    Log.i("deviceName",deviceName);
-                    if (strDeviceList!= null && !strDeviceList.isEmpty()) {
-                        DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
-                        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
-                            if (deviceType.trim().equals(resultBean.getDevice_id().trim())){
-                                if ("0".equals(resultBean.getBlood_pressure())) {
-                                    isShowBp = false;
-                                }else{
-                                    isShowBp = true;
-                                }
-                                SPUtil.put(mContext,"isShowBp",isShowBp);
-                                if ("0".equals(resultBean.getOxygen_pressure())) {
-                                    isShowBo = false;
-                                }else{
-                                    isShowBo = true;
-                                }
-                                SPUtil.put(mContext,"isShowBo",isShowBo);
-//                    if ("0".equals("0")) {
-//                        isShowBp = false;
+//                    //        isShowBp = isShowBo =false;
+//                    isShowBp = (boolean) SPUtil.get(mContext,"isShowBp",false);
+//                    isShowBo = (boolean) SPUtil.get(mContext,"isShowBo",false);
+//                    String strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
+//                    String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
+//                    String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
+//                    Log.i("deviceType",deviceType);
+//                    Log.i("deviceName",deviceName);
+//                    if (strDeviceList!= null && !strDeviceList.isEmpty()) {
+//                        DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
+//                        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+//                            if (deviceType.trim().equals(resultBean.getDevice_id().trim())){
+//                                if ("0".equals(resultBean.getBlood_pressure())) {
+//                                    isShowBp = false;
+//                                }else{
+//                                    isShowBp = true;
+//                                }
+//                                SPUtil.put(mContext,"isShowBp",isShowBp);
+//                                if ("0".equals(resultBean.getOxygen_pressure())) {
+//                                    isShowBo = false;
+//                                }else{
+//                                    isShowBo = true;
+//                                }
+//                                SPUtil.put(mContext,"isShowBo",isShowBo);
+////                    if ("0".equals("0")) {
+////                        isShowBp = false;
+////                    }
+////                    if ("0".equals("0")) {
+////                        isShowBo = false;
+////                    }
+//                            }
+//                        }
+//
+//                        try {
+//                            if (!isShowBp) {
+//                                viewList.remove(bpFragment);
+//                            }
+//                            if (!isShowBo) {
+//                                viewList.remove(boFragment);
+//                            }
+//                            if (!isShowBp || !isShowBo){
+//                                viewAdapter.notifyDataSetChanged();
+//                            }
+//                        }catch (Exception e){
+//                            e.printStackTrace();
+//                        }
+//
+//                        boolean isnotifyDataSetChanged = false;
+//
+//                        if(isShowBp||isShowBo){
+//                            boolean isHaveBp = false;
+//                            boolean isHaveBo = false;
+//                            Iterator it = viewList.iterator();
+//                            while (it.hasNext()){
+//                                Object o = it.next();
+//                                if(BpFragment.class.equals(o.getClass())){
+//                                    isHaveBp = true;
+//                                }else if(BoFragment.class.equals(o.getClass())){
+//                                    isHaveBo = true;
+//                                }
+//                            }
+//                            if(isShowBp&&(!isHaveBp)){
+//                                if(bpFragment!=null){
+//                                    viewList.add(bpFragment);
+//                                    isnotifyDataSetChanged = true;
+//                                }else{
+//                                    bpFragment = new BpFragment();
+//                                    viewList.add(bpFragment);
+//                                    isnotifyDataSetChanged = true;
+//                                }
+//                            }
+//                            if(isShowBo&&(!isHaveBo)){
+//                                if(boFragment!=null){
+//                                    viewList.add(boFragment);
+//                                    isnotifyDataSetChanged = true;
+//                                }else{
+//                                    boFragment = new BoFragment();
+//                                    viewList.add(boFragment);
+//                                    isnotifyDataSetChanged = true;
+//                                }
+//                            }
+//                        }
+//
+//
+//                        if(isnotifyDataSetChanged){
+//                            viewAdapter.notifyDataSetChanged();
+//                            isnotifyDataSetChanged = false;
+//                        }
 //                    }
-//                    if ("0".equals("0")) {
-//                        isShowBo = false;
-//                    }
+//                    IbandApplication.isNeedRefresh = false;
+
+                    boolean isShowBp = (boolean)SPUtil.get(mContext,"isShowBp",false);
+                    boolean isShowBo = (boolean)SPUtil.get(mContext,"isShowBo",false);
+
+                    try {
+                        if (!isShowBp) {
+                            viewList.remove(bpFragment);
+                        }
+                        if (!isShowBo) {
+                            viewList.remove(boFragment);
+                        }
+                        if (!isShowBp || !isShowBo){
+                        viewAdapter.notifyDataSetChanged();
+//                            handler2.sendMessage(handler2.obtainMessage(4));
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                    boolean isnotifyDataSetChanged = false;
+
+                    if(isShowBp||isShowBo){
+                        boolean isHaveBp = false;
+                        boolean isHaveBo = false;
+                        Iterator it = viewList.iterator();
+                        while (it.hasNext()){
+                            Object o = it.next();
+                            if(BpFragment.class.equals(o.getClass())){
+                                isHaveBp = true;
+                            }else if(BoFragment.class.equals(o.getClass())){
+                                isHaveBo = true;
                             }
                         }
-
-                        try {
-                            if (!isShowBp) {
-                                viewList.remove(bpFragment);
-                            }
-                            if (!isShowBo) {
-                                viewList.remove(boFragment);
-                            }
-                            if (!isShowBp || !isShowBo){
-                                viewAdapter.notifyDataSetChanged();
-                            }
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-
-                        boolean isnotifyDataSetChanged = false;
-
-                        if(isShowBp||isShowBo){
-                            boolean isHaveBp = false;
-                            boolean isHaveBo = false;
-                            Iterator it = viewList.iterator();
-                            while (it.hasNext()){
-                                Object o = it.next();
-                                if(BpFragment.class.equals(o.getClass())){
-                                    isHaveBp = true;
-                                }else if(BoFragment.class.equals(o.getClass())){
-                                    isHaveBo = true;
-                                }
-                            }
-                            if(isShowBp&&(!isHaveBp)){
-                                if(bpFragment!=null){
-                                    viewList.add(bpFragment);
-                                    isnotifyDataSetChanged = true;
-                                }else{
-                                    bpFragment = new BpFragment();
-                                    viewList.add(bpFragment);
-                                    isnotifyDataSetChanged = true;
-                                }
-                            }
-                            if(isShowBo&&(!isHaveBo)){
-                                if(boFragment!=null){
-                                    viewList.add(boFragment);
-                                    isnotifyDataSetChanged = true;
-                                }else{
-                                    boFragment = new BoFragment();
-                                    viewList.add(boFragment);
-                                    isnotifyDataSetChanged = true;
-                                }
+                        if(isShowBp&&(!isHaveBp)){
+                            if(bpFragment!=null){
+                                viewList.add(bpFragment);
+                                isnotifyDataSetChanged = true;
+                            }else{
+                                bpFragment = new BpFragment();
+                                viewList.add(bpFragment);
+                                isnotifyDataSetChanged = true;
                             }
                         }
-
-
-                        if(isnotifyDataSetChanged){
-                            viewAdapter.notifyDataSetChanged();
-                            isnotifyDataSetChanged = false;
+                        if(isShowBo&&(!isHaveBo)){
+                            if(boFragment!=null){
+                                viewList.add(boFragment);
+                                isnotifyDataSetChanged = true;
+                            }else{
+                                boFragment = new BoFragment();
+                                viewList.add(boFragment);
+                                isnotifyDataSetChanged = true;
+                            }
                         }
                     }
-                    IbandApplication.isNeedRefresh = false;
+
+
+                    if(isnotifyDataSetChanged){
+//                    handler2.sendMessage(handler2.obtainMessage(4));
+                        viewAdapter.notifyDataSetChanged();
+//                    isnotifyDataSetChanged = false;
+                    }
+//                    viewAdapter.notifyDataSetChanged();
                     break;
                 case 5:
                     initDeviceUpdate();
@@ -284,7 +347,49 @@ public class MainActivity extends BaseActivity {
         }
     };
 
+    Runnable updatePageRunnable = new Runnable() {
+        @Override
+        public void run() {
+            //        isShowBp = isShowBo =false;
+            isShowBp = (boolean) SPUtil.get(mContext,"isShowBp",false);
+            isShowBo = (boolean) SPUtil.get(mContext,"isShowBo",false);
+            String strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
+            String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
+            String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
+            Log.i("deviceType",deviceType);
+            Log.i("deviceName",deviceName);
+            if (strDeviceList!= null && !strDeviceList.isEmpty()) {
+                DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
+                for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+                    if (deviceType.trim().equals(resultBean.getDevice_id().trim())){
+                        if ("0".equals(resultBean.getBlood_pressure())) {
+                            isShowBp = false;
+                        }else{
+                            isShowBp = true;
+                        }
+                        SPUtil.put(mContext,"isShowBp",isShowBp);
+                        if ("0".equals(resultBean.getOxygen_pressure())) {
+                            isShowBo = false;
+                        }else{
+                            isShowBo = true;
+                        }
+                        SPUtil.put(mContext,"isShowBo",isShowBo);
 
+                        handler2.sendMessage(handler2.obtainMessage(4));
+//                    if ("0".equals("0")) {
+//                        isShowBp = false;
+//                    }
+//                    if ("0".equals("0")) {
+//                        isShowBo = false;
+//                    }
+                    }
+                }
+
+
+            }
+//            IbandApplication.isNeedRefresh = false;
+        }
+    };
     /*
      * 判断网络连接是否已开
      * true 已打开  false 未打开
@@ -388,9 +493,9 @@ public class MainActivity extends BaseActivity {
         }
 
 
-        if(IbandApplication.isNeedRefresh) {
+//        if(IbandApplication.isNeedRefresh) {
             updateDeviceList();
-        }
+//        }
 //        int state = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
 //        if(state==AppGlobal.DEVICE_STATE_UNCONNECT||state==AppGlobal.DEVICE_STATE_CONNECTED) {
 //            return;
@@ -881,6 +986,7 @@ public class MainActivity extends BaseActivity {
     protected void loadData() {
         super.loadData();
         String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
+//        updateDeviceList();
         int state = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
         if (!Watch.getInstance().isBluetoothEnable()) {
             OpenBluetoothDialog();
@@ -895,7 +1001,6 @@ public class MainActivity extends BaseActivity {
             EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));
         }
         setHintState(state);
-        updateDeviceList();
     }
 
     private void updateDeviceList(){
@@ -906,7 +1011,15 @@ public class MainActivity extends BaseActivity {
         if("".equals(strDeviceList)) {
             strDeviceList = DeviceListDataSpare.strDeviceList;
             SPUtil.put(ibandApplication, AppGlobal.DATA_DEVICE_LIST, strDeviceList);
+        }else{
+            try{
+                DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
+            }catch (Exception e){
+                strDeviceList = DeviceListDataSpare.strDeviceList;
+                SPUtil.put(ibandApplication, AppGlobal.DATA_DEVICE_LIST, strDeviceList);
+            }
         }
+        handler2.post(updatePageRunnable);
         HttpService.getInstance().getDeviceList(new OnResultCallBack() {
             @Override
             public void onResult(boolean result, Object o) {
@@ -924,18 +1037,20 @@ public class MainActivity extends BaseActivity {
                     }
                     String str =new Gson().toJson(nameList);
                     SPUtil.put(ibandApplication,AppGlobal.DATA_DEVICE_FILTER,str);
-                    handler2.sendMessage(handler2.obtainMessage(4));
-                    handler2.sendMessageDelayed(handler2.obtainMessage(5),1500);
+                    handler2.post(updatePageRunnable);
+                    handler2.sendMessageDelayed(handler2.obtainMessage(5),200);
                 }else{
                     EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_LOAD_DEVICE_LIST));
-                    handler2.sendMessageDelayed(handler2.obtainMessage(4),500);
+                    handler2.post(updatePageRunnable);
                     Message message = handler2.obtainMessage(3);
                     handler2.sendMessage(message);
-                    handler2.sendMessageDelayed(handler2.obtainMessage(5),1500);
+                    handler2.sendMessageDelayed(handler2.obtainMessage(5),200);
                 }
             }
         });
     }
+
+
 
     private void selectTitle(int position) {
         switch (position) {
@@ -991,6 +1106,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case AppGlobal.DEVICE_STATE_SYNC_OK:
                 tbSync.setText(R.string.hint_sync_ok);
+                handler2.post(updatePageRunnable);
                 break;
             case AppGlobal.DEVICE_STATE_SYNC_NO:
                 tbSync.setText(R.string.hint_sync_no);

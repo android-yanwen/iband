@@ -361,6 +361,9 @@
     <string name="button_correcting">Calibração</string>
 
     <string name="button_reseting">Reset</string>
+
+    <string name="hint_not_get_devicelist">Não foi possível obter a lista de dispositivos</string>
+
     <string name="heart_rate_instructions">
         Calibração: Use a função de calibração quando achar que não é possível medir sua frequência cardíaca ou se sua medição está sujeita a falhas.\n
 Redefinir: restaura a função de frequência cardíaca para as configurações de fábrica.\n

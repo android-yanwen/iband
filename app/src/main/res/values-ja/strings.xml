@@ -361,6 +361,9 @@
     <string name="button_correcting">較正</string>
 
     <string name="button_reseting">リセット</string>
+
+    <string name="hint_not_get_devicelist">デバイスリストを取得できませんでした</string>
+
     <string name="heart_rate_instructions">
         校正：心拍数を測定できない場合、または測定が失敗する傾向がある場合は、校正機能を使用してください。\n
 リセット：心拍機能を工場出荷時の設定に戻します。\n

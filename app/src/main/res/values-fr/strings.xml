@@ -362,6 +362,8 @@
 
     <string name="button_reseting">Réinitialiser</string>
 
+    <string name="hint_not_get_devicelist">Impossible d\'obtenir la liste des périphériques</string>
+
     <string name="heart_rate_instructions">
         Calibration: Use the calibration function when you find that you cannot measure your heart rate, or if your measurement is prone to failure.\n
 Reset: Restores the heart rate function to the factory settings.\n
