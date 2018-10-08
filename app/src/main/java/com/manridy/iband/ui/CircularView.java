@@ -9,6 +9,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -113,14 +116,12 @@ public class CircularView extends View {
         backgroundPaint.setStrokeWidth(strokeWidth);
         backgroundPaint.setAntiAlias(true);//抗锯齿
 
-
         //Init Foreground
         foregroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         foregroundPaint.setColor(progressColor);
         foregroundPaint.setStyle(Paint.Style.STROKE);
         foregroundPaint.setStrokeWidth(backgroundStrokeWidth);
         foregroundPaint.setAntiAlias(true);//抗锯齿
-
 //        foregroundPaint.setStrokeCap(Paint.Cap.ROUND);//设置为圆角
 
         //显示标题文字
@@ -146,7 +147,6 @@ public class CircularView extends View {
         statePaint.setAntiAlias(true);
 //        statePaint.setTypeface(Typeface.createFromAsset(context.getAssets(),"fonts/gotham.ttf"));
         statePaint.setTextAlign(Paint.Align.CENTER);
-
 
         //显示单位文字
         unitPaint = new Paint();
@@ -197,7 +197,6 @@ public class CircularView extends View {
         setMeasuredDimension(min,min);
         float highStroke = (strokeWidth > backgroundStrokeWidth) ? strokeWidth : backgroundStrokeWidth;
         rectF.set(0 + highStroke / 2, 0 + highStroke / 2,min - highStroke / 2,min - highStroke / 2);
-
     }
 
     public float getProgress() {

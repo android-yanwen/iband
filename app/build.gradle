@@ -9,7 +9,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 26
         versionCode 99
-        versionName "1.9.29(beta2)"
+        versionName "1.9.30(beta1)"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
