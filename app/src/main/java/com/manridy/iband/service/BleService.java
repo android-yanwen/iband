@@ -226,7 +226,6 @@ public class BleService extends Service {
         IntentFilter filter1 = new IntentFilter();
         filter1.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(netWorkStateReceiver, filter1);
-
     }
 
     private BroadcastReceiver  netWorkStateReceiver = new BroadcastReceiver() {

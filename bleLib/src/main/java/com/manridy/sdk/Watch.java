@@ -1,6 +1,7 @@
 package com.manridy.sdk;
 
 
+import android.bluetooth.BluetoothGatt;
 import android.os.Handler;
 import android.util.Log;
 
@@ -31,6 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 腕表
  */
 public class Watch extends BluetoothLeManager implements WatchApi {
+    public static String brand = "";
     private static Watch instance;
     private static String version = "2.2.4";
     private static List<cmdMessage> messageList = new LinkedList<>();//消息集合
@@ -181,26 +183,57 @@ public class Watch extends BluetoothLeManager implements WatchApi {
 
     //写入特征值
     private synchronized void writeCharacteristic(byte[] data, BleCallback bleCallback){
-        BluetoothLeDevice leDevice;
-        if (data == null) {
-            bleCallback.onFailure(new OtherException("sendCmd data is null!"));
-            return;
-        }
-        if (sendMac == null || sendMac.isEmpty()) {//mac地址传空拿最后一个否则拿指定地址
-            if (bluetoothLeDevices != null && bluetoothLeDevices.size()>0) {//判断设备集合数据
-                leDevice = bluetoothLeDevices.get(bluetoothLeDevices.size()-1);//拿取最后一个
-            }else{
+        if("huawei".equalsIgnoreCase(Watch.brand)){
+//        BluetoothLeDevice leDevice;
+            BluetoothGatt bluetoothGatt;
+            if (data == null) {
+                bleCallback.onFailure(new OtherException("sendCmd data is null!"));
+                return;
+            }
+            if (sendMac == null || sendMac.isEmpty()) {//mac地址传空拿最后一个否则拿指定地址
+//            if (bluetoothLeDevices != null && bluetoothLeDevices.size()>0) {//判断设备集合数据
+//                leDevice = bluetoothLeDevices.get(bluetoothLeDevices.size()-1);//拿取最后一个
+//            }else{
+//                bleCallback.onFailure(new OtherException("sendCmd leDevice is null!"));
+//                return;
+//            }
+                if (curBluetoothGatt != null) {//判断设备集合数据
+                    bluetoothGatt = curBluetoothGatt;
+                }else{
+                    bleCallback.onFailure(new OtherException("sendCmd leDevice is null!"));
+                    return;
+                }
+            }else {
+                bluetoothGatt = curBluetoothGatt;
+            }
+            if (bluetoothGatt == null) {
                 bleCallback.onFailure(new OtherException("sendCmd leDevice is null!"));
                 return;
             }
+            writeCharacteristic(bluetoothGatt,data,bleCallback);
         }else {
-            leDevice = getBluetoothLeDevice(sendMac);
+            BluetoothLeDevice leDevice;
+            if (data == null) {
+                bleCallback.onFailure(new OtherException("sendCmd data is null!"));
+                return;
+            }
+            if (sendMac == null || sendMac.isEmpty()) {//mac地址传空拿最后一个否则拿指定地址
+                if (bluetoothLeDevices != null && bluetoothLeDevices.size() > 0) {//判断设备集合数据
+                    leDevice = bluetoothLeDevices.get(bluetoothLeDevices.size() - 1);//拿取最后一个
+                } else {
+                    bleCallback.onFailure(new OtherException("sendCmd leDevice is null!"));
+                    return;
+                }
+            } else {
+                leDevice = getBluetoothLeDevice(sendMac);
+            }
+            if (leDevice == null) {
+                bleCallback.onFailure(new OtherException("sendCmd leDevice is null!"));
+                return;
+            }
+            ;
+            writeCharacteristic(leDevice.getmBluetoothGatt(), data, bleCallback);
         }
-        if (leDevice == null) {
-            bleCallback.onFailure(new OtherException("sendCmd leDevice is null!"));
-            return;
-        };
-        writeCharacteristic(leDevice.getmBluetoothGatt(),data,bleCallback);
     }
 
     //=============================蓝牙操作=============================

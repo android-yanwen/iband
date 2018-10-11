@@ -57,6 +57,103 @@ public class BluetoothLeManager {
     private Handler handler = new Handler(Looper.getMainLooper());
     public List<BluetoothLeDevice> bluetoothLeDevices = new ArrayList<>();
     private mBluetoothGattCallback mBluetoothGattCallback;
+    private BleConnectCallback connectCallback;
+
+    //华为手机
+    public BluetoothGatt curBluetoothGatt;
+    public boolean isConnected;
+    public boolean isBluetoothReConnect;
+    public String curBluetoothMac;
+    public BluetoothDevice curBluetoothDevice;
+    private List<BluetoothGatt> oldBluetoothGatts = new ArrayList<>();
+    private void cleanCurBluetooth(){
+        Log.i(TAG,"oldBluetoothGatts.cleanCurBluetooth:"+oldBluetoothGatts.size());
+        curBluetoothMac = null;
+        if(curBluetoothGatt!=null){
+            curBluetoothGatt.disconnect();
+            oldBluetoothGatts.add(curBluetoothGatt);
+            Log.i(TAG,"oldBluetoothGatts.add:"+oldBluetoothGatts.size());
+        }
+        curBluetoothDevice = null;
+        isConnected = false;
+        isBluetoothReConnect = true;
+    }
+    String reConnectBluetoothMac;
+    BleConnectCallback reConnectCallback;
+    Handler reConnectHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:
+                    if(reConnectCallback!=null){
+                        reConnectCallback = null;
+                    }
+                    reConnectCallback = new BleConnectCallback() {
+                        @Override
+                        public void onConnectSuccess() {
+
+                        }
+
+                        @Override
+                        public void onConnectFailure(BleException exception) {
+                            reConnectHandler.removeMessages(2);
+                            Message message = reConnectHandler.obtainMessage(2);
+                            reConnectHandler.sendMessageDelayed(message,20000);
+                        }
+                    };
+                    connect(curBluetoothDevice,true,reConnectCallback);
+                    break;
+                case 2:
+                    Log.i(TAG,"isConnected:"+isConnected+";curBluetoothMac:"+curBluetoothMac);
+                    Log.i(TAG,"curBluetoothDevice:"+curBluetoothDevice+";curBluetoothGatt:"+curBluetoothGatt);
+                    if(!isConnected){
+                        if(curBluetoothMac!=null) {
+                            reConnect(curBluetoothMac);
+                        }
+                    }else{
+                        if(curBluetoothGatt==null){
+                            isConnected = false;
+                            if(curBluetoothMac!=null) {
+                                reConnect(curBluetoothMac);
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+    };
+
+    Runnable reConnectRunnale = new Runnable() {
+        @Override
+        public void run() {
+            if(curBluetoothMac!=null){
+                startScan(new TimeMacScanCallback(curBluetoothMac,12000) {
+                    @Override
+                    public void onDeviceFound(boolean isFound, BluetoothDevice device) {
+                        if(isFound){
+                            curBluetoothDevice = device;
+                            Message message = reConnectHandler.obtainMessage(1);
+                            reConnectHandler.sendMessage(message);
+                        }else {
+                            reConnectHandler.removeMessages(2);
+                            Message message = reConnectHandler.obtainMessage(2);
+                            reConnectHandler.sendMessageDelayed(message,20000);
+                        }
+                    }
+                });
+            }
+        }
+    };
+
+    private synchronized void reConnect(String mac){
+        Log.i(TAG,"reConnect:"+mac);
+        curBluetoothMac = mac;
+        reConnectBluetoothMac = mac;
+        reConnectHandler.post(reConnectRunnale);
+    }
+
+
 
     private UUID service = UUID.fromString("f000efe0-0451-4000-0000-00000000b000");
     private UUID notify = UUID.fromString("f000efe3-0451-4000-0000-00000000b000");
@@ -158,42 +255,89 @@ public class BluetoothLeManager {
      * @param isReConnect 意外断开是否重连
      */
     public synchronized void connect(final BluetoothDevice device, final boolean isReConnect, final BleConnectCallback connectCallback){
-        this.connectCallback = connectCallback;
-        if (null == device || mBluetoothAdapter == null) {
-            Log.e(TAG, "connect device or bluetoothAdapter is null" );
-        }
-        mBluetoothGattCallback = new mBluetoothGattCallback();
-        int index = -1;
-        for (int i = 0; i < bluetoothLeDevices.size(); i++) {
-            if (bluetoothLeDevices.get(i).getmBluetoothGatt().getDevice().getAddress().equals(device.getAddress())) {
-                index = i;
+        if("huawei".equalsIgnoreCase(Watch.brand)){
+            this.connectCallback = connectCallback;
+//        if (null == device || mBluetoothAdapter == null || bluetoothLeDevices == null) {
+//            LogUtil.e(TAG, "connect device or bluetoothAdapter is null" );
+//            return;
+//        }
+            if (null == device || mBluetoothAdapter == null) {
+                LogUtil.e(TAG, "connect device or bluetoothAdapter is null" );
+                return;
             }
-        }
-        Log.i(TAG, "connect() bluetoothLeDevices.size()==== "+ bluetoothLeDevices.size());
-        if (index != -1) {
-            BluetoothGatt getmBluetoothGatt = bluetoothLeDevices.get(index).getmBluetoothGatt();
-            closeBluetoothGatt(getmBluetoothGatt);
-            removeBluetoothLe(getmBluetoothGatt);
-            Log.e(TAG, "connect bluetoothGatt remove index is"+index);
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    BluetoothGatt gatt = device.connectGatt(mContext,false,mBluetoothGattCallback);
+            mBluetoothGattCallback = new mBluetoothGattCallback();
 
-                    bluetoothLeDevices.add(new BluetoothLeDevice(gatt,isReConnect));
-//                    connectCallback.setBluetoothGatt(gatt);
-                }
-            },1000);
-            Log.i(TAG, "connected() bluetoothLeDevices.size()==== "+ bluetoothLeDevices.size());
-        }else{
+            cleanCurBluetooth();
+
+            curBluetoothMac = device.getAddress();
+            isConnected = false;
+            isBluetoothReConnect = true;
+            curBluetoothGatt = null;
             BluetoothGatt gatt = device.connectGatt(mContext,false,mBluetoothGattCallback);
+//        curBluetoothGatt = gatt;
+
+
+//        int index = -1;
+//        for (int i = 0; i < bluetoothLeDevices.size(); i++) {
+//            if (bluetoothLeDevices.get(i).getmBluetoothGatt().getDevice().getAddress().equals(device.getAddress())) {
+//                index = i;
+//            }
+//        }
+//        if (index != -1) {
+//            BluetoothGatt getmBluetoothGatt = bluetoothLeDevices.get(index).getmBluetoothGatt();
+//            closeBluetoothGatt(getmBluetoothGatt);
+//            removeBluetoothLe(getmBluetoothGatt);
+//            LogUtil.e(TAG, "connect bluetoothGatt remove index is"+index);
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    BluetoothGatt gatt = device.connectGatt(mContext,false,mBluetoothGattCallback);
+//                    bluetoothLeDevices.add(new BluetoothLeDevice(gatt,isReConnect));
+//                }
+//            },1000);
+//        }else{
+//            BluetoothGatt gatt = device.connectGatt(mContext,false,mBluetoothGattCallback);
+//            bluetoothLeDevices.add(new BluetoothLeDevice(gatt,isReConnect));
+//        }
+            handler.postDelayed(connectTimeoutRunnable,CONNECT_TIME_OUT);
+        }else {
+            this.connectCallback = connectCallback;
+            if (null == device || mBluetoothAdapter == null) {
+                Log.e(TAG, "connect device or bluetoothAdapter is null");
+            }
+            mBluetoothGattCallback = new mBluetoothGattCallback();
+            int index = -1;
+            for (int i = 0; i < bluetoothLeDevices.size(); i++) {
+                if (bluetoothLeDevices.get(i).getmBluetoothGatt().getDevice().getAddress().equals(device.getAddress())) {
+                    index = i;
+                }
+            }
+            Log.i(TAG, "connect() bluetoothLeDevices.size()==== " + bluetoothLeDevices.size());
+            if (index != -1) {
+                BluetoothGatt getmBluetoothGatt = bluetoothLeDevices.get(index).getmBluetoothGatt();
+                closeBluetoothGatt(getmBluetoothGatt);
+                removeBluetoothLe(getmBluetoothGatt);
+                Log.e(TAG, "connect bluetoothGatt remove index is" + index);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        BluetoothGatt gatt = device.connectGatt(mContext, false, mBluetoothGattCallback);
+
+                        bluetoothLeDevices.add(new BluetoothLeDevice(gatt, isReConnect));
+//                    connectCallback.setBluetoothGatt(gatt);
+                    }
+                }, 1000);
+                Log.i(TAG, "connected() bluetoothLeDevices.size()==== " + bluetoothLeDevices.size());
+            } else {
+                BluetoothGatt gatt = device.connectGatt(mContext, false, mBluetoothGattCallback);
 //            connectCallback.setBluetoothGatt(gatt);
-            bluetoothLeDevices.add(new BluetoothLeDevice(gatt,isReConnect));
-            Log.i(TAG, "connected2() bluetoothLeDevices.size()==== "+ bluetoothLeDevices.size());
+                bluetoothLeDevices.add(new BluetoothLeDevice(gatt, isReConnect));
+                Log.i(TAG, "connected2() bluetoothLeDevices.size()==== " + bluetoothLeDevices.size());
+            }
+            handler.postDelayed(connectTimeoutRunnable, 10000);
         }
-        handler.postDelayed(connectTimeoutRunnable,10000);
     }
-    BleConnectCallback connectCallback;
+//    BleConnectCallback connectCallback;
     Runnable connectTimeoutRunnable = new Runnable() {
         @Override
         public void run() {
@@ -216,19 +360,36 @@ public class BluetoothLeManager {
 
     BleCallback disConnectCallback;
     public synchronized void disconnect(String mac,BleCallback disConnectCallback){
-        BluetoothLeDevice leDevice = getBluetoothLeDevice(mac);
-        if (leDevice == null) {
-            disConnectCallback.onFailure(new OtherException("disconnect leDevice is null!"));
-            return;
+        if("huawei".equalsIgnoreCase(Watch.brand)){
+            if (curBluetoothGatt == null||mac == null) {
+                disConnectCallback.onFailure(new OtherException("disconnect leDevice is null!"));
+                return;
+            }
+//        BluetoothGatt gatt = leDevice.getmBluetoothGatt();
+//        if (gatt == null) {
+//            disConnectCallback.onFailure(new OtherException("disconnect gatt is null!"));
+//            return;
+//        }
+            this.disConnectCallback = disConnectCallback;
+            handler.postDelayed(disConnectTimeoutRunnable,DISCONNECT_TIME_OUT);
+            if(mac.equals(curBluetoothGatt.getDevice().getAddress())){
+                curBluetoothGatt.disconnect();
+            }
+        }else {
+            BluetoothLeDevice leDevice = getBluetoothLeDevice(mac);
+            if (leDevice == null) {
+                disConnectCallback.onFailure(new OtherException("disconnect leDevice is null!"));
+                return;
+            }
+            BluetoothGatt gatt = leDevice.getmBluetoothGatt();
+            if (gatt == null) {
+                disConnectCallback.onFailure(new OtherException("disconnect gatt is null!"));
+                return;
+            }
+            this.disConnectCallback = disConnectCallback;
+            handler.postDelayed(disConnectTimeoutRunnable, DISCONNECT_TIME_OUT);
+            gatt.disconnect();
         }
-        BluetoothGatt gatt = leDevice.getmBluetoothGatt();
-        if (gatt == null) {
-            disConnectCallback.onFailure(new OtherException("disconnect gatt is null!"));
-            return;
-        }
-        this.disConnectCallback = disConnectCallback;
-        handler.postDelayed(disConnectTimeoutRunnable,DISCONNECT_TIME_OUT);
-        gatt.disconnect();
     }
 
     Runnable disConnectTimeoutRunnable = new Runnable() {
@@ -267,7 +428,14 @@ public class BluetoothLeManager {
     }
 
     public BluetoothDevice getDevice(String mac){
-        return mBluetoothAdapter.getRemoteDevice(mac);
+        if("huawei".equalsIgnoreCase(Watch.brand)) {
+            if (mBluetoothAdapter != null) {
+                return mBluetoothAdapter.getRemoteDevice(mac);
+            }
+            return null;
+        }else{
+            return mBluetoothAdapter.getRemoteDevice(mac);
+        }
     }
 
     /********Notification and WriteData********/
@@ -421,6 +589,97 @@ public class BluetoothLeManager {
     class mBluetoothGattCallback extends BluetoothGattCallback{
         @Override
         public void onConnectionStateChange(final BluetoothGatt gatt, int status, int newState) {
+            if("huawei".equalsIgnoreCase(Watch.brand)){
+                Log.i(TAG,"oldBluetoothGatts.size():"+oldBluetoothGatts.size()+":"+curBluetoothGatt);
+//            if (status != BluetoothGatt.GATT_SUCCESS) {
+//                String err = "Cannot connect device with error status: " + status;
+//                // 当尝试连接失败的时候调用 disconnect 方法是不会引起这个方法回调的，所以这里
+//                //   直接回调就可以了。
+//                gatt.close();
+//                Log.e(TAG, err);
+//                return;
+//            }
+                try{
+                    super.onConnectionStateChange(gatt, status, newState);
+                    LogUtil.e(TAG, "onConnectionStateChange: device is "+gatt.getDevice().getAddress()+",status is "+status+", new state "+newState );
+                    if (status!=BluetoothGatt.GATT_SUCCESS){
+                        if(oldBluetoothGatts.size()>0&&oldBluetoothGatts.contains(gatt)){
+                            for(BluetoothGatt bluetoothGatt : oldBluetoothGatts){
+                                if(bluetoothGatt==gatt){
+                                    oldBluetoothGatts.remove(gatt);
+                                    gatt.close();
+                                }
+                            }
+                        }else{
+                            if (disConnectCallback != null) {
+                                handler.removeCallbacks(disConnectTimeoutRunnable);
+                                cleanCurBluetooth();
+                                gatt.close();
+                                curBluetoothGatt = null;
+                                disConnectCallback.onSuccess(null);
+                                disConnectCallback = null;
+                                mBluetoothGattCallback = null;
+                                broadcastUpdate(ACTION_GATT_DISCONNECTED,null,gatt.getDevice().getAddress());
+                            }else{
+                                broadcastUpdate(ACTION_GATT_DISCONNECTED,new byte[]{(byte) status},gatt.getDevice().getAddress());
+//                                    if (bluetoothLeDevice.isReConnect()) {
+//                                        LogUtil.d(TAG, "isReConnect() called ");
+//                                        reConnect(bluetoothLeDevice);
+//                                    }
+                                gatt.close();
+                                curBluetoothGatt = null;
+                                reConnect(gatt.getDevice().getAddress());
+                            }
+                        }
+                    }else {
+                        if (newState == BluetoothProfile.STATE_CONNECTED) {
+                            isConnected = false;
+                            gatt.discoverServices();
+                            broadcastUpdate(ACTION_GATT_CONNECT, null, gatt.getDevice().getAddress());
+                        } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                            if(oldBluetoothGatts.size()>0&&oldBluetoothGatts.contains(gatt)){
+                                for(BluetoothGatt bluetoothGatt : oldBluetoothGatts){
+                                    if(bluetoothGatt==gatt){
+                                        oldBluetoothGatts.remove(gatt);
+                                        gatt.close();
+                                    }
+                                }
+                            }else{
+                                if (disConnectCallback != null) {
+                                    handler.removeCallbacks(disConnectTimeoutRunnable);
+                                    cleanCurBluetooth();
+                                    gatt.close();
+                                    curBluetoothGatt = null;
+                                    disConnectCallback.onSuccess(null);
+                                    disConnectCallback = null;
+                                    mBluetoothGattCallback = null;
+                                    broadcastUpdate(ACTION_GATT_DISCONNECTED,null,gatt.getDevice().getAddress());
+                                }else{
+                                    broadcastUpdate(ACTION_GATT_DISCONNECTED,new byte[]{(byte) status},gatt.getDevice().getAddress());
+//                                    if (bluetoothLeDevice.isReConnect()) {
+//                                        LogUtil.d(TAG, "isReConnect() called ");
+//                                        reConnect(bluetoothLeDevice);
+//                                    }
+                                    gatt.close();
+                                    curBluetoothGatt = null;
+                                    reConnect(gatt.getDevice().getAddress());
+                                }
+                            }
+                        } else {//连接异常状态处理
+                            isConnected = false;
+                            reConnect(gatt.getDevice().getAddress());
+                        }
+
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }else {
+
+
+
+
             try{
                 super.onConnectionStateChange(gatt, status, newState);
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
@@ -461,16 +720,38 @@ public class BluetoothLeManager {
             }catch (Exception e){
                 e.printStackTrace();
             }
+
+            }
         }
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            super.onServicesDiscovered(gatt, status);
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                enableNotification(gatt,service,notify);
-                broadcastUpdate(ACTION_SERVICES_DISCOVERED,null,gatt.getDevice().getAddress());
+            if("huawei".equalsIgnoreCase(Watch.brand)){
+                super.onServicesDiscovered(gatt, status);
+                Log.i(TAG,"onServicesDiscovered:"+gatt.getDevice()+";status:"+status);
+                if (status == BluetoothGatt.GATT_SUCCESS) {
+                    reConnectHandler.removeMessages(2);
+                    isConnected = true;
+                    curBluetoothGatt = gatt;
+                    Log.i(TAG,"oldBluetoothGatts:onServicesDiscovered:"+gatt);
+                    enableNotification(gatt,service,notify);
+                    broadcastUpdate(ACTION_SERVICES_DISCOVERED,null,gatt.getDevice().getAddress());
+                }else{
+                    if (connectCallback != null) {
+                        connectCallback.onConnectFailure(new GattException(status));
+                        connectCallback = null;
+                    }
+                    LogUtil.e(TAG, "onServicesDiscovered: error code is"+status);
+                }
+            }else {
+
+                super.onServicesDiscovered(gatt, status);
+                if (status == BluetoothGatt.GATT_SUCCESS) {
+                    enableNotification(gatt, service, notify);
+                    broadcastUpdate(ACTION_SERVICES_DISCOVERED, null, gatt.getDevice().getAddress());
+                }
+                Log.e(TAG, "onServicesDiscovered:code is" + status);
             }
-            Log.e(TAG, "onServicesDiscovered:code is"+status);
         }
 
         @Override
@@ -518,6 +799,7 @@ public class BluetoothLeManager {
         public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
             super.onMtuChanged(gatt, mtu, status);
         }
+
     };
 
     /********bluetoothLeManager********/
@@ -577,6 +859,7 @@ public class BluetoothLeManager {
      * @return
      */
     public boolean refreshDeviceCache(BluetoothGatt gatt) {
+
         try {
             final Method refresh = BluetoothGatt.class.getMethod("refresh");
             if (refresh != null) {
@@ -595,19 +878,27 @@ public class BluetoothLeManager {
      * @param gatt
      */
     public void closeBluetoothGatt(BluetoothGatt gatt){
-        if (gatt != null) {
-            refreshDeviceCache(gatt);
-            gatt.close();
+        if("huawei".equalsIgnoreCase(Watch.brand)) {
+        }
+        else {
+            if (gatt != null) {
+                refreshDeviceCache(gatt);
+                gatt.close();
+            }
         }
     }
 
     public void closeBluetoothGatt(String mac){
-        BluetoothLeDevice leDevice = getBluetoothLeDevice(mac);
-        Log.i("closeBluetoothGatt","leDevice:"+leDevice);
-        if (leDevice != null) {
-            BluetoothGatt bluetoothGatt = leDevice.getmBluetoothGatt();
-            Log.i("closeBluetoothGatt","getmBluetoothGatt():"+bluetoothGatt);
-            closeBluetoothGatt(bluetoothGatt);
+        if("huawei".equalsIgnoreCase(Watch.brand)) {
+        }
+        else {
+            BluetoothLeDevice leDevice = getBluetoothLeDevice(mac);
+            Log.i("closeBluetoothGatt", "leDevice:" + leDevice);
+            if (leDevice != null) {
+                BluetoothGatt bluetoothGatt = leDevice.getmBluetoothGatt();
+                Log.i("closeBluetoothGatt", "getmBluetoothGatt():" + bluetoothGatt);
+                closeBluetoothGatt(bluetoothGatt);
+            }
         }
     }
 
@@ -615,17 +906,26 @@ public class BluetoothLeManager {
      * 关闭所有蓝牙BLE设备
      */
     public void closeALLBluetoothLe(){
-        Log.i(TAG, "closeALLBluetoothLe() bluetoothLeDevices.size()==== "+ bluetoothLeDevices.size());
-
-        for (BluetoothLeDevice mBluetoothLeGatt : bluetoothLeDevices) {
-            closeBluetoothGatt(mBluetoothLeGatt.getmBluetoothGatt());
+        if("huawei".equalsIgnoreCase(Watch.brand)) {
         }
-        bluetoothLeDevices.clear();
-        bluetoothLeDevices = null;
+        else {
+            Log.i(TAG, "closeALLBluetoothLe() bluetoothLeDevices.size()==== " + bluetoothLeDevices.size());
+
+            for (BluetoothLeDevice mBluetoothLeGatt : bluetoothLeDevices) {
+                closeBluetoothGatt(mBluetoothLeGatt.getmBluetoothGatt());
+            }
+            bluetoothLeDevices.clear();
+            bluetoothLeDevices = null;
+        }
     }
 
     public void clearBluetoothLe(){
-        bluetoothLeDevices.clear();
+        if("huawei".equalsIgnoreCase(Watch.brand)) {
+        }
+        else {
+            bluetoothLeDevices.clear();
+        }
+
     }
 
     /*******广播*******/

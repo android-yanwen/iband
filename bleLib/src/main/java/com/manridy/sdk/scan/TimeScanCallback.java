@@ -4,8 +4,11 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.manridy.sdk.BluetoothLeManager;
+import com.manridy.sdk.Watch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +37,9 @@ public abstract class TimeScanCallback implements BluetoothAdapter.LeScanCallbac
 
     @Override
     public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+        if("huawei".equalsIgnoreCase(Watch.brand)){
+            Log.i("TimeScanCallback","device:"+device.getAddress());
+        }
         if (!deviceList.contains(device)) {//筛选重复
             deviceList.add(device);
             if (filter == null || filter.isEmpty()) {//是否过滤
@@ -52,6 +58,16 @@ public abstract class TimeScanCallback implements BluetoothAdapter.LeScanCallbac
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    if("huawei".equalsIgnoreCase(Watch.brand)){
+                        Log.i("TimeScanCallback","deviceList.size:"+deviceList.size());
+                        if(deviceList.size()==0){
+                            if(bluetoothLeManager!=null){
+                                if(bluetoothLeManager.mContext!=null){
+                                    Toast.makeText(bluetoothLeManager.mContext,"未找到任何设备，请重启蓝牙！",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    }
                     bluetoothLeManager.stopScan(TimeScanCallback.this);
                     onScanEnd();
                     deviceList.clear();

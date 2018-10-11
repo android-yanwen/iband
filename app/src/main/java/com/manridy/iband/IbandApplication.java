@@ -20,6 +20,7 @@ import com.manridy.iband.service.BleService;
 import com.manridy.iband.service.NotificationCollectorMonitorService;
 import com.manridy.iband.service.AppNotificationListenerService;
 import com.manridy.iband.view.setting.UpdateActivity;
+import com.manridy.sdk.Watch;
 import com.mob.MobSDK;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
@@ -59,6 +60,14 @@ public class IbandApplication extends Application {
         initLangue();//初始化语言
 //        CrashHandler.getInstance().init(intance);
         MobSDK.init(this);
+
+        try {
+            String brand = android.os.Build.BRAND;
+            Watch.brand = brand;
+            Log.i(TAG,brand);
+        }catch (Exception e){
+            Log.e(TAG,"fail:getBrand");
+        }
     }
 
     private void initLangue() {

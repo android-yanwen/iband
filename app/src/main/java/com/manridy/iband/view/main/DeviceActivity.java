@@ -1,6 +1,7 @@
 package com.manridy.iband.view.main;
 
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -247,16 +248,34 @@ public class DeviceActivity extends BaseActionActivity {
         Watch.getInstance().connect(bindDevice, true, new BleConnectCallback() {
             @Override
             public void onConnectSuccess() {
-                dismissProgress();//取消弹窗，保存设备名称和地址
-                BluetoothLeDevice leDevice = Watch.getInstance().getBluetoothLeDevice(mac);
-                SPUtil.put(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, mac);
-                if (leDevice != null) {
-                    bindName = leDevice.getmBluetoothGatt().getDevice().getName();
+                if("huawei".equalsIgnoreCase(Watch.brand)){
+                    dismissProgress();//取消弹窗，保存设备名称和地址
+//                BluetoothLeDevice leDevice = Watch.getInstance().getBluetoothLeDevice(mac);
+                    BluetoothGatt bluetoothGatt = Watch.getInstance().curBluetoothGatt;
+                    SPUtil.put(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, mac);
+//                if (leDevice != null) {
+//                    bindName = leDevice.getmBluetoothGatt().getDevice().getName();
+//                }
+                    if (bluetoothGatt != null) {
+                        bindName = bluetoothGatt.getDevice().getName();
+                    }
+                    SPUtil.put(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,bindName == null ? "UNKONW":bindName);
+                    String deviceImgRes = getDeviceImgRes(bindName,filterDeviceList);
+                    SPUtil.put(mContext,AppGlobal.DATA_DEVICE_BIND_IMG,deviceImgRes);
+                    eventSend(EventGlobal.STATE_DEVICE_BIND);//发送绑定成功广播
+                }else{
+                    dismissProgress();//取消弹窗，保存设备名称和地址
+                    BluetoothLeDevice leDevice = Watch.getInstance().getBluetoothLeDevice(mac);
+                    SPUtil.put(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, mac);
+                    if (leDevice != null) {
+                        bindName = leDevice.getmBluetoothGatt().getDevice().getName();
+                    }
+                    SPUtil.put(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,bindName == null ? "UNKONW":bindName);
+                    String deviceImgRes = getDeviceImgRes(bindName,filterDeviceList);
+                    SPUtil.put(mContext,AppGlobal.DATA_DEVICE_BIND_IMG,deviceImgRes);
+                    eventSend(EventGlobal.STATE_DEVICE_BIND);//发送绑定成功广播
                 }
-                SPUtil.put(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,bindName == null ? "UNKONW":bindName);
-                String deviceImgRes = getDeviceImgRes(bindName,filterDeviceList);
-                SPUtil.put(mContext,AppGlobal.DATA_DEVICE_BIND_IMG,deviceImgRes);
-                eventSend(EventGlobal.STATE_DEVICE_BIND);//发送绑定成功广播
+
             }
 
             @Override

@@ -310,7 +310,7 @@
     <string name="hint_select_weight">Choisissez le poids</string>
     <string name="toast_ota_battery_low">Appareil courant batterie faible, s\'il vous plaît charger d\'abord!</string>
     <string name="hint_state_connecting">En connexion</string>
-    <string name="hint_view_step">Étape</string>
+    <string name="hint_view_step">PAS EFFECTUES</string>
     <string name="title_clock">Despertador</string>
     <string name="hint_export_excel">Mobile - Gestion de fichiers - dossier iband - database.xls avec des données au format Excel</string>
     <string name="hint_alert_lost_open">Ouvrez le rappel anti-perdu</string>

@@ -175,7 +175,7 @@ public class MainActivity extends BaseActivity {
                     ivShare.setEnabled(true);
                     break;
                 case 3:
-                    Toast.makeText(MainActivity.this,R.string.hint_not_get_devicelist,Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this,R.string.hint_not_get_devicelist,Toast.LENGTH_SHORT).show();
                     if(!isConn(MainActivity.this)){
                         showNoNetWorkDlg(MainActivity.this);
                     }
