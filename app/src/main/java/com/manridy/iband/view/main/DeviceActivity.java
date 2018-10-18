@@ -421,7 +421,7 @@ public class DeviceActivity extends BaseActionActivity {
                 @Override
                 public void run() {
                     SyncAlert.getInstance(mContext).sync();
-                    SyncAlert.getInstance(mContext).isGetCallbackSetTimingHrTest = true;
+                    SyncAlert.getInstance(mContext).isGetCallbackSetTimingHrTest = false;
 //                    SyncAlert.getInstance(mContext).setTimingHrTest();
 
                 }

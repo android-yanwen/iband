@@ -41,6 +41,7 @@
         <attr name="big_hint" format="string"/>
         <attr name="big_onoff" format="boolean"/>
         <attr name="big_line" format="boolean"/>
+        <attr name="big_center" format="string"/>
     </declare-styleable>
 
     <declare-styleable name="AlertBigItemsButton">

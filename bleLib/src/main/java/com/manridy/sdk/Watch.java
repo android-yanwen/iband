@@ -8,6 +8,7 @@ import android.util.Log;
 import com.manridy.sdk.bean.Clock;
 import com.manridy.sdk.bean.Sedentary;
 import com.manridy.sdk.bean.User;
+import com.manridy.sdk.bean.Weather;
 import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.ble.BleParse;
 import com.manridy.sdk.ble.WatchApi;
@@ -711,4 +712,28 @@ public class Watch extends BluetoothLeManager implements WatchApi {
     public void setSendMac(String sendMac) {
         this.sendMac = sendMac;
     }
+
+    @Override
+    public void setWeather(Weather weather, BleCallback bleCallback) {
+        if(weather!=null){
+            int T0 = weather.getWeatherRegime();
+            int H0 = weather.getMaxTemperature();
+            if(H0<0){
+                H0 = -H0+128;
+            }
+            int L0 = weather.getMinTemperature();
+            if(L0<0){
+                L0 = -L0+128;
+            }
+            int C0 = weather.getNowTemperature();
+            if(C0<0){
+                C0 = -C0+128;
+            }
+            byte[] data = new byte[]{(byte) T0,(byte) H0,(byte) L0,(byte) C0};
+            Log.i("setWeather","T0:"+T0+",H0:"+H0+",L0:"+L0+",C0:"+C0);
+            sendCmd(BleCmd.setWeather(data),bleCallback);
+        }
+
+    }
+
 }

@@ -49,7 +49,7 @@ public class UpdateActivity extends BaseActionActivity {
     String deviceName;
     boolean is_Force_ViewBtUpdate = false;
 
-    public static boolean isGoogle = true;
+    public static boolean isGoogle = false;
 
     @Override
     protected void initView(Bundle savedInstanceState) {

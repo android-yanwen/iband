@@ -7,7 +7,9 @@ import com.google.gson.Gson;
 import com.manridy.applib.utils.FileUtil;
 import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
+import com.manridy.iband.bean.AddressModel;
 import com.manridy.iband.bean.DeviceList;
+import com.manridy.iband.bean.Weather;
 import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.DomXmlParse;
@@ -47,6 +49,9 @@ public class HttpService {
     public static final String device_wechat_query = "http://120.78.138.141:8080/deviceRegisterQuery.php";
     public static final String device_wechat_regist = "http://120.78.138.141:8080/wechatRegister.php";
 
+    public static final String heweather_city = "https://search.heweather.com/find?key=e778b60bd3004e309d51fe0a2d69dd39&location=";
+    public static final String weather = "http://112.74.54.235/product/index.php/Api/weather/requestByKey/city/";
+
     private HttpService() {
     }
 
@@ -77,11 +82,62 @@ public class HttpService {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            onResultCallBack.onResult(false,null);
+            onResultCallBack.onResult(  false,null);
         } catch (Exception e) {
             onResultCallBack.onResult(false,null);
             e.printStackTrace();
         }
+    }
+
+    public void getHeWeather_city(String location,String lang ,final OnResultCallBack onResultCallBack){
+        Request request = new Request.Builder().url(heweather_city+location+"&lang="+lang).build();
+        OkHttpClient client = new OkHttpClient();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                onResultCallBack.onResult(false,null);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    String result = response.body().string();
+                    AddressModel addressModel = new Gson().fromJson(result, AddressModel.class);
+                    onResultCallBack.onResult(true, addressModel);
+                }catch (Exception e){
+                    onResultCallBack.onResult(false,null);
+                }
+            }
+        });
+    }
+
+    public void getWeather(String city,final OnResultCallBack onResultCallBack){
+        Request request = new Request.Builder().url(weather+city).build();
+        OkHttpClient client = new OkHttpClient();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                onResultCallBack.onResult(false,null);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    try {
+                    String result = response.body().string();
+                        Weather weather = new Gson().fromJson(result,Weather.class);
+                        onResultCallBack.onResult(true,weather);
+                    }catch (Exception e){
+                        onResultCallBack.onResult(false,null);
+                    }
+//                AddressModel addressModel = new Gson().fromJson(result, AddressModel.class);
+//                onResultCallBack.onResult(true,addressModel);
+                }catch (Exception e){
+                    onResultCallBack.onResult(false,null);
+                }
+
+            }
+        });
     }
 
     public void downloadOTAFile(String url, OnResultCallBack onResultCallBack) {

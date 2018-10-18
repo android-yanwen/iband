@@ -227,7 +227,7 @@ public class SyncData {
     private synchronized void next(){
         syncIndex++;
         LogUtil.d("SyncData", "next() called syncIndex == "+syncIndex);
-        if (syncIndex < 14) {
+        if (syncIndex < 15) {
             send();
         }else {
             if (syncAlertListener != null) {
@@ -308,6 +308,14 @@ public class SyncData {
                     next();
                 }
                 break;
+            case 14:
+                if(IbandApplication.getIntance().weather!=null){
+                    Watch.getInstance().setWeather(IbandApplication.getIntance().weather,bleCallback);
+                }else{
+                    next();
+                }
+                break;
+
         }
         timeOutIndex = 0;
     }

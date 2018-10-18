@@ -93,7 +93,7 @@ public class SyncAlert {
     public boolean isGetCallbackSetTimingHrTest=false;
 
     private synchronized void next(){
-        if (syncIndex < 12) {
+        if (syncIndex < 13) {
             syncIndex++;
             send();
         }else {
@@ -280,6 +280,13 @@ public class SyncAlert {
                boolean onOff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_WRIST, true);
                 watch.sendCmd(BleCmd.setWristOnOff(onOff ? 1 : 0),bleCallback);
                 Log.i("SetTimingHrTest","1");
+                break;
+            case 13:
+                if(IbandApplication.getIntance().weather!=null){
+                    Watch.getInstance().setWeather(IbandApplication.getIntance().weather,bleCallback);
+                }else{
+                    next();
+                }
                 break;
         }
     }

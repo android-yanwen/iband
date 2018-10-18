@@ -3,6 +3,7 @@ package com.manridy.sdk.ble;
 import com.manridy.sdk.bean.Clock;
 import com.manridy.sdk.bean.Sedentary;
 import com.manridy.sdk.bean.User;
+import com.manridy.sdk.bean.Weather;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.type.AlertType;
 import com.manridy.sdk.type.ClockType;
@@ -75,5 +76,7 @@ public interface WatchApi {
     void findDevice(FindType findType, BleCallback bleCallback);
 
     void setDeviceName(String name, BleCallback bleCallback);
+
+    void setWeather(Weather weather, BleCallback bleCallback);
 
 }

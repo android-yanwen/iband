@@ -13,6 +13,9 @@ public class EventGlobal {
     public static final int DATA_LOAD_BP = 1803;
     public static final int DATA_LOAD_BO = 1804;
     public static final int DATA_LOAD_RUN = 1805;
+    //加载天气信息
+    public static final int DATA_LOAD_WEATHER = 1806;
+
     //运动历史数据加载
     public static final int DATA_LOAD_STEP_HISTORY = 1810;
     public static final int DATA_LOAD_SLEEP_HISTORY = 1811;
@@ -32,7 +35,10 @@ public class EventGlobal {
     public static final int REFRESH_VIEW_BP = 2803;
     public static final int REFRESH_VIEW_BO = 2804;
     public static final int REFRESH_VIEW_RUN = 2806;
+    public static final int REFRESH_VIEW_WEATHER = 2807;
     public static final int REFRESH_VIEW_ALL = 2805;
+
+
     //历史界面刷新
     public static final int REFRESH_VIEW_STEP_HISTORY  = 2810;
     public static final int REFRESH_VIEW_SLEEP_HISTORY  = 2811;
@@ -90,6 +96,7 @@ public class EventGlobal {
 
     //网络连接
     public static final int STATE_CHANGE_NETWOOK_ON = 5001;
+
 
 
 

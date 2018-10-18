@@ -39,6 +39,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.baoyz.widget.PullRefreshLayout;
 import com.dalimao.library.util.FloatUtil;
 import com.google.gson.Gson;
@@ -50,6 +54,8 @@ import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.TimeUtil;
 import com.manridy.iband.DeviceListDataSpare;
 import com.manridy.iband.IbandApplication;
+import com.manridy.iband.bean.AddressModel;
+import com.manridy.iband.bean.WeatherModel;
 import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.R;
 import com.manridy.iband.SyncData;
@@ -69,6 +75,7 @@ import com.manridy.iband.view.model.HrFragment;
 import com.manridy.iband.view.model.SleepFragment;
 import com.manridy.iband.view.model.StepFragment;
 import com.manridy.sdk.Watch;
+import com.manridy.sdk.bean.Weather;
 import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleConnectCallback;
@@ -88,6 +95,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -142,7 +150,7 @@ public class MainActivity extends BaseActivity {
     private boolean isLogOnOff = true;
 
     private String filePath;
-
+    WeatherModel weatherModel;
 
     private Handler handler = new Handler() {
         @Override
@@ -505,10 +513,148 @@ public class MainActivity extends BaseActivity {
 //        IbandApplication.getIntance().service.reConnectHandler.removeCallbacksAndMessages(null);
 //        IbandApplication.getIntance().service.reConnectHandler.postDelayed(IbandApplication.getIntance().service.reConnectThread,4000);
 
-
+        getLocation();
 
     }
 
+    AMapLocationClient mlocationClient = null;
+    AMapLocationListener aMapLocationListener = null;
+    private void getLocation(){
+        aMapLocationListener = new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation amapLocation) {
+                if (amapLocation != null) {
+                    if (amapLocation.getErrorCode() == 0) {
+                        aMapLocationListener = null;
+                        if (mlocationClient != null) {
+                            mlocationClient.stopLocation();
+                            mlocationClient.onDestroy();
+                        }
+                        //zh en de es fr it jp kr ru
+                        String localeCode = "en";
+                        String locale = Locale.getDefault().getLanguage().toLowerCase();
+                        String[] locales = new String[]{"zh","en","de","es","fr","it","jp","kr","ru"};
+
+                        if(locale!=null&&locale.length()>=2){
+                            boolean isAvailableLocale = false;
+                            String localeSub = locale.substring(0,2);
+                            if("ko".equals(localeSub)){
+                                localeSub = "kr";
+                            }
+                            if("ja".equals(localeSub)){
+                                localeSub = "jp";
+                            }
+                            for (String s:locales) {
+                                if(s.equals(localeSub)){
+                                    isAvailableLocale = true;
+                                    break;
+                                }
+                            }
+                            if(isAvailableLocale)localeCode = localeSub;
+                        }
+
+                        //定位成功回调信息，设置相关消息
+                        HttpService.getInstance().getHeWeather_city("" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),localeCode, new OnResultCallBack() {
+                            @Override
+                            public void onResult(boolean result, Object o) {
+                                if(result){
+                                    AddressModel addressModel = (AddressModel)o;
+                                    List<AddressModel.HeWeather6Bean> heWeather6Beans = addressModel.getHeWeather6();
+                                    if(heWeather6Beans.size()>0){
+                                        AddressModel.HeWeather6Bean heWeather6Bean = heWeather6Beans.get(0);
+                                        List<AddressModel.HeWeather6Bean.BasicBean> basicBeans = heWeather6Bean.getBasic();
+                                        if(basicBeans.size()<1)return;
+                                        final AddressModel.HeWeather6Bean.BasicBean basicBean = basicBeans.get(0);
+                                        IbandApplication.getIntance().country = basicBean.getCnty();
+                                        if(basicBean.getParent_city()!=null) {
+                                            IbandApplication.getIntance().city = basicBean.getParent_city();
+                                        }else{
+                                            IbandApplication.getIntance().city = basicBean.getLocation();
+                                        }
+                                        HttpService.getInstance().getWeather(IbandApplication.getIntance().city, new OnResultCallBack() {
+                                            @Override
+                                            public void onResult(boolean result, Object o) {
+                                                if(result){
+                                                    com.manridy.iband.bean.Weather weather = (com.manridy.iband.bean.Weather)o;
+                                                    int max = 0xFF;
+                                                    int min = 0xFF;
+                                                    int now = 0xFF;
+                                                    if(weather.getData().getNowWeather().getTmp()!=null){
+                                                        now = Integer.parseInt(weather.getData().getNowWeather().getTmp());
+                                                    }
+                                                    if(weather.getData().getNowWeather().getTmp_max()!=null){
+                                                        max = Integer.parseInt(weather.getData().getNowWeather().getTmp_max());
+                                                    }
+                                                    if(weather.getData().getNowWeather().getTmp_min()!=null){
+                                                        min = Integer.parseInt(weather.getData().getNowWeather().getTmp_min());
+                                                    }
+                                                    Weather weatherBean = new Weather(weather.getData().getNowWeather().getWeather_type(),max,min,now);
+                                                    IbandApplication.getIntance().weather =weatherBean;
+                                                    Watch.getInstance().setWeather(weatherBean, new BleCallback() {
+                                                        @Override
+                                                        public void onSuccess(Object o) {
+
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(BleException exception) {
+
+                                                        }
+                                                    });
+                                                    weatherModel = new WeatherModel(IbandApplication.getIntance().country,basicBean.getAdmin_area(),IbandApplication.getIntance().city,basicBean.getCid());
+                                                    weatherModel.setWeatherInfo(""+weatherBean.getWeatherRegime(),""+weatherBean.getNowTemperature());
+                                                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+                                                    weatherModel.setDay(df.format(new Date()));
+                                                    weatherModel.save();
+                                                    EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
+                                                }else{
+                                                    EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
+                                                }
+                                            }
+                                        });
+                                    }
+
+                                }else{
+
+                                }
+                            }
+                        });
+                    } else {
+                        //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+                        Log.e("AmapError","location Error, ErrCode:"
+                                + amapLocation.getErrorCode() + ", errInfo:"
+                                + amapLocation.getErrorInfo());
+                    }
+                }
+            }
+        };
+
+        //声明mLocationOption对象
+        AMapLocationClientOption mLocationOption = null;
+        mlocationClient = new AMapLocationClient(getBaseContext());
+//初始化定位参数
+        mLocationOption = new AMapLocationClientOption();
+//设置返回地址信息，默认为true
+        mLocationOption.setNeedAddress(true);
+//设置定位监听
+        mlocationClient.setLocationListener(aMapLocationListener);
+//设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+//设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption.setInterval(2000);
+//设置定位参数
+        mlocationClient.setLocationOption(mLocationOption);
+// 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+// 注意设置合适的定位时间的间隔（最小间隔支持为1000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+// 在定位结束后，在合适的生命周期调用onDestroy()方法
+// 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+//启动定位
+        mlocationClient.startLocation();
+
+//        String ha = sHA1(getContext());
+//        Log.i(TAG,"sHA1:"+ha);
+
+    }
 
     private static boolean isNotificationListenerServiceEnabled(Context context) {
         Set<String> packageNames = NotificationManagerCompat.getEnabledListenerPackages(context);

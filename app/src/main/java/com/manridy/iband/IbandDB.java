@@ -17,6 +17,7 @@ import com.manridy.iband.bean.SleepStatsModel;
 import com.manridy.iband.bean.StepModel;
 import com.manridy.iband.bean.UserModel;
 import com.manridy.iband.bean.ViewModel;
+import com.manridy.iband.bean.WeatherModel;
 import com.manridy.sdk.bean.Clock;
 import com.manridy.sdk.common.TimeUtil;
 
@@ -167,6 +168,14 @@ public class IbandDB {
         dayBean.setDayMin(DataSupport.where("sleepDay = ? and deviceMac = ?",day,mac).sum(SleepStatsModel.class,"sleepLight",int.class));
         dayBean.setDayCount(DataSupport.where("sleepDay = ? and deviceMac = ?",day,mac).count(SleepStatsModel.class));
         return dayBean;
+    }
+
+    public WeatherModel getCurDayWeather(String day, String country, String city){
+        return DataSupport.where("day = ? and country = ? and city = ?",day,country,city).findLast(WeatherModel.class);
+    }
+
+    public WeatherModel getLastWeather(String day){
+        return DataSupport.where("day = ?",day).findLast(WeatherModel.class);
     }
 
     public List<HistoryAdapter.Item> getMonthHeart(List<String> days){

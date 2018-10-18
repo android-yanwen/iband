@@ -766,11 +766,18 @@ public class BleCmd {
         body = new byte[17];
         body[0] = 0x01;
         body[2] = (byte) (onOff?1:0);
-        body[4] = (byte) 30;
+        body[4] = (byte) space;
         Log.i("sendCmd:setTimingHrTest","onOff:"+onOff+";space:"+space);
         return BleProtocol.cmd(head,type,body);
     }
 
+    public static byte[] getTimingHrTestInfo(){
+        type = 0x22;
+        body = new byte[17];
+        body[0] = 0x01;
+        body[2] = 1;
+        return BleProtocol.cmd(head,type,body);
+    }
 
 //    0xFC0F10V2V1V0
     public static byte[] setDeviceStepNum(int num){
@@ -814,6 +821,25 @@ public class BleCmd {
         type = 0x23;
         body = new byte[17];
         body[0] = (byte) 0x01;
+        return BleProtocol.cmd(head,type,body);
+    }
+
+    /**
+     * 设置天气
+     * @param data 天气数据[T0][H0][L0][C0]
+     *             [T0]天气类型
+     *             [H0]当天最高气温
+     *             [L0]当天最低气温
+     *             [C0]实时温度
+     * @return
+     */
+    public static byte[] setWeather(byte[] data){
+        type = 0x29;
+        body= new byte[17];
+        body[0] = 0x01;
+        for(int i=0 ; data.length > i ; i++){
+            body[i+1] = data[i];
+        }
         return BleProtocol.cmd(head,type,body);
     }
 }

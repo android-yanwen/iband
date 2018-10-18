@@ -21,6 +21,7 @@ import com.manridy.iband.service.NotificationCollectorMonitorService;
 import com.manridy.iband.service.AppNotificationListenerService;
 import com.manridy.iband.view.setting.UpdateActivity;
 import com.manridy.sdk.Watch;
+import com.manridy.sdk.bean.Weather;
 import com.mob.MobSDK;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
@@ -41,6 +42,12 @@ public class IbandApplication extends Application {
     public BleService service;
 
     public static boolean isNeedRefresh = false;
+
+    public String city = "";
+    public String country = "";
+    public Weather weather;
+    public static double location_latitude;
+    public static double location_longitude;
 
     @Override
     public void onCreate() {
@@ -63,6 +70,9 @@ public class IbandApplication extends Application {
 
         try {
             String brand = android.os.Build.BRAND;
+            if("HONOR".equalsIgnoreCase(brand)){
+                brand = "huawei";
+            }
             Watch.brand = brand;
             Log.i(TAG,brand);
         }catch (Exception e){

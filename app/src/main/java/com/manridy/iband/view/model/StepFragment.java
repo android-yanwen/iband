@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,10 +32,12 @@ import com.google.gson.JsonParseException;
 import com.manridy.applib.utils.CheckUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.TimeUtil;
+import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.SyncData;
 import com.manridy.iband.bean.StepModel;
+import com.manridy.iband.bean.WeatherModel;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
@@ -88,6 +92,12 @@ public class StepFragment extends BaseEventFragment {
     ImageView ivLocation;
     @BindView(R.id.tv_empty)
     TextView tvEmpty;
+    @BindView(R.id.tv_addr)
+    TextView tvAddr;
+    @BindView(R.id.tv_tempetature)
+    TextView tvTempetature;
+    @BindView(R.id.iv_weather)
+    ImageView ivWeather;
 
     StepModel curStep;
     List<StepModel> curSectionSteps;
@@ -95,6 +105,14 @@ public class StepFragment extends BaseEventFragment {
     SimpleDateFormat hourFormat;
     private Gson mGson;
     int unit;
+
+    WeatherModel weatherModel;
+    String city = "";
+    String country = "";
+    String cityCode = "";
+    String weather = "";
+    int weatherImg = 0;
+
     @Override
     public View initView(LayoutInflater inflater, @Nullable ViewGroup container) {
         root = inflater.inflate(R.layout.fragment_step, container, false);
@@ -145,6 +163,22 @@ public class StepFragment extends BaseEventFragment {
     public void onResume() {
         super.onResume();
 
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+        WeatherModel weatherModel = IbandDB.getInstance().getLastWeather(df.format(new Date()));
+        if(weatherModel!=null){
+            String cityName = weatherModel.getCity().replace("市", "");
+            tvAddr.setText(weatherModel.getCountry()+"•"+cityName);
+            tvTempetature.setText(weatherModel.getNowTemperature()+"°");
+            if(!"".equals(weatherModel.getWeatherRegime())){
+//                            String weatherType = getWeatherType(weatherModel.getWeatherRegime());
+                weatherImg = getWeatherImg(weatherModel.getWeatherRegime());
+                if(weatherImg!=0){
+                    ivWeather.setImageResource(weatherImg);
+                }
+            }
+
+        }
+
 
 
     }
@@ -168,6 +202,24 @@ public class StepFragment extends BaseEventFragment {
             } catch (Exception e) {
             }
         }
+    }
+
+    private int getWeatherImg(String weather){
+        int weatherImg = 0;
+        if("0".equals(weather)||"sunny".equals(weather)){
+            weatherImg = R.mipmap.weather_sunny;
+        }else if("1".equals(weather)||"shade".equals(weather)){
+            weatherImg = R.mipmap.weather_shade;
+        }else if("2".equals(weather)||"rain".equals(weather)){
+            weatherImg = R.mipmap.weather_rain;
+        }else if("3".equals(weather)||"snow".equals(weather)){
+            weatherImg = R.mipmap.weather_snow;
+        }else if("4".equals(weather)||"haze".equals(weather)){
+            weatherImg = R.mipmap.weather_haze;
+        }else if("5".equals(weather)||"sand".equals(weather)){
+            weatherImg = R.mipmap.weather_sand;
+        }
+        return weatherImg;
     }
 
 
@@ -251,6 +303,8 @@ public class StepFragment extends BaseEventFragment {
             updateBarChartView(bcStep,curSectionSteps);
             tvEmpty.setVisibility(curSectionSteps.size() == 0?View.VISIBLE:View.GONE);
             setDataItem();
+        } else if (event.getWhat() == EventGlobal.REFRESH_VIEW_WEATHER){
+            handler.sendMessage(handler.obtainMessage(1));
         }
     }
 
@@ -268,6 +322,21 @@ public class StepFragment extends BaseEventFragment {
             Log.i("StepFragment","DATA_CHANGE_UNIT");
             unit = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_UNIT,0);
             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_STEP));
+        }else if (event.getWhat() == EventGlobal.DATA_LOAD_WEATHER){
+            country = IbandApplication.getIntance().country;
+            city = IbandApplication.getIntance().city;
+
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+            if(country==null||city==null)return;
+//            List<WeatherModel> weatherModelList = AppDB.getInstance().getCurDayWeather(df.format(new Date()),country,city);
+//            if(weatherModelList.size()>0) {
+//                weatherModel = weatherModelList.get(0);
+//            }
+            WeatherModel lastWeatherModel = IbandDB.getInstance().getCurDayWeather(df.format(new Date()),country,city);
+            if(lastWeatherModel!=null){
+                weatherModel = lastWeatherModel;
+            }
+            EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_WEATHER));
         }
     }
 
@@ -443,4 +512,33 @@ public class StepFragment extends BaseEventFragment {
         }
         return String .format(Locale.US,"%.1f",(mi/1000.0));
     }
+
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:
+                    if(weatherModel!=null){
+                        String cityName = ""+IbandApplication.getIntance().city.replace("市", "");
+                        tvAddr.setText(""+IbandApplication.getIntance().country+"•"+cityName);
+                        tvTempetature.setText(weatherModel.getNowTemperature()+"°");
+                        if(!"".equals(weatherModel.getWeatherRegime())){
+//                            String weatherType = getWeatherType(weatherModel.getWeatherRegime());
+                            weatherImg = getWeatherImg(weatherModel.getWeatherRegime());
+                            if(weatherImg!=0){
+                                ivWeather.setImageResource(weatherImg);
+                            }
+                        }
+
+                    }
+                    break;
+            }
+
+
+
+        }
+    };
+
 }

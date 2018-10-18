@@ -3,13 +3,13 @@ apply plugin: 'com.mob.sdk'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.0'
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.manridy.iband"
         minSdkVersion 18
         targetSdkVersion 26
         versionCode 100
-        versionName "1.9.31(beta1)"
+        versionName "1.9.31(beta2)"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -43,6 +43,14 @@ android {
         }
     }
 
+
+    sourceSets{
+        main{
+            jniLibs.srcDirs = ['libs']
+            jni.srcDirs = [] //disable automatic ndk-build
+        }
+    }
+
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
@@ -58,8 +66,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:26.0.0'
-    compile 'com.android.support:design:26.0.0'
+    compile 'com.android.support:appcompat-v7:26.0.2'
+    compile 'com.android.support:design:26.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     compile project(':appLib')
     compile project(':bleLib')
@@ -103,6 +111,13 @@ dependencies {
     //导航功能
     //    compile 'com.amap.api:navi-3dmap:latest.integration'
     //    compile 'com.amap.api:search:latest.integration'
+
+    //高德地图
+    compile files('libs/Amap_2DMap_V5.2.0_20170627.jar')
+    compile files('libs/AMap_Location_V4.0.1_20180426.jar')
+    compile files('libs/AMap_Search_V6.1.0_20180330.jar')
+
+
     compile files('libs/jxl.jar')
 
 

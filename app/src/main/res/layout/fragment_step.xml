@@ -15,7 +15,48 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="288dp"
-        android:background="#2196f3">
+        android:background="#2196f3"
+       >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:visibility="visible"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_gravity="right"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_tempetature"
+                    android:text="-"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22dp"
+                    />
+                <ImageView
+                    android:paddingTop="2dp"
+                    android:id="@+id/iv_weather"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    />
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_addr"
+                android:text="-"
+                android:textColor="#5e5e5f"
+                android:textSize="14dp"
+                />
+        </LinearLayout>
         <com.manridy.iband.ui.CircularView
             android:id="@+id/cv_step"
             android:layout_width="220dp"

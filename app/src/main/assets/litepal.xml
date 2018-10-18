@@ -19,7 +19,7 @@
             For example:
         <version value="1" ></version>
     -->
-    <version value="13" ></version>
+    <version value="17" ></version>
 
     <!--
         Define your models in the list with mapping tag, LitePal will
@@ -44,5 +44,6 @@
         <mapping class="com.manridy.iband.bean.BoModel"></mapping>
         <mapping class="com.manridy.iband.bean.AppModel"></mapping>
         <mapping class="com.manridy.iband.bean.SleepStatsModel"></mapping>
+        <mapping class="com.manridy.iband.bean.WeatherModel"></mapping>
     </list>
 </litepal>
