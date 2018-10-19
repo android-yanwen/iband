@@ -54,8 +54,9 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="c1cZbjfjD7euO4Pz6WnhDDkKH5624Pdn" />
         <meta-data android:name="com.amap.api.v2.apikey"
-                   android:value="88320cd7932980d6219b1f4bebb4cf70">
+                   android:value="767c9359cf8c9189525156908a851cde">
         </meta-data>
+
         <!--<service-->
             <!--android:name="com.baidu.location.f"-->
             <!--android:enabled="true"-->
@@ -78,6 +79,8 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </service>
+        <service android:name="com.amap.api.location.APSService" />
+
         <provider
             android:authorities="com.manridy.iband.fileprovider"
             android:name="android.support.v4.content.FileProvider"

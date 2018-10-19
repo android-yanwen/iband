@@ -1,5 +1,7 @@
 package com.manridy.sdk.bean;
 
+import java.util.LinkedList;
+
 public class Weather {
     private int id;
     private int weatherRegime;
@@ -7,22 +9,24 @@ public class Weather {
     private int minTemperature;
     private int nowTemperature;
     private String day;
-
+    private LinkedList<Weather> forecastWeathers;
     public Weather(){};
 
-    public Weather(int weatherRegime, int maxTemperature, int minTemperature, int nowTemperature, String day){
+    public Weather(int weatherRegime, int maxTemperature, int minTemperature, int nowTemperature, String day,LinkedList<Weather> forecastWeathers){
         this.weatherRegime = weatherRegime;
         this.maxTemperature = maxTemperature;
         this.minTemperature = minTemperature;
         this.nowTemperature = nowTemperature;
+        this.forecastWeathers = forecastWeathers;
         this.day = day;
     };
 
-    public Weather(int weatherRegime, int maxTemperature, int minTemperature, int nowTemperature){
+    public Weather(int weatherRegime, int maxTemperature, int minTemperature, int nowTemperature,LinkedList<Weather> forecastWeathers){
         this.weatherRegime = weatherRegime;
         this.maxTemperature = maxTemperature;
         this.minTemperature = minTemperature;
         this.nowTemperature = nowTemperature;
+        this.forecastWeathers = forecastWeathers;
     };
 
     public int getId() {
@@ -71,5 +75,13 @@ public class Weather {
 
     public void setNowTemperature(int nowTemperature) {
         this.nowTemperature = nowTemperature;
+    }
+
+    public LinkedList<Weather> getForecastWeathers() {
+        return forecastWeathers;
+    }
+
+    public void setForecastWeathers(LinkedList<Weather> forecastWeathers) {
+        this.forecastWeathers = forecastWeathers;
     }
 }

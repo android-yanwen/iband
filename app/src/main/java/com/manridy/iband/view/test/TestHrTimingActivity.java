@@ -67,6 +67,7 @@ public class TestHrTimingActivity extends BaseActionActivity {
         aiAlert.setAlertCenterClickListen(new AlertBigItemsOnClick() {
             @Override
             public void onClick() {
+                curSpace = (int) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
                 new NumDialog(mContext, getSpaces(), curSpace+"",getString(R.string.hint_space), new NumDialog.NumDialogListener() {
                     @Override
                     public void getNum(String num) {
@@ -149,6 +150,7 @@ public class TestHrTimingActivity extends BaseActionActivity {
 //                    is_heart_rate_timing_chk
                     if(!"0".equals(resultBean.getIs_heart_rate_timing_chk())&&resultBean.getIs_heart_rate_timing_chk().compareTo(deviceFirm)<=0){
                         aiAlert.setIvMenuCenterIsView(true);
+                        aiAlert.setAlertCenterContent((int) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace)+getString(R.string.unit_min));
                     }else{
                         aiAlert.setIvMenuCenterIsView(false);
                         curSpace = 30;

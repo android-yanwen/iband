@@ -310,7 +310,8 @@ public class SyncData {
                 break;
             case 14:
                 if(IbandApplication.getIntance().weather!=null){
-                    Watch.getInstance().setWeather(IbandApplication.getIntance().weather,bleCallback);
+                    Watch.getInstance().setWeather(IbandApplication.getIntance().weather,null);
+                    next();
                 }else{
                     next();
                 }

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -98,6 +99,8 @@ public class StepFragment extends BaseEventFragment {
     TextView tvTempetature;
     @BindView(R.id.iv_weather)
     ImageView ivWeather;
+    @BindView(R.id.ll_weather)
+    LinearLayout ll_weather;
 
     StepModel curStep;
     List<StepModel> curSectionSteps;
@@ -164,8 +167,9 @@ public class StepFragment extends BaseEventFragment {
         super.onResume();
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-        WeatherModel weatherModel = IbandDB.getInstance().getLastWeather(df.format(new Date()));
+        WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
         if(weatherModel!=null){
+            ll_weather.setVisibility(View.VISIBLE);
             String cityName = weatherModel.getCity().replace("市", "");
             tvAddr.setText(weatherModel.getCountry()+"•"+cityName);
             tvTempetature.setText(weatherModel.getNowTemperature()+"°");
@@ -323,6 +327,7 @@ public class StepFragment extends BaseEventFragment {
             unit = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_UNIT,0);
             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_STEP));
         }else if (event.getWhat() == EventGlobal.DATA_LOAD_WEATHER){
+
             country = IbandApplication.getIntance().country;
             city = IbandApplication.getIntance().city;
 
@@ -521,6 +526,7 @@ public class StepFragment extends BaseEventFragment {
             switch (msg.what){
                 case 1:
                     if(weatherModel!=null){
+                        ll_weather.setVisibility(View.VISIBLE);
                         String cityName = ""+IbandApplication.getIntance().city.replace("市", "");
                         tvAddr.setText(""+IbandApplication.getIntance().country+"•"+cityName);
                         tvTempetature.setText(weatherModel.getNowTemperature()+"°");

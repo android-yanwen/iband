@@ -836,7 +836,7 @@ public class BleCmd {
     public static byte[] setWeather(byte[] data){
         type = 0x29;
         body= new byte[17];
-        body[0] = 0x01;
+        body[0] = 0x04;
         for(int i=0 ; data.length > i ; i++){
             body[i+1] = data[i];
         }

@@ -234,6 +234,13 @@ public class BleParse {
                     }
                     Log.i("sendCmd:re","sendCmd:"+datas);
                     break;
+                case 0x29:
+                    String datas29 = "";
+                    for (int i = 0;i<data.length;i++){
+                        datas29+="["+i+"]:"+Integer.parseInt(""+data[i], 10);
+                    }
+                    Log.i("0x29sendCmd:re","sendCmd:"+datas29);
+                    break;
             }
             if (bleCallback == null) {
                 return;
@@ -253,6 +260,13 @@ public class BleParse {
                         datas+="["+i+"]:"+data[i];
                     }
                     Log.i("sendCmd:re","sendCmd:"+datas);
+                    break;
+                case 0x29:
+                    String datas29 = "";
+                    for (int i = 0;i<data.length;i++){
+                        datas29+="["+i+"]:"+Integer.parseInt(""+data[i], 10);
+                    }
+                    Log.i("0x29sendCmd:re","false:"+datas29);
                     break;
             }
             parseOther(data);

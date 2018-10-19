@@ -94,6 +94,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -588,7 +589,17 @@ public class MainActivity extends BaseActivity {
                                                     if(weather.getData().getNowWeather().getTmp_min()!=null){
                                                         min = Integer.parseInt(weather.getData().getNowWeather().getTmp_min());
                                                     }
-                                                    Weather weatherBean = new Weather(weather.getData().getNowWeather().getWeather_type(),max,min,now);
+                                                    LinkedList<Weather> forecastWeathers = new LinkedList<>();
+                                                    Weather forecastWeather;
+                                                    if(weather.getData().getForecastWeather().size()>=3){
+                                                        for(int i = 0;i<3;i++){
+                                                            com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = weather.getData().getForecastWeather().get(i);
+                                                            forecastWeather = new Weather(forecastWeatherBean.getWeather_type(),Integer.parseInt(forecastWeatherBean.getTmp_max()),Integer.parseInt(forecastWeatherBean.getTmp_min()),0xFF,null);
+                                                            forecastWeathers.add(forecastWeather);
+                                                        }
+
+                                                    }
+                                                    Weather weatherBean = new Weather(weather.getData().getNowWeather().getWeather_type(),max,min,now,forecastWeathers);
                                                     IbandApplication.getIntance().weather =weatherBean;
                                                     Watch.getInstance().setWeather(weatherBean, new BleCallback() {
                                                         @Override

@@ -729,9 +729,51 @@ public class Watch extends BluetoothLeManager implements WatchApi {
             if(C0<0){
                 C0 = -C0+128;
             }
-            byte[] data = new byte[]{(byte) T0,(byte) H0,(byte) L0,(byte) C0};
-            Log.i("setWeather","T0:"+T0+",H0:"+H0+",L0:"+L0+",C0:"+C0);
-            sendCmd(BleCmd.setWeather(data),bleCallback);
+            if(weather.getForecastWeathers().size()>=3){
+                int T01 = weather.getForecastWeathers().get(0).getWeatherRegime();
+                int H01 = weather.getForecastWeathers().get(0).getMaxTemperature();
+                if(H01<0){
+                    H01 = -H01+128;
+                }
+                int L01 = weather.getForecastWeathers().get(0).getMinTemperature();
+                if(L01<0){
+
+                    L01 = -L01+128;
+                }
+
+                int T02 = weather.getForecastWeathers().get(1).getWeatherRegime();
+                int H02 = weather.getForecastWeathers().get(1).getMaxTemperature();
+                if(H02<0){
+                    H02 = -H02+128;
+                }
+                int L02 = weather.getForecastWeathers().get(1).getMinTemperature();
+                if(L02<0){
+
+                    L02 = -L02+128;
+                }
+
+                int T03 = weather.getForecastWeathers().get(2).getWeatherRegime();
+                int H03 = weather.getForecastWeathers().get(2).getMaxTemperature();
+                if(H03<0){
+                    H03 = -H03+128;
+                }
+                int L03 = weather.getForecastWeathers().get(2).getMinTemperature();
+                if(L03<0){
+
+                    L03 = -L03+128;
+                }
+                byte[] data = new byte[]{(byte) T0,(byte) H0,(byte) L0,(byte) C0,(byte) T01,(byte) H01,(byte) L01,(byte)0xff,(byte) T02,(byte) H02,(byte) L02,(byte)0xff,(byte) T03,(byte) H03,(byte) L03,(byte)0xff};
+                Log.i("setWeather","T0:"+T0+",H0:"+H0+",L0:"+L0+",C0:"+C0+",T01:"+T01+",H01:"+H01+",L01:"+L01+",T02:"+T02+",H02:"+H02+",L02:"+L02+",T03:"+T03+",H03:"+H03+",L03:"+L03);
+                sendCmd(BleCmd.setWeather(data),bleCallback);
+            }else {
+                byte[] data = new byte[]{(byte) T0,(byte) H0,(byte) L0,(byte) C0};
+                Log.i("setWeather","T0:"+T0+",H0:"+H0+",L0:"+L0+",C0:"+C0);
+                sendCmd(BleCmd.setWeather(data),bleCallback);
+            }
+//                byte[] data = new byte[]{(byte) T0,(byte) H0,(byte) L0,(byte) C0};
+//                Log.i("setWeather","T0:"+T0+",H0:"+H0+",L0:"+L0+",C0:"+C0);
+//                sendCmd(BleCmd.setWeather(data),bleCallback);
+
         }
 
     }

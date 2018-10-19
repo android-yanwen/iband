@@ -178,6 +178,10 @@ public class IbandDB {
         return DataSupport.where("day = ?",day).findLast(WeatherModel.class);
     }
 
+    public WeatherModel getLastWeather(){
+        return DataSupport.findLast(WeatherModel.class);
+    }
+
     public List<HistoryAdapter.Item> getMonthHeart(List<String> days){
         List<HistoryAdapter.Item> dayData = new ArrayList<>();
         SimpleDateFormat dateFormFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
