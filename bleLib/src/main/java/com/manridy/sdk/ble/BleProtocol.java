@@ -27,11 +27,11 @@ public class BleProtocol {
         byte[] cmd = new byte[20];
         cmd[cmd.length-1] = getCrc(head, type, body);
         System.arraycopy(data,0,cmd,0,data.length);
-        String datas = "";
-        for (int i = 0;i<cmd.length;i++){
-            datas+="["+i+"]:"+Integer.parseInt(""+cmd[i], 10);;
-        }
-        Log.i("0x29sendCmd:",datas);
+//        String datas = "";
+//        for (int i = 0;i<cmd.length;i++){
+//            datas+="["+i+"]:"+Integer.parseInt(""+cmd[i], 10);;
+//        }
+//        Log.i("0x29sendCmd:",datas);
         return cmd;
     }
 
