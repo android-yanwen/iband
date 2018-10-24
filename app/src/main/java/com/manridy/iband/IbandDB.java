@@ -212,6 +212,7 @@ public class IbandDB {
         List<HistoryAdapter.Item> dayData = new ArrayList<>();
         SimpleDateFormat dateFormFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat dateToFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
+        String lastTime = "";
         for (int i = days.size() - 1; i >= 0; i--) {
             List<BpModel> bpModels =DataSupport.where("bpDay = ?",days.get(i)).order("bpDate desc").find(BpModel.class);
             for (BpModel bpModel : bpModels) {
@@ -219,11 +220,15 @@ public class IbandDB {
                 try {
                     Date date = dateFormFormat.parse(bpModel.getBpDate());
                     time = dateToFormat.format(date);
+                    if(time!=null&&time.equals(lastTime)){
+                        continue;
+                    }
+                    HistoryAdapter.Item dayBean = new HistoryAdapter.Item(time,"",bpModel.getBpHp()+"/"+bpModel.getBpLp(),"mmHg");
+                    dayData.add(dayBean);
+                    lastTime = time;
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                HistoryAdapter.Item dayBean = new HistoryAdapter.Item(time,"",bpModel.getBpHp()+"/"+bpModel.getBpLp(),"mmHg");
-                dayData.add(dayBean);
             }
         }
         return dayData;
@@ -233,6 +238,7 @@ public class IbandDB {
         List<HistoryAdapter.Item> dayData = new ArrayList<>();
         SimpleDateFormat dateFormFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat dateToFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
+        String lastTime = "";
         for (int i = days.size() - 1; i >= 0; i--) {
             List<BoModel> boModels =DataSupport.where("boDay = ?",days.get(i)).order("boDate desc").find(BoModel.class);
             for (BoModel boModel : boModels) {
@@ -240,11 +246,15 @@ public class IbandDB {
                 try {
                     Date date = dateFormFormat.parse(boModel.getboDate());
                     time = dateToFormat.format(date);
+                    if(time!=null&&time.equals(lastTime)){
+                        continue;
+                    }
+                    HistoryAdapter.Item dayBean = new HistoryAdapter.Item(time,"",boModel.getboRate(),"%");
+                    dayData.add(dayBean);
+                    lastTime = time;
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                HistoryAdapter.Item dayBean = new HistoryAdapter.Item(time,"",boModel.getboRate(),"%");
-                dayData.add(dayBean);
             }
         }
         return dayData;
