@@ -49,6 +49,7 @@ public class IbandApplication extends Application {
     public static double location_latitude;
     public static double location_longitude;
 
+
     @Override
     public void onCreate() {
         super.onCreate();

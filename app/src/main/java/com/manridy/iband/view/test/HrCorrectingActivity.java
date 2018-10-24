@@ -200,38 +200,38 @@ public class HrCorrectingActivity extends BaseActionActivity {
 //                }).show();
 //            }
 //        });
-        tbMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showProgress( getString(R.string.hint_saveing));
-                ibandApplication.service.watch.sendCmd(BleCmd.setTimingHrTest(curOnoff,curSpace), new BleCallback() {
-                    @Override
-                    public void onSuccess(Object o) {
-                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
-                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
-                        dismissProgress();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showToast( getString(R.string.hint_save_success));
-                            }
-                        });
-                        finish();
-                    }
-
-                    @Override
-                    public void onFailure(BleException exception) {
-                        dismissProgress();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showToast( getString(R.string.hint_save_fail));
-                            }
-                        });
-                    }
-                });
-            }
-        });
+//        tbMenu.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showProgress( getString(R.string.hint_saveing));
+//                ibandApplication.service.watch.sendCmd(BleCmd.setTimingHrTest(curOnoff,curSpace), new BleCallback() {
+//                    @Override
+//                    public void onSuccess(Object o) {
+//                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
+//                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
+//                        dismissProgress();
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showToast( getString(R.string.hint_save_success));
+//                            }
+//                        });
+//                        finish();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(BleException exception) {
+//                        dismissProgress();
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showToast( getString(R.string.hint_save_fail));
+//                            }
+//                        });
+//                    }
+//                });
+//            }
+//        });
     }
 
     private String[] getSpaces() {

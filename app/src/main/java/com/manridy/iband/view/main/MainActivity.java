@@ -71,6 +71,7 @@ import com.manridy.iband.service.HttpService;
 import com.manridy.iband.ui.SimpleView;
 import com.manridy.iband.view.model.BoFragment;
 import com.manridy.iband.view.model.BpFragment;
+import com.manridy.iband.view.model.EcgFragment;
 import com.manridy.iband.view.model.HrFragment;
 import com.manridy.iband.view.model.SleepFragment;
 import com.manridy.iband.view.model.StepFragment;
@@ -285,9 +286,12 @@ public class MainActivity extends BaseActivity {
                     boolean isShowBp = (boolean)SPUtil.get(mContext,"isShowBp",false);
                     boolean isShowBo = (boolean)SPUtil.get(mContext,"isShowBo",false);
 
+//                    viewList.remove(ecgFragment);
+
                     try {
                         if (!isShowBp) {
                             viewList.remove(bpFragment);
+
                         }
                         if (!isShowBo) {
                             viewList.remove(boFragment);
@@ -591,8 +595,8 @@ public class MainActivity extends BaseActivity {
                                                     }
                                                     LinkedList<Weather> forecastWeathers = new LinkedList<>();
                                                     Weather forecastWeather;
-                                                    if(weather.getData().getForecastWeather().size()>=3){
-                                                        for(int i = 0;i<3;i++){
+                                                    if(weather.getData().getForecastWeather().size()>=4){
+                                                        for(int i = 1;i<=4;i++){
                                                             com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = weather.getData().getForecastWeather().get(i);
                                                             forecastWeather = new Weather(forecastWeatherBean.getWeather_type(),Integer.parseInt(forecastWeatherBean.getTmp_max()),Integer.parseInt(forecastWeatherBean.getTmp_min()),0xFF,null);
                                                             forecastWeathers.add(forecastWeather);
@@ -780,15 +784,18 @@ public class MainActivity extends BaseActivity {
 
     BpFragment bpFragment;
     BoFragment boFragment;
+    EcgFragment ecgFragment;
     private void initViewPager() {
         bpFragment = new BpFragment();
         boFragment = new BoFragment();
+        ecgFragment = new EcgFragment();
 
         viewList.add(new StepFragment());
         viewList.add(new SleepFragment());
         viewList.add(new HrFragment());
         viewList.add(bpFragment);
         viewList.add(boFragment);
+//        viewList.add(ecgFragment);
         viewAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -1002,6 +1009,9 @@ public class MainActivity extends BaseActivity {
                         break;
                     case 4:
                         view.setBackgroundColor(Color.parseColor("#ff4081"));
+                        break;
+                    case 5:
+                        view.setBackgroundColor(Color.parseColor("#00897b"));
                         break;
                 }
             }
@@ -1229,6 +1239,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case 4:
                 tbTitle.setText(R.string.hint_view_bo);
+                break;
+            case 5:
+                tbTitle.setText(R.string.hint_view_ecg);
                 break;
         }
     }

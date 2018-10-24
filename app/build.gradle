@@ -9,7 +9,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 26
         versionCode 100
-        versionName "1.9.31(beta7)"
+        versionName "1.9.31(beta11)"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

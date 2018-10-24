@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:big_name="@string/hint_test_hr_timing"
-        app:big_center="30分钟"
+        app:big_center="-"
         app:big_onoff="false"
         android:visibility="gone"
         />

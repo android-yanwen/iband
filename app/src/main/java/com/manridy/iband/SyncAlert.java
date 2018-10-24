@@ -342,14 +342,14 @@ public class SyncAlert {
         watch.sendCmd(BleCmd.setTimingHrTest(true, 30),new BleCallback(){
             @Override
             public void onFailure(BleException exception) {
-                    SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,true);
-                    SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,30);
+//                    SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,true);
+//                    SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,30);
                     Log.i("SetTimingHrTest","SetTimingHrTest:onFailure");
                 watch.sendCmd(BleCmd.setTimingHrTest(true, 30),new BleCallback(){
                     @Override
                     public void onFailure(BleException exception) {
-                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,true);
-                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,30);
+//                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,true);
+//                        SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,30);
                         Log.i("SetTimingHrTest","SetTimingHrTest:onFailure");
 
                     }

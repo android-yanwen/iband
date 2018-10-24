@@ -46,8 +46,8 @@ public class TestHrTimingActivity extends BaseActionActivity {
     AlertBigItems2 aiCorrecting;
     @BindView(R.id.ai_hr_correcting_baseline)
     TextView aiHrCorrectingBaseline;
-    private boolean curOnoff;
-    private int curSpace;
+    private static boolean curOnoff;
+    private static int curSpace;
 
 
 
@@ -140,8 +140,8 @@ public class TestHrTimingActivity extends BaseActionActivity {
                 if (resultBean.getDevice_id().equals(deviceType)) {
                     if(!"0".equals(resultBean.getHeartrate_version())&&resultBean.getHeartrate_version().compareTo(deviceFirm)<=0){
                         aiAlert.setVisibility(View.VISIBLE);
-                        curOnoff = resultBean.getHeartrate_isopen().equals("1");
-                        curSpace = Integer.parseInt(resultBean.getHeartrate_interval());
+//                        curOnoff = resultBean.getHeartrate_isopen().equals("1");
+//                        curSpace = Integer.parseInt(resultBean.getHeartrate_interval());
                     }
                     if(!"0".equals(resultBean.getIs_chk_heart_rate())&&resultBean.getIs_chk_heart_rate().compareTo(deviceFirm) <=0 ){
                         aiCorrecting.setVisibility(View.VISIBLE);

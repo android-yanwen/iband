@@ -186,6 +186,7 @@ public class IbandDB {
         List<HistoryAdapter.Item> dayData = new ArrayList<>();
         SimpleDateFormat dateFormFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat dateToFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
+        String lastTime = "";
         for (int i = days.size() - 1; i >= 0; i--) {
             List<HeartModel> heartModels =DataSupport.where("heartDay = ?", days.get(i)).order("heartDate desc").find(HeartModel.class);
             for (HeartModel heartModel : heartModels) {
@@ -193,11 +194,15 @@ public class IbandDB {
                 try {
                     Date date = dateFormFormat.parse(heartModel.getHeartDate());
                     time = dateToFormat.format(date);
+                    if(time!=null&&time.equals(lastTime)){
+                        continue;
+                    }
+                    HistoryAdapter.Item dayBean = new HistoryAdapter.Item(time,"",heartModel.getHeartRate()+"","");
+                    dayData.add(dayBean);
+                    lastTime = time;
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                HistoryAdapter.Item dayBean = new HistoryAdapter.Item(time,"",heartModel.getHeartRate()+"","");
-                dayData.add(dayBean);
             }
         }
         return dayData;
