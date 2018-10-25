@@ -9,6 +9,7 @@ import com.manridy.sdk.Watch;
 import com.manridy.sdk.bean.BloodOxygen;
 import com.manridy.sdk.bean.BloodPressure;
 import com.manridy.sdk.bean.Clock;
+import com.manridy.sdk.bean.Ecg;
 import com.manridy.sdk.bean.Gps;
 import com.manridy.sdk.bean.Heart;
 import com.manridy.sdk.bean.Sleep;
@@ -77,6 +78,8 @@ public class BleParse {
     private BleNotifyListener runNotifyListener;
     private BleNotifyListener sleepStatsNotifyListener;
     private BleNotifyListener hrCorrectingNotifyListener;
+    private BleNotifyListener ecgNotifyListener;
+    private BleNotifyListener hrBaseLineListener;
 
     private BleHistoryListener stepHistoryListener;
     private BleHistoryListener sleepHistoryListener;
@@ -88,6 +91,8 @@ public class BleParse {
     private BleActionListener actionListener;
 
     private BleCallback timingHrTestListener;
+
+
 
     public synchronized static BleParse getInstance() {
         if (instance == null) {
@@ -241,6 +246,12 @@ public class BleParse {
                     }
                     Log.i("0x29sendCmd:re","sendCmd:"+datas29);
                     break;
+                case 0x41:
+                    result = parseEcg();
+                    break;
+                case 0x42:
+                    result = parseHrBaseLine();
+                    break;
             }
             if (bleCallback == null) {
                 return;
@@ -272,6 +283,40 @@ public class BleParse {
             parseOther(data);
         }
 
+    }
+
+
+    private String parseEcg() {
+        String result= "";
+        int userId = body[0]&0x0f;
+        int dataPackage = body[0]&0xf0;
+        List<Integer> list = new ArrayList<>();
+        for (int i = 1; i <= 9; i++) {
+            int rx = (data[i*2] << 8 & 0xff00) | (data[i*2+1] & 0xff);
+            list.add(rx);
+        }
+        Ecg ecg = new Ecg(userId,dataPackage,list);
+        result = gson.toJson(ecg);
+        if (ecgNotifyListener != null) {
+            ecgNotifyListener.onNotify(result);
+        }
+        Log.i("parseEcg()",result);
+        return result;
+    }
+
+    private String parseHrBaseLine() {
+        byte[] hrBaseLines = new byte[2];
+        System.arraycopy(body,1,hrBaseLines,0,hrBaseLines.length);
+        int hrBaseLine = BitUtil.byte3ToInt(hrBaseLines);
+        String result = "";
+//        int THI = body[1];
+//        int TLI = body[2];
+        result = result + hrBaseLine;
+//        Log.i("parseHrBaseLine()","THI:"+THI+"TLI:"+TLI+"hrBaseLine:"+result);
+        if(hrBaseLineListener != null) {
+            hrBaseLineListener.onNotify(result);
+        }
+        return result;
     }
 
     public void parseOther(byte[] data){
@@ -964,6 +1009,14 @@ public class BleParse {
 
     public void setHrCorrectingNotifyListener(BleNotifyListener hrCorrectingNotifyListener){
         this.hrCorrectingNotifyListener = hrCorrectingNotifyListener;
+    }
+
+    public void setEcgNotifyListener(BleNotifyListener ecgNotifyListener) {
+        this.ecgNotifyListener = ecgNotifyListener;
+    }
+
+    public void setHrBaseLineListener(BleNotifyListener hrBaseLineListener){
+        this.hrBaseLineListener = hrBaseLineListener;
     }
 
     private String putIntJson(String key, int value){

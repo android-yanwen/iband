@@ -842,4 +842,14 @@ public class BleCmd {
         }
         return BleProtocol.cmd(head,type,body);
     }
+
+    /**
+     * 获取设备心电波形基线获取
+     */
+    public static byte[] getHrBaseLine(){
+        type = 0x42;
+        body= new byte[17];
+        body[0] = 0x01;
+        return BleProtocol.cmd(head,type,body);
+    }
 }

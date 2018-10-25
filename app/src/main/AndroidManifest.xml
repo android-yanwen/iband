@@ -138,6 +138,7 @@
         <activity android:name=".view.main.OtaActivity"
                   android:launchMode="singleTask"/>
         <activity android:name=".view.history.HrHistoryActivity"/>
+        <activity android:name=".view.history.EcgHistoryActivity"/>
         <activity android:name=".view.history.StepHistoryActivity"/>
         <activity android:name=".view.history.SleepHistoryActivity"/>
         <activity android:name=".view.test.TestDatabaseActivity"/>

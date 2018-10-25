@@ -591,6 +591,13 @@ public class Watch extends BluetoothLeManager implements WatchApi {
     }
 
     /**
+     * 获取设备心电波形基线获取
+     */
+    public void getHrBaseLineInfo(BleCallback bleCallback){
+        sendCmd(BleCmd.getHrBaseLine(),bleCallback);
+    }
+
+    /**
      * 获取固件版本
      */
     @Override
@@ -692,6 +699,14 @@ public class Watch extends BluetoothLeManager implements WatchApi {
      */
     public void setActionListener(BleActionListener actionListener) {
         BleParse.getInstance().setActionListener(actionListener);
+    }
+
+    public void setEcgNotifyListener(BleNotifyListener boNotifyListener) {
+        BleParse.getInstance().setEcgNotifyListener(boNotifyListener);
+    }
+
+    public void setHrBaseLineListener(BleNotifyListener hrBaseLinebleNotifyListener) {
+        BleParse.getInstance().setHrBaseLineListener(hrBaseLinebleNotifyListener);
     }
 
     //=============================SDK接口=============================

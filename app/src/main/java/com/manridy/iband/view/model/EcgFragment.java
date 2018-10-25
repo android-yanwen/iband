@@ -1,8 +1,10 @@
 package com.manridy.iband.view.model;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +24,19 @@ import com.manridy.applib.utils.LogUtil;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
+import com.manridy.iband.bean.EcgDataBean;
+import com.manridy.iband.bean.EcgHistoryModel;
 import com.manridy.iband.bean.HeartModel;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.CircularView;
+import com.manridy.iband.ui.chars.SuperCharts;
 import com.manridy.iband.ui.items.DataItems;
 import com.manridy.iband.view.base.BaseEventFragment;
+import com.manridy.iband.view.history.EcgHistoryActivity;
 import com.manridy.iband.view.history.HrHistoryActivity;
 import com.manridy.iband.view.test.TestHrTimingActivity;
+import com.manridy.sdk.bean.Ecg;
 import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleNotifyListener;
@@ -70,19 +77,22 @@ public class EcgFragment extends BaseEventFragment {
     CircularView cvHr;
     @BindView(R.id.bt_test)
     Button btTest;
-    @BindView(R.id.lc_hr)
-    LineChart lcHr;
+//    @BindView(R.id.lc_hr)
+//    LineChart lcHr;
+    @BindView(R.id.chart_ecg)
+    SuperCharts chart_ecg;
     @BindView(R.id.tv_start)
     TextView tvStart;
     @BindView(R.id.tv_end)
     TextView tvEnd;
-    @BindView(R.id.tv_empty)
-    TextView tvEmpty;
+//    @BindView(R.id.tv_empty)
+//    TextView tvEmpty;
 
     HeartModel curHeart;
     List<HeartModel> curHeartList;
     int avgHr, maxHr, minHr;
     boolean isTestData = true;
+    private Gson gson;
 
     @Override
     public View initView(LayoutInflater inflater, @Nullable ViewGroup container) {
@@ -93,12 +103,137 @@ public class EcgFragment extends BaseEventFragment {
 
     @Override
     protected void initVariables() {
-        initChartView(lcHr);
-        initChartAxis(lcHr);
+        gson = new Gson();
+//        initChartView(lcHr);
+//        initChartAxis(lcHr);
     }
 
+    private ArrayList<Integer> curEcgList = new ArrayList<>();
+    private ArrayList<Integer> nextEcgList = new ArrayList<>();
+    int index = 0;
+    int count = 0;
+    int dataPackage = 0;
+    EcgHistoryModel ecgHistoryModel;
+    SimpleDateFormat format0 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");
+    SimpleDateFormat format3 = new SimpleDateFormat("yyyyMMddHHmmss");
+    String tamp;
+    EcgDataBean ecgDataBean;
+    private int hrBaseLine;
     @Override
     protected void initListener() {
+
+        IbandApplication.getIntance().service.watch.setHrBaseLineListener(new BleNotifyListener() {
+            @Override
+            public void onNotify(Object o) {
+                String hrBaseLineListener = o.toString();
+                Log.i("parseHrBaseLine:Notify",hrBaseLineListener);
+                hrBaseLine= Integer.parseInt(hrBaseLineListener);
+            }
+        });
+
+
+
+
+        IbandApplication.getIntance().service.watch.setEcgNotifyListener(new BleNotifyListener() {
+            @Override
+            public void onNotify(Object o) {
+//                Log.i("BleNotifyListener","BleNotifyListener:"+o.toString());
+                Ecg ecg = gson.fromJson(o.toString(), Ecg.class);
+//                Log.i("BleNotifyListener","BleNotifyListener:"+ecg);
+                count++;
+                if(dataPackage!=ecg.getDataPackage()){
+
+                    dataPackage = ecg.getDataPackage();
+                    ecgHistoryModel = new EcgHistoryModel();
+                    ecgHistoryModel.setUserId(ecg.getUserId());
+                    ecgHistoryModel.setDataPackage(ecg.getDataPackage());
+                    Date date = new Date();
+                    long date_l = date.getTime();
+                    String time = format0.format(date_l);
+                    String day = format1.format(date_l);
+                    String hms = format2.format(date_l);
+                    tamp = format3.format(date_l);
+                    ecgHistoryModel.setEcgStartDate(time);
+                    ecgHistoryModel.setEcgEndDate(time);
+                    ecgHistoryModel.setEcgDate(time);
+                    ecgHistoryModel.setEcgDay(day);
+//                    ecgHistoryModel.setEcgDay("2018-06-10");
+                    List<Integer> list = ecg.getList();
+//                    if(list!=null){
+//                        str_ecg = "";
+//                        str_ecg_time = "";
+//                        for(Integer ecg_int :list)
+//                        {
+//                            str_ecg = str_ecg+ecg_int+",";
+//                            str_ecg_time = str_ecg_time+(ecg_int-10000)+" "+hms+",";
+//                        }
+//                        ecgHistoryModel.setEcg(str_ecg);
+//                        ecgHistoryModel.setEcg_time(str_ecg_time);
+//                    }
+
+
+                    if(list!=null){
+                        ecgHistoryModel.setEcg_data_id(tamp);
+                        ecgHistoryModel.save();
+                        String str_ecg = "";
+                        for(Integer ecg_int :list)
+                        {
+                            str_ecg = str_ecg+ecg_int+",";
+                        }
+                        ecgDataBean = new EcgDataBean();
+                        ecgDataBean.setEcg_time(time);
+                        ecgDataBean.setEcg_data_id(tamp);
+                        ecgDataBean.setEcg(str_ecg);
+                        ecgDataBean.setRate_aided_signal(hrBaseLine);
+                        Log.i("setRate_aided_signal:",""+hrBaseLine);
+                        ecgDataBean.save();
+                    }
+
+                }else if(dataPackage==ecg.getDataPackage()){
+                    Date date = new Date();
+                    long date_l = date.getTime();
+                    String time = format0.format(date_l);
+                    String hms = format2.format(date_l);
+                    ecgHistoryModel.setEcgEndDate(time);
+                    if(avgHr!=0) {
+                        ecgHistoryModel.setAvgHr(avgHr);
+
+                    }else{
+                        ecgHistoryModel.setAvgHr(65);
+                    }
+                    List<Integer> list = ecg.getList();
+                    if(list!=null){
+                        String str_ecg = "";
+                        for(Integer ecg_int :list)
+                        {
+                            str_ecg = str_ecg+ecg_int+",";
+                        }
+                        ecgDataBean = new EcgDataBean();
+                        ecgDataBean.setEcg_time(time);
+                        ecgDataBean.setEcg_data_id(tamp);
+                        ecgDataBean.setEcg(str_ecg);
+                        ecgDataBean.setRate_aided_signal(hrBaseLine);
+                        ecgDataBean.save();
+                    }
+                    ecgHistoryModel.save();
+                }
+
+
+//                EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_DATA_COUNT));
+                if (index++ > 2) {//如果大于180个数据刷新一次
+
+                    curEcgList = (ArrayList<Integer>) nextEcgList.clone();
+                    nextEcgList.clear();
+                    index = 0;
+                    EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_ECG));
+                }
+                nextEcgList.addAll(ecg.getList());
+            }
+        });
+
+
         IbandApplication.getIntance().service.watch.setHrNotifyListener(new BleNotifyListener() {
             @Override
             public void onNotify(Object o) {//上报不做保存处理
@@ -149,7 +284,9 @@ public class EcgFragment extends BaseEventFragment {
         }
         switch (view.getId()) {
             case R.id.iv_history:
-                startActivity(HrHistoryActivity.class);
+                Intent intent = new Intent(mContext, EcgHistoryActivity.class);
+                intent.putExtra("history_type", 3);
+                startActivity(intent);
                 break;
             case R.id.iv_test:
                 startActivity(TestHrTimingActivity.class);
@@ -157,13 +294,13 @@ public class EcgFragment extends BaseEventFragment {
         }
     }
 
-
+    int i = 0;
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMainEvent(EventMessage event) {
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_HR) {
             setCircularView();
-            updateChartView(lcHr, curHeartList);
-            tvEmpty.setVisibility(curHeartList.size() == 0?View.VISIBLE:View.GONE);
+//            updateChartView(lcHr, curHeartList);
+//            tvEmpty.setVisibility(curHeartList.size() == 0?View.VISIBLE:View.GONE);
 
             setDataItem();
         } else if (event.getWhat() == EventGlobal.ACTION_HR_TEST) {
@@ -173,7 +310,31 @@ public class EcgFragment extends BaseEventFragment {
             btTest.setText(R.string.hint_test);
             cvHr.setTitle(getString(R.string.hint_last_hr)).invaliDate();
             isTestData = true;
+        } else if (event.getWhat() == EventGlobal.REFRESH_VIEW_ECG) {
+            setEcgView();
+            i++;
+            if(i>6) {
+                i = 0;
+                IbandApplication.getIntance().service.watch.getHrBaseLineInfo(new BleCallback() {
+                    @Override
+                    public void onSuccess(Object o) {
+//                Log.i("parseHrBaseLine()","EcgFragment:"+o.toString());
+                    }
+
+                    @Override
+                    public void onFailure(BleException exception) {
+                    }
+                });
+            }
         }
+    }
+
+
+    private void setEcgView() {
+//        for(Integer i : curEcgList){
+//            Log.i(TAG,"setEcgView():curEcgList:"+i);
+//        }
+        chart_ecg.setmData(curEcgList,hrBaseLine);
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)

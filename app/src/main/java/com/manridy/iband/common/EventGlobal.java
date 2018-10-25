@@ -22,6 +22,8 @@ public class EventGlobal {
     public static final int DATA_LOAD_HR_HISTORY = 1812;
     public static final int DATA_LOAD_BP_HISTORY = 1813;
     public static final int DATA_LOAD_BO_HISTORY = 1814;
+    public static final int DATA_LOAD_ECG_HISTORY = 1815;
+
     //运动历史数据同步
     public static final int DATA_SYNC_HISTORY = 1900;
     public static final int DATA_EXPORT_EXCEL = 1901;
@@ -37,7 +39,7 @@ public class EventGlobal {
     public static final int REFRESH_VIEW_RUN = 2806;
     public static final int REFRESH_VIEW_WEATHER = 2807;
     public static final int REFRESH_VIEW_ALL = 2805;
-
+    public static final int REFRESH_VIEW_ECG = 2808;
 
     //历史界面刷新
     public static final int REFRESH_VIEW_STEP_HISTORY  = 2810;
@@ -46,6 +48,7 @@ public class EventGlobal {
     public static final int REFRESH_VIEW_BP_HISTORY  = 2813;
     public static final int REFRESH_VIEW_BO_HISTORY  = 2814;
     public static final int REFRESH_VIEW_DEVICE  = 2815;
+    public static final int REFRESH_VIEW_ECG_HISTORY = 2816;
 
     //设备状态改变
     public static final int STATE_DEVICE_BIND = 2000;

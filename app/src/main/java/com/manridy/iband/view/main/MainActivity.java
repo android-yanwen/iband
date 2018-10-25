@@ -154,6 +154,9 @@ public class MainActivity extends BaseActivity {
     private String filePath;
     WeatherModel weatherModel;
 
+    private boolean isViewEcg = true;
+
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -795,7 +798,10 @@ public class MainActivity extends BaseActivity {
         viewList.add(new HrFragment());
         viewList.add(bpFragment);
         viewList.add(boFragment);
-//        viewList.add(ecgFragment);
+        if(isViewEcg){
+            viewList.add(ecgFragment);
+        }
+
         viewAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {

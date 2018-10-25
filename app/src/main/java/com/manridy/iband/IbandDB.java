@@ -4,12 +4,15 @@ import android.database.sqlite.SQLiteDatabase;
 
 
 import com.manridy.iband.adapter.AppAdapter;
+import com.manridy.iband.adapter.EcgHistoryAdapter;
 import com.manridy.iband.adapter.HistoryAdapter;
 import com.manridy.iband.bean.AppModel;
 import com.manridy.iband.bean.BoModel;
 import com.manridy.iband.bean.BpModel;
 import com.manridy.iband.bean.ClockModel;
 import com.manridy.iband.bean.DayBean;
+import com.manridy.iband.bean.EcgDataBean;
+import com.manridy.iband.bean.EcgHistoryModel;
 import com.manridy.iband.bean.HeartModel;
 import com.manridy.iband.bean.SedentaryModel;
 import com.manridy.iband.bean.SleepModel;
@@ -19,6 +22,7 @@ import com.manridy.iband.bean.UserModel;
 import com.manridy.iband.bean.ViewModel;
 import com.manridy.iband.bean.WeatherModel;
 import com.manridy.sdk.bean.Clock;
+import com.manridy.sdk.bean.Ecg;
 import com.manridy.sdk.common.TimeUtil;
 
 import org.bouncycastle.crypto.Mac;
@@ -260,6 +264,33 @@ public class IbandDB {
         return dayData;
     }
 
+
+    public List<EcgHistoryAdapter.Item> getMonthEcg(List<String> days){
+        List<EcgHistoryAdapter.Item> dayData = new ArrayList<>();
+        SimpleDateFormat dateFormFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateToFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
+        String lastTime = "";
+        for (int i = days.size() - 1; i >= 0; i--) {
+            List<EcgHistoryModel> ecgModels =DataSupport.where("ecgDay = ?", days.get(i)).order("ecgDate desc").find(EcgHistoryModel.class);
+            for (EcgHistoryModel ecgModel : ecgModels) {
+                String time ="";
+                try {
+                    Date date = dateFormFormat.parse(ecgModel.getEcgDate());
+                    time = dateToFormat.format(date);
+                    if(time!=null&&time.equals(lastTime)){
+                        continue;
+                    }
+                    EcgHistoryAdapter.Item dayBean = new EcgHistoryAdapter.Item(time,"","","");
+                    dayData.add(dayBean);
+                    lastTime = time;
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return dayData;
+    }
+
     public List<StepModel> getStepList(){
         return DataSupport.findAll(StepModel.class);
     }
@@ -282,6 +313,17 @@ public class IbandDB {
 
     public List<BoModel> getBoList(){
         return DataSupport.findAll(BoModel.class);
+    }
+
+
+    public List<EcgHistoryModel> getEcgHistory(String ecgDataId){
+//        return DataSupport.where("ecg_data_id = ?",ecgDataId).find(EcgHistoryModel.class);
+        return DataSupport.where("ecg_data_id = ?",ecgDataId).find(EcgHistoryModel.class);
+    }
+
+    public List<EcgDataBean> getEcgDataBean(String ecgDataId){
+//        return DataSupport.where("ecg_data_id = ?",ecgDataId).find(EcgDataBean.class);
+        return DataSupport.where("ecg_data_id = ?",ecgDataId).find(EcgDataBean.class);
     }
 
     public List<AppModel> getAppList(){
