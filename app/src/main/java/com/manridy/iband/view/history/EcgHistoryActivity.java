@@ -1,5 +1,7 @@
 package com.manridy.iband.view.history;
 
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.manridy.applib.utils.TimeUtil;
 import com.manridy.applib.view.dialog.DateDialog;
@@ -232,6 +235,16 @@ public class EcgHistoryActivity extends BaseActionActivity {
         mCalendar =Calendar.getInstance();
         mDateFormat = new SimpleDateFormat("yyyy-MM");
         historyAdapter = new EcgHistoryAdapter(itemList);
+        historyAdapter.setOnItemClickLitener(new EcgHistoryAdapter.OnItemClickLitener() {
+            @Override
+            public void onItemClick(String ecgDataId) {
+                Intent intent = new Intent();
+                intent.putExtra("ecgDataId",ecgDataId);
+                intent.setClass(getBaseContext(),EcgRePlayHistoryActivity.class);
+                startActivity(intent);
+                Toast.makeText(getBaseContext(),""+ecgDataId,Toast.LENGTH_SHORT).show();
+            }
+        });
         rvHistory.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
         rvHistory.setAdapter(historyAdapter);
         initHistoryTitle();
@@ -467,4 +480,8 @@ public class EcgHistoryActivity extends BaseActionActivity {
         }
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 }

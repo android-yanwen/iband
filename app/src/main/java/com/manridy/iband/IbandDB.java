@@ -280,7 +280,13 @@ public class IbandDB {
                     if(time!=null&&time.equals(lastTime)){
                         continue;
                     }
-                    EcgHistoryAdapter.Item dayBean = new EcgHistoryAdapter.Item(time,"","","");
+
+                    List<EcgDataBean> ecgDataBeanList;
+                    ecgDataBeanList = IbandDB.getInstance().getEcgDataBean(ecgModel.getEcg_data_id());
+
+                    EcgHistoryAdapter.Item dayBean = new EcgHistoryAdapter.Item(time,"",""+ecgDataBeanList.size(),"");
+                    dayBean.setEcgDataBeanList(ecgDataBeanList);
+                    dayBean.setItemEcgDataId(ecgModel.getEcg_data_id());
                     dayData.add(dayBean);
                     lastTime = time;
                 } catch (ParseException e) {

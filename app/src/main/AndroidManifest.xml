@@ -138,7 +138,12 @@
         <activity android:name=".view.main.OtaActivity"
                   android:launchMode="singleTask"/>
         <activity android:name=".view.history.HrHistoryActivity"/>
-        <activity android:name=".view.history.EcgHistoryActivity"/>
+        <activity android:name=".view.history.EcgHistoryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            />
+        <activity android:name=".view.history.EcgRePlayHistoryActivity" android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            />
         <activity android:name=".view.history.StepHistoryActivity"/>
         <activity android:name=".view.history.SleepHistoryActivity"/>
         <activity android:name=".view.test.TestDatabaseActivity"/>
@@ -155,6 +160,7 @@
         <activity android:name=".view.setting.DataExportActivity"/>
         <activity android:name=".view.setting.HelpWebViewActivity"/>
         <activity android:name=".view.test.HrCorrectingActivity"/>
+
     </application>
 
 </manifest>

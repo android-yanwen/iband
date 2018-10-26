@@ -20,7 +20,7 @@ import java.util.List;
  * Created by jarLiao on 17/11/2.
  */
 
-public class SuperCharts2 extends View {
+public class SuperCharts4 extends View {
     public static String TAG = "SuperCharts";
     private Paint mPaint;//画笔
     private Paint linePaint;//画笔
@@ -46,23 +46,27 @@ public class SuperCharts2 extends View {
     private int mEndColor = Color.parseColor("#ffea00");//渐变结束颜色
     private List<String> mLabelList;
     private Path mPath;
+
     boolean isFirstStart = true;
 
     //一般在直接New一个View时调用
-    public SuperCharts2(Context context) {
+    public SuperCharts4(Context context) {
         super(context);
+        Log.i(TAG+"22","SuperCharts4(Context context)");
         initView();
     }
 
     //一般在layout文件中使用的时候会调用，关于它的所有属性都会包含在attrs中传递进来
-    public SuperCharts2(Context context, @Nullable AttributeSet attrs) {
+    public SuperCharts4(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        Log.i(TAG+"22","SuperCharts4(Context context, @Nullable AttributeSet attrs)");
         initView();
     }
 
     //调用了三个参数的构造函数，明确指定第三个参数
-    public SuperCharts2(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SuperCharts4(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        Log.i(TAG+"22","SuperCharts4(Context context, @Nullable AttributeSet attrs, int defStyleAttr)");
         initView();
     }
 
@@ -71,6 +75,7 @@ public class SuperCharts2 extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        Log.i(TAG+"22","onMeasure");
         //widthMeasureSpec\heightMeasureSpec 32二进制，31-30表示模式，29-0表示宽高实际值
         int widthsize = MeasureSpec.getSize(widthMeasureSpec);//取出宽度的确切数值
         int widthmode = MeasureSpec.getMode(widthMeasureSpec);//取出宽度的测量模式
@@ -83,6 +88,7 @@ public class SuperCharts2 extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);//宽度，高度，上次宽度，上次高度
+        Log.i(TAG+"22","onSizeChanged");
         Log.d(TAG, "onSizeChanged() called with: w = [" + w + "], h = [" + h + "], oldw = [" + oldw + "], oldh = [" + oldh + "]");
         mWidth = w;//宽度
         mHeight = h;//高度
@@ -99,6 +105,8 @@ public class SuperCharts2 extends View {
     }
 
     private void getPath() {
+        Log.i(TAG+"22","getPath()");
+        Log.i(TAG+"22","list.size:"+list.size());
         if (list.size() > 0) {
             mPath = new Path();
             LinearGradient linearGradient = new LinearGradient(0,0,0,mTableHeight,new int[]{mStartColor,mEndColor, mStartColor},null, Shader.TileMode.REPEAT);
@@ -153,6 +161,7 @@ public class SuperCharts2 extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        Log.i(TAG+"22","onDraw");
         if(true) {
             //20180504
             leftLinePaint = new Paint();
@@ -187,6 +196,7 @@ public class SuperCharts2 extends View {
 //            postInvalidateDelayed(10);
         }
 
+
         if(mData1!=null&&isFirstStart) {
             Log.i(TAG+"22","mData1.size:"+mData1.size());
             isFirstStart = false;
@@ -194,6 +204,8 @@ public class SuperCharts2 extends View {
         }else{
             Log.i(TAG+"22","mData1.size:null");
         }
+
+        Log.i("getPath:onDraw","list.size:"+list.size());
     }
 
 
@@ -210,11 +222,12 @@ public class SuperCharts2 extends View {
 //                invalidate();
                 break;
         }
-        return false;
+        return true;
     }
 
     float dataMax = 200f;
     private float getCurrentY(int num) {
+//        Log.i(TAG+"22","getCurrentY");
         float y = mTableHeight/2+40 + (mTableHeight/2*((10000-num) / dataMax));
         y = y<0?0:y;
         y = y>mTableHeight ? mTableHeight:y;
@@ -233,26 +246,18 @@ public class SuperCharts2 extends View {
         }
         getPath();
 //        setAnim(1000);
+
         invalidate();
         Log.d(TAG, "setmData() called with: mData = [" + mData + "]");
+    }
+
+    public void cleanList(){
+        list = new ArrayList<>();
     }
 
     ArrayList<Integer> mData1;
     int hrBaseLine = 20;
     public void setmData(ArrayList<Integer> mData,int hrBaseLine) {
-////        Log.i("SuperCharts:mData:",""+mData.size());
-//        this.hrBaseLine = hrBaseLine;
-//        Log.i("SuperCharts:hrBaseLine:",""+hrBaseLine);
-//        for (Integer integer : mData) {
-//            list.add(getCurrentY(integer));
-//        }
-//        while (list.size()>480){
-//            list.remove(0);
-//        }
-//        getPath();
-////        setAnim(1000);
-//        invalidate();
-//        Log.d(TAG, "setmData() called with: mData = [" + mData + "]");
         Log.i(TAG+"22","setmData");
         if(mData!=null) {
             Log.i(TAG+"22","mData.size:"+mData.size());
@@ -312,7 +317,7 @@ public class SuperCharts2 extends View {
 
 
     private void initView() {
-
+        Log.i(TAG+"22","initView");
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
@@ -341,11 +346,13 @@ public class SuperCharts2 extends View {
      * @return
      */
     private int dipToPx(float dip) {
+        Log.i(TAG+"22","dipToPx");
         float density = getContext().getResources().getDisplayMetrics().density;
         return (int)(dip * density + 0.5f * (dip >= 0 ? 1 : -1));
     }
 
     private int sp2px(final float spValue) {
+//        Log.i(TAG+"22","sp2px");
         final float fontScale = getContext().getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
     }
@@ -370,6 +377,4 @@ public class SuperCharts2 extends View {
         int blue = (int) (blueStart + ((blueEnd - blueStart) * radio + 0.5));
         return Color.argb(255,red, greed, blue);
     }
-
-
 }

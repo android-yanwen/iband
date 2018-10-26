@@ -533,6 +533,7 @@ public class MainActivity extends BaseActivity {
             public void onLocationChanged(AMapLocation amapLocation) {
                 if (amapLocation != null) {
                     if (amapLocation.getErrorCode() == 0) {
+                        Log.i("amapLocationErrorCode",""+amapLocation.getErrorCode());
                         aMapLocationListener = null;
                         if (mlocationClient != null) {
                             mlocationClient.stopLocation();

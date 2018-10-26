@@ -90,7 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements SwipeBa
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-//        super.onConfigurationChanged(newConfig);
+        super.onConfigurationChanged(newConfig);
     }
 
     protected abstract void initView(Bundle savedInstanceState);
