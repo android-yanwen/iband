@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/appLib" />
             <option value="$PROJECT_DIR$/bleLib" />
+            <option value="$PROJECT_DIR$/indicatorseekbar" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

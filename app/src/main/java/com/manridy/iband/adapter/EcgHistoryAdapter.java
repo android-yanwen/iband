@@ -143,7 +143,7 @@ public class EcgHistoryAdapter extends RecyclerView.Adapter<EcgHistoryAdapter.My
             tvMenuName.setText(item.itemName);
 //            tvMenuContent.setText(item.itemContent);
 //            tvMenuUnit.setText(item.itemUnit.isEmpty()?tvMenuNum.getContext().getString(R.string.hint_unit_hr):item.itemUnit);
-            tvMenuNum.setText(item.itemNum);
+//            tvMenuNum.setText(item.itemNum);
             EcgDataBean ecgDataBean;
             String str_ecg;
             List<String> list_str;

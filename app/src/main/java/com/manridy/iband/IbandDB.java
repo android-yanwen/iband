@@ -282,7 +282,7 @@ public class IbandDB {
                     }
 
                     List<EcgDataBean> ecgDataBeanList;
-                    ecgDataBeanList = IbandDB.getInstance().getEcgDataBean(ecgModel.getEcg_data_id());
+                    ecgDataBeanList = IbandDB.getInstance().getHeadEcgDataBean(ecgModel.getEcg_data_id());
 
                     EcgHistoryAdapter.Item dayBean = new EcgHistoryAdapter.Item(time,"",""+ecgDataBeanList.size(),"");
                     dayBean.setEcgDataBeanList(ecgDataBeanList);
@@ -322,6 +322,10 @@ public class IbandDB {
     }
 
 
+    public EcgHistoryModel getLastEcgHistoryModel(){
+        return DataSupport.findLast(EcgHistoryModel.class);
+    }
+
     public List<EcgHistoryModel> getEcgHistory(String ecgDataId){
 //        return DataSupport.where("ecg_data_id = ?",ecgDataId).find(EcgHistoryModel.class);
         return DataSupport.where("ecg_data_id = ?",ecgDataId).find(EcgHistoryModel.class);
@@ -331,6 +335,10 @@ public class IbandDB {
 //        return DataSupport.where("ecg_data_id = ?",ecgDataId).find(EcgDataBean.class);
         return DataSupport.where("ecg_data_id = ?",ecgDataId).find(EcgDataBean.class);
     }
+    public List<EcgDataBean> getHeadEcgDataBean(String ecgDataId){
+        return DataSupport.where("ecg_data_id = ?",ecgDataId).order("ecg_time asc").limit(140).find(EcgDataBean.class);
+    }
+
 
     public List<AppModel> getAppList(){
         return DataSupport.findAll(AppModel.class);

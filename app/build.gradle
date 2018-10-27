@@ -102,7 +102,7 @@ dependencies {
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
     //远程升级
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
-    compile 'com.github.warkiz.widget:indicatorseekbar:1.1.2'
+    compile project(':indicatorseekbar')
 
 
     //    compile 'com.tencent.bugly:crashreport:latest.release'//bugly

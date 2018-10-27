@@ -42,8 +42,8 @@ public class SuperCharts2 extends View {
     private int mVerticalNum = 20;//纵
 
     private int mCenter;
-    private int mStartColor = Color.parseColor("#01a08b");//渐变开始颜色
-    private int mEndColor = Color.parseColor("#ffea00");//渐变结束颜色
+    private int mStartColor = Color.parseColor("#4D4D4D");//渐变开始颜色
+    private int mEndColor = Color.parseColor("#4D4D4D");//渐变结束颜色
     private List<String> mLabelList;
     private Path mPath;
     boolean isFirstStart = true;

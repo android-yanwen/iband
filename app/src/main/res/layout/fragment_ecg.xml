@@ -29,18 +29,27 @@
             app:cv_state=""
             app:cv_unit="@string/hint_unit_hr"
             app:cv_progress="0.5"
-            app:cv_icon="@mipmap/heart_heart_icon"/>
+            app:cv_icon="@mipmap/ecg_ic_ecg"/>
 
-        <Button
-            android:id="@+id/bt_test"
-            android:layout_width="92dp"
-            android:layout_height="36dp"
+        <!--<Button-->
+            <!--android:id="@+id/bt_test"-->
+            <!--android:layout_width="92dp"-->
+            <!--android:layout_height="36dp"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginTop="180dp"-->
+            <!--android:textSize="14sp"-->
+            <!--android:textColor="@color/color_white"-->
+            <!--android:text="@string/hint_test"-->
+            <!--android:background="@drawable/shape_button_hr"/>-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="180dp"
-            android:textSize="14sp"
+            android:textSize="22sp"
             android:textColor="@color/color_white"
-            android:text="@string/hint_test"
-            android:background="@drawable/shape_button_hr"/>
+            android:text="正常"
+            />
 
         <ImageView
             android:id="@+id/iv_history"
@@ -121,7 +130,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#043744">
+            android:background="#E9E9E9"
+            android:paddingBottom="12dp"
+            >
 
             <com.manridy.iband.ui.chars.SuperTable
                 android:layout_width="match_parent"

@@ -15,29 +15,29 @@ import android.view.View;
  * Created by jarLiao on 17/11/2.
  */
 
-public class SuperTable extends View {
+public class SuperTable2 extends View {
     public static String TAG = "SuperTable";
     private Paint mPaint;//画笔
     private int mWidth,mHeight;//视图宽高
-    private int mAcrossNum = 10;//横
+    private int mAcrossNum = 13;//横
     private int mVerticalNum = 20;//纵
     private Paint mDashPaint;
 
 
     //一般在直接New一个View时调用
-    public SuperTable(Context context) {
+    public SuperTable2(Context context) {
         super(context);
         initView();
     }
 
     //一般在layout文件中使用的时候会调用，关于它的所有属性都会包含在attrs中传递进来
-    public SuperTable(Context context, @Nullable AttributeSet attrs) {
+    public SuperTable2(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initView();
     }
 
     //调用了三个参数的构造函数，明确指定第三个参数
-    public SuperTable(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SuperTable2(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView();
     }
@@ -88,14 +88,14 @@ public class SuperTable extends View {
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-        mPaint.setColor(Color.parseColor("#85000000"));
+        mPaint.setColor(Color.parseColor("#898989"));
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(1.0f);
         //外部刻度线
 
         mDashPaint = new Paint();
         mDashPaint.setAntiAlias(true);
-        mDashPaint.setColor(Color.parseColor("#85000000"));
+        mDashPaint.setColor(Color.parseColor("#898989"));
         mDashPaint.setStyle(Paint.Style.STROKE);
         mDashPaint.setStrokeWidth(1.0f);
     }

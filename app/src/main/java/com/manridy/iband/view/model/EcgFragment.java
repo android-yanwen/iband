@@ -75,8 +75,6 @@ public class EcgFragment extends BaseEventFragment {
     TextView ivTest;
     @BindView(R.id.cv_hr)
     CircularView cvHr;
-    @BindView(R.id.bt_test)
-    Button btTest;
 //    @BindView(R.id.lc_hr)
 //    LineChart lcHr;
     @BindView(R.id.chart_ecg)
@@ -104,6 +102,17 @@ public class EcgFragment extends BaseEventFragment {
     @Override
     protected void initVariables() {
         gson = new Gson();
+        try {
+            EcgHistoryModel ecgHistoryModel = IbandDB.getInstance().getLastEcgHistoryModel();
+            String startTime = ecgHistoryModel.getEcgStartDate().substring(11);
+            String stopTime = ecgHistoryModel.getEcgEndDate().substring(11);
+            tvStart.setText(startTime);
+            tvEnd.setText(stopTime);
+        }catch (Exception e){
+
+        }
+
+
 //        initChartView(lcHr);
 //        initChartAxis(lcHr);
     }
@@ -159,6 +168,8 @@ public class EcgFragment extends BaseEventFragment {
                     ecgHistoryModel.setEcgEndDate(time);
                     ecgHistoryModel.setEcgDate(time);
                     ecgHistoryModel.setEcgDay(day);
+//                    String startTime = time.substring(11);
+//                    tvStart.setText(startTime);
 //                    ecgHistoryModel.setEcgDay("2018-06-10");
                     List<Integer> list = ecg.getList();
 //                    if(list!=null){
@@ -197,6 +208,8 @@ public class EcgFragment extends BaseEventFragment {
                     String time = format0.format(date_l);
                     String hms = format2.format(date_l);
                     ecgHistoryModel.setEcgEndDate(time);
+//                    String stopTime = time.substring(11);
+//                    tvEnd.setText(stopTime);
                     if(avgHr!=0) {
                         ecgHistoryModel.setAvgHr(avgHr);
 
@@ -248,27 +261,27 @@ public class EcgFragment extends BaseEventFragment {
             }
         });
 
-        btTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (btTest.getText().equals(getString(R.string.hint_test))) {
-                    IbandApplication.getIntance().service.watch.sendCmd(BleCmd.setHrTest(2), new BleCallback() {
-                        @Override
-                        public void onSuccess(Object o) {
-                            EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_HR_TEST));
-                        }
-
-                        @Override
-                        public void onFailure(BleException exception) {
-
-                        }
-                    });
-                } else {
-                    IbandApplication.getIntance().service.watch.sendCmd(BleCmd.setHrTest(0));
-                    EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_HR_TESTED));
-                }
-            }
-        });
+//        btTest.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (btTest.getText().equals(getString(R.string.hint_test))) {
+//                    IbandApplication.getIntance().service.watch.sendCmd(BleCmd.setHrTest(2), new BleCallback() {
+//                        @Override
+//                        public void onSuccess(Object o) {
+//                            EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_HR_TEST));
+//                        }
+//
+//                        @Override
+//                        public void onFailure(BleException exception) {
+//
+//                        }
+//                    });
+//                } else {
+//                    IbandApplication.getIntance().service.watch.sendCmd(BleCmd.setHrTest(0));
+//                    EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_HR_TESTED));
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -304,14 +317,23 @@ public class EcgFragment extends BaseEventFragment {
 
             setDataItem();
         } else if (event.getWhat() == EventGlobal.ACTION_HR_TEST) {
-            btTest.setText(R.string.hint_stop);
+//            btTest.setText(R.string.hint_stop);
             cvHr.setTitle(getString(R.string.hint_hr_testing)).invaliDate();
         } else if (event.getWhat() == EventGlobal.ACTION_HR_TESTED) {
-            btTest.setText(R.string.hint_test);
+//            btTest.setText(R.string.hint_test);
             cvHr.setTitle(getString(R.string.hint_last_hr)).invaliDate();
             isTestData = true;
         } else if (event.getWhat() == EventGlobal.REFRESH_VIEW_ECG) {
             setEcgView();
+            try {
+                String startTime = ecgHistoryModel.getEcgStartDate().substring(11);
+                tvStart.setText(startTime);
+                String stopTime = ecgHistoryModel.getEcgEndDate().substring(11);
+                tvEnd.setText(stopTime);
+            }catch (Exception e){
+
+            }
+
             i++;
             if(i>6) {
                 i = 0;
@@ -443,8 +465,8 @@ public class EcgFragment extends BaseEventFragment {
 
             String start = curHeartList.get(0).getHeartDate().substring(11, 19);
             String end = curHeartList.get(curHeartList.size() - 1).getHeartDate().substring(11, 19);
-            tvStart.setText(start);
-            tvEnd.setText(end);
+//            tvStart.setText(start);
+//            tvEnd.setText(end);
         }
         diData1.setItemData(getString(R.string.hint_hr_avg), avgHr + "");
         diData2.setItemData(getString(R.string.hint_hr_min), minHr + "");

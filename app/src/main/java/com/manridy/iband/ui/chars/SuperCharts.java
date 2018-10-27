@@ -42,8 +42,8 @@ public class SuperCharts extends View {
     private int mVerticalNum = 20;//纵
 
     private int mCenter;
-    private int mStartColor = Color.parseColor("#01a08b");//渐变开始颜色
-    private int mEndColor = Color.parseColor("#ffea00");//渐变结束颜色
+    private int mStartColor = Color.parseColor("#00897B");//渐变开始颜色
+    private int mEndColor = Color.parseColor("#00897B");//渐变结束颜色
     private List<String> mLabelList;
     private Path mPath;
 
@@ -285,7 +285,7 @@ public class SuperCharts extends View {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(3f);
+        mPaint.setStrokeWidth(5.0f);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
 
         //外部刻度线
@@ -294,7 +294,7 @@ public class SuperCharts extends View {
         linePaint.setAntiAlias(true);
         linePaint.setColor(Color.parseColor("#de1cc05f"));
         linePaint.setStyle(Paint.Style.STROKE);
-        linePaint.setStrokeWidth(1.0f);
+        linePaint.setStrokeWidth(2.0f);
 
         textPaint = new Paint();
         textPaint.setAntiAlias(true);

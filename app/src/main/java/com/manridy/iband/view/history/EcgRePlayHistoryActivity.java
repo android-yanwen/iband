@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -29,6 +30,9 @@ import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.items.DataItems;
 import com.manridy.iband.view.base.BaseActionActivity;
+import com.warkiz.widget.IndicatorSeekBar;
+import com.warkiz.widget.OnSeekChangeListener;
+import com.warkiz.widget.SeekParams;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -76,6 +80,8 @@ public class EcgRePlayHistoryActivity extends BaseActionActivity {
     RecyclerView rvHistory;
     @BindView(R.id.loading)
     ProgressBar pb_loading;
+    @BindView(R.id.i_seekbar)
+    IndicatorSeekBar indicatorSeekBar;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -87,6 +93,7 @@ public class EcgRePlayHistoryActivity extends BaseActionActivity {
         setTitleBar(getString(R.string.title_ecg_history), color);
         setStatusBarColor(color);
         ecg_data_id = getIntent().getStringExtra("ecgDataId");
+
     }
 
     @Override
@@ -103,6 +110,25 @@ public class EcgRePlayHistoryActivity extends BaseActionActivity {
 //                intent.setClass(getBaseContext(),EcgHistoryActivity.class);
 //                startActivity(intent);
                 finish();
+            }
+        });
+        indicatorSeekBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+        rvHistory.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager l = (LinearLayoutManager)recyclerView.getLayoutManager();
+                int adapterNowPos = l.findFirstVisibleItemPosition();
+                int allItems = l.getItemCount();
+                float item = ((float)adapterNowPos/(allItems-1))*100;
+
+                indicatorSeekBar.setProgress(item);
+                Log.i("indicatorSeekBar","adapterNowPos:"+adapterNowPos+";allItems:"+allItems+";item:"+item);
             }
         });
     }

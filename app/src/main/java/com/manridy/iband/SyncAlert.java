@@ -108,6 +108,16 @@ public class SyncAlert {
         LogUtil.d("syncAlert", "next() called syncIndex == "+syncIndex);
     }
 
+    private boolean isH1F1(){
+        String deviceName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,"");
+        if("H1-F1".equals(deviceName)){
+            next();
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     private void send(){
         switch (syncIndex) {
             case 0:
@@ -120,6 +130,7 @@ public class SyncAlert {
                 watch.getBatteryInfo(bleCallback);
                 break;
             case 3:
+                if(isH1F1())break;
                 UserModel userModel = IbandDB.getInstance().getUser();
                 if (userModel == null || userModel.getUserHeight() == null || userModel.getUserHeight() == null) {
                     userModel = new UserModel("170","65");
@@ -127,6 +138,7 @@ public class SyncAlert {
                 watch.setUserInfo(new User(userModel.getUserHeight(),userModel.getUserWeight()),bleCallback);
                 break;
             case 4:
+                if(isH1F1())break;
                 int target = (int) SPUtil.get(mContext,AppGlobal.DATA_SETTING_TARGET_STEP,0);
                 watch.setSportTarget(target == 0 ? 8000:target,bleCallback);
                 break;
@@ -155,6 +167,7 @@ public class SyncAlert {
                 next();
                 break;
             case 6:
+                if(isH1F1())break;
                 SedentaryModel sedentaryModel = IbandDB.getInstance().getSedentary();
                 if (sedentaryModel == null) {
                     sedentaryModel = new SedentaryModel(false, false, "09:00", "21:00");
@@ -165,6 +178,7 @@ public class SyncAlert {
                 watch.setSedentaryAlert(sedentary,bleCallback);
                 break;
             case 7:
+                if(isH1F1())break;
                 boolean lostOn = (boolean) SPUtil.get(mContext,AppGlobal.DATA_ALERT_LOST,false);
                 String deviceName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME,"");
                 String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"");
@@ -184,6 +198,7 @@ public class SyncAlert {
                     watch.setLostAlert(lostOn,time,bleCallback);
                 break;
             case 8:
+                if(isH1F1())break;
                 int clockNum = 0;
                 String deviceType1 = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE, "");
                 String deviceName1 = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME, "");
@@ -265,18 +280,22 @@ public class SyncAlert {
 
                 break;
             case 9:
+                if(isH1F1())break;
                 int light = (int) SPUtil.get(mContext,AppGlobal.DATA_SETTING_LIGHT,2);
                 watch.sendCmd(BleCmd.setLight(light),bleCallback);
                 break;
             case 10:
+                if(isH1F1())break;
                 int unitLength = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_UNIT,0);
                 watch.sendCmd(BleCmd.setUnit(unitLength),bleCallback);
                 break;
             case 11:
+                if(isH1F1())break;
                 int unitTime = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_UNIT_TIME,0);
                 watch.sendCmd(BleCmd.setHourSelect(unitTime),bleCallback);
                 break;
             case 12:
+                if(isH1F1())break;
                boolean onOff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_WRIST, true);
                 watch.sendCmd(BleCmd.setWristOnOff(onOff ? 1 : 0),bleCallback);
                 Log.i("SetTimingHrTest","1");

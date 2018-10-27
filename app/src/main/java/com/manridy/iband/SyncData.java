@@ -11,12 +11,14 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.manridy.applib.utils.LogUtil;
+import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.TimeUtil;
 import com.manridy.iband.bean.BoModel;
 import com.manridy.iband.bean.BpModel;
 import com.manridy.iband.bean.HeartModel;
 import com.manridy.iband.bean.SleepModel;
 import com.manridy.iband.bean.StepModel;
+import com.manridy.iband.common.AppGlobal;
 import com.manridy.sdk.Watch;
 import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.ble.BleParse;
@@ -238,6 +240,17 @@ public class SyncData {
             }
         }
     }
+
+    private boolean isH1F1(){
+        String deviceName = (String) SPUtil.get(IbandApplication.getIntance().getApplicationContext(), AppGlobal.DATA_DEVICE_BIND_NAME,"");
+        if("H1-F1".equals(deviceName)){
+            next();
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     //计步历史条数>>睡眠历史条数>>心率历史条数>>血压历史条数>>血氧历史条数
     //计步当前>>计步历史>>睡眠历史>>心率历史>>血压历史>>血氧历史
     private synchronized void send(){
@@ -246,27 +259,34 @@ public class SyncData {
                 watch.setTimeToNew(bleCallback);
                 break;
             case 1:
+                if(isH1F1())break;
                 watch.sendCmd(BleCmd.getStepSectionNum(),bleCallback);
                 break;
             case 2:
+                if(isH1F1())break;
                 watch.sendCmd(BleCmd.getRunHistoryNum(),bleCallback);
                 break;
             case 3:
+                if(isH1F1())break;
                 watch.getSleepInfo(InfoType.HISTORY_NUM,bleCallback);
                 break;
             case 4:
                 watch.getHeartRateInfo(InfoType.HISTORY_NUM,bleCallback);
                 break;
             case 5:
+                if(isH1F1())break;
                 watch.getBloodPressureInfo(InfoType.HISTORY_NUM,bleCallback);
                 break;
             case 6:
+                if(isH1F1())break;
                 watch.getBloodOxygenInfo(InfoType.HISTORY_NUM,bleCallback);
                 break;
             case 7:
+                if(isH1F1())break;
                 watch.getSportInfo(InfoType.CURRENT_INFO,bleCallback);
                 break;
             case 8:
+                if(isH1F1())break;
                 if (stepSum != 0) {
                     watch.sendCmd(BleCmd.getStepSectionHistroy(),bleCallback);
                 }else {
@@ -274,6 +294,7 @@ public class SyncData {
                 }
                 break;
             case 9:
+                if(isH1F1())break;
                 if (runSum != 0){
                     watch.sendCmd(BleCmd.getRunHistoryData(),bleCallback);
                 }else {
@@ -281,6 +302,7 @@ public class SyncData {
                 }
                 break;
             case 10:
+                if(isH1F1())break;
                 if (sleepSum != 0) {
                     watch.getSleepInfo(InfoType.HISTORY_INFO,bleCallback);
                 }else {
