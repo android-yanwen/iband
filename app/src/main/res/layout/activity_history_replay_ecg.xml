@@ -15,17 +15,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_centerInParent="true"
-            android:layout_alignParentBottom="true"
             />
-        <com.manridy.iband.ui.chars.SuperTable2
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"/>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_history"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+
+
         <com.warkiz.widget.IndicatorSeekBar
             android:id="@+id/i_seekbar"
             android:layout_width="match_parent"
@@ -43,6 +35,25 @@
             app:isb_thumb_size="10dp"
             app:isb_thumb_color="#26a69a"
             android:layout_alignParentBottom="true"
+            />
+        <com.manridy.iband.ui.chars.SuperTable2
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/i_seekbar"
+            />
+        <com.manridy.iband.ui.chars.LeftLine
+            android:id="@+id/ll_leftline"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/i_seekbar"
+            >
+        </com.manridy.iband.ui.chars.LeftLine>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_history"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/i_seekbar"
             />
     </RelativeLayout>
 

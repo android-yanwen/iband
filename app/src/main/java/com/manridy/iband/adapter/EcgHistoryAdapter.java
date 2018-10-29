@@ -174,12 +174,14 @@ public class EcgHistoryAdapter extends RecyclerView.Adapter<EcgHistoryAdapter.My
                 if(k<480){
                     ecgs.add(all.get(j));
                     k++;
-                }else{
-                    chartEcg.setmData(ecgs,hrBaseLine);
-                    ecgs = new ArrayList<>();
-                    k=0;
                 }
+//                else{
+//                    chartEcg.setmData(ecgs,hrBaseLine);
+//                    ecgs = new ArrayList<>();
+//                    k=0;
+//                }
             }
+            chartEcg.setmData(ecgs,0);
         }
     }
 

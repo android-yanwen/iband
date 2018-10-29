@@ -42,8 +42,8 @@ public class SuperCharts4 extends View {
     private int mVerticalNum = 20;//纵
 
     private int mCenter;
-    private int mStartColor = Color.parseColor("#01a08b");//渐变开始颜色
-    private int mEndColor = Color.parseColor("#ffea00");//渐变结束颜色
+    private int mStartColor = Color.parseColor("#004D40");//渐变开始颜色
+    private int mEndColor = Color.parseColor("#004D40");//渐变结束颜色
     private List<String> mLabelList;
     private Path mPath;
 
@@ -92,7 +92,7 @@ public class SuperCharts4 extends View {
         Log.d(TAG, "onSizeChanged() called with: w = [" + w + "], h = [" + h + "], oldw = [" + oldw + "], oldh = [" + oldh + "]");
         mWidth = w;//宽度
         mHeight = h;//高度
-        mTableHeight = mHeight - dipToPx(24);
+        mTableHeight = mHeight;
         mCenter = Math.min(mWidth,mTableHeight)/2;//中心点
 //        for (int i = 0; i <=180; i++) {
 //            list.add((float)(Math.random() *400));
@@ -124,7 +124,7 @@ public class SuperCharts4 extends View {
             }
 
             int iXor = 1;
-            for (int i = 1; i < list.size(); i++) {
+            for (int i = 0; i < list.size(); i++) {
                 float inX = mX + mSpaceX * i + mChangedX;//原点+间距*系数+结束点
                 if (inX >= 0) {
                     iXor = i;
@@ -162,7 +162,7 @@ public class SuperCharts4 extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Log.i(TAG+"22","onDraw");
-        if(true) {
+        if(false) {
             //20180504
             leftLinePaint = new Paint();
             leftLinePaint.setColor(Color.parseColor("#ECE40A"));                    //设置画笔颜色
@@ -228,7 +228,7 @@ public class SuperCharts4 extends View {
     float dataMax = 200f;
     private float getCurrentY(int num) {
 //        Log.i(TAG+"22","getCurrentY");
-        float y = mTableHeight/2+40 + (mTableHeight/2*((10000-num) / dataMax));
+        float y = mTableHeight/2 + (mTableHeight/2*((10000-num) / dataMax));
         y = y<0?0:y;
         y = y>mTableHeight ? mTableHeight:y;
 //        Log.d(TAG, "getCurrentY() called with: y = [" + y + "]  num = ["+num+"] ");
@@ -241,7 +241,7 @@ public class SuperCharts4 extends View {
         for (Integer integer : mData) {
             list.add(getCurrentY(integer));
         }
-        while (list.size()>480){
+        while (list.size()>482){
             list.remove(0);
         }
         getPath();
@@ -321,7 +321,7 @@ public class SuperCharts4 extends View {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(3f);
+        mPaint.setStrokeWidth(4f);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
 
         //外部刻度线

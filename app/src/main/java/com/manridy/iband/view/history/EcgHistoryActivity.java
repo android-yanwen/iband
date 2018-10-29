@@ -1,5 +1,6 @@
 package com.manridy.iband.view.history;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -26,6 +27,7 @@ import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.items.DataItems;
 import com.manridy.iband.view.base.BaseActionActivity;
+import com.manridy.iband.view.main.MainActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -81,6 +83,8 @@ public class EcgHistoryActivity extends BaseActionActivity {
     RecyclerView rvHistory;
     @BindView(R.id.tb_share)
     ImageView ivShare;
+    @BindView(R.id.tb_back)
+    ImageView tbBack;
 
     private String filePath;
 
@@ -242,7 +246,6 @@ public class EcgHistoryActivity extends BaseActionActivity {
                 intent.putExtra("ecgDataId",ecgDataId);
                 intent.setClass(getBaseContext(),EcgRePlayHistoryActivity.class);
                 startActivity(intent);
-                Toast.makeText(getBaseContext(),""+ecgDataId,Toast.LENGTH_SHORT).show();
             }
         });
         rvHistory.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
@@ -289,6 +292,15 @@ public class EcgHistoryActivity extends BaseActionActivity {
                         initHistoryData();
                     }
                 }).show();
+            }
+        });
+
+        tbBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(EcgHistoryActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
     }

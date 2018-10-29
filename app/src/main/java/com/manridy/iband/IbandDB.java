@@ -269,7 +269,7 @@ public class IbandDB {
         List<EcgHistoryAdapter.Item> dayData = new ArrayList<>();
         SimpleDateFormat dateFormFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat dateToFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
-        String lastTime = "";
+//        String lastTime = "";
         for (int i = days.size() - 1; i >= 0; i--) {
             List<EcgHistoryModel> ecgModels =DataSupport.where("ecgDay = ?", days.get(i)).order("ecgDate desc").find(EcgHistoryModel.class);
             for (EcgHistoryModel ecgModel : ecgModels) {
@@ -277,9 +277,9 @@ public class IbandDB {
                 try {
                     Date date = dateFormFormat.parse(ecgModel.getEcgDate());
                     time = dateToFormat.format(date);
-                    if(time!=null&&time.equals(lastTime)){
-                        continue;
-                    }
+//                    if(time!=null&&time.equals(lastTime)){
+//                        continue;
+//                    }
 
                     List<EcgDataBean> ecgDataBeanList;
                     ecgDataBeanList = IbandDB.getInstance().getHeadEcgDataBean(ecgModel.getEcg_data_id());
@@ -287,8 +287,10 @@ public class IbandDB {
                     EcgHistoryAdapter.Item dayBean = new EcgHistoryAdapter.Item(time,"",""+ecgDataBeanList.size(),"");
                     dayBean.setEcgDataBeanList(ecgDataBeanList);
                     dayBean.setItemEcgDataId(ecgModel.getEcg_data_id());
-                    dayData.add(dayBean);
-                    lastTime = time;
+                    if(ecgDataBeanList.size()>55) {
+                        dayData.add(dayBean);
+                    }
+//                    lastTime = time;
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -333,10 +335,10 @@ public class IbandDB {
 
     public List<EcgDataBean> getEcgDataBean(String ecgDataId){
 //        return DataSupport.where("ecg_data_id = ?",ecgDataId).find(EcgDataBean.class);
-        return DataSupport.where("ecg_data_id = ?",ecgDataId).find(EcgDataBean.class);
+        return DataSupport.where("ecg_data_id = ?",ecgDataId).order("ecg_time asc").find(EcgDataBean.class);
     }
     public List<EcgDataBean> getHeadEcgDataBean(String ecgDataId){
-        return DataSupport.where("ecg_data_id = ?",ecgDataId).order("ecg_time asc").limit(140).find(EcgDataBean.class);
+        return DataSupport.where("ecg_data_id = ?",ecgDataId).order("ecg_time asc").limit(60).find(EcgDataBean.class);
     }
 
 

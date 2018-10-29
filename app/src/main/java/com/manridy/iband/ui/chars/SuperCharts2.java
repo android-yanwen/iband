@@ -86,7 +86,7 @@ public class SuperCharts2 extends View {
         Log.d(TAG, "onSizeChanged() called with: w = [" + w + "], h = [" + h + "], oldw = [" + oldw + "], oldh = [" + oldh + "]");
         mWidth = w;//宽度
         mHeight = h;//高度
-        mTableHeight = mHeight - dipToPx(24);
+        mTableHeight = mHeight;
         mCenter = Math.min(mWidth,mTableHeight)/2;//中心点
 //        for (int i = 0; i <=180; i++) {
 //            list.add((float)(Math.random() *400));
@@ -153,7 +153,7 @@ public class SuperCharts2 extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if(true) {
+        if(false) {
             //20180504
             leftLinePaint = new Paint();
             leftLinePaint.setColor(Color.parseColor("#ECE40A"));                    //设置画笔颜色
@@ -215,7 +215,7 @@ public class SuperCharts2 extends View {
 
     float dataMax = 200f;
     private float getCurrentY(int num) {
-        float y = mTableHeight/2+40 + (mTableHeight/2*((10000-num) / dataMax));
+        float y = mTableHeight/2 + (mTableHeight/2*((10000-num) / dataMax));
         y = y<0?0:y;
         y = y>mTableHeight ? mTableHeight:y;
 //        Log.d(TAG, "getCurrentY() called with: y = [" + y + "]  num = ["+num+"] ");

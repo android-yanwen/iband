@@ -8,15 +8,13 @@
         android:layout_height="wrap_content"
         android:textSize="30sp"
         android:id="@+id/tv_test_update"
+        android:visibility="gone"
         />
 
     <com.manridy.iband.ui.chars.SuperCharts4
         android:id="@+id/chart_ecg_item"
         android:layout_alignParentRight="true"
         android:layout_width="match_parent"
-        android:layout_height="482dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
-        android:layout_centerHorizontal="true"
+        android:layout_height="match_parent"
         />
 </RelativeLayout>

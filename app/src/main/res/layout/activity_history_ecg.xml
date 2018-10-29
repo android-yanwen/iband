@@ -37,7 +37,7 @@
             android:layout_toLeftOf="@id/tv_num"
             android:layout_marginRight="8dp"
             android:layout_marginTop="60dp"
-            android:src="@mipmap/heart_heartic02"/>
+            android:src="@mipmap/his_ic_ecg"/>
 
         <TextView
             android:id="@+id/tv_unit"
@@ -70,6 +70,17 @@
             android:text="@string/hint_date"/>
 
         <TextView
+            android:layout_below="@+id/tv_time"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正常"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="#8a000000"
+            />
+
+        <TextView
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,6 +90,8 @@
             android:textColor="#de000000"
             android:textSize="14dp"
             android:text="@string/hint_month_current"/>
+
+
 
         <LinearLayout android:orientation="horizontal"
                       android:layout_width="match_parent"

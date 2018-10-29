@@ -28,6 +28,8 @@ import com.manridy.iband.bean.EcgDataBean;
 import com.manridy.iband.bean.EcgHistoryModel;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
+import com.manridy.iband.ui.chars.LeftLine;
+import com.manridy.iband.ui.chars.SimpleDividerItemDecoration;
 import com.manridy.iband.ui.items.DataItems;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.warkiz.widget.IndicatorSeekBar;
@@ -82,6 +84,8 @@ public class EcgRePlayHistoryActivity extends BaseActionActivity {
     ProgressBar pb_loading;
     @BindView(R.id.i_seekbar)
     IndicatorSeekBar indicatorSeekBar;
+    @BindView(R.id.ll_leftline)
+    LeftLine leftLine;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -122,10 +126,15 @@ public class EcgRePlayHistoryActivity extends BaseActionActivity {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+
                 LinearLayoutManager l = (LinearLayoutManager)recyclerView.getLayoutManager();
                 int adapterNowPos = l.findFirstVisibleItemPosition();
                 int allItems = l.getItemCount();
                 float item = ((float)adapterNowPos/(allItems-1))*100;
+                if(hrBaseLines.size()>0){
+                    float num = ((float)adapterNowPos/(allItems))*hrBaseLines.size();
+                    leftLine.setmData(hrBaseLines.get((int)num));
+                }
 
                 indicatorSeekBar.setProgress(item);
                 Log.i("indicatorSeekBar","adapterNowPos:"+adapterNowPos+";allItems:"+allItems+";item:"+item);
@@ -170,6 +179,43 @@ public class EcgRePlayHistoryActivity extends BaseActionActivity {
             ecgDataBeanList = null;
             ecgDataBeanList = IbandDB.getInstance().getEcgDataBean(ecg_data_id);
             ecgDataBeanListItem = 0;
+            if(ecgDataBeanList!=null&&ecgDataBeanListItem>=ecgDataBeanList.size()){
+                return;
+            }
+            EcgDataBean ecgDataBean;
+            String str_ecg;
+            List<String> list_str;
+            List<Integer> all = new LinkedList<>();
+            hrBaseLines = new ArrayList<>();
+            for(int i=0;i<ecgDataBeanList.size();i++){
+                ecgDataBean = ecgDataBeanList.get(i);
+                hrBaseLine = ecgDataBean.getRate_aided_signal();
+                str_ecg = ecgDataBean.getEcg();
+                list_str = java.util.Arrays.asList(str_ecg.split(","));
+                List<Integer> list = new LinkedList<>();
+                for(String ecg : list_str){
+                    list.add(Integer.valueOf(ecg));
+                }
+                all.addAll(list);
+                hrBaseLines.add(hrBaseLine);
+//                        curItemList2.add(new EcgDataAdapter.Item(list,hrBaseLine));
+            }
+
+            int k = 0;
+            ArrayList<Integer> ecgs = new ArrayList<>();
+            for(int j = 0;j<all.size();j++){
+                if(k<480){
+                    ecgs.add(all.get(j));
+                    k++;
+                }else{
+                    curItemList2.add(new EcgDataAdapter.Item(ecgs,hrBaseLine));
+                    ecgs = new ArrayList<>();
+                    ecgs.add(all.get(j));
+                    k=1;
+                }
+            }
+
+
             if(isRunning) {
                 Message message = handler.obtainMessage();
                 handler.removeMessages(1);
@@ -184,89 +230,26 @@ public class EcgRePlayHistoryActivity extends BaseActionActivity {
     EcgDataAdapter historyDataAdapter;
     private int hrBaseLine;
     private List<EcgDataAdapter.Item> curItemList2 = new ArrayList<>();
+    private List<Integer> hrBaseLines = new ArrayList<>();
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-                    if(ecgDataBeanList!=null&&ecgDataBeanListItem>=ecgDataBeanList.size()){
-                        break;
-                    }
-                    Log.i("EcgReplayFragment","ecgDataBeanListItem:"+ecgDataBeanListItem);
-
-
-                    EcgDataBean ecgDataBean;
-                    String str_ecg;
-                    List<String> list_str;
-                    List<Integer> all = new LinkedList<>();
-                    for(int i=0;i<ecgDataBeanList.size();i++){
-                        ecgDataBean = ecgDataBeanList.get(i);
-                        hrBaseLine = ecgDataBean.getRate_aided_signal();
-                        str_ecg = ecgDataBean.getEcg();
-                        list_str = java.util.Arrays.asList(str_ecg.split(","));
-                        List<Integer> list = new LinkedList<>();
-                        for(String ecg : list_str){
-                            list.add(Integer.valueOf(ecg));
-                        }
-                        all.addAll(list);
-
-//                        curItemList2.add(new EcgDataAdapter.Item(list,hrBaseLine));
-                    }
-
-                    int k = 0;
-                    ArrayList<Integer> ecgs = new ArrayList<>();
-                    for(int j = 0;j<all.size();j++){
-                        if(k<480){
-                            ecgs.add(all.get(j));
-                            k++;
-                        }else{
-                            ecgs = new ArrayList<>();
-                            curItemList2.add(new EcgDataAdapter.Item(ecgs,hrBaseLine));
-                            k=0;
-                        }
-                    }
-
                     historyDataAdapter = new EcgDataAdapter(curItemList2);
 
                     rvHistory.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
                     rvHistory.setAdapter(historyDataAdapter);
+                    rvHistory.addItemDecoration(new SimpleDividerItemDecoration());
                     rvHistory.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             historyDataAdapter.notifyDataSetChanged();
                         }
                     });
-//                    historyDataAdapter.setItemList(curItemList2);
-                    Log.i("EcgReplayFragment","curItemList2.size:"+curItemList2.size());
-//                    EcgDataBean ecgDataBean = ecgDataBeanList.get(ecgDataBeanListItem);
-//                    hrBaseLine = ecgDataBean.getRate_aided_signal();
-//                    String str_ecg = ecgDataBean.getEcg();
-//                    List<String> list_str = java.util.Arrays.asList(str_ecg.split(","));
-//                    List<Integer> list = new LinkedList<Integer>();
-//                    for(String ecg : list_str){
-//                        list.add(Integer.valueOf(ecg));
-//
-////                        Log.i("ecgDataBeanList","data:"+ecg);
-////                        Log.i("ecgDataBeanList","size:"+list_str.size());
-////                        Log.i("ecgDataBeanList","ecgDataBeanListItem:szie:"+ecgDataBeanList.size());
-////                        Log.i("ecgDataBeanList","ecgDataBeanListItem:"+ecgDataBeanListItem);
-//                    }
-//
-//                count++;
-//                if (index++ > 2) {//如果大于180个数据刷新一次
-//                    curEcgList = (ArrayList<Integer>) nextEcgList.clone();
-//                    nextEcgList.clear();
-//                    index = 0;
-//                    EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_REPLAY_ECG));
-//                }
-//                nextEcgList.addAll(list);
-//                ecgDataBeanListItem++;
-//                if(ecgDataBeanListItem<ecgDataBeanList.size()) {
-//                    Message message = handler.obtainMessage();
-//                    message.what = 1;
-//                    handler.removeMessages(1);
-//                    handler.sendMessageDelayed(message,30);
-//                }
+                    if(hrBaseLines.size()>0){
+                        leftLine.setmData(hrBaseLines.get(0));
+                    }
                     break;
                 case 2:
                     pb_loading.setVisibility(View.GONE);

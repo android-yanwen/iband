@@ -57,7 +57,7 @@
     <com.manridy.iband.ui.chars.SuperCharts2
         android:id="@+id/chart_ecg"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="56dp"
         android:layout_below="@+id/rl_data"
         />
     <!--<TextView-->

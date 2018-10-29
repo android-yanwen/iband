@@ -108,7 +108,9 @@
         <activity android:name=".view.main.MainActivity"
                   android:theme="@style/Theme.NoBackgroundAndTitleMain"
                   android:launchMode="singleTask"
-                  android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            />
         <activity android:name=".view.main.SettingActivity"/>
         <activity android:name=".view.main.WelcomeActivity"/>
         <activity android:name=".view.setting.ViewActivity"/>
