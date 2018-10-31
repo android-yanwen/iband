@@ -22,8 +22,15 @@ import java.util.Date;
     private int stepCalorie;//卡路里
     private int stepTime;//运动时长
     private int stepType;//运动类型
+    //跑步、跳绳...1000以下是从手环获取的记录，1001起手机自身生成的运动记录
+    //运动模式
     private int sportMode;//运动模式
     private long updateDate;//数据更新时间
+
+    private String pace;//运动配速
+    private String map;//使用的地图
+    private boolean isInCN;//是否在中国
+    private String runTime;
 
     public StepModel() {
     }
@@ -170,5 +177,37 @@ import java.util.Date;
         sb.append(", updateDate=").append(TimeUtil.getNowYMDHMSTime(updateDate));
         sb.append('}');
         return sb.toString();
+    }
+
+    public String getPace() {
+        return pace;
+    }
+
+    public void setPace(String pace) {
+        this.pace = pace;
+    }
+
+    public String getMap() {
+        return map;
+    }
+
+    public void setMap(String map) {
+        this.map = map;
+    }
+
+    public boolean isInCN() {
+        return isInCN;
+    }
+
+    public void setInCN(boolean inCN) {
+        isInCN = inCN;
+    }
+
+    public String getRunTime() {
+        return runTime;
+    }
+
+    public void setRunTime(String runTime) {
+        this.runTime = runTime;
     }
 }

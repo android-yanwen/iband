@@ -1,12 +1,23 @@
 package com.manridy.iband.view.model;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -101,6 +113,9 @@ public class StepFragment extends BaseEventFragment {
     ImageView ivWeather;
     @BindView(R.id.ll_weather)
     LinearLayout ll_weather;
+    @BindView(R.id.iv_icon)
+    ImageView ivIcon;
+
 
     StepModel curStep;
     List<StepModel> curSectionSteps;
@@ -281,7 +296,7 @@ public class StepFragment extends BaseEventFragment {
         }
     }
 
-    @OnClick({ R.id.iv_menu,R.id.iv_history,R.id.iv_location})
+    @OnClick({ R.id.iv_menu,R.id.iv_history,R.id.iv_location,R.id.iv_icon})
     public void onClick(View view) {
         if (isFastDoubleClick()) {
             return;
@@ -296,9 +311,86 @@ public class StepFragment extends BaseEventFragment {
             case R.id.iv_location:
                 startActivity(SportActivity.class);
                 break;
+            case R.id.iv_icon:
+                gotoSport();
+                break;
         }
     }
 
+    //动态申请权限的测试方法
+    public void gotoSport() {
+        // 要申请的权限 数组 可以同时申请多个权限
+        String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION};
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            //如果超过6.0才需要动态权限，否则不需要动态权限
+            //如果同时申请多个权限，可以for循环遍历
+            int check = ContextCompat.checkSelfPermission(getActivity(),permissions[0]);
+            // 权限是否已经 授权 GRANTED---授权  DINIED---拒绝
+            if (check == PackageManager.PERMISSION_GRANTED) {
+                //写入你需要权限才能使用的方法
+//                startActivity(SportActivity.class);
+                openGPSSettings();
+            } else {
+                //手动去请求用户打开权限(可以在数组中添加多个权限) 1 为请求码 一般设置为final静态变量
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            }
+        } else {
+            //写入你需要权限才能使用的方法
+//            startActivity(SportActivity.class);
+            openGPSSettings();
+        }
+    }
+
+    /**
+     * 跳转GPS设置
+     */
+    private void openGPSSettings() {
+        if (checkGPSIsOpen()) {
+//            initLocation(); //自己写的定位方法
+            startActivity(SportActivity.class);
+        } else {
+            //没有打开则弹出对话框
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.notifyTitle)
+                    .setMessage(R.string.gpsNotifyMsg)
+                    // 拒绝, 退出应用
+                    .setNegativeButton(R.string.hint_cancel,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+//                                    finish();
+                                }
+                            })
+
+                    .setPositiveButton(R.string.hint_set,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //跳转GPS设置界面
+                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    startActivityForResult(intent, GPS_REQUEST_CODE);
+                                }
+                            })
+
+                    .setCancelable(false)
+                    .show();
+
+        }
+    }
+
+    private int GPS_REQUEST_CODE = 10;
+    /**
+     * 检测GPS是否打开
+     *
+     * @return
+     */
+    private boolean checkGPSIsOpen() {
+        boolean isOpen;
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        isOpen = locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER);
+        return isOpen;
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMainEvent(EventMessage event){
@@ -311,6 +403,34 @@ public class StepFragment extends BaseEventFragment {
             handler.sendMessage(handler.obtainMessage(1));
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //回调，判断用户到底点击是还是否。
+        //如果同时申请多个权限，可以for循环遍历
+        if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            //写入你需要权限才能使用的方法
+//            run();
+//            startActivity(SportActivity.class);
+            openGPSSettings();
+        } else {
+            // 没有获取 到权限，从新请求，或者关闭app
+            Toast.makeText(getActivity(),"需要获得GPS权限",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GPS_REQUEST_CODE) {
+            //做需要做的事情，比如再次检测是否打开GPS了 或者定位
+            openGPSSettings();
+        }
+    }
+
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onBackgroundEvent(EventMessage event){

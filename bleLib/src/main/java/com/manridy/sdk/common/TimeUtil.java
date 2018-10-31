@@ -302,4 +302,21 @@ public class TimeUtil {
         }
         return null;
     }
+
+
+    @SuppressLint("SimpleDateFormat")
+    public static String getYMDHMSTime(Date d) {
+        SimpleDateFormat mDateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss");
+        String date = mDateFormat.format(d);
+        return date;
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public static String getNowYMDHM(){
+        SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyyMMddHHmm");
+        String date = mDateFormat.format(new Date());
+        return date;
+    }
+
 }

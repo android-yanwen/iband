@@ -1,223 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_background">
-
-    <LinearLayout android:id="@+id/rl_tab"
-                  android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="72dp"
-                  android:background="@color/toolbar_background">
-
-        <RelativeLayout
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:tag="content"
+        >
+        <TextView
+            android:id="@+id/tv_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="24dp">
+            android:layout_height="24dp"
+            android:background="#151515"/>
+        <RelativeLayout
+            android:id="@+id/rl_top"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:background="#151515"
+            android:layout_below="@id/tv_toolbar">
             <ImageView
-                android:id="@+id/tb_back"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:scaleType="fitCenter"
-                style="@style/ToolBarButton"
-                android:src="@mipmap/ic_back"/>
-
-            <TextView
-                android:id="@+id/tb_title"
+                android:id="@+id/iv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:textColor="@color/color_white"
-                android:textSize="18sp"
-                android:text="标题"/>
-
+                android:layout_centerVertical="true"
+                android:src="@mipmap/nav_ic_back"/>
             <ImageView
-                android:id="@+id/tb_share"
+                android:id="@+id/iv_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
-                android:src="@mipmap/sp_ic_set"/>
+                android:src="@mipmap/nav_ic_more"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_alignParentBottom="true"
+                android:background="#1effffff"/>
+            <com.ogaclejapan.smarttablayout.SmartTabLayout
+                android:id="@+id/st_tab"
+                android:layout_width="180dp"
+                android:layout_height="48dp"
+                android:layout_centerHorizontal="true"
+                app:stl_indicatorAlwaysInCenter="true"
+                app:stl_indicatorWithoutPadding="false"
+                app:stl_indicatorInFront="false"
+                app:stl_indicatorInterpolation="smart"
+                app:stl_indicatorGravity="bottom"
+                app:stl_indicatorColor="#00000000"
+                app:stl_indicatorThickness="0dp"
+                app:stl_indicatorWidth="auto"
+                app:stl_indicatorCornerRadius="0dp"
+                app:stl_overlineColor="#00000000"
+                app:stl_overlineThickness="0dp"
+                app:stl_underlineColor="#00000000"
+                app:stl_underlineThickness="0dp"
+                app:stl_dividerColor="#00000000"
+                app:stl_dividerThickness="0dp"
+                app:stl_defaultTabBackground="?attr/selectableItemBackground"
+                app:stl_defaultTabTextAllCaps="true"
+                app:stl_defaultTabTextColor="@drawable/selector_tab_text"
+                app:stl_defaultTabTextSize="16sp"
+                app:stl_defaultTabTextHorizontalPadding="16dp"
+                app:stl_defaultTabTextMinWidth="0dp"
+                app:stl_distributeEvenly="false"
+                app:stl_clickable="true"
+                app:stl_titleOffset="24dp"
+                app:stl_drawDecorationAfterTab="false"/>
         </RelativeLayout>
-    </LinearLayout>
-    <RelativeLayout
-        android:id="@+id/rl_state"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_below="@id/rl_tab">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:textColor="#de000000"
-            android:textSize="14sp"
-            android:text="GPS"/>
+
+        <com.manridy.iband.ui.SuperViewPager
+            android:id="@+id/vp_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/rl_top"/>
 
         <ImageView
-            android:id="@+id/iv_signa"
+            android:id="@+id/iv_line"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/sp_ic_signa"
-            android:layout_marginLeft="36dp"/>
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-22dp"
+            android:layout_below="@id/rl_top"
+            android:src="@mipmap/ic_line"/>
 
         <TextView
+            android:id="@+id/tv_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="#de000000"
-            android:textSize="17sp"
-            android:text="上次记录"/>
-
-        <ImageView
-            android:id="@+id/iv_history"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/sp_ic_his"/>
+            android:layout_below="@id/iv_line"/>
     </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/rl_state">
-
-        <TextView
-            android:id="@+id/tv_mi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="54dp"
-            android:textColor="#2196f3"
-            android:textSize="72sp"
-            android:text="0.0"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tv_mi"
-            android:layout_marginTop="108dp"
-            android:layout_marginLeft="8dp"
-            android:textColor="#8a000000"
-            android:textSize="14sp"
-            android:text="公里"/>
-
-        <ImageView
-            android:id="@+id/iv_speed_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_mi"
-            android:layout_marginTop="36dp"
-            android:layout_marginLeft="16dp"
-            android:src="@mipmap/sp_ic_speed"/>
-
-        <TextView
-            android:id="@+id/tv_speed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/iv_speed_icon"
-            android:layout_alignBottom="@id/iv_speed_icon"
-            android:layout_marginLeft="16dp"
-            android:textColor="#de000000"
-            android:textSize="24sp"
-            android:text="0'00''"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_speed"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            android:text="配速(min/km)"/>
-
-        <TextView
-            android:id="@+id/line"
-            android:layout_width="1px"
-            android:layout_height="36dp"
-            android:layout_alignTop="@id/iv_speed_icon"
-            android:layout_centerHorizontal="true"
-            android:background="#de000000"/>
-
-        <ImageView
-            android:id="@+id/iv_time_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_mi"
-            android:layout_toRightOf="@id/line"
-            android:layout_marginTop="36dp"
-            android:layout_marginLeft="32dp"
-            android:src="@mipmap/sp_ic_time"/>
-
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/iv_time_icon"
-            android:layout_alignBottom="@id/iv_time_icon"
-            android:layout_marginLeft="16dp"
-            android:textColor="#de000000"
-            android:textSize="24sp"
-            android:text="00:00:00"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_time"
-            android:layout_alignLeft="@id/iv_time_icon"
-            android:layout_marginTop="8dp"
-            android:text="时间(H/Min/Sec)"/>
-
-        <TextView
-            android:layout_width="1px"
-            android:layout_height="36dp"
-            android:layout_alignTop="@id/iv_speed_icon"
-            android:layout_centerHorizontal="true"
-            android:background="#de000000"/>
-
-        <ImageView
-            android:id="@+id/iv_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="80dp"
-            android:src="@mipmap/sp_ic_keep"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="40dp"
-            android:src="@mipmap/sp_ic_map"/>
-
-    </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/rl_time_num"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#de000000"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/tv_time_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="#ffffff"
-            android:textSize="150sp"
-            android:textStyle="italic"
-            android:text="3"
-            />
-    </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>

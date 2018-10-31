@@ -101,6 +101,10 @@ public class EventGlobal {
     public static final int STATE_CHANGE_NETWOOK_ON = 5001;
 
 
+    public static final int VIEW_SPORTACTIVITY_HEADBAR_VISIBLE = 1401;
+    public static final int VIEW_SPORTACTIVITY_HEADBAR_GONE = 1402;
 
+    public static final int REFRESH_VIEW_LOCATION_SATELLITES_NUM = 50001;
+    public static final int REFRESH_VIEW_LOCATION_POSITION = 50002;
 
 }

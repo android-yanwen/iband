@@ -1,5 +1,6 @@
 package com.manridy.applib.base;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -24,7 +25,14 @@ public abstract class BaseFragment extends Fragment {
     protected Context mContext;
     protected View root;
     private ProgressDialog dialog;
+    protected Activity mActivity;
 
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.mActivity = activity;
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

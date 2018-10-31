@@ -5,6 +5,7 @@ package com.manridy.iband.common;
  * Created by jarLiao on 17/5/18.
  */
 public class AppGlobal {
+    public static final String DATA_IS_IN_CN = "data_is_in_cn";
     public static final String DATA_APP_FIRST = "data_app_first";
     public static final String DATA_USER_HEAD = "data_user_head";
     public static final String DATA_USER_SEND = "data_user_send";
@@ -55,6 +56,10 @@ public class AppGlobal {
 
     public static final String DATA_DEVICEUPDATE_DELAY_FILEURL  = "data_deviceupdate_delay_fileurl";
     public static final String DATA_DEVICEUPDATE_DELAY_DATE = "data_deviceupdate_delay_date";
+
+
+
+    public static final String DATA_IS_ONLY_USE_AMAP = "data_is_only_use_amap";
 
     //device state
     public static final int DEVICE_STATE_UNCONNECT = 0;//未连接

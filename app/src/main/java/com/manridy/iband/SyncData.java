@@ -324,6 +324,7 @@ public class SyncData {
                 }
                 break;
             case 13:
+                if(isH1F1())break;
                 if (boSum != 0) {
                     watch.getBloodOxygenInfo(InfoType.HISTORY_INFO,bleCallback);
                 }else {

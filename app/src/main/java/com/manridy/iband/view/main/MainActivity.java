@@ -1238,7 +1238,8 @@ public class MainActivity extends BaseActivity {
                 tbTitle.setText(R.string.hint_view_hr);
                 break;
             case 3:
-                if(isShowBp){
+                String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
+                if(isShowBp||deviceType.equals("")){
                     tbTitle.setText(R.string.hint_view_hp);
                 }else{
                     tbTitle.setText(R.string.hint_view_bo);

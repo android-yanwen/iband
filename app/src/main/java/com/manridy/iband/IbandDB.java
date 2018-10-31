@@ -21,6 +21,7 @@ import com.manridy.iband.bean.StepModel;
 import com.manridy.iband.bean.UserModel;
 import com.manridy.iband.bean.ViewModel;
 import com.manridy.iband.bean.WeatherModel;
+import com.manridy.iband.bean.data.RunLocationModel;
 import com.manridy.sdk.bean.Clock;
 import com.manridy.sdk.bean.Ecg;
 import com.manridy.sdk.common.TimeUtil;
@@ -353,6 +354,26 @@ public class IbandDB {
         }
     }
 
+    public List<RunLocationModel> getRunLocationData(String locationDataPackageId){
+        return DataSupport.where("locationDataPackageId = ?",locationDataPackageId).find(RunLocationModel.class);
+    }
+
+    public StepModel getLastRunData(){
+        return DataSupport.where("sportMode = ?","1001").findLast(StepModel.class);
+    }
+
+    public StepModel getLastIndoorRunData(){
+        return DataSupport.where("sportMode = ?","1002").findLast(StepModel.class);
+    }
+
+    public StepModel getLastBikingData(){
+        return DataSupport.where("sportMode = ?","1003").findLast(StepModel.class);
+    }
+
+    public StepModel getRunData(String stepDate){
+        return DataSupport.where("sportMode = ? or sportMode = ? and stepDate = ?","1001","1003",stepDate).findLast(StepModel.class);
+//        return DataSupport.where("sportMode = ? and stepDate = ?","1001",stepDate).findLast(StepModel.class);
+    }
 
 
     public void resetAppData(){

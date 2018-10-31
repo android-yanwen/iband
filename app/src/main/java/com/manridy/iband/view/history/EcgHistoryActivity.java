@@ -276,7 +276,7 @@ public class EcgHistoryActivity extends BaseActionActivity {
                 }
                 if (time.length() >= 7) {
                     int year = Integer.parseInt(time.substring(0,4));
-                    int month = Integer.parseInt(time.substring(6,7));
+                    int month = Integer.parseInt(time.substring(5,7));
                     times = new int[]{year,month-1};
                 }
                 new DateDialog(mContext,times , getString(R.string.hint_select_month), new DateDialog.DateDialogListener() {

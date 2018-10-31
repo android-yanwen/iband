@@ -1,50 +1,55 @@
 package com.manridy.iband.view.main;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.manridy.applib.base.BaseActivity;
 import com.manridy.iband.R;
-import com.manridy.iband.view.base.BaseActionActivity;
+import com.manridy.iband.adapter.MenuAdapter;
+import com.manridy.iband.adapter.PageAdapter;
+import com.manridy.iband.common.EventGlobal;
+import com.manridy.iband.common.EventMessage;
+import com.manridy.iband.ui.SuperViewPager;
+import com.manridy.iband.view.model.sport.BikingFragment;
+import com.manridy.iband.view.model.sport.IndoorRunFragment;
+import com.manridy.iband.view.model.sport.OutdoorRunFragment;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-/**
- * 遥控拍照页面
- * Created by jarLiao on 17/5/4.
- */
+public class SportActivity extends BaseActivity {
+    @BindView(R.id.vp_view)
+    SuperViewPager vpView;
+    MenuAdapter menuAdapter;
+    @BindView(R.id.st_tab)
+    SmartTabLayout stTab;
+    @BindView(R.id.rl_top)
+    RelativeLayout rlTop;
+    @BindView(R.id.tv_toolbar)
+    TextView tvToolbar;
+    @BindView(R.id.iv_line)
+    ImageView ivLine;
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
+    @BindView(R.id.iv_more)
+    ImageView ivMore;
 
-public class SportActivity extends BaseActionActivity {
+    boolean isRegistEventBus;
 
-    @BindView(R.id.iv_signa)
-    ImageView ivSigna;
-    @BindView(R.id.iv_history)
-    ImageView ivHistory;
-    @BindView(R.id.tv_mi)
-    TextView tvMi;
-    @BindView(R.id.iv_speed_icon)
-    ImageView ivSpeedIcon;
-    @BindView(R.id.tv_speed)
-    TextView tvSpeed;
-    @BindView(R.id.line)
-    TextView line;
-    @BindView(R.id.iv_time_icon)
-    ImageView ivTimeIcon;
-    @BindView(R.id.tv_time)
-    TextView tvTime;
-    @BindView(R.id.iv_start)
-    ImageView ivStart;
-    @BindView(R.id.tv_time_num)
-    TextView tvTimeNum;
-    @BindView(R.id.rl_time_num)
-    RelativeLayout rlTimeNum;
+
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -54,35 +59,102 @@ public class SportActivity extends BaseActionActivity {
 
     @Override
     protected void initVariables() {
-        setStatusBarColor(Color.parseColor("#2196f3"));
-
+        initViewPager();
+        setStatusBar();
     }
 
     @Override
     protected void initListener() {
-        ivStart.setOnClickListener(new View.OnClickListener() {
+
+    }
+
+    @OnClick({R.id.iv_back, R.id.iv_more})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_back:
+                startActivity(new Intent().setClass(mContext,MainActivity.class));
+                break;
+            case R.id.iv_more:
+                startActivity(new Intent().setClass(mContext,SportFunctionActivity.class));
+                break;
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(EventMessage event) {
+        switch (event.getWhat()){
+                case EventGlobal.VIEW_SPORTACTIVITY_HEADBAR_GONE:
+                    rlTop.setVisibility(View.GONE);
+                    tvToolbar.setVisibility(View.GONE);
+                    ivLine.setVisibility(View.GONE);
+                    break;
+                case EventGlobal.VIEW_SPORTACTIVITY_HEADBAR_VISIBLE:
+                    rlTop.setVisibility(View.VISIBLE);
+                    tvToolbar.setVisibility(View.VISIBLE);
+                    ivLine.setVisibility(View.VISIBLE);
+                    break;
+        }
+
+    }
+
+    private void initViewPager() {
+
+        PageAdapter adapter = new PageAdapter(
+                getSupportFragmentManager(), FragmentPagerItems.with(this)
+                .add(R.string.hint_outdoors_run, OutdoorRunFragment.class)
+                .add(R.string.hint_indoors_run, IndoorRunFragment.class)
+                .add(R.string.hint_cycling, BikingFragment.class)
+//                .add("血压", BpFragment.class)
+//                .add("血氧", BoFragment.class)
+                .create());
+        vpView.setAdapter(adapter);
+        stTab.setViewPager(vpView);
+        vpView.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onClick(View v) {
-                ivStart.setEnabled(false);
-                rlTimeNum.setVisibility(View.VISIBLE);
-                handler.sendEmptyMessage(3);
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+//                EventBus.getDefault().post(new EventMessage(EventGlobal.VIEW_SPORTACTIVITY_HEADBAR_VISIBLE));
+
             }
         });
     }
 
-    Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what > 0) {
-                tvTimeNum.setText(String.valueOf(msg.what--));
-                tvTimeNum.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.out_from_big));
-                handler.sendEmptyMessageDelayed(msg.what,1000);
-            }else {
-                rlTimeNum.setVisibility(View.GONE);
-                startActivity(SportRunActivity.class);
-                ivStart.setEnabled(true);
-            }
+    protected void registerEventBus() {
+        isRegistEventBus = true;
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        registerEventBus();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isRegistEventBus) {
+            EventBus.getDefault().unregister(this);
         }
-    };
+    }
+
+
+
+
 }

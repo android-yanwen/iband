@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#151515">
+    <include layout="@layout/include_activity_tab"/>
+    <com.manridy.iband.ui.items.AlertBigItems
+        android:id="@+id/item_map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:big_name="@string/hint_only_use_amap"
+        app:big_hint="@string/hint_only_use_amap_info"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#959595"
+        ></View>
+    <Button
+        android:id="@+id/btn_to_battery_saver_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="省电设置"
+        android:textColor="#ffffff"
+        android:visibility="gone"
+        />
+    <Button
+        android:id="@+id/btn_to_battery_saver_settings2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="省电设置2"
+        android:textColor="#ffffff"
+        android:visibility="gone"
+        />
+</LinearLayout>

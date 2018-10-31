@@ -1,7 +1,10 @@
 package com.manridy.iband.view.main;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -37,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -92,6 +96,39 @@ public class TrainActivity extends BaseActionActivity {
         setTitleBar(getString(R.string.hint_tarin), Color.parseColor("#009688"));
         setStatusBarColor(Color.parseColor("#009688"));
         trainAdapter = new TrainAdapter(curRunList);
+        if(curRunList!=null&&curRunList.size()>0){
+            Date date = curRunList.get(0).getStepDate();
+            if(date!=null) {
+                tvStart.setText(hourFormat.format(date));
+                String endTime = hourFormat.format(curRunList.get(curRunList.size() - 1).getStepDate().getTime() + curRunList.get(curRunList.size() - 1).getStepTime() * 60 * 1000);
+                tvEnd.setText(endTime);
+            }
+        }
+        trainAdapter.setOnItemClickListener(new TrainAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                if(curRunList!=null&&curRunList.size()>position){
+                    List<StepModel> RunList = new ArrayList<>(curRunList);
+                    Collections.reverse(RunList);
+                    StepModel stepModel = RunList.get(position);
+                    if(stepModel.getSportMode()==1001||stepModel.getSportMode()==1003){
+                        if("GaoDe".equals(stepModel.getMap())) {
+                            Intent intent = new Intent(TrainActivity.this, AMapPlaybackActivity.class);
+                            intent.putExtra("StepDate", stepModel.getStepDate());
+                            startActivity(intent);
+                        }else if("google".equals(stepModel.getMap())){
+                            Intent intent = new Intent(TrainActivity.this, GoogleMapPlaybackActivity.class);
+                            intent.putExtra("StepDate", stepModel.getStepDate());
+                            startActivity(intent);
+                        }else{
+                            Intent intent = new Intent(TrainActivity.this, AMapPlaybackActivity.class);
+                            intent.putExtra("StepDate", stepModel.getStepDate());
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
+        });
         rvTrain.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         rvTrain.setAdapter(trainAdapter);
         initChartView(bcRun);
@@ -122,10 +159,44 @@ public class TrainActivity extends BaseActionActivity {
         if (event.getWhat() == EventGlobal.DATA_LOAD_RUN) {
             curRunList = IbandDB.getInstance().getCurRunStep(day);
             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_RUN));
+            hourFormat = new SimpleDateFormat("HH:mm");
+            dayFormat = new SimpleDateFormat("yyyy-MM-dd");
+//            trainAdapter = new TrainAdapter(curRunList);
+            if(curRunList!=null&&curRunList.size()>0){
+                Date date = curRunList.get(0).getStepDate();
+                if(date!=null) {
+                    startTime = hourFormat.format(date);
+//                    tvStart.setText(hourFormat.format(date));
+                    endTime = hourFormat.format(curRunList.get(curRunList.size() - 1).getStepDate().getTime() + curRunList.get(curRunList.size() - 1).getStepTime() * 60 * 1000);
+//                    tvEnd.setText(endTime);
+                    Message message = handler.obtainMessage();
+                    message.what = 1;
+                    handler.sendMessage(message);
+                }
+            }
         } else if (event.getWhat() == EventGlobal.REFRESH_VIEW_ALL) {
             EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_RUN));
         }
     }
+
+    String startTime;
+    String endTime;
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:
+                    if(startTime!=null){
+                        tvStart.setText(startTime);
+                    }
+                    if(endTime!=null){
+                        tvEnd.setText(endTime);
+                    }
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void initListener() {
@@ -246,6 +317,12 @@ public class TrainActivity extends BaseActionActivity {
                 colors[i] = Color.parseColor("#abd83232");
             } else if (dayData.get(i).getSportMode() == 4) {
                 colors[i] = Color.parseColor("#abc65e18");
+            } else if (dayData.get(i).getSportMode() == 1001){
+                colors[i] = Color.parseColor("#1CA196");
+            } else if(dayData.get(i).getSportMode() == 1002){
+                colors[i] = Color.parseColor("#1E877C");
+            } else if(dayData.get(i).getSportMode() == 1003){
+                colors[i] = Color.parseColor("#E55F37");
             }
             set.addEntry(barEntry);
         }
@@ -284,6 +361,18 @@ public class TrainActivity extends BaseActionActivity {
                 } else if (stepModel.getSportMode() == 2) {
                     num = stepModel.getStepCalorie() + getString(R.string.hint_unit_ka);
                     mode = getString(R.string.hint_swim);
+                } else if (stepModel.getSportMode() == 2) {
+                    num = stepModel.getStepCalorie() + getString(R.string.hint_unit_ka);
+                    mode = getString(R.string.hint_swim);
+                } else if(stepModel.getSportMode() == 1001){
+                    num = stepModel.getStepCalorie() + getString(R.string.hint_unit_ka);
+                    mode = getString(R.string.hint_outdoors_run);
+                } else if(stepModel.getSportMode() == 1002){
+                    num = stepModel.getStepCalorie() + getString(R.string.hint_unit_ka);
+                    mode = getString(R.string.hint_indoors_run);
+                } else if(stepModel.getSportMode() == 1003){
+                    num = stepModel.getStepCalorie() + getString(R.string.hint_unit_ka);
+                    mode = getString(R.string.hint_cycling);
                 }
                 tvHint.setText(mode + " " + start + "~" + end + " " + num);
             }

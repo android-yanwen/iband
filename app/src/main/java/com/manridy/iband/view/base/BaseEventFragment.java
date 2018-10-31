@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.manridy.applib.base.BaseFragment;
 import com.manridy.applib.utils.LogUtil;
+import com.manridy.iband.IbandApplication;
 import com.manridy.iband.R;
 
 import org.greenrobot.eventbus.EventBus;
@@ -117,6 +118,9 @@ public abstract class BaseEventFragment extends BaseFragment {
 
     }
 
+    protected Context getAppliaction(){
+        return IbandApplication.getIntance().getApplicationContext();
+    }
 //    public abstract void onMainEvent(MessageEvent event);
 
 //    public abstract void onBackgroundEvent(MessageEvent event);

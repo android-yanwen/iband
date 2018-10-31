@@ -9,8 +9,11 @@ import android.widget.TextView;
 
 import com.manridy.iband.R;
 import com.manridy.iband.bean.StepModel;
+import com.manridy.sdk.common.TimeUtil;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -26,6 +29,16 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.MyViewHolder
 
     public TrainAdapter(List<StepModel> list) {
         this.list = list;
+    }
+
+    public interface ItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public ItemClickListener mListener;
+
+    public void setOnItemClickListener(ItemClickListener listener) {
+        this.mListener = listener;
     }
 
     public void setItemList(List<StepModel> list) {
@@ -44,9 +57,18 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.MyViewHolder
         return new MyViewHolder(view);
     }
 
+
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.bindData(list.get(position));
+        if (mListener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onItemClick(position);
+                }
+            });
+        }
     }
 
     @Override
@@ -94,8 +116,28 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.MyViewHolder
                 itemRes =  R.mipmap.train_ic_pu;
                 itemText = R.string.hint_push;
                 stepText = step.getStepNum() + itemMin.getContext().getResources().getString(R.string.hint_unit_th);
+            }else if(step.getSportMode() == 1001){
+                itemRes = R.mipmap.train_ic02;
+                itemText = R.string.hint_outdoors_run;
+                DecimalFormat df = new DecimalFormat("0.00");
+                stepText = df.format((float) step.getStepMileage() / 1000)+(itemMin.getContext().getResources().getString(R.string.hint_unit_mi));
+//                stepText = step.getStepMileage()+"m";
+            }else if(step.getSportMode() == 1002){
+                itemRes = R.mipmap.train_runin;
+                itemText = R.string.hint_indoors_run;
+                stepText = step.getStepNum()+(itemMin.getContext().getResources().getString(R.string.hint_unit_step));
+            }else if(step.getSportMode() == 1003){
+                itemRes = R.mipmap.train_ic_bicycle;
+                itemText = R.string.hint_cycling;
+                DecimalFormat df = new DecimalFormat("0.00");
+                stepText = df.format((float) step.getStepMileage() / 1000)+(itemMin.getContext().getResources().getString(R.string.hint_unit_mi));
             }
             itemIcon.setImageResource(itemRes);
+
+            Date date = step.getStepDate();
+            if(date==null){
+                date = new Date();
+            }
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
             String start = simpleDateFormat.format(step.getStepDate());
             String end = simpleDateFormat.format((step.getStepDate().getTime()+step.getStepTime()*60*1000));
@@ -104,6 +146,11 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.MyViewHolder
             itemMin.setText(step.getStepTime()+(itemMin.getContext().getResources().getString(R.string.unit_min)));
             itemStep.setText(stepText);
             itemKa.setText(step.getStepCalorie()+(itemMin.getContext().getResources().getString(R.string.hint_unit_ka)));
+            if(step.getSportMode() == 1001||step.getSportMode() == 1003){
+                itemKa.setText(step.getPace()+(itemMin.getContext().getResources().getString(R.string.hint_unit_pace)));
+            }else if(step.getSportMode() == 1002){
+                itemKa.setText(step.getStepCalorie()+(itemMin.getContext().getResources().getString(R.string.hint_unit_ka)));
+            }
         }
     }
 

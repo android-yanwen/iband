@@ -32,6 +32,14 @@
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <!--定位 6.0以上需要动态授权-->
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -50,13 +58,13 @@
         android:theme="@style/AppThemes"
         tools:replace="android:name"
         >
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="c1cZbjfjD7euO4Pz6WnhDDkKH5624Pdn" />
+
         <meta-data android:name="com.amap.api.v2.apikey"
                    android:value="767c9359cf8c9189525156908a851cde">
         </meta-data>
-
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyACMM6eGEbnLlHQvim0gdyS9MCQcdQtex0" />
         <!--<service-->
             <!--android:name="com.baidu.location.f"-->
             <!--android:enabled="true"-->
@@ -162,7 +170,29 @@
         <activity android:name=".view.setting.DataExportActivity"/>
         <activity android:name=".view.setting.HelpWebViewActivity"/>
         <activity android:name=".view.test.HrCorrectingActivity"/>
+        <activity android:name=".view.main.SportFunctionActivity" />
+        <activity android:name=".view.main.AMapPlaybackActivity"></activity>
+        <activity android:name=".view.main.AMapRunActivity"></activity>
+        <activity android:name=".view.main.CountDownActivity"></activity>
+        <activity android:name=".view.main.RunActivity"></activity>
+        <activity android:name=".view.main.IndoorRunActivity"></activity>
+        <activity android:name=".view.main.GoogleMapRunActivity"></activity>
+        <activity android:name=".view.main.GoogleMapPlaybackActivity"></activity>
+        <activity android:name=".view.main.BikingActivity"></activity>
 
+        <service
+            android:name=".service.LocationService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name=".service.PedometerService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service android:name=".common.step.StepService">
+
+        </service>
+        <service android:name=".common.step.StepService$GrayInnerService">
+        </service>
     </application>
 
 </manifest>
