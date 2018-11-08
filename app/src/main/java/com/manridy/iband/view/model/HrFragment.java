@@ -100,20 +100,21 @@ public class HrFragment extends BaseEventFragment {
 
     @Override
     protected void initListener() {
-        IbandApplication.getIntance().service.watch.setHrNotifyListener(new BleNotifyListener() {
-            @Override
-            public void onNotify(Object o) {//上报不做保存处理
-                curHeart = new Gson().fromJson(o.toString(), HeartModel.class);
-                if (isTestData) {
-                    curHeartList = new ArrayList<>();
+        if(IbandApplication.getIntance().service.watch!=null) {
+            IbandApplication.getIntance().service.watch.setHrNotifyListener(new BleNotifyListener() {
+                @Override
+                public void onNotify(Object o) {//上报不做保存处理
+                    curHeart = new Gson().fromJson(o.toString(), HeartModel.class);
+                    if (isTestData) {
+                        curHeartList = new ArrayList<>();
+                    }
+                    isTestData = false;
+                    curHeartList.add(curHeart);
+                    EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_HR_TEST));
+                    EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_HR));
                 }
-                isTestData = false;
-                curHeartList.add(curHeart);
-                EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_HR_TEST));
-                EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_HR));
-            }
-        });
-
+            });
+        }
         btTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

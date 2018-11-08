@@ -73,7 +73,7 @@ public class DeviceList {
         private String is_chk_heart_rate;
         private String is_heart_rate_timing_chk;
         private String is_heart_rate_call_police;
-
+        private String ecg;
 
         public String getDevice_name() {
             return device_name;
@@ -258,6 +258,14 @@ public class DeviceList {
 
         public void setIs_heart_rate_call_police(String is_heart_rate_call_police) {
             this.is_heart_rate_call_police = is_heart_rate_call_police;
+        }
+
+        public String getEcg() {
+            return ecg;
+        }
+
+        public void setEcg(String ecg) {
+            this.ecg = ecg;
         }
     }
 }

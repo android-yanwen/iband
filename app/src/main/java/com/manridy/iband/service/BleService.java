@@ -277,7 +277,7 @@ public class BleService extends Service {
                 for (int i=0; i < networks.length; i++){
                     //获取ConnectivityManager对象对应的NetworkInfo对象
                     NetworkInfo networkInfo = connMgr.getNetworkInfo(networks[i]);
-                    if(networkInfo.isConnected()) {
+                    if(networkInfo!=null&&networkInfo.isConnected()) {
                         isConnected = true;
                     }
                 }

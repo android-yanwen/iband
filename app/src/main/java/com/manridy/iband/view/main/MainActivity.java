@@ -188,109 +188,15 @@ public class MainActivity extends BaseActivity {
                     ivShare.setEnabled(true);
                     break;
                 case 3:
-//                    Toast.makeText(MainActivity.this,R.string.hint_not_get_devicelist,Toast.LENGTH_SHORT).show();
                     if(!isConn(MainActivity.this)){
                         showNoNetWorkDlg(MainActivity.this);
                     }
 
                     break;
                 case 4:
-//                    //        isShowBp = isShowBo =false;
-//                    isShowBp = (boolean) SPUtil.get(mContext,"isShowBp",false);
-//                    isShowBo = (boolean) SPUtil.get(mContext,"isShowBo",false);
-//                    String strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
-//                    String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
-//                    String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
-//                    Log.i("deviceType",deviceType);
-//                    Log.i("deviceName",deviceName);
-//                    if (strDeviceList!= null && !strDeviceList.isEmpty()) {
-//                        DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
-//                        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
-//                            if (deviceType.trim().equals(resultBean.getDevice_id().trim())){
-//                                if ("0".equals(resultBean.getBlood_pressure())) {
-//                                    isShowBp = false;
-//                                }else{
-//                                    isShowBp = true;
-//                                }
-//                                SPUtil.put(mContext,"isShowBp",isShowBp);
-//                                if ("0".equals(resultBean.getOxygen_pressure())) {
-//                                    isShowBo = false;
-//                                }else{
-//                                    isShowBo = true;
-//                                }
-//                                SPUtil.put(mContext,"isShowBo",isShowBo);
-////                    if ("0".equals("0")) {
-////                        isShowBp = false;
-////                    }
-////                    if ("0".equals("0")) {
-////                        isShowBo = false;
-////                    }
-//                            }
-//                        }
-//
-//                        try {
-//                            if (!isShowBp) {
-//                                viewList.remove(bpFragment);
-//                            }
-//                            if (!isShowBo) {
-//                                viewList.remove(boFragment);
-//                            }
-//                            if (!isShowBp || !isShowBo){
-//                                viewAdapter.notifyDataSetChanged();
-//                            }
-//                        }catch (Exception e){
-//                            e.printStackTrace();
-//                        }
-//
-//                        boolean isnotifyDataSetChanged = false;
-//
-//                        if(isShowBp||isShowBo){
-//                            boolean isHaveBp = false;
-//                            boolean isHaveBo = false;
-//                            Iterator it = viewList.iterator();
-//                            while (it.hasNext()){
-//                                Object o = it.next();
-//                                if(BpFragment.class.equals(o.getClass())){
-//                                    isHaveBp = true;
-//                                }else if(BoFragment.class.equals(o.getClass())){
-//                                    isHaveBo = true;
-//                                }
-//                            }
-//                            if(isShowBp&&(!isHaveBp)){
-//                                if(bpFragment!=null){
-//                                    viewList.add(bpFragment);
-//                                    isnotifyDataSetChanged = true;
-//                                }else{
-//                                    bpFragment = new BpFragment();
-//                                    viewList.add(bpFragment);
-//                                    isnotifyDataSetChanged = true;
-//                                }
-//                            }
-//                            if(isShowBo&&(!isHaveBo)){
-//                                if(boFragment!=null){
-//                                    viewList.add(boFragment);
-//                                    isnotifyDataSetChanged = true;
-//                                }else{
-//                                    boFragment = new BoFragment();
-//                                    viewList.add(boFragment);
-//                                    isnotifyDataSetChanged = true;
-//                                }
-//                            }
-//                        }
-//
-//
-//                        if(isnotifyDataSetChanged){
-//                            viewAdapter.notifyDataSetChanged();
-//                            isnotifyDataSetChanged = false;
-//                        }
-//                    }
-//                    IbandApplication.isNeedRefresh = false;
-
                     boolean isShowBp = (boolean)SPUtil.get(mContext,"isShowBp",false);
                     boolean isShowBo = (boolean)SPUtil.get(mContext,"isShowBo",false);
-
-//                    viewList.remove(ecgFragment);
-
+                    boolean isShowEcg = (boolean)SPUtil.get(mContext,"isShowEcg",false);
                     try {
                         if (!isShowBp) {
                             viewList.remove(bpFragment);
@@ -299,19 +205,24 @@ public class MainActivity extends BaseActivity {
                         if (!isShowBo) {
                             viewList.remove(boFragment);
                         }
-                        if (!isShowBp || !isShowBo){
+                        if(!isShowEcg){
+                            viewList.remove(ecgFragment);
+                        }
+                        if (!isShowBp || !isShowBo||!isShowEcg){
                         viewAdapter.notifyDataSetChanged();
 //                            handler2.sendMessage(handler2.obtainMessage(4));
                         }
+
                     }catch (Exception e){
                         e.printStackTrace();
                     }
 
                     boolean isnotifyDataSetChanged = false;
 
-                    if(isShowBp||isShowBo){
+                    if(isShowBp||isShowBo||isShowEcg){
                         boolean isHaveBp = false;
                         boolean isHaveBo = false;
+                        boolean isHaveEcg = false;
                         Iterator it = viewList.iterator();
                         while (it.hasNext()){
                             Object o = it.next();
@@ -319,6 +230,8 @@ public class MainActivity extends BaseActivity {
                                 isHaveBp = true;
                             }else if(BoFragment.class.equals(o.getClass())){
                                 isHaveBo = true;
+                            }else if(EcgFragment.class.equals(o.getClass())){
+                                isHaveEcg = true;
                             }
                         }
                         if(isShowBp&&(!isHaveBp)){
@@ -338,6 +251,16 @@ public class MainActivity extends BaseActivity {
                             }else{
                                 boFragment = new BoFragment();
                                 viewList.add(boFragment);
+                                isnotifyDataSetChanged = true;
+                            }
+                        }
+                        if(isShowEcg&&(!isHaveEcg)){
+                            if(ecgFragment!=null){
+                                viewList.add(ecgFragment);
+                                isnotifyDataSetChanged = true;
+                            }else{
+                                ecgFragment = new EcgFragment();
+                                viewList.add(ecgFragment);
                                 isnotifyDataSetChanged = true;
                             }
                         }
@@ -369,6 +292,7 @@ public class MainActivity extends BaseActivity {
             //        isShowBp = isShowBo =false;
             isShowBp = (boolean) SPUtil.get(mContext,"isShowBp",false);
             isShowBo = (boolean) SPUtil.get(mContext,"isShowBo",false);
+            isShowEcg = (boolean) SPUtil.get(mContext,"isShowEcg",false);
             String strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
             String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
             String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
@@ -391,19 +315,20 @@ public class MainActivity extends BaseActivity {
                         }
                         SPUtil.put(mContext,"isShowBo",isShowBo);
 
+                        if ("0".equals(resultBean.getEcg())) {
+                            isShowEcg = false;
+                        }else{
+                            isShowEcg = true;
+                        }
+                        SPUtil.put(mContext,"isShowEcg",isShowEcg);
+
                         handler2.sendMessage(handler2.obtainMessage(4));
-//                    if ("0".equals("0")) {
-//                        isShowBp = false;
-//                    }
-//                    if ("0".equals("0")) {
-//                        isShowBo = false;
-//                    }
+
                     }
                 }
 
 
             }
-//            IbandApplication.isNeedRefresh = false;
         }
     };
     /*
@@ -484,18 +409,10 @@ public class MainActivity extends BaseActivity {
 
     private boolean isShowBp;
     private boolean isShowBo;
+    private boolean isShowEcg;
     @Override
     protected void onResume() {
         super.onResume();
-
-
-//        if(!isConn(MainActivity.this)){
-//            Message message = handler2.obtainMessage(3);
-//            handler2.sendMessage(message);
-//        }
-
-        //判断语言版本
-//        int curSelect = (int) SPUtil.get(mContext,AppGlobal.DATA_APP_LANGUE,0);
 
         int connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
         if (connectState == AppGlobal.DEVICE_STATE_CONNECTED) {
@@ -508,19 +425,7 @@ public class MainActivity extends BaseActivity {
             Watch.getInstance().sendCmd(BleCmd.setTime());
         }
 
-
-//        if(IbandApplication.isNeedRefresh) {
             updateDeviceList();
-//        }
-//        int state = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
-//        if(state==AppGlobal.DEVICE_STATE_UNCONNECT||state==AppGlobal.DEVICE_STATE_CONNECTED) {
-//            return;
-//        }
-//        IbandApplication.getIntance().service.reConnect_time_interval = 18;
-//        IbandApplication.getIntance().service.reConnect_times = 0;
-//        IbandApplication.getIntance().service.reConnectHandler.removeCallbacksAndMessages(null);
-//        IbandApplication.getIntance().service.reConnectHandler.postDelayed(IbandApplication.getIntance().service.reConnectThread,4000);
-
         getLocation();
 
     }
@@ -1239,14 +1144,26 @@ public class MainActivity extends BaseActivity {
                 break;
             case 3:
                 String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
-                if(isShowBp||deviceType.equals("")){
+                if(deviceType.equals("")||isShowBp){
                     tbTitle.setText(R.string.hint_view_hp);
-                }else{
+                }else if(!isShowBp&&isShowBo){
                     tbTitle.setText(R.string.hint_view_bo);
+                }else if(!isShowBp&&!isShowBo){
+                    tbTitle.setText(R.string.hint_view_ecg);
                 }
+//                if(isShowBp||deviceType.equals("")){
+//                    tbTitle.setText(R.string.hint_view_hp);
+//                }else{
+//                    tbTitle.setText(R.string.hint_view_bo);
+//                }
                 break;
             case 4:
-                tbTitle.setText(R.string.hint_view_bo);
+                String deviceType1 = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
+                if(isShowBo||deviceType1.equals("")){
+                    tbTitle.setText(R.string.hint_view_bo);
+                }else{
+                    tbTitle.setText(R.string.hint_view_ecg);
+                }
                 break;
             case 5:
                 tbTitle.setText(R.string.hint_view_ecg);

@@ -98,19 +98,21 @@ public class BpFragment extends BaseEventFragment {
 
     @Override
     protected void initListener() {
-        IbandApplication.getIntance().service.watch.setBpNotifyListener(new BleNotifyListener() {
-            @Override
-            public void onNotify(Object o) {//上报不做保存处理
-                curBp = new Gson().fromJson(o.toString(), BpModel.class);
-                if (isTestData) {
-                    curBpList = new ArrayList<>();
+        if(IbandApplication.getIntance().service.watch!=null) {
+            IbandApplication.getIntance().service.watch.setBpNotifyListener(new BleNotifyListener() {
+                @Override
+                public void onNotify(Object o) {//上报不做保存处理
+                    curBp = new Gson().fromJson(o.toString(), BpModel.class);
+                    if (isTestData) {
+                        curBpList = new ArrayList<>();
+                    }
+                    isTestData = false;
+                    curBpList.add(curBp);
+                    EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_BP_TEST));
+                    EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_BP));
                 }
-                isTestData = false;
-                curBpList.add(curBp);
-                EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_BP_TEST));
-                EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_BP));
-            }
-        });
+            });
+        }
     }
 
     @Override
