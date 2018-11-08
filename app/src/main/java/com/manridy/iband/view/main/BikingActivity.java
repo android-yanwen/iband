@@ -315,6 +315,8 @@ public class BikingActivity extends BaseActionActivity {
         handler.sendMessage(message);
     }
 
+
+
     static int runningState = 0;
     final int runningState_stop = 0;
     final int runningState_running = 1;
@@ -420,6 +422,10 @@ public class BikingActivity extends BaseActionActivity {
         super.onDestroy();
         handler.removeMessages(1);
         handler.removeMessages(2);
+        if(locationServiceBinder!=null){
+            locationServiceBinder.stopRunLocationRecord();
+            locationServiceBinder.stopTimer();
+        }
         unbindService(locationServiceConnection);
     }
 

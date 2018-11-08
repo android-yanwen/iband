@@ -418,6 +418,10 @@ public class RunActivity  extends BaseActionActivity {
         super.onDestroy();
         handler.removeMessages(1);
         handler.removeMessages(2);
+        if(locationServiceBinder!=null){
+            locationServiceBinder.stopRunLocationRecord();
+            locationServiceBinder.stopTimer();
+        }
         unbindService(locationServiceConnection);
     }
 

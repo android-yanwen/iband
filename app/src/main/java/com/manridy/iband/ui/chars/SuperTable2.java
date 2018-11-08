@@ -19,7 +19,7 @@ public class SuperTable2 extends View {
     public static String TAG = "SuperTable";
     private Paint mPaint;//画笔
     private int mWidth,mHeight;//视图宽高
-    private int mAcrossNum = 13;//横
+    private int mAcrossNum = 12;//横
     private int mVerticalNum = 20;//纵
     private Paint mDashPaint;
 

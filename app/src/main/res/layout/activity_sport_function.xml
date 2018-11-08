@@ -4,7 +4,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#151515">
+              android:background="#ffffff">
     <include layout="@layout/include_activity_tab"/>
     <com.manridy.iband.ui.items.AlertBigItems
         android:id="@+id/item_map"
@@ -17,7 +17,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#959595"
+        android:background="#ffffff"
         ></View>
     <Button
         android:id="@+id/btn_to_battery_saver_settings"

@@ -27,6 +27,8 @@ import com.amap.api.maps2d.MapsInitializer;
 import com.amap.api.maps2d.UiSettings;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps2d.model.Marker;
+import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
 import com.amap.api.maps2d.model.PolylineOptions;
 import com.manridy.applib.callback.LocationCallBack;
@@ -196,6 +198,7 @@ public class AMapRunActivity extends BaseActionActivity implements LocationSourc
         // myLocationStyle.anchor(int,int)//设置小蓝点的锚点
         myLocationStyle.strokeWidth(1.0f);// 设置圆形的边框粗细
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW);
+        myLocationStyle.showMyLocation(false);
         aMap.setMyLocationStyle(myLocationStyle);
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
@@ -327,6 +330,7 @@ public class AMapRunActivity extends BaseActionActivity implements LocationSourc
         }
     }
 
+    List<Marker> markerList = new ArrayList<Marker>();
     /**绘制两个坐标点之间的线段,从以前位置到现在位置*/
     private void setUpMap(LatLng oldData, LatLng newData , boolean isInCN) {
         if(isInCN){
@@ -347,13 +351,43 @@ public class AMapRunActivity extends BaseActionActivity implements LocationSourc
                         .add(oldDesLatLng, newDesLatLng)
                         .geodesic(true).color(Color.RED));
             }
-//            aMap.moveCamera(CameraUpdateFactory.changeLatLng(newDesLatLng));
+            aMap.moveCamera(CameraUpdateFactory.changeLatLng(newDesLatLng));
 
+            for (int i = 0 ; i<markerList.size();i++){
+                Marker marker = markerList.get(i);
+                if(marker!=null) marker.remove();
+            }
+            MarkerOptions markerOptions = new MarkerOptions();
+            //添加一个位置--经度，维度---marker对应一个markerOptions，用来设置marker的属性等
+            markerOptions.position(newDesLatLng);
+            //添加图标
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.location_marker));
+            //添加marker
+            Marker marker = aMap.addMarker(markerOptions);
+            markerList.add(marker);
+//            aMap.invalidate();
         }else{
+            for (int i = 0 ; i<markerList.size();i++){
+                Marker marker = markerList.get(i);
+                if(marker!=null) marker.remove();
+            }
             aMap.addPolyline((new PolylineOptions())
                     .add(oldData, newData)
                     .geodesic(true).color(Color.RED));
-//            aMap.moveCamera(CameraUpdateFactory.changeLatLng(newData));
+            aMap.moveCamera(CameraUpdateFactory.changeLatLng(newData));
+
+            for (int i = 0 ; i<markerList.size();i++){
+                Marker marker = markerList.get(i);
+                if(marker!=null) marker.remove();
+            }
+            MarkerOptions markerOptions = new MarkerOptions();
+            //添加一个位置--经度，维度---marker对应一个markerOptions，用来设置marker的属性等
+            markerOptions.position(newData);
+            //添加图标
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.location_marker));
+            //添加marker
+            Marker marker = aMap.addMarker(markerOptions);
+            markerList.add(marker);
         }
 //        aMap.moveCamera(CameraUpdateFactory.changeLatLng(newData));
 

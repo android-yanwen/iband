@@ -134,13 +134,13 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.MyViewHolder
             }
             itemIcon.setImageResource(itemRes);
 
-            Date date = step.getStepDate();
+            Date date = TimeUtil.getDate(step.getStepDate());
             if(date==null){
                 date = new Date();
             }
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-            String start = simpleDateFormat.format(step.getStepDate());
-            String end = simpleDateFormat.format((step.getStepDate().getTime()+step.getStepTime()*60*1000));
+            String start = simpleDateFormat.format(date);
+            String end = simpleDateFormat.format((date.getTime()+step.getStepTime()*60*1000));
             itemTime.setText(start+"~"+end);
             itemType.setText(itemText);
             itemMin.setText(step.getStepTime()+(itemMin.getContext().getResources().getString(R.string.unit_min)));

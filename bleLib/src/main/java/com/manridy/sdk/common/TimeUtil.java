@@ -319,4 +319,19 @@ public class TimeUtil {
         return date;
     }
 
+    @SuppressLint("SimpleDateFormat")
+    public static Date getDate(String ymdhms) {
+        SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date;
+        try {
+            date = mDateFormat.parse(ymdhms);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+
 }

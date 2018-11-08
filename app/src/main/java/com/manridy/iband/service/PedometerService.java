@@ -59,7 +59,7 @@ public class PedometerService extends Service {
 
             runPace = "00:00";
 
-            stepModel.setStepDate(runRecordDate);
+            stepModel.setStepDate(TimeUtil.getYMDHMSTime(runRecordDate));
             stepModel.setStepDay(TimeUtil.getYMD(runRecordDate));
 
             stepModel.setStepType(2);//0代表当前 1代表分段计步

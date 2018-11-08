@@ -126,18 +126,30 @@ public class EcgRePlayHistoryActivity extends BaseActionActivity {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                    int position = layoutManager.findFirstVisibleItemPosition();
+                    View firstVisiableChildView = layoutManager.findViewByPosition(position);
+                    int itemWidth = firstVisiableChildView.getWidth();
+                    int scollYDistance = (position) * itemWidth - firstVisiableChildView.getLeft();
+                    int allItems = layoutManager.getItemCount();
+                    int allWidth = allItems*itemWidth;
+                    float scollPercent = (float)scollYDistance/(allWidth-itemWidth);
 
-                LinearLayoutManager l = (LinearLayoutManager)recyclerView.getLayoutManager();
-                int adapterNowPos = l.findFirstVisibleItemPosition();
-                int allItems = l.getItemCount();
-                float item = ((float)adapterNowPos/(allItems-1))*100;
+
+//                LinearLayoutManager l = (LinearLayoutManager)recyclerView.getLayoutManager();
+//                int adapterNowPos = l.findFirstVisibleItemPosition();
+//                int allItems = l.getItemCount();
+//                float item = ((float)adapterNowPos/(allItems-1))*100;
                 if(hrBaseLines.size()>0){
-                    float num = ((float)adapterNowPos/(allItems))*hrBaseLines.size();
+//                    float num = ((float)adapterNowPos/(allItems))*hrBaseLines.size();
+//                    leftLine.setmData(hrBaseLines.get((int)num));
+                    float num = scollPercent*(hrBaseLines.size()-1);
+                    if(hrBaseLines.size()>num+53){
+                        num=num+53;
+                    }
                     leftLine.setmData(hrBaseLines.get((int)num));
                 }
-
-                indicatorSeekBar.setProgress(item);
-                Log.i("indicatorSeekBar","adapterNowPos:"+adapterNowPos+";allItems:"+allItems+";item:"+item);
+                indicatorSeekBar.setProgress(scollPercent*100);
             }
         });
     }
@@ -267,4 +279,6 @@ public class EcgRePlayHistoryActivity extends BaseActionActivity {
             thread.interrupt();
         }
     }
+
+
 }

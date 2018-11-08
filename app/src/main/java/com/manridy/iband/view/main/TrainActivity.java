@@ -93,14 +93,15 @@ public class TrainActivity extends BaseActionActivity {
         hourFormat = new SimpleDateFormat("HH:mm");
         dayFormat = new SimpleDateFormat("yyyy-MM-dd");
         mCalendar = Calendar.getInstance();
-        setTitleBar(getString(R.string.hint_tarin), Color.parseColor("#009688"));
-        setStatusBarColor(Color.parseColor("#009688"));
+        setTitleBar(getString(R.string.hint_tarin), Color.parseColor("#2196f3"));
+        setStatusBarColor(Color.parseColor("#2196f3"));
         trainAdapter = new TrainAdapter(curRunList);
         if(curRunList!=null&&curRunList.size()>0){
-            Date date = curRunList.get(0).getStepDate();
+
+            Date date = TimeUtil.getDate(curRunList.get(0).getStepDate());
             if(date!=null) {
                 tvStart.setText(hourFormat.format(date));
-                String endTime = hourFormat.format(curRunList.get(curRunList.size() - 1).getStepDate().getTime() + curRunList.get(curRunList.size() - 1).getStepTime() * 60 * 1000);
+                String endTime = hourFormat.format(TimeUtil.getDate(curRunList.get(curRunList.size() - 1).getStepDate()).getTime() + curRunList.get(curRunList.size() - 1).getStepTime() * 60 * 1000);
                 tvEnd.setText(endTime);
             }
         }
@@ -163,11 +164,11 @@ public class TrainActivity extends BaseActionActivity {
             dayFormat = new SimpleDateFormat("yyyy-MM-dd");
 //            trainAdapter = new TrainAdapter(curRunList);
             if(curRunList!=null&&curRunList.size()>0){
-                Date date = curRunList.get(0).getStepDate();
+                Date date = TimeUtil.getDate(curRunList.get(0).getStepDate());
                 if(date!=null) {
                     startTime = hourFormat.format(date);
 //                    tvStart.setText(hourFormat.format(date));
-                    endTime = hourFormat.format(curRunList.get(curRunList.size() - 1).getStepDate().getTime() + curRunList.get(curRunList.size() - 1).getStepTime() * 60 * 1000);
+                    endTime = hourFormat.format(TimeUtil.getDate(curRunList.get(curRunList.size() - 1).getStepDate()).getTime() + curRunList.get(curRunList.size() - 1).getStepTime() * 60 * 1000);
 //                    tvEnd.setText(endTime);
                     Message message = handler.obtainMessage();
                     message.what = 1;
@@ -350,8 +351,12 @@ public class TrainActivity extends BaseActionActivity {
         public void onValueSelected(Entry e, Highlight h) {
             if (curRunList != null && curRunList.size() >= e.getX()) {
                 StepModel stepModel = curRunList.get((int) e.getX() > 0 ? (int) e.getX() - 1 : 0);
-                String start = hourFormat.format(stepModel.getStepDate());
-                String end = hourFormat.format((stepModel.getStepDate().getTime() + stepModel.getStepTime() * 60 * 1000));
+                Date date = TimeUtil.getDate(stepModel.getStepDate());
+                if(date==null){
+                    date = new Date();
+                }
+                String start = hourFormat.format(date);
+                String end = hourFormat.format((date.getTime() + stepModel.getStepTime() * 60 * 1000));
 
                 String num = stepModel.getStepNum() + getString(R.string.hint_unit_step);
                 String mode = getString(R.string.hint_run);

@@ -32,6 +32,8 @@ public class LocationService extends Service {
 
     String TAG = LocationService.class.getSimpleName();
 
+    static String stepDate ="";
+
     private int nowSatellites = 0;
     private Location nowLocation;
     private Date runRecordDate;
@@ -105,8 +107,9 @@ public class LocationService extends Service {
 //            stepModel.setStepCalorie(ka);
 //            stepModel.setHisLength(packageLength);
 //            stepModel.setHisCount(packageNum);
-            stepModel.setStepDate(runRecordDate);
+            stepModel.setStepDate(TimeUtil.getYMDHMSTime(runRecordDate));
             stepModel.setStepDay(TimeUtil.getYMD(runRecordDate));
+            LocationService.stepDate = TimeUtil.getYMDHMSTime(runRecordDate);
 //            stepModel.setStepTime(time);
             stepModel.setStepType(2);//0代表当前 1代表分段计步
             stepModel.setSportMode(sportMode);
@@ -142,7 +145,9 @@ public class LocationService extends Service {
                     }
                 }
             }
-            stepModel.save();
+            if(LocationService.stepDate!=null&&LocationService.stepDate.equals(stepModel.getStepDate())){
+                stepModel.save();
+            }
             handler.post(saveLocationRunnable);
         }
 
@@ -209,6 +214,17 @@ public class LocationService extends Service {
     }
 
     @Override
+    public boolean onUnbind(Intent intent) {
+        isRunning = false;
+        handler.removeCallbacks(saveLocationRunnable);
+        isTimeRunning = false;
+        isTimePause = false;
+        beginTime = curTime = 0;
+        pauseTime = 0;
+        return super.onUnbind(intent);
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
     }
@@ -220,9 +236,9 @@ public class LocationService extends Service {
         @Override
         public void run() {
             if(nowLocation!=null&&times>=3){
-                if(lastLocation==null){
-                    lastLocation =  nowLocation;
-                }
+//                if(lastLocation==null){
+//                    lastLocation =  nowLocation;
+//                }
                 if(!isTimePause) {
                     runDistance += LocationUtil.getDistance(lastLocation.getLongitude(), lastLocation.getLatitude(), nowLocation.getLongitude(), nowLocation.getLatitude());
                 }
@@ -259,11 +275,19 @@ public class LocationService extends Service {
 
 
             if(nowLocation == null){
-                String runningTime = "00:00:00";
-                long l_runningTime = curTime - beginTime - pauseTime*1000;
-                runningTime = stampToDate(l_runningTime);
-                stepModel.setRunTime(runningTime);
-                stepModel.save();
+//                String runningTime = "00:00:00";
+//                long l_runningTime = curTime - beginTime - pauseTime*1000;
+//                runningTime = stampToDate(l_runningTime);
+//                stepModel.setRunTime(runningTime);
+                stepModel.setUpdateDate(System.currentTimeMillis());
+//                stepModel.setStepMileage((int)runDistance);
+                stepModel.setStepTime((int)((curTime - beginTime - pauseTime*1000)/1000/60));
+//                stepModel.setPace(runPace);
+                stepModel.setRunTime(stampToDate(curTime - beginTime - pauseTime*1000));
+//                stepModel.setStepCalorie((int)(60*(runDistance/1000)*1.036));
+                if(LocationService.stepDate!=null&&LocationService.stepDate.equals(stepModel.getStepDate())){
+                    stepModel.save();
+                }
             }
 
             if(nowLocation!=null&&times>=3&&!isTimePause){
@@ -282,10 +306,9 @@ public class LocationService extends Service {
                     runningTime = stampToDate(l_runningTime);
                     stepModel.setRunTime(runningTime);
                     stepModel.setStepCalorie((int)(60*(runDistance/1000)*1.036));
-                    stepModel.save();
-                    Log.i(TAG,"1");
-                    Log.i(TAG,runLocationModel.getCurMinute());
-                    Log.i(TAG,runLocationModel.getLocationData());
+                    if(LocationService.stepDate!=null&&LocationService.stepDate.equals(stepModel.getStepDate())){
+                        stepModel.save();
+                    }
                 }else{
                     runLocationModel = new RunLocationModel();
                     curMinute = nowYMDHM;
@@ -305,11 +328,9 @@ public class LocationService extends Service {
                     boolean is_inCN=LocationUtil.getInstance(getApplicationContext()).isInArea(nowLocation.getLatitude(),nowLocation.getLongitude());
                     isInCN = is_inCN;
                     stepModel.setInCN(is_inCN);
-                    stepModel.save();
-                    Log.i(TAG,"2");
-                    Log.i(TAG,runLocationModel.getCurMinute());
-                    Log.i(TAG,runLocationModel.getLocationData());
-
+                    if(LocationService.stepDate!=null&&LocationService.stepDate.equals(stepModel.getStepDate())){
+                        stepModel.save();
+                    }
                 }
             }
 
@@ -326,6 +347,7 @@ public class LocationService extends Service {
 
             }
             times++;
+            Log.i("saveLocationRunnable",this.toString()+";cur:"+curTime+";beginTime:"+beginTime+";pauseTime:"+pauseTime);
             handler.postDelayed(this, 1000);
         }
     };
@@ -334,6 +356,12 @@ public class LocationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        isRunning = false;
+        handler.removeCallbacks(saveLocationRunnable);
+        isTimeRunning = false;
+        isTimePause = false;
+        beginTime = curTime = 0;
+        pauseTime = 0;
     }
 
     LocationCallBack locationCallBack = new LocationCallBack(){

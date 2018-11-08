@@ -371,7 +371,7 @@ public class IbandDB {
     }
 
     public StepModel getRunData(String stepDate){
-        return DataSupport.where("sportMode = ? or sportMode = ? and stepDate = ?","1001","1003",stepDate).findLast(StepModel.class);
+        return DataSupport.where("(sportMode = ? or sportMode = ?) and stepDate = ?","1001","1003",stepDate).findLast(StepModel.class);
 //        return DataSupport.where("sportMode = ? and stepDate = ?","1001",stepDate).findLast(StepModel.class);
     }
 

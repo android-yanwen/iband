@@ -9,12 +9,13 @@ android {
         minSdkVersion 18
         targetSdkVersion 26
         versionCode 101
-        versionName "1.9.32(beta1)"
+        versionName "1.9.32(beta6)"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     dexOptions {
         jumboMode true
+        javaMaxHeapSize "4096M"
     }
 
     sourceSets{

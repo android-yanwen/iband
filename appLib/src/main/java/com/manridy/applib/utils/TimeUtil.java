@@ -3,6 +3,7 @@ package com.manridy.applib.utils;
 
 import android.annotation.SuppressLint;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -325,5 +326,19 @@ public class TimeUtil {
     public static double getHourDouble(int time){
         String str =  String.format(Locale.US,"%.1f", ((double)time/60)+0.005);
         return Double.valueOf(str);
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public static Date getDate(String ymdhms) {
+        SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date;
+        try {
+            date = mDateFormat.parse(ymdhms);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 }

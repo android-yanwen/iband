@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -81,6 +82,7 @@ public class AMapPlaybackActivity extends BaseActionActivity implements Location
         public void run() {
             runLocationModels = IbandDB.getInstance().getRunLocationData(stepDate);
             runData = IbandDB.getInstance().getRunData(stepDate);
+            Log.i("AMapPlaybackActivity","runTime:"+runData.getRunTime());
             latLngs = new ArrayList<LatLng>();
             String locationData;
             String[] locations;

@@ -13,7 +13,7 @@ import java.util.Date;
  */
  public class StepModel extends DataSupport {
     private int id;//主键
-    private Date stepDate;//时间
+    private String stepDate;//时间
     private String stepDay;//天
     private int hisLength;//历史总条数
     private int hisCount;//历史包编号
@@ -42,7 +42,7 @@ import java.util.Date;
         this.stepNum = stepNum;
     }
 
-    public StepModel(Date stepDate, String stepDay, int stepNum, int stepMileage, int stepCalorie) {
+    public StepModel(String stepDate, String stepDay, int stepNum, int stepMileage, int stepCalorie) {
         this.stepDate = stepDate;
         this.stepDay = stepDay;
         this.stepNum = stepNum;
@@ -50,7 +50,7 @@ import java.util.Date;
         this.stepCalorie = stepCalorie;
     }
 
-    public StepModel(Date stepDate, int stepTime, int stepType, int stepNum, int stepMileage, int stepCalorie) {
+    public StepModel(String stepDate, int stepTime, int stepType, int stepNum, int stepMileage, int stepCalorie) {
         this.stepDate = stepDate;
         this.stepTime = stepTime;
         this.stepType = stepType;
@@ -67,11 +67,11 @@ import java.util.Date;
         this.id = id;
     }
 
-    public Date getStepDate() {
+    public String getStepDate() {
         return stepDate;
     }
 
-    public void setStepDate(Date stepDate) {
+    public void setStepDate(String stepDate) {
         this.stepDate = stepDate;
     }
 

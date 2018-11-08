@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="#009688">
+        android:background="#2196f3">
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
@@ -53,7 +53,7 @@
         android:layout_height="32dp"
         android:gravity="center"
         android:textColor="#86ffffff"
-        android:background="#009688"
+        android:background="#2196f3"
         android:textSize="12sp"
         android:text=""/>
     <RelativeLayout
@@ -63,7 +63,7 @@
             android:id="@+id/bc_run"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#009688"/>
+            android:background="#2196f3"/>
         <TextView
             android:id="@+id/tv_empty"
             android:layout_width="wrap_content"
