@@ -60,6 +60,7 @@ public class BleParse {
     private final byte CALL_FACTORY_TEST = 0x14;
     private final byte CALL_PALMING = 0x15;
     private final byte CALL_SEDENTARY_ALERT = 0x16;
+    private final byte CALL_ECG_HEART_RATE = 0x41;
 
     private static BleParse instance;
     private byte[] data;//蓝牙数据
@@ -72,6 +73,7 @@ public class BleParse {
     private BleNotifyListener sportNotifyListener;
     private BleNotifyListener sleepNotifyListener;
     private BleNotifyListener hrNotifyListener;
+    private BleNotifyListener ecgHrNotifyListener;
     private BleNotifyListener bpNotifyListener;
     private BleNotifyListener boNotifyListener;
     private BleNotifyListener stepNotifyListener;
@@ -247,7 +249,7 @@ public class BleParse {
                     Log.i("0x29sendCmd:re","sendCmd:"+datas29);
                     break;
                 case 0x41:
-                    result = parseEcg();
+                    result = parseEcgData();
                     break;
                 case 0x42:
                     result = parseHrBaseLine();
@@ -286,6 +288,17 @@ public class BleParse {
     }
 
 
+    private String parseEcgData(){
+        String result= "";
+        int ty = body[0];
+        if(ty == 3){
+           result = parseEcgHr();
+        }else{
+           result = parseEcg();
+        }
+        return result;
+    }
+
     private String parseEcg() {
         String result= "";
         int userId = body[0]&0x0f;
@@ -303,6 +316,39 @@ public class BleParse {
         Log.i("parseEcg()",result);
         return result;
     }
+
+    private String parseEcgHr() {
+        String result;
+        int ty = body[0];//心率操作状态 0最近一次 1历史心率
+        int hr = body[11]&0xff;//心率
+        byte[] hrBLength = new byte[2];
+        byte[] hrBNum = new byte[2];
+        byte[] hrBDates = new byte[6];
+        //拷贝字节
+        System.arraycopy(body,1,hrBLength,0,hrBLength.length);
+        System.arraycopy(body,3,hrBNum,0,hrBNum.length);
+        System.arraycopy(body,5,hrBDates,0,hrBDates.length);
+        String hrDate = BitUtil.bytesToDate(hrBDates,0);//得到时间
+        String hrDay = BitUtil.bytesToDate(hrBDates,4);
+        int hrLength = BitUtil.byte3ToInt(hrBLength);//得到总包数
+        int hrNum = BitUtil.byte3ToInt(hrBNum);//得到包编号
+        //数据填充模板
+        Heart heart = new Heart(hrDate,hrDay,hrLength,hrNum,hr);
+        result = gson.toJson(heart);
+
+        if (ty == 3){
+            if (bleCallback == null) {
+                if (ecgHrNotifyListener != null) {
+                    ecgHrNotifyListener.onNotify(result);
+                }
+            }
+        }
+
+        //打印日志
+        LogUtil.i(TAG,"ecg心率数据："+ result);
+        return result;
+    }
+
 
     private String parseHrBaseLine() {
         byte[] hrBaseLines = new byte[2];
@@ -545,6 +591,8 @@ public class BleParse {
         return result;
     }
 
+
+
     private String parseHr() {
         String result;
         int ty = body[0];//心率操作状态 0最近一次 1历史心率
@@ -563,6 +611,7 @@ public class BleParse {
         //数据填充模板
         Heart heart = new Heart(hrDate,hrDay,hrLength,hrNum,hr);
         result = gson.toJson(heart);
+
         if (ty == 3){
             if (bleCallback == null) {
                 if (hrNotifyListener != null) {
@@ -965,6 +1014,10 @@ public class BleParse {
 
     public void setHrNotifyListener(BleNotifyListener hrNotifyListener) {
         this.hrNotifyListener = hrNotifyListener;
+    }
+
+    public void setEcgHrNotifyListener(BleNotifyListener ecgHrNotifyListener) {
+        this.ecgHrNotifyListener = ecgHrNotifyListener;
     }
 
     public void setBpNotifyListener(BleNotifyListener bpNotifyListener) {

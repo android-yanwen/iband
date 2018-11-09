@@ -13,6 +13,7 @@ public class EventGlobal {
     public static final int DATA_LOAD_BP = 1803;
     public static final int DATA_LOAD_BO = 1804;
     public static final int DATA_LOAD_RUN = 1805;
+    public static final int DATA_LOAD_ECG = 1807;
     //加载天气信息
     public static final int DATA_LOAD_WEATHER = 1806;
 
@@ -40,6 +41,7 @@ public class EventGlobal {
     public static final int REFRESH_VIEW_WEATHER = 2807;
     public static final int REFRESH_VIEW_ALL = 2805;
     public static final int REFRESH_VIEW_ECG = 2808;
+    public static final int REFRESH_VIEW_ECG_HR = 2809;
 
     //历史界面刷新
     public static final int REFRESH_VIEW_STEP_HISTORY  = 2810;

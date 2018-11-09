@@ -17,6 +17,10 @@ public class EcgHistoryModel extends DataSupport {
     private String ecg_data_id;
     private boolean isSave;
     private int avgHr;
+    private int minHr;
+    private int maxHr;
+    private int lastHr;
+    private String lastHrDate;
 
     private String username;
 
@@ -111,5 +115,38 @@ public class EcgHistoryModel extends DataSupport {
 
     public void setAvgHr(int avgHr) {
         this.avgHr = avgHr;
+    }
+
+
+    public int getMaxHr() {
+        return maxHr;
+    }
+
+    public void setMaxHr(int maxHr) {
+        this.maxHr = maxHr;
+    }
+
+    public int getMinHr() {
+        return minHr;
+    }
+
+    public void setMinHr(int minHr) {
+        this.minHr = minHr;
+    }
+
+    public String getLastHrDate() {
+        return lastHrDate;
+    }
+
+    public void setLastHrDate(String lastHrDate) {
+        this.lastHrDate = lastHrDate;
+    }
+
+    public int getLastHr() {
+        return lastHr;
+    }
+
+    public void setLastHr(int lastHr) {
+        this.lastHr = lastHr;
     }
 }

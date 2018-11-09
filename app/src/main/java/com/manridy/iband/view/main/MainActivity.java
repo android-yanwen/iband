@@ -156,6 +156,7 @@ public class MainActivity extends BaseActivity {
 
     private boolean isViewEcg = true;
 
+    private boolean isDeviceIdInService = false;
 
     private Handler handler = new Handler() {
         @Override
@@ -298,10 +299,13 @@ public class MainActivity extends BaseActivity {
             String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
             Log.i("deviceType",deviceType);
             Log.i("deviceName",deviceName);
+
+            isDeviceIdInService = false;
             if (strDeviceList!= null && !strDeviceList.isEmpty()) {
                 DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
                 for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
                     if (deviceType.trim().equals(resultBean.getDevice_id().trim())){
+                        isDeviceIdInService = true;
                         if ("0".equals(resultBean.getBlood_pressure())) {
                             isShowBp = false;
                         }else{
@@ -704,9 +708,8 @@ public class MainActivity extends BaseActivity {
         viewList.add(new HrFragment());
         viewList.add(bpFragment);
         viewList.add(boFragment);
-        if(isViewEcg){
-            viewList.add(ecgFragment);
-        }
+        viewList.add(ecgFragment);
+
 
         viewAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
@@ -1144,7 +1147,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case 3:
                 String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
-                if(deviceType.equals("")||isShowBp){
+                if(deviceType.equals("")||isShowBp||!isDeviceIdInService){
                     tbTitle.setText(R.string.hint_view_hp);
                 }else if(!isShowBp&&isShowBo){
                     tbTitle.setText(R.string.hint_view_bo);
@@ -1159,7 +1162,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case 4:
                 String deviceType1 = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
-                if(isShowBo||deviceType1.equals("")){
+                if(isShowBo||deviceType1.equals("")||!isDeviceIdInService){
                     tbTitle.setText(R.string.hint_view_bo);
                 }else{
                     tbTitle.setText(R.string.hint_view_ecg);

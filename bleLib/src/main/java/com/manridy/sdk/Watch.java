@@ -678,6 +678,14 @@ public class Watch extends BluetoothLeManager implements WatchApi {
     }
 
     /**
+     * ecg心率上报数据监听
+     * @param hrNotifyListener
+     */
+    public void setEcgHrNotifyListener(BleNotifyListener hrNotifyListener) {
+        BleParse.getInstance().setEcgHrNotifyListener(hrNotifyListener);
+    }
+
+    /**
      * 血压上报数据监听
      * @param bpNotifyListener
      */

@@ -45,6 +45,7 @@ import com.manridy.sdk.exception.BleException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.crud.DataSupport;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -92,6 +93,13 @@ public class EcgFragment extends BaseEventFragment {
     boolean isTestData = true;
     private Gson gson;
 
+    //本测心电测试中的生成的心率数据
+    HeartModel curEcgHeart;
+    private int curEcgHr;
+    private List<HeartModel> ecgHrList;
+    private int avgEcgHr, maxEcgHr, minEcgHr;
+    private String lastEcgHrDate;
+
     @Override
     public View initView(LayoutInflater inflater, @Nullable ViewGroup container) {
         root = inflater.inflate(R.layout.fragment_ecg, container, false);
@@ -104,10 +112,22 @@ public class EcgFragment extends BaseEventFragment {
         gson = new Gson();
         try {
             EcgHistoryModel ecgHistoryModel = IbandDB.getInstance().getLastEcgHistoryModel();
-            String startTime = ecgHistoryModel.getEcgStartDate().substring(11);
-            String stopTime = ecgHistoryModel.getEcgEndDate().substring(11);
-            tvStart.setText(startTime);
-            tvEnd.setText(stopTime);
+            if(ecgHistoryModel!=null) {
+                String text = ecgHistoryModel.getLastHr() + "";
+                float progress = (float) ((ecgHistoryModel.getLastHr() / 220.0) * 100);
+//        cvHr.setProgressWithAnimation(progress);
+                cvHr.setText(text)
+                        .setProgress(progress)
+                        .invaliDate();
+                cvHr.setProgressWithAnimation(progress);
+                diData1.setItemData(getString(R.string.hint_hr_avg), ecgHistoryModel.getAvgHr() + "");
+                diData2.setItemData(getString(R.string.hint_hr_min), ecgHistoryModel.getMinHr() + "");
+                diData3.setItemData(getString(R.string.hint_hr_max), ecgHistoryModel.getMaxHr() + "");
+                String startTime = ecgHistoryModel.getEcgStartDate().substring(11);
+                String stopTime = ecgHistoryModel.getEcgEndDate().substring(11);
+                tvStart.setText(startTime);
+                tvEnd.setText(stopTime);
+            }
         }catch (Exception e){
 
         }
@@ -153,6 +173,10 @@ public class EcgFragment extends BaseEventFragment {
 //                Log.i("BleNotifyListener","BleNotifyListener:"+ecg);
                 count++;
                 if(dataPackage!=ecg.getDataPackage()){
+                    ecgHrList = new ArrayList<>();
+                    maxEcgHr = minEcgHr = avgEcgHr = curEcgHr =0;
+                    lastEcgHrDate = "";
+                    curEcgHeart = new HeartModel();
 
                     dataPackage = ecg.getDataPackage();
                     ecgHistoryModel = new EcgHistoryModel();
@@ -216,6 +240,11 @@ public class EcgFragment extends BaseEventFragment {
                     }else{
                         ecgHistoryModel.setAvgHr(65);
                     }
+                    ecgHistoryModel.setAvgHr(avgEcgHr);
+                    ecgHistoryModel.setMinHr(minEcgHr);
+                    ecgHistoryModel.setMaxHr(maxEcgHr);
+                    ecgHistoryModel.setLastHr(curEcgHr);
+                    ecgHistoryModel.setLastHrDate(lastEcgHrDate);
                     List<Integer> list = ecg.getList();
                     if(list!=null){
                         String str_ecg = "";
@@ -247,17 +276,32 @@ public class EcgFragment extends BaseEventFragment {
         });
 
 
-        IbandApplication.getIntance().service.watch.setHrNotifyListener(new BleNotifyListener() {
+//        IbandApplication.getIntance().service.watch.setHrNotifyListener(new BleNotifyListener() {
+//            @Override
+//            public void onNotify(Object o) {//上报不做保存处理
+//                curHeart = new Gson().fromJson(o.toString(), HeartModel.class);
+//                if (isTestData) {
+//                    curHeartList = new ArrayList<>();
+//                }
+//                isTestData = false;
+//                curHeartList.add(curHeart);
+//                EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_HR_TEST));
+//                EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_HR));
+//            }
+//        });
+
+        IbandApplication.getIntance().service.watch.setEcgHrNotifyListener(new BleNotifyListener() {
             @Override
-            public void onNotify(Object o) {//上报不做保存处理
-                curHeart = new Gson().fromJson(o.toString(), HeartModel.class);
-                if (isTestData) {
-                    curHeartList = new ArrayList<>();
-                }
-                isTestData = false;
-                curHeartList.add(curHeart);
-                EventBus.getDefault().post(new EventMessage(EventGlobal.ACTION_HR_TEST));
-                EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_HR));
+            public void onNotify(Object o) {
+                curEcgHeart = new Gson().fromJson(o.toString(),HeartModel.class);
+                ecgHrList.add(curEcgHeart);
+                Date date = new Date();
+                long date_l = date.getTime();
+                SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm:ss");
+                String time = format.format(date_l);
+                lastEcgHrDate = time;
+                curEcgHr = curEcgHeart.getHeartRate();
+                EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_ECG_HR));
             }
         });
 
@@ -286,7 +330,8 @@ public class EcgFragment extends BaseEventFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_HR));
+//        EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_HR));
+        EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_ECG));
     }
 
 
@@ -311,10 +356,13 @@ public class EcgFragment extends BaseEventFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMainEvent(EventMessage event) {
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_HR) {
-            setCircularView();
+//            setCircularView();
 //            updateChartView(lcHr, curHeartList);
 //            tvEmpty.setVisibility(curHeartList.size() == 0?View.VISIBLE:View.GONE);
 
+//            setDataItem();
+        } else if(event.getWhat() == EventGlobal.REFRESH_VIEW_ECG_HR){
+            setCircularView();
             setDataItem();
         } else if (event.getWhat() == EventGlobal.ACTION_HR_TEST) {
 //            btTest.setText(R.string.hint_stop);
@@ -361,13 +409,14 @@ public class EcgFragment extends BaseEventFragment {
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onBackgroundEvent(EventMessage event) {
-        if (event.getWhat() == EventGlobal.DATA_LOAD_HR) {
-            curHeart = IbandDB.getInstance().getLastHeart();
-            curHeartList = IbandDB.getInstance().getLastsHeart();
-            Collections.reverse(curHeartList); // 倒序排列
-            EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_HR));
+        if (event.getWhat() == EventGlobal.DATA_LOAD_ECG) {
+//            curHeart = IbandDB.getInstance().getLastHeart();
+//            curHeartList = IbandDB.getInstance().getLastsHeart();
+//            Collections.reverse(curHeartList); // 倒序排列
+//            EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_HR));
+
         } else if (event.getWhat() == EventGlobal.REFRESH_VIEW_ALL) {
-            EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_HR));
+//            EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_ECG));
         }
     }
 
@@ -452,33 +501,34 @@ public class EcgFragment extends BaseEventFragment {
     }
 
     private void setDataItem() {
-        avgHr = maxHr = minHr = 0;
-        if (curHeartList.size() > 0) {
-            minHr = curHeart.getHeartRate();
-            for (HeartModel heartModel : curHeartList) {
+        if(ecgHrList==null)return;
+        avgEcgHr = maxEcgHr = minEcgHr = 0;
+        if (ecgHrList.size() > 0) {
+            minEcgHr = curEcgHeart.getHeartRate();
+            for (HeartModel heartModel : ecgHrList) {
                 int hr = heartModel.getHeartRate();
-                avgHr += hr;
-                maxHr = maxHr > hr ? maxHr : hr;
-                minHr = minHr < hr ? minHr : hr;
+                avgEcgHr += hr;
+                maxEcgHr = maxEcgHr > hr ? maxEcgHr : hr;
+                minEcgHr = minEcgHr < hr ? minEcgHr : hr;
             }
-            avgHr /= curHeartList.size();
+            avgEcgHr /= ecgHrList.size();
 
-            String start = curHeartList.get(0).getHeartDate().substring(11, 19);
-            String end = curHeartList.get(curHeartList.size() - 1).getHeartDate().substring(11, 19);
+            String start = ecgHrList.get(0).getHeartDate().substring(11, 19);
+            String end = ecgHrList.get(ecgHrList.size() - 1).getHeartDate().substring(11, 19);
 //            tvStart.setText(start);
 //            tvEnd.setText(end);
         }
-        diData1.setItemData(getString(R.string.hint_hr_avg), avgHr + "");
-        diData2.setItemData(getString(R.string.hint_hr_min), minHr + "");
-        diData3.setItemData(getString(R.string.hint_hr_max), maxHr + "");
+        diData1.setItemData(getString(R.string.hint_hr_avg), avgEcgHr + "");
+        diData2.setItemData(getString(R.string.hint_hr_min), minEcgHr + "");
+        diData3.setItemData(getString(R.string.hint_hr_max), maxEcgHr + "");
     }
 
     private void setCircularView() {
-        if (curHeart == null) {
+        if (curEcgHeart == null) {
             return;
         }
-        String text = curHeart.getHeartRate() + "";
-        float progress = (float) ((curHeart.getHeartRate() / 220.0) * 100);
+        String text = curEcgHeart.getHeartRate() + "";
+        float progress = (float) ((curEcgHeart.getHeartRate() / 220.0) * 100);
 //        cvHr.setProgressWithAnimation(progress);
         cvHr.setText(text)
                 .setProgress(progress)

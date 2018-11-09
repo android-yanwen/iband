@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -23,6 +24,7 @@ import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.adapter.EcgHistoryAdapter;
 import com.manridy.iband.adapter.HistoryAdapter;
+import com.manridy.iband.bean.EcgHistoryModel;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.items.DataItems;
@@ -252,6 +254,21 @@ public class EcgHistoryActivity extends BaseActionActivity {
         rvHistory.setAdapter(historyAdapter);
         initHistoryTitle();
         initHistoryData();
+
+        try {
+            EcgHistoryModel ecgHistoryModel = IbandDB.getInstance().getLastEcgHistoryModel();
+            if(ecgHistoryModel!=null) {
+                diData1.setItemData(getString(R.string.hint_hr_avg), ecgHistoryModel.getAvgHr() + "", getString(R.string.hint_unit_hr), lineColor);
+                diData2.setItemData(getString(R.string.hint_hr_min), ecgHistoryModel.getMinHr() + "", getString(R.string.hint_unit_hr), lineColor);
+                diData3.setItemData(getString(R.string.hint_hr_max), ecgHistoryModel.getMaxHr() + "", getString(R.string.hint_unit_hr), lineColor);
+                tvNum.setText(""+ecgHistoryModel.getLastHr());
+                tvTime.setText(""+ecgHistoryModel.getLastHrDate());
+            }
+        }catch (Exception e){
+            Log.e(TAG,e.toString());
+        }
+
+
     }
 
     @Override
@@ -309,19 +326,19 @@ public class EcgHistoryActivity extends BaseActionActivity {
     public void onMainEvent(EventMessage event){
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_HR_HISTORY) {
             historyAdapter.setItemList(itemList);
-            diData1.setItemData(getString(R.string.hint_hr_avg), dataAvg +"",getString(R.string.hint_unit_hr),lineColor);
-            diData2.setItemData(getString(R.string.hint_hr_min),dataMin +"",getString(R.string.hint_unit_hr),lineColor);
-            diData3.setItemData(getString(R.string.hint_hr_max),dataMax +"",getString(R.string.hint_unit_hr),lineColor);
-            if (curItem !=null){
-                tvNum.setText(curItem.itemNum);
-                tvTime.setText(curItem.itemName);
-            }else{
-                tvNum.setText("--");
-                tvTime.setText(getString(R.string.hint_date));
-                diData1.setItemData("--");
-                diData2.setItemData("--");
-                diData3.setItemData("--");
-            }
+//            diData1.setItemData(getString(R.string.hint_hr_avg), dataAvg +"",getString(R.string.hint_unit_hr),lineColor);
+//            diData2.setItemData(getString(R.string.hint_hr_min),dataMin +"",getString(R.string.hint_unit_hr),lineColor);
+//            diData3.setItemData(getString(R.string.hint_hr_max),dataMax +"",getString(R.string.hint_unit_hr),lineColor);
+//            if (curItem !=null){
+//                tvNum.setText(curItem.itemNum);
+//                tvTime.setText(curItem.itemName);
+//            }else{
+//                tvNum.setText("--");
+//                tvTime.setText(getString(R.string.hint_date));
+//                diData1.setItemData("--");
+//                diData2.setItemData("--");
+//                diData3.setItemData("--");
+//            }
         }else if (event.getWhat() == EventGlobal.REFRESH_VIEW_BP_HISTORY) {
             historyAdapter.setItemList(itemList);
             String time = mDateFormat.format(mCalendar.getTime());
