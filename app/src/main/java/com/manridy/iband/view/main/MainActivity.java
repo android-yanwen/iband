@@ -1254,7 +1254,7 @@ public class MainActivity extends BaseActivity {
                     }
                 }
                 String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"");
-                String deviceIDs[] = {"8077","8078","8079","8080"};
+                String deviceIDs[] = {"8077","8078","8079","8080","8092"};
                 for(int i = 0;i<deviceIDs.length;i++){
                     if(deviceType!=null&&deviceIDs[i].equals(deviceType.trim())){
                         isOn = false;
