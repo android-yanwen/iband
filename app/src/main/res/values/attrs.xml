@@ -76,4 +76,27 @@
         <attr name="cv_stroke_width" format="float"/>
         <attr name="cv_text_size" format="float"/>
     </declare-styleable>
+
+
+
+    <declare-styleable name="EditItem">
+        <attr name="ei_title" format="string" />
+        <attr name="ei_et_hint" format="string"/>
+        <attr name="ei_unit" format="string"/>
+        <attr name="ei_et_text" format="string"/>
+        <attr name="ei_text" format="string"/>
+        <attr name="ei_alert" format="string"/>
+        <attr name="ei_color" format="color"/>
+        <attr name="ei_text_color" format="color"/>
+        <attr name="ei_max_length" format="integer"/>
+        <attr name="ei_right_color" format="color"/>
+        <attr name="ei_enable" format="boolean"/>
+        <attr name="ei_input_type" format="enum">
+            <enum name="Num" value="1"/>
+            <enum name="String" value="0"/>
+        </attr>
+        <attr name="ei_single_line" format="boolean">
+        </attr>
+
+    </declare-styleable>
 </resources>

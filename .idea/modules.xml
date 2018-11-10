@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/appLib/appLib.iml" filepath="$PROJECT_DIR$/appLib/appLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/bleLib/bleLib.iml" filepath="$PROJECT_DIR$/bleLib/bleLib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/iband.iml" filepath="$PROJECT_DIR$/iband.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iband_Android.iml" filepath="$PROJECT_DIR$/iband_Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/indicatorseekbar/indicatorseekbar.iml" filepath="$PROJECT_DIR$/indicatorseekbar/indicatorseekbar.iml" />
     </modules>
   </component>
