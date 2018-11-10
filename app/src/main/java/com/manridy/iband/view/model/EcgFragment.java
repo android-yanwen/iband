@@ -3,6 +3,8 @@ package com.manridy.iband.view.model;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -175,8 +177,20 @@ public class EcgFragment extends BaseEventFragment {
                 if(dataPackage!=ecg.getDataPackage()){
                     ecgHrList = new ArrayList<>();
                     maxEcgHr = minEcgHr = avgEcgHr = curEcgHr =0;
+//                    String text =  "0";
+//                    float progress = (float) ((220.0 / 220.0) * 100);
+////        cvHr.setProgressWithAnimation(progress);
+//                    cvHr.setText(text)
+//                            .setProgress(progress)
+//                            .invaliDate();
+//                    cvHr.setProgressWithAnimation(progress);
+//                    diData1.setItemData(getString(R.string.hint_hr_avg),  "0");
+//                    diData2.setItemData(getString(R.string.hint_hr_min), "0");
+//                    diData3.setItemData(getString(R.string.hint_hr_max), "0");
                     lastEcgHrDate = "";
                     curEcgHeart = new HeartModel();
+
+                    handler.sendMessage(handler.obtainMessage(1));
 
                     dataPackage = ecg.getDataPackage();
                     ecgHistoryModel = new EcgHistoryModel();
@@ -536,6 +550,26 @@ public class EcgFragment extends BaseEventFragment {
         cvHr.setProgressWithAnimation(progress);
     }
 
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 1:
+                    String text = "--";
+                    float progress = (float) ((220.0 / 220.0) * 100);
+//        cvHr.setProgressWithAnimation(progress);
+                    cvHr.setText(text)
+                            .setProgress(progress)
+                            .invaliDate();
+                    cvHr.setProgressWithAnimation(progress);
+                    diData1.setItemData(getString(R.string.hint_hr_avg), "--");
+                    diData2.setItemData(getString(R.string.hint_hr_min), "--");
+                    diData3.setItemData(getString(R.string.hint_hr_max), "--");
+                    break;
+            }
+
+        }
+    };
 
     OnChartValueSelectedListener selectedListener = new OnChartValueSelectedListener() {
         @Override

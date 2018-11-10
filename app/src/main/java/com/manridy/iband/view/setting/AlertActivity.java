@@ -122,7 +122,7 @@ public class AlertActivity extends BaseActionActivity {
         menuLost.setVisibility(View.VISIBLE);
         menuLostRightline.setVisibility(View.VISIBLE);
         String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"");
-        String deviceIDs[] = {"8077","8078","8079","8080"};
+        String deviceIDs[] = {"8077","8078","8079","8080","8092"};
         if(deviceType==null||"".equals(deviceType)){
             menuLost.setAlertState(false);
             menuLost.setVisibility(View.GONE);
