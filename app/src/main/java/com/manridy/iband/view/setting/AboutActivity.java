@@ -37,6 +37,9 @@ public class AboutActivity extends BaseActionActivity {
     HelpItems hiData;
     @BindView(R.id.iv_icon)
     ImageView ivIcon;
+    @BindView(R.id.hi_feedback)
+    HelpItems hiFeedback;
+
 
     final static int COUNTS = 20;//点击次数
     final static long DURATION = 30 * 1000;//规定有效时间
@@ -114,6 +117,12 @@ public class AboutActivity extends BaseActionActivity {
 //                    Toast.makeText(AboutActivity.this, tips, Toast.LENGTH_SHORT).show();
                     hiLangue.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+        hiFeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(FeedbackActivity.class);
             }
         });
 

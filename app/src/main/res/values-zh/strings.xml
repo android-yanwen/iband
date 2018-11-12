@@ -327,6 +327,7 @@
     <string name="hint_bluetooth_close">蓝牙已关闭</string>
     <string name="hint_bluetooth_opening">蓝牙开启中</string>
     <string name="hint_data_export">数据导出</string>
+    <string name="hint_feedback">用户反馈</string>
     <string name="hint_data_export_help">数据导出之后在哪里可以查看</string>
     <string name="hint_click_look">点击查看</string>
     <string name="hint_data_export_succes">数据已导出完毕，是否立即查看?</string>

@@ -181,6 +181,7 @@
         <activity android:name=".view.main.GoogleMapRunActivity"></activity>
         <activity android:name=".view.main.GoogleMapPlaybackActivity"></activity>
         <activity android:name=".view.main.BikingActivity"></activity>
+        <activity android:name=".view.setting.FeedbackActivity" />
 
         <service
             android:name=".service.LocationService"

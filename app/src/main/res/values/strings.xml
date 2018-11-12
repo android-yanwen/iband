@@ -83,6 +83,7 @@
     <string name="hint_sleep_end">Waking up</string>
     <string name="error_end_before">End time cannot be earlier than start time.</string>
     <string name="hint_data_export">Data output</string>
+    <string name="hint_feedback">Feedback</string>
     <string name="hint_hr_correct1">Note: Do not modify this data if your device is capable of measuring heart rate normally！</string>
     <string name="hint_alert_lost1">Detect the watch </string>
     <string name="hint_lost_nap">Anti-Lost-Funktion ist ausgeschaltet</string>

@@ -70,4 +70,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:help_name="@string/hint_data_export"/>
+
+    <com.manridy.iband.ui.items.HelpItems
+        android:id="@+id/hi_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:help_name="@string/hint_feedback"/>
 </LinearLayout>
