@@ -8,10 +8,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,10 +22,16 @@ import android.widget.Toast;
 import com.manridy.applib.base.BaseActivity;
 import com.manridy.applib.common.DialogManage;
 import com.manridy.applib.utils.BitmapUtil;
+import com.manridy.applib.utils.SPUtil;
+import com.manridy.applib.utils.VersionUtil;
 import com.manridy.applib.view.dialog.ListDialog;
+import com.manridy.iband.IbandApplication;
+import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.bean.UserModel;
+import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.network.NetInterfaceMethod;
+import com.manridy.iband.ui.EditItem;
 import com.manridy.iband.view.base.BaseActionActivity;
 
 import java.io.File;
@@ -44,11 +52,18 @@ public class FeedbackActivity extends BaseActionActivity {
 
 
     private TextView tbTitle;
+    private EditItem eiAge;
+    private EditText et_question;
+
+    private UserModel curUser;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_feedback);
         tbTitle = (TextView) findViewById(R.id.tb_title);
+        eiAge = (EditItem) findViewById(R.id.ei_age);
+        eiAge.setEtTextInputTypeIsEmail();
+        et_question = (EditText) findViewById(R.id.et_question);
     }
 
     @Override
@@ -61,7 +76,10 @@ public class FeedbackActivity extends BaseActionActivity {
     @Override
     protected void loadData() {
         super.loadData();
-
+        curUser = IbandDB.getInstance().getUser();
+        if (curUser == null) {
+            curUser = new UserModel();
+        }
     }
 
     @Override
@@ -77,59 +95,10 @@ public class FeedbackActivity extends BaseActionActivity {
         findViewById(R.id.bt_send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Retrofit retrofit = new Retrofit.Builder()
-//                        .baseUrl("http://112.74.54.235/product/index.php/Api/Goods/")
-//                        .build();
-//
-//                BlogServer blogServer = retrofit.create(BlogServer.class);
-//                Call<ResponseBody> call = blogServer.getBlog();
-//                call.enqueue(new retrofit2.Callback<ResponseBody>() {
-//                    @Override
-//                    public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-//                        ResponseBody result = response.body();
-//                        try {
-//                            String ss = result.string();
-//                            Log.i(TAG, "onResponse: " + ss);
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                        Log.d(TAG, "onFailure: ");
-//
-//                    }
-//                });
-
-//                Retrofit retrofit = new Retrofit.Builder()
-//                        .baseUrl("http://120.78.138.141:8080/")
-////                        .addConverterFactory(GsonConverterFactory.create())
-////                        .baseUrl("http://112.74.54.235/product/index.php/Api/Survey/")
-//                        .addConverterFactory(ScalarsConverterFactory.create())
-//                        .build();
-//                NetInterfaceMethod blogServer = retrofit.create(NetInterfaceMethod.class);
-//                Map<String, String> map = new HashMap<>();
-//                map.put("device_name", "N109");
-//                map.put("device_mac", "EE6997DE995B");
-//                map.put("product_id", "35788");
-//                Call<String> call = blogServer.postWechatRegister(map);
-//                call.enqueue(new retrofit2.Callback<String>() {
-//                    @Override
-//                    public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-//                        //                            String result = response.body().string();
-//                        String result = response.body();
-//                        Log.d(TAG, "onResponse: "+result);
-//                        Toast.makeText(FeedbackActivity.this, result, Toast.LENGTH_SHORT).show();
-//                        //                            Log.d(TAG, "onResponse: " + result);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<String> call, Throwable t) {
-//                        Log.d(TAG, "onFailure");
-//                    }
-//                });
-
+                UploadInfo uploadInfo = obtainInfo();
+                if (uploadInfo == null) {
+                    return;
+                }
 
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl("http://112.74.54.235/product/index.php/Api/Survey/")
@@ -137,22 +106,22 @@ public class FeedbackActivity extends BaseActionActivity {
                         .build();
                 NetInterfaceMethod blogServer = retrofit.create(NetInterfaceMethod.class);
                 Map<String, Object> map = new HashMap<>();
-                map.put("mac", "");
-                map.put("app_name", "");
-                map.put("phone_system_version", "");
-                map.put("device_id", 35788);
-                map.put("device_name", "");
-                map.put("username", "");
-                map.put("email", "");
-                map.put("firmware_edition", "");
-                map.put("soft_edition", "");
-                map.put("live_city", "");
-                map.put("age", "");
-                map.put("sex", "");
-                map.put("height", "");
-                map.put("weight", "");
-                map.put("step_size", "");
-                map.put("question_desc", "");
+                map.put("mac", uploadInfo.deviceMac);//
+                map.put("app_name", uploadInfo.deviceId);//
+                map.put("phone_system_version", uploadInfo.phoneSysVersion);//
+                map.put("device_id", uploadInfo.deviceId);//
+                map.put("device_name", uploadInfo.deviceName);//
+                map.put("username", uploadInfo.userName);//
+                map.put("email", uploadInfo.email);//
+                map.put("firmware_edition", uploadInfo.deviceVersion);//
+                map.put("soft_edition", uploadInfo.softVersion);//
+                map.put("live_city", uploadInfo.liveCity);
+                map.put("age", uploadInfo.userAge);//
+                map.put("sex", uploadInfo.userSex);//
+                map.put("height", uploadInfo.userHeight);//
+                map.put("weight", uploadInfo.userWeight);//
+                map.put("step_size", 80);//
+                map.put("question_desc", uploadInfo.question);//
                 Call<String> call = blogServer.postGetSurveyData(map);
                 call.enqueue(new retrofit2.Callback<String>() {
                     @Override
@@ -172,5 +141,62 @@ public class FeedbackActivity extends BaseActionActivity {
     }
 
 
+    /**
+     * @Name obtainInfo
+     * @Func 获得反馈信息页面需要的信息
+     * @Author yanwen
+     * @Date 18.11.12
+     */
+    private UploadInfo obtainInfo() {
+        UploadInfo uploadInfo = new UploadInfo();
+        uploadInfo.question = et_question.getText().toString();
+        if (uploadInfo.question.isEmpty()) {
+            Toast.makeText(mContext, "请输入问题描述", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+        uploadInfo.email = eiAge.getContent();
+        if (uploadInfo.email.isEmpty()) {
+            Toast.makeText(mContext, "请填写Email地址", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+        uploadInfo.deviceMac = (String) SPUtil.get(this, AppGlobal.DATA_DEVICE_BIND_MAC, "");
+        uploadInfo.appName = "ibund";
+        uploadInfo.deviceName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME, "");
+        uploadInfo.deviceVersion = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION, "1.0.0");
+        uploadInfo.softVersion = "v" + VersionUtil.getVersionName(mContext);
+        uploadInfo.deviceId = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"1");
+        uploadInfo.phoneSysVersion = android.os.Build.VERSION.RELEASE;
+        if (curUser == null) {
+            return null;
+        }
+        uploadInfo.userName = curUser.getUserName();
+        uploadInfo.userAge = curUser.getUserAge();
+        uploadInfo.userSex = curUser.getUserSex();
+        uploadInfo.userHeight = curUser.getUserHeight();
+        uploadInfo.userWeight = curUser.getUserWeight();
+        return uploadInfo;
+    }
+
+
+    /**
+     * 需要上传给服务器的一些信息
+     */
+    private class UploadInfo{
+        public String deviceMac;
+        public String appName;
+        public String deviceName;
+        public String deviceVersion;
+        public String softVersion;
+        public String deviceId;
+        public String phoneSysVersion;
+        public String email;
+        public String userName;
+        public String liveCity;
+        public String userAge;
+        public int userSex;
+        public String userHeight;
+        public String userWeight;
+        public String question;
+    }
 
 }

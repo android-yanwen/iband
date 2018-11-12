@@ -127,7 +127,8 @@ public class SettingActivity extends BaseActionActivity {
         ButterKnife.bind(this);
         registerEventBus();
     }
-
+    //868053035518273
+    //868053035518265
     @Override
     protected void initVariables() {
         setStatusBarColor(Color.parseColor("#2196f3"));

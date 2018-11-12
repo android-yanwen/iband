@@ -7,6 +7,7 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -82,6 +83,16 @@ public class EditItem extends RelativeLayout{
     //得到文字内容
     public String getContent(){
         return etText.getText().toString();
+    }
+
+
+    /**
+     * @Name setEtTextInputTypeIsEmail
+     * @Autor yanwen
+     * @Date 18.11.12
+     */
+    public void setEtTextInputTypeIsEmail() {
+        etText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     }
 
     //设置文字内容
