@@ -2,6 +2,7 @@ package com.manridy.iband.service;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.manridy.applib.utils.FileUtil;
@@ -13,12 +14,15 @@ import com.manridy.iband.bean.Weather;
 import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.DomXmlParse;
+import com.manridy.iband.network.NetInterfaceMethod;
+import com.manridy.iband.view.setting.FeedbackActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -27,6 +31,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  *
@@ -51,6 +57,9 @@ public class HttpService {
 
     public static final String heweather_city = "https://search.heweather.com/find?key=e778b60bd3004e309d51fe0a2d69dd39&location=";
     public static final String weather = "http://112.74.54.235/product/index.php/Api/weather/requestByKey/city/";
+
+    /*******获取用户反馈信息******/
+    public static final String URL_GetSurveyData = "http://112.74.54.235/product/index.php/Api/Survey/";
 
     private HttpService() {
     }
@@ -355,5 +364,36 @@ public class HttpService {
             e.printStackTrace();
         }
     }
+
+    /***
+     * @Name getSurveyData
+     * @Func 发送用户反馈的信息，
+     *        http://112.74.54.235/product/index.php/Api/Survey/服务器获取用户反馈信息接口
+     * @Author Yanwen
+     * @Data 18.11.14
+     */
+    public void getSurveyData(Map<String, Object> map, final OnResultCallBack onResultCallBack) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL_GetSurveyData)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
+        NetInterfaceMethod blogServer = retrofit.create(NetInterfaceMethod.class);
+        retrofit2.Call<String> call = blogServer.postGetSurveyData(map);
+        call.enqueue(new retrofit2.Callback<String>() {
+            @Override
+            public void onResponse(retrofit2.Call<String> call, retrofit2.Response<String> response) {
+                String result = response.body();
+//                Log.d(TAG, "onResponse: "+result);
+                onResultCallBack.onResult(true, result);
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<String> call, Throwable t) {
+//                Log.d(TAG, "发送失败，请确认网络正常.");
+                onResultCallBack.onResult(false, call);
+            }
+        });
+    }
+
 
 }
