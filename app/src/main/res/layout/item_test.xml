@@ -34,12 +34,11 @@
         android:layout_width="80dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:layout_marginRight="8dp"
-        android:textSize="12sp"
-        android:textColor="@color/text_title"
+        android:background="@drawable/shape_button_alert"
         android:text="开启"
-        android:background="@drawable/shape_button_alert"/>
+        android:textColor="@color/text_title"
+        android:textSize="12sp" />
 
     <TextView
         android:layout_width="match_parent"

@@ -15,40 +15,20 @@
             android:layout_width="match_parent"
             android:paddingTop="10dp"
             android:paddingLeft="16dp"
-            android:layout_height="110dp">
+            android:layout_height="180dp">
             <EditText
                 android:id="@+id/et_question"
                 android:layout_marginBottom="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="请输入遇到的问题或建议"
+                android:hint="@string/text_please_input_question_and_opinion"
                 android:textColor="#000000"
                 android:textCursorDrawable="@null"
                 android:textSize="16sp"
                 android:background="@null"
                 android:visibility="visible"/>
         </ScrollView>
-        <HorizontalScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
-            <LinearLayout
-                android:id="@+id/id_ll_pic"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_margin="15dp"
-                android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/ib_question_pic"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/transparent"
-                    android:src="@mipmap/feedback_addimg"/>
-
-            </LinearLayout>
-
-        </HorizontalScrollView>
     </RelativeLayout>
     <TextView
         android:layout_width="match_parent"
@@ -64,9 +44,8 @@
             android:id="@+id/ei_age"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:ei_input_type="String"
-            app:ei_title="联系邮箱"
-            app:ei_et_hint="填写方便我们联系你"
+            app:ei_title="@string/text_contact_address"
+            app:ei_et_hint="@string/text_please_input_infomation"
             app:ei_max_length = "20"
             app:ei_single_line="true"/>
     </RelativeLayout>
@@ -81,7 +60,7 @@
         android:background="@drawable/shape_button_alert"
         android:textColor="#c703a9f4"
         android:textSize="12sp"
-        android:text="发送"
+        android:text="@string/text_send"
         android:visibility="visible"/>
 
 

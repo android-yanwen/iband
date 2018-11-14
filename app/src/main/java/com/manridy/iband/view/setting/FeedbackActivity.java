@@ -30,7 +30,9 @@ import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.bean.UserModel;
 import com.manridy.iband.common.AppGlobal;
+import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.network.NetInterfaceMethod;
+import com.manridy.iband.service.HttpService;
 import com.manridy.iband.ui.EditItem;
 import com.manridy.iband.view.base.BaseActionActivity;
 
@@ -68,7 +70,7 @@ public class FeedbackActivity extends BaseActionActivity {
 
     @Override
     protected void initVariables() {
-        tbTitle.setText("意见反馈");
+        tbTitle.setText(R.string.activity_feedback);
 
 
     }
@@ -117,7 +119,21 @@ public class FeedbackActivity extends BaseActionActivity {
                 map.put("weight", uploadInfo.userWeight);//
                 map.put("step_size", uploadInfo.stepSize);//
                 map.put("question_desc", uploadInfo.question);//
-                Retrofit retrofit = new Retrofit.Builder()
+                showProgress(getString(R.string.activity_sending));
+                HttpService.getInstance().getSurveyData(map, new OnResultCallBack() {
+                    @Override
+                    public void onResult(boolean isSuccess, Object result) {
+                        if (isSuccess == true) {
+                            Toast.makeText(FeedbackActivity.this, getString(R.string.activity_send_success), Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+                        } else {
+                            Toast.makeText(FeedbackActivity.this, getString(R.string.activity_send_fail), Toast.LENGTH_SHORT).show();
+                        }
+                        dismissProgress();
+                        Log.d(TAG, "onResult: "+result);
+                    }
+                });
+                /*Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl("http://112.74.54.235/product/index.php/Api/Survey/")
                         .addConverterFactory(ScalarsConverterFactory.create())
                         .build();
@@ -139,7 +155,7 @@ public class FeedbackActivity extends BaseActionActivity {
                         Log.d(TAG, "发送失败，请确认网络正常.");
                         dismissProgress();
                     }
-                });
+                });*/
             }
         });
     }
@@ -155,12 +171,12 @@ public class FeedbackActivity extends BaseActionActivity {
         UploadInfo uploadInfo = new UploadInfo();
         uploadInfo.question = et_question.getText().toString();
         if (uploadInfo.question.isEmpty()) {
-            Toast.makeText(mContext, "请输入问题描述", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, getString(R.string.activity_input_question), Toast.LENGTH_SHORT).show();
             return null;
         }
         uploadInfo.email = eiAge.getContent();
         if (uploadInfo.email.isEmpty()) {
-            Toast.makeText(mContext, "请填写Email地址", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, getString(R.string.activity_input_email), Toast.LENGTH_SHORT).show();
             return null;
         }
         uploadInfo.deviceMac = (String) SPUtil.get(this, AppGlobal.DATA_DEVICE_BIND_MAC, "");
@@ -168,7 +184,7 @@ public class FeedbackActivity extends BaseActionActivity {
         uploadInfo.deviceName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME, "");
         uploadInfo.deviceVersion = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION, "1.0.0");
         uploadInfo.softVersion = "v" + VersionUtil.getVersionName(mContext);
-        uploadInfo.deviceId = Integer.parseInt((String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"1"));;
+        uploadInfo.deviceId = Integer.parseInt((String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"1"));
         uploadInfo.phoneSysVersion = android.os.Build.VERSION.RELEASE;
         if (curUser == null) {
             return null;

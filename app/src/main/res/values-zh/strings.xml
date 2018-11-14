@@ -327,7 +327,7 @@
     <string name="hint_bluetooth_close">蓝牙已关闭</string>
     <string name="hint_bluetooth_opening">蓝牙开启中</string>
     <string name="hint_data_export">数据导出</string>
-    <string name="hint_feedback">用户反馈</string>
+    <string name="activity_feedback">意见反馈</string>
     <string name="hint_data_export_help">数据导出之后在哪里可以查看</string>
     <string name="hint_click_look">点击查看</string>
     <string name="hint_data_export_succes">数据已导出完毕，是否立即查看?</string>
@@ -371,6 +371,11 @@
 
     <string name="hint_not_get_devicelist">未能获取设备列表</string>
 
+    <string name="hint_empty_data">暂无活动数据</string>
+    <string name="hint_alert_space">提醒间隔</string>
+    <string name="activity_sending">发送中...</string>
+    <string name="activity_send_success">发送成功</string>
+    <string name="activity_send_fail">发送失败</string>
     <string name="heart_rate_instructions">
 校准：当发现无法测量心率，或者测量容易失败时，请使用校准功能。\n复位：使心率功能恢复到出厂设置。\n操作方法：\n\n
     1.佩戴好手表，并确保手表与APP正常连接\n
@@ -490,6 +495,10 @@
               2.绑定微信运动后，APP和微信运动可以同时连接设备，互不影响。
         </item>
     </string-array>
-    <string name="hint_empty_data">暂无活动数据</string>
-    <string name="hint_alert_space">提醒间隔</string>
+    <string name="activity_input_question">请输入问题描述</string>
+    <string name="activity_input_email">请填写Email地址</string>
+    <string name="text_send">发送</string>
+    <string name="text_contact_address">联系邮箱</string>
+    <string name="text_please_input_infomation">填写方便我们联系你</string>
+    <string name="text_please_input_question_and_opinion">请输入遇到的问题或建议</string>
 </resources>
