@@ -60,6 +60,7 @@ public class EditItem extends RelativeLayout{
         tvUnit.setText(unit == null?"":unit);
         etText.setHint(etHint == null?"":etHint);
         etText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+        etText.setSingleLine(isSingleLine);
         if (inputType == 1) {
             etText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
         }
@@ -67,7 +68,6 @@ public class EditItem extends RelativeLayout{
         if (etTxt != null) {
             this.etText.setText(etTxt);
         }
-        etText.setSingleLine(isSingleLine);
         if (text != null) {
             etText.setVisibility(GONE);
             tvText.setVisibility(VISIBLE);
@@ -92,7 +92,8 @@ public class EditItem extends RelativeLayout{
      * @Date 18.11.12
      */
     public void setEtTextInputTypeIsEmail() {
-        etText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+//        etText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        etText.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     }
 
     //设置文字内容
