@@ -62,7 +62,7 @@ public class FeedbackActivity extends BaseActionActivity {
         setContentView(R.layout.fragment_feedback);
         tbTitle = (TextView) findViewById(R.id.tb_title);
         eiAge = (EditItem) findViewById(R.id.ei_age);
-        eiAge.setEtTextInputTypeIsEmail();
+        eiAge.setEtTextInputTypeIsEmail(); //输入Email地址
         et_question = (EditText) findViewById(R.id.et_question);
     }
 
@@ -100,11 +100,6 @@ public class FeedbackActivity extends BaseActionActivity {
                     return;
                 }
 
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("http://112.74.54.235/product/index.php/Api/Survey/")
-                        .addConverterFactory(ScalarsConverterFactory.create())
-                        .build();
-                NetInterfaceMethod blogServer = retrofit.create(NetInterfaceMethod.class);
                 Map<String, Object> map = new HashMap<>();
                 map.put("mac", uploadInfo.deviceMac);//
                 map.put("app_name", uploadInfo.deviceId);//
@@ -120,20 +115,29 @@ public class FeedbackActivity extends BaseActionActivity {
                 map.put("sex", uploadInfo.userSex);//
                 map.put("height", uploadInfo.userHeight);//
                 map.put("weight", uploadInfo.userWeight);//
-                map.put("step_size", 80);//
+                map.put("step_size", uploadInfo.stepSize);//
                 map.put("question_desc", uploadInfo.question);//
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://112.74.54.235/product/index.php/Api/Survey/")
+                        .addConverterFactory(ScalarsConverterFactory.create())
+                        .build();
+                NetInterfaceMethod blogServer = retrofit.create(NetInterfaceMethod.class);
                 Call<String> call = blogServer.postGetSurveyData(map);
+                showProgress("发送中...");
                 call.enqueue(new retrofit2.Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                         String result = response.body();
                         Log.d(TAG, "onResponse: "+result);
-                        Toast.makeText(FeedbackActivity.this, result, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FeedbackActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
+                        onBackPressed();
+                        dismissProgress();
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-                        Log.d(TAG, "onFailure");
+                        Log.d(TAG, "发送失败，请确认网络正常.");
+                        dismissProgress();
                     }
                 });
             }
@@ -164,16 +168,16 @@ public class FeedbackActivity extends BaseActionActivity {
         uploadInfo.deviceName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME, "");
         uploadInfo.deviceVersion = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION, "1.0.0");
         uploadInfo.softVersion = "v" + VersionUtil.getVersionName(mContext);
-        uploadInfo.deviceId = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"1");
+        uploadInfo.deviceId = Integer.parseInt((String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"1"));;
         uploadInfo.phoneSysVersion = android.os.Build.VERSION.RELEASE;
         if (curUser == null) {
             return null;
         }
         uploadInfo.userName = curUser.getUserName();
-        uploadInfo.userAge = curUser.getUserAge();
+        uploadInfo.userAge = Integer.parseInt(curUser.getUserAge());
         uploadInfo.userSex = curUser.getUserSex();
-        uploadInfo.userHeight = curUser.getUserHeight();
-        uploadInfo.userWeight = curUser.getUserWeight();
+        uploadInfo.userHeight = Integer.parseInt(curUser.getUserHeight());
+        uploadInfo.userWeight = Integer.parseInt(curUser.getUserWeight());
         return uploadInfo;
     }
 
@@ -187,15 +191,16 @@ public class FeedbackActivity extends BaseActionActivity {
         public String deviceName;
         public String deviceVersion;
         public String softVersion;
-        public String deviceId;
+        public int deviceId;
         public String phoneSysVersion;
         public String email;
         public String userName;
-        public String liveCity;
-        public String userAge;
+        public String liveCity="";
+        public int userAge;
         public int userSex;
-        public String userHeight;
-        public String userWeight;
+        public int userHeight;
+        public int userWeight;
+        public int stepSize = 80;
         public String question;
     }
 
