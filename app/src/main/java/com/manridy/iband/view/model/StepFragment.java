@@ -70,6 +70,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -516,14 +518,16 @@ public class StepFragment extends BaseEventFragment {
     private void updateBarChartView(BarChart chart, List<StepModel> stepList) {
         curMap = new HashMap<>();
 //        StepModel step = curStep;
-        int hour = Integer.parseInt(hourFormat.format(new Date()));
+//        int hour = Integer.parseInt(hourFormat.format(new Date()));
         if (stepList == null ){
             stepList = new ArrayList<>();
         }
         List<BarEntry> barList = new ArrayList<>();
-        for (int i = 0; i < stepList.size(); i++) {
+        int size = stepList.size();
+        for (int i = 0; i < size; i++) {
             StepModel stepModel = stepList.get(i);
-            String format = hourFormat.format(stepModel.getStepDate());
+            String stepDate = stepModel.getStepDate();
+            String format = hourFormat.format(new Date(stepDate));
             int h = Integer.valueOf(format);
 //            step.setStepNum((step.getStepNum() - stepModel.getStepNum()));
 //            step.setStepMileage(step.getStepMileage() - stepModel.getStepMileage());
