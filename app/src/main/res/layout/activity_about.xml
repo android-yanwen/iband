@@ -75,5 +75,6 @@
         android:id="@+id/hi_feedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:help_name="@string/activity_feedback"/>
+        app:help_name="@string/activity_feedback"
+        android:visibility="gone"/>
 </LinearLayout>
