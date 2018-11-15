@@ -190,6 +190,7 @@ public class FeedbackActivity extends BaseActionActivity {
             return null;
         }
         uploadInfo.userName = curUser.getUserName();
+        uploadInfo.liveCity = ibandApplication.city;
         uploadInfo.userAge = Integer.parseInt(curUser.getUserAge());
         uploadInfo.userSex = curUser.getUserSex();
         uploadInfo.userHeight = Integer.parseInt(curUser.getUserHeight());
