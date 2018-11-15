@@ -501,4 +501,5 @@
     <string name="text_contact_address">联系邮箱</string>
     <string name="text_please_input_infomation">填写方便我们联系你</string>
     <string name="text_please_input_question_and_opinion">请输入遇到的问题或建议</string>
+    <string name="text_do_not_disturb">勿扰模式</string>
 </resources>

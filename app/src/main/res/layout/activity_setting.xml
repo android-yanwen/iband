@@ -175,6 +175,13 @@
                 app:menus_icon="@mipmap/set_heart_rate"
                 app:menus_name="@string/hint_hr_set"
                 android:visibility="gone"/>
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_do_not_disturb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/nodisturb"
+                app:menus_name="@string/text_do_not_disturb"
+                android:visibility="visible"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_clean"
