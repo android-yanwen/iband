@@ -8,12 +8,12 @@ import org.litepal.crud.DataSupport;
  */
 public class UserModel extends DataSupport {
     private int id;//数据索引
-    private String userName;//用户名
+    private String userName="0";//用户名
     private int userSex;//性别
-    private String userAge;//年龄
-    private String userHeight;//身高
-    private String userWeight;//体重
-    private String userStep;//步长
+    private String userAge="0";//年龄
+    private String userHeight="0";//身高
+    private String userWeight="0";//体重
+    private String userStep="0";//步长
 
     public int getUserPound() {
         return userPound;
