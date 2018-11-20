@@ -122,7 +122,7 @@ public class IbandApplication extends Application {
         return intance;
     }
 
-    ServiceConnection mServiceConnection = new ServiceConnection() {
+    public ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder iBinder) {
             service = ((BleService.LocalBinder) iBinder).service();
@@ -134,4 +134,14 @@ public class IbandApplication extends Application {
             LogUtil.d(TAG, "onServiceDisconnected() called with: name = [" + name + "]");
         }
     };
+    /**
+     *
+     * */
+    public void stopService() {
+//        service.stopThread();
+//        service.watch.stopThread();
+//        service.watch.curBluetoothGatt.disconnect();
+//        service.watch.closeALLBluetoothLe();
+        service.unbindService(mServiceConnection);
+    }
 }

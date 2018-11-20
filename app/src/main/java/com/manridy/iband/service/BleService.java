@@ -95,7 +95,9 @@ public class BleService extends Service {
     public void init(){
         watch = Watch.getInstance();//初始化手表sdk
         watch.init(getApplicationContext());
-        thread.start();
+//        threadIsRun = true; //tread线程控制标志
+//        thread.start();
+        startThread();
         initListener();//初始化监听器
         initBroadcast();//初始化ble广播
         initConnect(true);//初始化连接
@@ -226,6 +228,15 @@ public class BleService extends Service {
         IntentFilter filter1 = new IntentFilter();
         filter1.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(netWorkStateReceiver, filter1);
+    }
+
+    /**
+     * @Name yanwen
+     * @Date 18/11/20
+     * */
+    private void unregisterReceiver() {
+        unregisterReceiver(bleReceiver);
+        unregisterReceiver(netWorkStateReceiver);
     }
 
     private BroadcastReceiver  netWorkStateReceiver = new BroadcastReceiver() {
@@ -648,10 +659,11 @@ public class BleService extends Service {
         }
     }
 
+    boolean threadIsRun = false;
     Thread thread = new Thread(new Runnable() {
         @Override
         public void run() {
-            while (true){
+            while (threadIsRun){
                 if (!isConnectRun.get())
                 {
                     if (messageList.size() > 0) {
@@ -693,6 +705,28 @@ public class BleService extends Service {
 
         }
     });
+
+    /**
+     * @Desc 控制线程启动
+     * @Name yanwen
+     * @Date 2018/11/20
+     * */
+    public void startThread() {
+        if (thread != null) {
+            threadIsRun = true;
+            thread.start();
+        }
+    }
+    /**
+     * @Desc 控制线程停止
+     * @Name yanwen
+     * @Date 2018/11/20
+     * */
+    public void stopThread() {
+        threadIsRun = false;
+        thread = null;
+    }
+
 
     private void connectAction(String mac, boolean isReConnect, BleConnectCallback connectCallback){
         messageList.add(new ConnectMessage(mac, isReConnect, connectCallback));
@@ -740,6 +774,15 @@ public class BleService extends Service {
     }
 
 
-
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        stopNotification();
+        unregisterReceiver();
+        stopThread();
+        watch.stopThread();
+        watch.closeALLBluetoothLe();
+        watch.curBluetoothGatt.disconnect();
+    }
 }

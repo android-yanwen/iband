@@ -408,7 +408,8 @@ public class BluetoothLeManager {
      */
     public synchronized void reConnect(BluetoothGatt gatt){
         if (gatt != null) {
-            gatt.connect();
+            boolean status = gatt.connect();
+            Log.d(TAG, "reconnect status:" + status);
             broadcastUpdate(ACTION_GATT_RECONNECT,null,gatt.getDevice().getAddress());
             Log.e(TAG, "reConnect: device is" + gatt.getDevice().getAddress() );
         }
@@ -581,6 +582,7 @@ public class BluetoothLeManager {
         }
         return status;
     }
+
 
     /********BluetoothGatt********/
     /**

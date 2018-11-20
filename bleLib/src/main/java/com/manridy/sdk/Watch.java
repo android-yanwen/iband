@@ -56,11 +56,13 @@ public class Watch extends BluetoothLeManager implements WatchApi {
     AtomicBoolean isRun = new AtomicBoolean(false);
     BleCallback cmdCallback;
     int sleepIndex = 2;
+
+    public boolean threadIsRun = false; // 线程控制标志符
     //消息队列
     Thread thread = new Thread(new Runnable() {
         @Override
         public void run() {
-            for (;;){//循环
+            while (threadIsRun){//循环
                 if (!isRun.get()) {//运行状态
                     synchronized (messageList) {
                         Integer integer = messageList.size();
@@ -149,7 +151,28 @@ public class Watch extends BluetoothLeManager implements WatchApi {
     }
 
     private Watch() {
-        thread.start();
+        startThread();
+    }
+
+    /**
+     * @Desc 控制线程启动
+     * @Name yanwen
+     * @Date 2018/11/20
+     * */
+    public void startThread() {
+        if (thread != null) {
+            threadIsRun = true;
+            thread.start();
+        }
+    }
+    /**
+     * @Desc 控制线程停止
+     * @Name yanwen
+     * @Date 2018/11/20
+     * */
+    public void stopThread() {
+        threadIsRun = false;
+        thread = null;
     }
 
     public void sendCmd(byte[] data){

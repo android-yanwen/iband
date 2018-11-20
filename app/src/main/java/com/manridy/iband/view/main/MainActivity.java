@@ -1548,12 +1548,15 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+//        Intent intent = new Intent(this, BleService.class);
+//        ibandApplication.service.stopService(new Intent(intent));
     }
 
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
-        moveTaskToBack(true);
+        moveTaskToBack(true);//Activity活动于后台
+        ibandApplication.stopService();
     }
 
 }
