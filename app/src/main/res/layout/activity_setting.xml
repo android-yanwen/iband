@@ -181,7 +181,7 @@
                 android:layout_height="wrap_content"
                 app:menus_icon="@mipmap/nodisturb"
                 app:menus_name="@string/text_do_not_disturb"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
             <com.manridy.iband.ui.items.MenuItems
                 android:id="@+id/menu_clean"

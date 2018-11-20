@@ -451,4 +451,27 @@ Wenn WeRun nicht mit iband verknüpft ist, können die Daten nicht synchronisier
 2.Nachdem Sie WeRun mit Ihrem Gerät verknüpft haben, können Sie parallel die iband App ohne Einschränkungen koppeln und nutzen.
         </item>
     </string-array>
+    <string name="activity_feedback">Feedback</string>
+    <string name="hint_update_delay">Erinnerungen nicht innerhalb einer Woche wiederholen</string>
+    <string name="hint_view_ecg">Puls</string>
+    <string name="title_ecg_history">Puls Historie</string>
+    <string name="notifyTitle">Hinweis</string>
+    <string name="gpsNotifyMsg">Bitte aktivieren Sie die Standortfreigabe.</string>
+    <string name="hint_sportpace">Geschwindigkeit(min/km)</string>
+    <string name="hint_not_support_google_map">Google Maps wird nicht unterstützt.</string>
+    <string name="hint_pace">Durchschnittsgeschwindigkeit</string>
+    <string name="hint_sporting">Aktiv</string>
+    <string name="hint_stopsport">Diese Übung beenden</string>
+    <string name="hint_pausesport">Pause</string>
+    <string name="hint_no_gps">Die aktuelle GPS-Signalstärke ist schwach und die Bewegungsdaten können nicht berechnet werden.</string>
+    <string name="hint_no_data">Keine Daten vorhanden</string>
+    <string name="hint_unit_pace">(min/km)</string>
+    <string name="hint_indoors_run">Laufband</string>
+    <string name="hint_sportstep">Anzahl der Schritte</string>
+    <string name="hint_sporttime">Zeit</string>
+    <string name="calorie">Kalorien</string>
+    <string name="hint_outdoors_run">Joggen</string>
+    <string name="hint_only_use_amap">Genaue Aufzeichnung</string>
+    <string name="hint_only_use_amap_info">Möchten Sie nur die Daten der Kartenaufzeichnung verwenden?</string>
+    <string name="hint_lastRecord">Letzte Aufzeichnung</string>
 </resources>

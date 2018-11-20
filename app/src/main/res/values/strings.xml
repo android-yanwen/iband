@@ -339,8 +339,6 @@
     <string name="hint_menu_camera">Remote camera </string>
     <string name="hint_empty_data">No activity data</string>
     <string name="hint_alert_space">Remind interval</string>
-    <string name="hint_exporting">Exporting data, please wait ...</string>
-    <string name="hint_searched">Search complete</string>
     <string name="hint_hr_set">Heart rate settings</string>
     <string name="hint_test_hr_timing">Timing measurement</string>
     <string name="hint_hr_correcting">Heart rate calibration</string>
@@ -354,30 +352,10 @@
     <string name="hr_reseting_fail">Reset failed</string>
     <string name="button_correcting">Calibration</string>
     <string name="button_reseting">Reset</string>
-    <string name="hint_update_delay">一个星期内不重复提醒</string>
     <string name="hint_not_get_devicelist">Failed to get device list</string>
-    <string name="hint_view_ecg">心电</string>
-    <string name="title_ecg_history">心电记录</string>
-    <string name="notifyTitle">提示</string>
-    <string name="gpsNotifyMsg">当前应用需要打开定位功能。\n\n请点击\"设置\"-\"定位服务\"-打开定位功能。</string>
-    <string name="hint_sportpace">配速(min/km)</string>
-    <string name="hint_not_support_google_map">本机不支持Google地图!</string>
-    <string name="hint_pace">配速</string>
-    <string name="hint_sporting">运动中</string>
-    <string name="hint_stopsport">结束本次运动</string>
-    <string name="hint_pausesport">暂停运动</string>
-    <string name="hint_no_gps">当前GPS信号强度弱,无法计算运动数据,请移步至信号较强处运动</string>
-    <string name="hint_no_data">暂无数据</string>
-    <string name="hint_unit_pace">(min/km)</string>
-    <string name="hint_indoors_run">室内跑</string>
-    <string name="hint_sportstep">运动步数</string>
-    <string name="hint_sporttime">时间(H/Min/Sec)</string>
-    <string name="calorie">卡路里</string>
-    <string name="hint_outdoors_run">户外跑</string>
-    <string name="hint_only_use_amap">仅使用高德地图</string>
-    <string name="hint_only_use_amap_info">设置运动模式中是否仅使用高德地图</string>
-    <string name="hint_lastRecord">上次记录</string>
 
+    <string name="hint_exporting">Exporting data, please wait ...</string>
+    <string name="hint_searched">Search complete</string>
 
     <string name="activity_sending">Sending...</string>
     <string name="activity_send_success">Send success</string>
