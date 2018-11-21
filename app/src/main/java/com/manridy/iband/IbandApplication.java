@@ -39,7 +39,7 @@ import static com.manridy.iband.view.setting.LangueActivity.getLocale;
 public class IbandApplication extends Application {
     private static final String TAG = IbandApplication.class.getSimpleName();
     private static IbandApplication intance;
-    public BleService service;
+    public BleService service = null;
 
     public static boolean isNeedRefresh = false;
 
@@ -58,7 +58,7 @@ public class IbandApplication extends Application {
 //        startService(new Intent(this, AppNotificationListenerService.class));
         LitePalApplication.initialize(this);//初始化数据库
         Fresco.initialize(this);//初始化图片加载
-        initBleSevrice();//初始化蓝牙服务
+//        initBleSevrice();//初始化蓝牙服务
         initAlertService();//初始化提醒服务
         if(!UpdateActivity.isGoogle) {
             initBugly();//初始化bugly
@@ -80,6 +80,7 @@ public class IbandApplication extends Application {
         }
     }
 
+
     private void initLangue() {
         int curSelect = (int) SPUtil.get(this, AppGlobal.DATA_APP_LANGUE,0);
         Resources res = getResources();
@@ -97,7 +98,7 @@ public class IbandApplication extends Application {
         res.updateConfiguration(conf, dm);
     }
 
-    private void initBleSevrice() {
+    public void initBleSevrice() {
         Intent bindIntent = new Intent(this,BleService.class);
         bindService(bindIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
@@ -135,13 +136,36 @@ public class IbandApplication extends Application {
         }
     };
     /**
-     *
+     *@Name yanwen
+     *@Date 18/11/21
      * */
-    public void stopService() {
-//        service.stopThread();
-//        service.watch.stopThread();
-//        service.watch.curBluetoothGatt.disconnect();
-//        service.watch.closeALLBluetoothLe();
-        service.unbindService(mServiceConnection);
+    public void stopBleService() {
+        if ("huawei".equalsIgnoreCase(Watch.brand)) {
+            if (service != null) {
+//                service.stopThread();
+//                service.watch.stopThread();
+//                service.watch.closeALLBluetoothLe();
+                service.watch.closeCurBluetoothGatt();
+                SPUtil.put(getApplicationContext(),AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
+                SPUtil.put(this, AppGlobal.STATE_APP_OTA_RUN, false);
+
+                unbindService(mServiceConnection);
+                service = null;
+//                stopAlertService();
+//                stopNotificationService();
+            }
+        }
+    }
+
+    private void stopAlertService() {
+//        startService(new Intent(this,AlertService.class));
+        stopService(new Intent(this, AlertService.class));
+    }
+
+    private void stopNotificationService() {
+//        boolean appOnOff = (boolean) SPUtil.get(this, AppGlobal.DATA_ALERT_APP,false);
+//        if (appOnOff) {
+            stopService(new Intent(this, NotificationCollectorMonitorService.class));
+//        }
     }
 }

@@ -198,8 +198,10 @@ public class Watch extends BluetoothLeManager implements WatchApi {
         }
         Log.i("sendCmd","sendCmd:"+datas);
         messageList.add(new cmdMessage(data, bleCallback));
-        synchronized (thread) {
-            thread.notify();
+        if (thread != null) {
+            synchronized (thread) {
+                thread.notify();
+            }
         }
     }
 

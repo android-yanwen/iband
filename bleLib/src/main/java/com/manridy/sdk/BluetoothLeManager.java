@@ -45,6 +45,10 @@ import static com.manridy.sdk.exception.BleException.ERROR_CODE_WRITE;
  */
 
 public class BluetoothLeManager {
+//    /**************设置一个重连标志后期优化去掉**************/
+//    public static boolean IS_RENECT = true;
+
+
     private static final String TAG = BluetoothLeManager.class.getSimpleName();
     private AtomicBoolean isScaning = new AtomicBoolean(false);
 
@@ -60,7 +64,7 @@ public class BluetoothLeManager {
     private BleConnectCallback connectCallback;
 
     //华为手机
-    public BluetoothGatt curBluetoothGatt;
+    public BluetoothGatt curBluetoothGatt = null;
     public boolean isConnected;
     public boolean isBluetoothReConnect;
     public String curBluetoothMac;
@@ -273,8 +277,9 @@ public class BluetoothLeManager {
             isConnected = false;
             isBluetoothReConnect = true;
             curBluetoothGatt = null;
-            BluetoothGatt gatt = device.connectGatt(mContext,false,mBluetoothGattCallback);
-//        curBluetoothGatt = gatt;
+            BluetoothGatt gatt = device.connectGatt(mContext, false, mBluetoothGattCallback);
+            //获取到当前GATT
+        curBluetoothGatt = gatt;
 
 
 //        int index = -1;
@@ -592,6 +597,7 @@ public class BluetoothLeManager {
         @Override
         public void onConnectionStateChange(final BluetoothGatt gatt, int status, int newState) {
             if("huawei".equalsIgnoreCase(Watch.brand)){
+//                if (!BluetoothLeManager.IS_RENECT) return;
                 Log.i(TAG,"oldBluetoothGatts.size():"+oldBluetoothGatts.size()+":"+curBluetoothGatt);
 //            if (status != BluetoothGatt.GATT_SUCCESS) {
 //                String err = "Cannot connect device with error status: " + status;
@@ -734,7 +740,7 @@ public class BluetoothLeManager {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     reConnectHandler.removeMessages(2);
                     isConnected = true;
-                    curBluetoothGatt = gatt;
+//                    curBluetoothGatt = gatt;//不能在发现服务里面获取到当前gatt
                     Log.i(TAG,"oldBluetoothGatts:onServicesDiscovered:"+gatt);
                     enableNotification(gatt,service,notify);
                     broadcastUpdate(ACTION_SERVICES_DISCOVERED,null,gatt.getDevice().getAddress());
@@ -856,6 +862,17 @@ public class BluetoothLeManager {
 
     /********Other********/
     /**
+     * @Name:yanwen
+     * @Date:18/11/21
+     * */
+    public void closeCurBluetoothGatt() {
+        if (curBluetoothGatt != null) {
+            curBluetoothGatt.disconnect();
+            curBluetoothGatt.close();
+        }
+    }
+
+    /**
      * 刷新蓝牙设备缓存
      * @param gatt
      * @return
@@ -880,9 +897,8 @@ public class BluetoothLeManager {
      * @param gatt
      */
     public void closeBluetoothGatt(BluetoothGatt gatt){
-        if("huawei".equalsIgnoreCase(Watch.brand)) {
-        }
-        else {
+        if ("huawei".equalsIgnoreCase(Watch.brand)) {
+        } else {
             if (gatt != null) {
                 refreshDeviceCache(gatt);
                 gatt.close();

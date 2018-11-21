@@ -1,9 +1,11 @@
 package com.manridy.iband.view.main;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -75,6 +77,7 @@ import com.manridy.iband.view.model.EcgFragment;
 import com.manridy.iband.view.model.HrFragment;
 import com.manridy.iband.view.model.SleepFragment;
 import com.manridy.iband.view.model.StepFragment;
+import com.manridy.sdk.BluetoothLeManager;
 import com.manridy.sdk.Watch;
 import com.manridy.sdk.bean.Weather;
 import com.manridy.sdk.ble.BleCmd;
@@ -1548,15 +1551,20 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-//        Intent intent = new Intent(this, BleService.class);
-//        ibandApplication.service.stopService(new Intent(intent));
     }
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
-        moveTaskToBack(true);//Activity活动于后台
-        ibandApplication.stopService();
+        if ("huawei".equalsIgnoreCase(Watch.brand)) {
+            super.onBackPressed();
+//            BluetoothLeManager.IS_RENECT = false;
+            ibandApplication.stopBleService();
+//            ActivityManager manager = (ActivityManager)mContext.getSystemService(ACTIVITY_SERVICE); //获取应用程序管理器
+//            manager.killBackgroundProcesses(getPackageName()); //强制结束当前应用程序
+        }
+        else {
+            moveTaskToBack(true);//Activity活动于后台
+        }
     }
 
 }

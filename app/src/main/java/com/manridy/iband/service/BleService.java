@@ -235,7 +235,7 @@ public class BleService extends Service {
      * @Date 18/11/20
      * */
     private void unregisterReceiver() {
-        unregisterReceiver(bleReceiver);
+//        unregisterReceiver(bleReceiver);
         unregisterReceiver(netWorkStateReceiver);
     }
 
@@ -770,6 +770,7 @@ public class BleService extends Service {
     @Override
     public boolean onUnbind(Intent intent) {
         EventBus.getDefault().unregister(this);
+        unregisterReceiver();
         return super.onUnbind(intent);
     }
 
@@ -777,12 +778,5 @@ public class BleService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
-        stopNotification();
-        unregisterReceiver();
-        stopThread();
-        watch.stopThread();
-        watch.closeALLBluetoothLe();
-        watch.curBluetoothGatt.disconnect();
     }
 }

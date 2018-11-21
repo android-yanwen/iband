@@ -12,6 +12,7 @@ import com.manridy.applib.base.BaseActivity;
 import com.manridy.applib.common.AppManage;
 import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
+import com.manridy.iband.IbandApplication;
 import com.manridy.iband.R;
 import com.manridy.iband.common.AppGlobal;
 
@@ -31,6 +32,7 @@ public class StartActivity extends BaseActivity {
     private boolean isFirstOpen;
     @Override
     protected void initView(Bundle savedInstanceState) {
+        ((IbandApplication)getApplication()).initBleSevrice();//初始化蓝牙服务
         isFirstOpen = (boolean) SPUtil.get(mContext, AppGlobal.DATA_APP_FIRST,true);
         // 如果是第一次启动，则先进入功能引导页
         if (isFirstOpen) {
