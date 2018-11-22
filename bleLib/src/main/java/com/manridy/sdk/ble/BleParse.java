@@ -62,6 +62,8 @@ public class BleParse {
     private final byte CALL_SEDENTARY_ALERT = 0x16;
     private final byte CALL_ECG_HEART_RATE = 0x41;
 
+    private final byte CALL_DO_NOT_DISTURB = 0x2e; //免打扰消息命令
+
     private static BleParse instance;
     private byte[] data;//蓝牙数据
     private byte head;//头部 消息类型
@@ -149,9 +151,11 @@ public class BleParse {
 
     //解析消息体
     private synchronized void bodyParse(){
-        System.arraycopy(data,1,body,0,body.length);//从第2个字节到19字节为消息体
+        System.arraycopy(data, 1, body, 0, body.length);//从第2个字节到19字节为消息体
+//        Log.i(TAG, "head: "+ head);
         if (headCheck()) {
             String result = "";
+//            Log.i(TAG, "infoType: "+ infoType);
             switch (infoType) {
                 case CALL_TIME://时间
                     result = parseTime();
@@ -253,6 +257,9 @@ public class BleParse {
                     break;
                 case 0x42:
                     result = parseHrBaseLine();
+                    break;
+                case CALL_DO_NOT_DISTURB:  //免打扰
+                    result = "success";
                     break;
             }
             if (bleCallback == null) {

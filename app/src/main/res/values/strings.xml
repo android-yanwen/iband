@@ -396,7 +396,7 @@ Note: Be sure to keep still when calibrating or resetting, and make sure the APP
 
     <!-- 最弱 -->
     <string-array name="corrects">
-        <item >The weakest</item>
+        <item>The weakest</item>
         <!-- 正常 -->
         <item>normal</item>
         <!-- 最强 -->
@@ -404,13 +404,13 @@ Note: Be sure to keep still when calibrating or resetting, and make sure the APP
     </string-array>
 
     <string-array name="helpTitleList">
-        <item >If you\’ re informed that iband couldn\’ t be found, tips are as follows？</item>
-        <item >If you’re informed of failing to bind:</item>
-        <item >How can you sync iband\’ s data？If you\’ re prompted for failure to sync the data.</item>
-        <item >Why didn’ t I be reminded for having a phone call though I set Call notification？ (Android)</item>
-        <item >I received messages without reminding though I set Message notification. Why？</item>
-        <item >Why didn’t I be reminded for receiving messages on QQ and WeChat though I set Application reminder？</item>
-        <item >I long pressed on the icon of iband to cancel a phone call when receiving a call notification. But I failed. Why? </item>
+        <item>If you\’ re informed that iband couldn\’ t be found, tips are as follows？</item>
+        <item>If you’re informed of failing to bind:</item>
+        <item>How can you sync iband\’ s data？If you\’ re prompted for failure to sync the data.</item>
+        <item>Why didn’ t I be reminded for having a phone call though I set Call notification？ (Android)</item>
+        <item>I received messages without reminding though I set Message notification. Why？</item>
+        <item>Why didn’t I be reminded for receiving messages on QQ and WeChat though I set Application reminder？</item>
+        <item>I long pressed on the icon of iband to cancel a phone call when receiving a call notification. But I failed. Why? </item>
         <item>Why did my HR measurement fail？</item>
     </string-array>
 

@@ -30,6 +30,7 @@ import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.iband.view.setting.AboutActivity;
 import com.manridy.iband.view.setting.AlertActivity;
 import com.manridy.iband.view.setting.CameraActivity;
+import com.manridy.iband.view.setting.DoNotDisturbActivity;
 import com.manridy.iband.view.setting.FindActivity;
 import com.manridy.iband.view.setting.LightActivity;
 import com.manridy.iband.view.setting.TargetActivity;
@@ -235,8 +236,9 @@ public class SettingActivity extends BaseActionActivity {
             R.id.menu_alert, R.id.menu_wechat, R.id.menu_light,
             R.id.menu_unit, R.id.menu_time, R.id.menu_target,
             R.id.menu_about, R.id.rl_user_info, R.id.rl_device,
-            R.id.iv_user_icon, R.id.menu_wrist, R.id.menu_reset
-    ,R.id.menu_hr_test,R.id.menu_clean})
+            R.id.iv_user_icon, R.id.menu_wrist, R.id.menu_reset,
+            R.id.menu_hr_test,R.id.menu_clean, R.id.menu_do_not_disturb
+    })
     public void onClick(View view) {
         if (isFastDoubleClick()) {
             return;
@@ -312,6 +314,11 @@ public class SettingActivity extends BaseActionActivity {
                 break;
             case R.id.menu_hr_test:
                 startActivity(TestHrTimingActivity.class);
+                break;
+            case R.id.menu_do_not_disturb:    // 勿扰模式
+                startActivity(DoNotDisturbActivity.class);
+                break;
+            default:
                 break;
         }
     }

@@ -1,32 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.manridy.iband">
 
-
-
     <!-- 蓝牙操作权限 -->
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <!-- 写入文件权限 6.0以上需要动态授权-->
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- 写入文件权限 6.0以上需要动态授权 -->
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!-- 读取短信 6.0以上需要动态授权-->
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <!--读取手机状态 6.0以上需要动态授权-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
-    <!--读取联系人 6.0以上需要动态授权-->
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <!--震动-->
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <!--定位 6.0以上需要动态授权-->
-    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <!--网络or其他-->
+    <!-- 读取短信 6.0以上需要动态授权 -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <!-- 读取手机状态 6.0以上需要动态授权 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <!-- 读取联系人 6.0以上需要动态授权 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- 震动 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- 定位 6.0以上需要动态授权 -->
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 网络or其他 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -36,166 +35,163 @@
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-
-    <!--定位 6.0以上需要动态授权-->
-    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!-- 定位 6.0以上需要动态授权 -->
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature
         android:name="android.hardware.bluetooth_le"
-        android:required="true"/>
-
+        android:required="true" />
 
     <application
-        android:name="com.manridy.iband.IbandApplication"
+        android:name=".IbandApplication"
         android:allowBackup="true"
+        android:configChanges="locale|layoutDirection"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:configChanges="locale|layoutDirection"
         android:theme="@style/AppThemes"
-        tools:replace="android:name"
-        >
-
-        <meta-data android:name="com.amap.api.v2.apikey"
-                   android:value="767c9359cf8c9189525156908a851cde">
-        </meta-data>
+        tools:replace="android:name">
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="767c9359cf8c9189525156908a851cde"></meta-data>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyACMM6eGEbnLlHQvim0gdyS9MCQcdQtex0" />
-        <!--<service-->
-            <!--android:name="com.baidu.location.f"-->
-            <!--android:enabled="true"-->
-            <!--android:process=":remote" >-->
-            <!--<intent-filter>-->
-                <!--<action-->
-                    <!--android:name="com.baidu.location.service_v2.2">-->
-                <!--</action>-->
-            <!--</intent-filter>-->
-        <!--</service>-->
-        <service android:name=".service.BleService"/>
-        <service android:name=".service.AlertService"/>
-        <service android:name=".service.DfuService"/>
-        <service android:name="com.manridy.iband.service.NotificationCollectorMonitorService"/>
-        <service android:name="com.manridy.iband.service.AppNotificationListenerService"
-                 android:label="@string/app_name"
-                 android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+        <!-- <service -->
+        <!-- android:name="com.baidu.location.f" -->
+        <!-- android:enabled="true" -->
+        <!-- android:process=":remote" > -->
+        <!-- <intent-filter> -->
+        <!-- <action -->
+        <!-- android:name="com.baidu.location.service_v2.2"> -->
+        <!-- </action> -->
+        <!-- </intent-filter> -->
+        <!-- </service> -->
+        <service android:name=".service.BleService" />
+        <service android:name=".service.AlertService" />
+        <service android:name=".service.DfuService" />
+        <service android:name=".service.NotificationCollectorMonitorService" />
+        <service
+            android:name=".service.AppNotificationListenerService"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </service>
         <service android:name="com.amap.api.location.APSService" />
 
         <provider
-            android:authorities="com.manridy.iband.fileprovider"
             android:name="android.support.v4.content.FileProvider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:authorities="com.manridy.iband.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
 
-
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent" />
-        <activity android:name=".view.main.StartActivity"
-                  android:theme="@style/startActivityTheme"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name=".view.main.StartActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/startActivityTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.main.MainActivity"
-                  android:theme="@style/Theme.NoBackgroundAndTitleMain"
-                  android:launchMode="singleTask"
-                  android:screenOrientation="portrait"
+        <activity
+            android:name=".view.main.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            />
-        <activity android:name=".view.main.SettingActivity"/>
-        <activity android:name=".view.main.WelcomeActivity"/>
-        <activity android:name=".view.setting.ViewActivity"/>
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.NoBackgroundAndTitleMain" />
+        <activity android:name=".view.main.SettingActivity" />
+        <activity android:name=".view.main.WelcomeActivity" />
+        <activity android:name=".view.setting.ViewActivity" />
         <activity android:name=".view.setting.CameraActivity" />
-        <activity android:name=".view.setting.FindActivity"/>
-        <activity android:name=".view.setting.AlertActivity"/>
-        <activity android:name=".view.setting.WechatActivity"/>
-        <activity android:name=".view.setting.LightActivity"/>
-        <activity android:name=".view.setting.UnitActivity"/>
-        <activity android:name=".view.setting.TimeActivity"/>
-        <activity android:name=".view.setting.TargetActivity"/>
-        <activity android:name=".view.setting.AboutActivity"/>
-        <activity android:name=".view.setting.UpdateActivity"/>
-        <activity android:name=".view.setting.WristActivity"/>
-        <activity android:name=".view.alert.AlertMenuActivity"/>
-        <activity android:name=".view.alert.SedentaryActivity"/>
-        <activity android:name=".view.alert.ClockActivity"/>
-        <activity android:name=".view.alert.PhoneActivity"/>
-        <activity android:name=".view.alert.SmsActivity"/>
-        <activity android:name=".view.alert.LostActivity"/>
-        <activity android:name=".view.alert.AppActivity"/>
-
-        <activity android:name=".view.main.TrainActivity"/>
-        <activity android:name=".view.test.TestHrTimingActivity"/>
-        <activity android:name=".view.main.UserActivity"/>
-        <activity android:name=".view.main.DeviceActivity"/>
-        <activity android:name=".view.main.OtaActivity"
-                  android:launchMode="singleTask"/>
-        <activity android:name=".view.history.HrHistoryActivity"/>
-        <activity android:name=".view.history.EcgHistoryActivity"
+        <activity android:name=".view.setting.FindActivity" />
+        <activity android:name=".view.setting.AlertActivity" />
+        <activity android:name=".view.setting.WechatActivity" />
+        <activity android:name=".view.setting.LightActivity" />
+        <activity android:name=".view.setting.UnitActivity" />
+        <activity android:name=".view.setting.TimeActivity" />
+        <activity android:name=".view.setting.TargetActivity" />
+        <activity android:name=".view.setting.AboutActivity" />
+        <activity android:name=".view.setting.UpdateActivity" />
+        <activity android:name=".view.setting.WristActivity" />
+        <activity android:name=".view.alert.AlertMenuActivity" />
+        <activity android:name=".view.alert.SedentaryActivity" />
+        <activity android:name=".view.alert.ClockActivity" />
+        <activity android:name=".view.alert.PhoneActivity" />
+        <activity android:name=".view.alert.SmsActivity" />
+        <activity android:name=".view.alert.LostActivity" />
+        <activity android:name=".view.alert.AppActivity" />
+        <activity android:name=".view.main.TrainActivity" />
+        <activity android:name=".view.test.TestHrTimingActivity" />
+        <activity android:name=".view.main.UserActivity" />
+        <activity android:name=".view.main.DeviceActivity" />
+        <activity
+            android:name=".view.main.OtaActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".view.history.HrHistoryActivity" />
+        <activity
+            android:name=".view.history.EcgHistoryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name=".view.history.EcgRePlayHistoryActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            />
-        <activity android:name=".view.history.EcgRePlayHistoryActivity" android:screenOrientation="landscape"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            />
-        <activity android:name=".view.history.StepHistoryActivity"/>
-        <activity android:name=".view.history.SleepHistoryActivity"/>
-        <activity android:name=".view.test.TestDatabaseActivity"/>
-        <activity android:name=".view.test.TestMenuActivity"/>
-        <activity android:name=".view.main.HrCorrectActivity"/>
-        <activity android:name=".view.setting.HelpActivity"/>
-        <activity android:name=".view.setting.HelpItemActivity"/>
-        <activity android:name=".view.main.QrActivity"/>
-        <activity android:name=".view.setting.LangueActivity"/>
-        <activity android:name=".view.main.LocationActivity"/>
-        <activity android:name=".view.main.Location2Activity"/>
-        <activity android:name=".view.main.SportActivity"/>
-        <activity android:name=".view.main.SportRunActivity"/>
-        <activity android:name=".view.setting.DataExportActivity"/>
-        <activity android:name=".view.setting.HelpWebViewActivity"/>
-        <activity android:name=".view.test.HrCorrectingActivity"/>
+            android:screenOrientation="landscape" />
+        <activity android:name=".view.history.StepHistoryActivity" />
+        <activity android:name=".view.history.SleepHistoryActivity" />
+        <activity android:name=".view.test.TestDatabaseActivity" />
+        <activity android:name=".view.test.TestMenuActivity" />
+        <activity android:name=".view.main.HrCorrectActivity" />
+        <activity android:name=".view.setting.HelpActivity" />
+        <activity android:name=".view.setting.HelpItemActivity" />
+        <activity android:name=".view.main.QrActivity" />
+        <activity android:name=".view.setting.LangueActivity" />
+        <activity android:name=".view.main.LocationActivity" />
+        <activity android:name=".view.main.Location2Activity" />
+        <activity android:name=".view.main.SportActivity" />
+        <activity android:name=".view.main.SportRunActivity" />
+        <activity android:name=".view.setting.DataExportActivity" />
+        <activity android:name=".view.setting.HelpWebViewActivity" />
+        <activity android:name=".view.test.HrCorrectingActivity" />
         <activity android:name=".view.main.SportFunctionActivity" />
-        <activity android:name=".view.main.AMapPlaybackActivity"></activity>
-        <activity android:name=".view.main.AMapRunActivity"></activity>
-        <activity android:name=".view.main.CountDownActivity"></activity>
-        <activity android:name=".view.main.RunActivity"></activity>
-        <activity android:name=".view.main.IndoorRunActivity"></activity>
-        <activity android:name=".view.main.GoogleMapRunActivity"></activity>
-        <activity android:name=".view.main.GoogleMapPlaybackActivity"></activity>
-        <activity android:name=".view.main.BikingActivity"></activity>
+        <activity android:name=".view.main.AMapPlaybackActivity" />
+        <activity android:name=".view.main.AMapRunActivity" />
+        <activity android:name=".view.main.CountDownActivity" />
+        <activity android:name=".view.main.RunActivity" />
+        <activity android:name=".view.main.IndoorRunActivity" />
+        <activity android:name=".view.main.GoogleMapRunActivity" />
+        <activity android:name=".view.main.GoogleMapPlaybackActivity" />
+        <activity android:name=".view.main.BikingActivity" />
         <activity android:name=".view.setting.FeedbackActivity" />
 
         <service
             android:name=".service.LocationService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
         <service
             android:name=".service.PedometerService"
             android:enabled="true"
-            android:exported="true"></service>
-        <service android:name=".common.step.StepService">
+            android:exported="true" />
+        <service android:name=".common.step.StepService"></service>
+        <service android:name=".common.step.StepService$GrayInnerService"></service>
 
-        </service>
-        <service android:name=".common.step.StepService$GrayInnerService">
-        </service>
+        <activity android:name=".view.setting.DoNotDisturbActivity"></activity>
     </application>
 
 </manifest>

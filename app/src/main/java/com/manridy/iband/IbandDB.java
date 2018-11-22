@@ -11,6 +11,7 @@ import com.manridy.iband.bean.BoModel;
 import com.manridy.iband.bean.BpModel;
 import com.manridy.iband.bean.ClockModel;
 import com.manridy.iband.bean.DayBean;
+import com.manridy.iband.bean.DoNotDisturbModel;
 import com.manridy.iband.bean.EcgDataBean;
 import com.manridy.iband.bean.EcgHistoryModel;
 import com.manridy.iband.bean.HeartModel;
@@ -22,6 +23,7 @@ import com.manridy.iband.bean.UserModel;
 import com.manridy.iband.bean.ViewModel;
 import com.manridy.iband.bean.WeatherModel;
 import com.manridy.iband.bean.data.RunLocationModel;
+import com.manridy.iband.view.setting.DoNotDisturbActivity;
 import com.manridy.sdk.bean.Clock;
 import com.manridy.sdk.bean.Ecg;
 import com.manridy.sdk.common.TimeUtil;
@@ -73,6 +75,14 @@ public class IbandDB {
     public SedentaryModel getSedentary(){
         return DataSupport.findLast(SedentaryModel.class);
     }
+    /**
+     * @Name yanwen
+     * @Date 18/11/22
+     * */
+    public DoNotDisturbModel getDoNotDisturbModel() {
+        return DataSupport.findLast(DoNotDisturbModel.class);
+    }
+
 
     public List<ClockModel> getClock(){
         return DataSupport.findAll(ClockModel.class);

@@ -517,6 +517,27 @@ public class BleCmd {
         }
         return BleProtocol.cmd(head,type,body);
     }
+    /**
+     * 设置勿扰模式命令
+     * */
+    public static byte[] setDoNotDisturbCmd(int onOrOff, int s_hour, int s_minute, int e_hour, int e_minute) {
+        // FC 2E SS SH SM EH EM 00 00 00 00 00 00 00 00 00 00 00
+        byte[] body = new byte[20];
+        body[0] = head;
+        body[1] = (byte) 0x2E;
+        body[2] = (byte) onOrOff;
+        body[3] = (byte) (s_hour & 0xff);
+        body[4] = (byte) (s_minute & 0xff);
+        body[5] = (byte) (e_hour & 0xff);
+        body[6] = (byte) (e_minute & 0xff);
+        for (int i = 7; i < 20; ++i) {
+            body[i] = 0x00;
+        }
+        return body;
+    }
+
+
+
 
     /**
      * 设置设备名称

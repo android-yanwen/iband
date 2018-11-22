@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.manridy.sdk.bean.Clock;
+import com.manridy.sdk.bean.DoNotDisturb;
 import com.manridy.sdk.bean.Sedentary;
 import com.manridy.sdk.bean.User;
 import com.manridy.sdk.bean.Weather;
@@ -194,7 +195,7 @@ public class Watch extends BluetoothLeManager implements WatchApi {
     public synchronized void sendCmd(byte[] data, BleCallback bleCallback){
         String datas = "";
         for (int i = 0;i<data.length;i++){
-            datas+="["+i+"]:"+data[i];
+            datas+=" ["+i+"]:"+data[i];
         }
         Log.i("sendCmd","sendCmd:"+datas);
         messageList.add(new cmdMessage(data, bleCallback));
@@ -514,6 +515,27 @@ public class Watch extends BluetoothLeManager implements WatchApi {
         int space = sedentary.getSpace();
         int target = (int) (space / 60.0 * 100.0);
         sendCmd(BleCmd.setSedentaryAlert(sedentary.isSedentaryOnOff() ? 1 : 0,sedentary.isSedentaryNap() ? 1 : 0 ,space ,target ,times ),bleCallback);
+    }
+
+    /**
+     * 设置勿扰模式
+     * @Name YanWen
+     * @Date 18/11/22
+     * */
+    public void setDoNotDisturb(DoNotDisturb doNotDisturb, BleCallback bleCallback) {
+        if (doNotDisturb == null) {
+            throw new IllegalArgumentException("setDoNotDisturb is null !");
+        }
+        sendCmd(
+                BleCmd.setDoNotDisturbCmd(doNotDisturb.getDoNotDisturbOnOff(),
+                        doNotDisturb.getStartHour(),
+                        doNotDisturb.getStartMinute(),
+                        doNotDisturb.getEndHour(),
+                        doNotDisturb.getEndMinute()
+                ),
+                bleCallback
+        );
+
     }
 
     /**

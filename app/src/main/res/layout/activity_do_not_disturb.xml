@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.setting.DoNotDisturbActivity"
+    android:orientation="vertical">
+
+    <include layout="@layout/tab_activity"/>
+
+    <com.manridy.iband.ui.items.AlertItems
+        android:id="@+id/ai_do_not_disturb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:alert_names="开启勿扰模式"
+        app:alert_img="@mipmap/ic_off"/>
+
+    <com.manridy.iband.ui.items.AlertItems
+        android:id="@+id/ai_do_not_disturb_start_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:alert_names="@string/hint_alert_sedentary_time_start"
+        app:alert_text="09:00"
+        app:alert_img="@mipmap/ic_chevron_right"
+        android:visibility="gone"/>
+
+    <com.manridy.iband.ui.items.AlertItems
+        android:id="@+id/ai_do_not_disturb_end_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:alert_names="@string/hint_alert_sedentary_time_end"
+        app:alert_text="21:00"
+        app:alert_img="@mipmap/ic_chevron_right"
+        android:visibility="gone"/>
+</LinearLayout>
