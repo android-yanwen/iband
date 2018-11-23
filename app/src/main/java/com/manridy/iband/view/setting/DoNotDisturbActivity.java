@@ -76,8 +76,7 @@ public class DoNotDisturbActivity extends BaseActionActivity {
                 ai_do_not_disturb.setAlertCheck(onOrOff);
                 ai_do_not_disturb_start_time.setVisibility(onOrOff ? View.VISIBLE : View.GONE);
                 ai_do_not_disturb_end_time.setVisibility(onOrOff ? View.VISIBLE : View.GONE);
-                curDoNotDisturbModel.setDoNotDisturbOnOff(onOrOff ? 1 : 0);
-                curDoNotDisturbModel.save();
+//                curDoNotDisturbModel.save();
             }
         });
 
@@ -134,6 +133,8 @@ public class DoNotDisturbActivity extends BaseActionActivity {
                                 Toast.makeText(ibandApplication, getString(R.string.hint_save_success), Toast.LENGTH_SHORT).show();
                             }
                         });
+                        curDoNotDisturbModel.setDoNotDisturbOnOff(onOrOff ? 1 : 0);
+                        curDoNotDisturbModel.save();
                         onBackPressed();
                     }
 

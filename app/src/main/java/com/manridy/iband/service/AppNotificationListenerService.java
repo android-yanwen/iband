@@ -200,7 +200,9 @@ public class AppNotificationListenerService extends NotificationListenerService 
             if (appAlert != -1) {
                 cmdFirst = true;
                 infoId = infoId > 63 ? 1 : infoId++;
-                IbandApplication.getIntance().service.watch.sendCmd(BleCmd.setAppAlertName(infoId,appAlert), AppleCallback);
+                if (IbandApplication.getIntance().service.watch != null) {
+                    IbandApplication.getIntance().service.watch.sendCmd(BleCmd.setAppAlertName(infoId,appAlert), AppleCallback);
+                }
             }
         }
     }

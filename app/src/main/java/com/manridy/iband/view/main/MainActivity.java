@@ -56,6 +56,7 @@ import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.TimeUtil;
 import com.manridy.iband.DeviceListDataSpare;
 import com.manridy.iband.IbandApplication;
+import com.manridy.iband.IbandDB;
 import com.manridy.iband.bean.AddressModel;
 import com.manridy.iband.bean.WeatherModel;
 import com.manridy.iband.common.OnResultCallBack;
@@ -432,7 +433,7 @@ public class MainActivity extends BaseActivity {
             Watch.getInstance().sendCmd(BleCmd.setTime());
         }
 
-            updateDeviceList();
+        updateDeviceList();
         getLocation();
 
     }
@@ -474,12 +475,71 @@ public class MainActivity extends BaseActivity {
                             if(isAvailableLocale)localeCode = localeSub;
                         }
 
+                        // 经度，纬度
+//                        Log.e(TAG, "onLocationChanged: ................." + amapLocation.getLongitude() );
+//                        Log.e(TAG, "onLocationChanged: ................." + amapLocation.getLatitude() );
+
+//                        HttpService.getInstance().getCityWeather(
+//                                ""+amapLocation.getLongitude(),
+//                                ""+amapLocation.getLatitude()
+//                        );
+
                         //定位成功回调信息，设置相关消息
                         HttpService.getInstance().getHeWeather_city("" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),localeCode, new OnResultCallBack() {
                             @Override
                             public void onResult(boolean result, Object o) {
                                 if(result){
                                     AddressModel addressModel = (AddressModel)o;
+                                    int max = 0xFF;
+                                    int min = 0xFF;
+                                    int now = 0xFF;
+                                    if(addressModel.getForecastWeather().get(0).getTmp_now()!=null){
+                                        now = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_now());
+                                    }
+                                    if(addressModel.getForecastWeather().get(0).getTmp_max()!=null){
+                                        max = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_max());
+                                    }
+                                    if(addressModel.getForecastWeather().get(0).getTmp_min()!=null){
+                                        min = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_min());
+                                    }
+                                    LinkedList<Weather> forecastWeathers = new LinkedList<>();
+                                    Weather forecastWeather;
+                                    if(addressModel.getForecastWeather().size()>=3){
+                                        for(int i = 1;i<=3;i++){
+                                            com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = new com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean();
+                                            forecastWeatherBean.setWeather_type(addressModel.getForecastWeather().get(i).getWeater_type());
+                                            forecastWeatherBean.setTmp_max(addressModel.getForecastWeather().get(i).getTmp_max());
+                                            forecastWeatherBean.setTmp_min(addressModel.getForecastWeather().get(i).getTmp_min());
+                                            forecastWeather = new Weather(forecastWeatherBean.getWeather_type(),Integer.parseInt(forecastWeatherBean.getTmp_max()),Integer.parseInt(forecastWeatherBean.getTmp_min()),0xFF,null);
+                                            forecastWeathers.add(forecastWeather);
+                                        }
+                                    }
+                                    Weather weatherBean = new Weather(addressModel.getForecastWeather().get(0).getWeater_type(),max,min,now,forecastWeathers);
+                                    IbandApplication.getIntance().weather =weatherBean;
+                                    Watch.getInstance().setWeather(weatherBean, new BleCallback() {
+                                        @Override
+                                        public void onSuccess(Object o) {
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(BleException exception) {
+
+                                        }
+                                    });
+
+                                    /**************************存本地数据库***************************/
+                                    WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
+                                    weatherModel.setCountry(addressModel.getCnty());
+                                    weatherModel.setCity(addressModel.getParent_city());
+                                    weatherModel.setNowTemperature(addressModel.getForecastWeather().get(0).getTmp_min());
+                                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+                                    weatherModel.setDay(df.format(new Date()));
+                                    weatherModel.save();
+                                    EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
+
+
+/*
                                     List<AddressModel.HeWeather6Bean> heWeather6Beans = addressModel.getHeWeather6();
                                     if(heWeather6Beans.size()>0){
                                         AddressModel.HeWeather6Bean heWeather6Bean = heWeather6Beans.get(0);
@@ -543,10 +603,9 @@ public class MainActivity extends BaseActivity {
                                                 }
                                             }
                                         });
-                                    }
-
+                                    }*/
                                 }else{
-
+                                    Log.d(TAG, "获取失败");
                                 }
                             }
                         });
