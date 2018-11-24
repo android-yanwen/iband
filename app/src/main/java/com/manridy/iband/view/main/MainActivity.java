@@ -504,13 +504,13 @@ public class MainActivity extends BaseActivity {
                                     }
                                     LinkedList<Weather> forecastWeathers = new LinkedList<>();
                                     Weather forecastWeather;
-                                    if(addressModel.getForecastWeather().size()>=3){
-                                        for(int i = 1;i<=3;i++){
+                                    if (addressModel.getForecastWeather().size() == 3) {
+                                        for (int i = 1; i < 3; i++) {
                                             com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = new com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean();
                                             forecastWeatherBean.setWeather_type(addressModel.getForecastWeather().get(i).getWeater_type());
                                             forecastWeatherBean.setTmp_max(addressModel.getForecastWeather().get(i).getTmp_max());
                                             forecastWeatherBean.setTmp_min(addressModel.getForecastWeather().get(i).getTmp_min());
-                                            forecastWeather = new Weather(forecastWeatherBean.getWeather_type(),Integer.parseInt(forecastWeatherBean.getTmp_max()),Integer.parseInt(forecastWeatherBean.getTmp_min()),0xFF,null);
+                                            forecastWeather = new Weather(forecastWeatherBean.getWeather_type(), Integer.parseInt(forecastWeatherBean.getTmp_max()), Integer.parseInt(forecastWeatherBean.getTmp_min()), 0xFF, null);
                                             forecastWeathers.add(forecastWeather);
                                         }
                                     }
@@ -532,7 +532,7 @@ public class MainActivity extends BaseActivity {
                                     WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
                                     weatherModel.setCountry(addressModel.getCnty());
                                     weatherModel.setCity(addressModel.getParent_city());
-                                    weatherModel.setNowTemperature(addressModel.getForecastWeather().get(0).getTmp_min());
+                                    weatherModel.setNowTemperature(addressModel.getForecastWeather().get(0).getTmp_now());
                                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
                                     weatherModel.setDay(df.format(new Date()));
                                     weatherModel.save();

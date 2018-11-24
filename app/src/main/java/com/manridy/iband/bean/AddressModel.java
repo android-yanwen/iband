@@ -2,6 +2,7 @@ package com.manridy.iband.bean;
 
 import com.manridy.sdk.bean.Weather;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddressModel {
@@ -9,7 +10,7 @@ public class AddressModel {
 
     private String cnty;
     private String parent_city;
-    private List<ForecastWeather> forecastWeather;
+    private List<ForecastWeather> forecastWeather = new ArrayList<>();
 
     public class ForecastWeather{
         private String cond_txt_d;
@@ -27,6 +28,16 @@ public class AddressModel {
             if (cond_txt_d ==null) return;
             if (cond_txt_d.equals("多云")) {
                 weater_type = 1;
+            }else if (cond_txt_d.equals("晴")){
+                weater_type = 0;
+            } else if (cond_txt_d.equals("小雨")) {
+                weater_type = 2;
+            } else if (cond_txt_d.equals("小雪")) {
+                weater_type = 3;
+            } else if (cond_txt_d.equals("阴霾")) {
+                weater_type = 4;
+            } else if (cond_txt_d.equals("沙尘暴")) {
+                weater_type = 5;
             }
         }
 

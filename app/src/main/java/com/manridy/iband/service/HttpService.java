@@ -57,8 +57,7 @@ public class HttpService {
     public static final String device_wechat_query = "http://120.78.138.141:8080/deviceRegisterQuery.php";
     public static final String device_wechat_regist = "http://120.78.138.141:8080/wechatRegister.php";
 
-//    public static final String heweather_city = "https://search.heweather.com/find?key=e778b60bd3004e309d51fe0a2d69dd39&location=";
-    public static final String heweather_city = "https://api.heweather.com/s6/weather/";
+//    public static final String heweather_city = "https://search.heweather.com/find?key=e778b60bd3004e309d51fe0a2d69dd39&location=";//公司服务器天气接口
     public static final String weather = "http://112.74.54.235/product/index.php/Api/weather/requestByKey/city/";
 
     /*******获取用户反馈信息******/
@@ -133,7 +132,7 @@ public class HttpService {
                         addressModel.getForecastWeather().get(i).setCond_txt_d(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("cond_txt_d").getAsString());
                         addressModel.getForecastWeather().get(i).setTmp_max(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_max").getAsString());
                         addressModel.getForecastWeather().get(i).setTmp_min(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_min").getAsString());
-                        addressModel.getForecastWeather().get(i).setTmp_now(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_min").getAsString());
+                        addressModel.getForecastWeather().get(i).setTmp_now(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_max").getAsString());
                     }
                     onResultCallBack.onResult(true, addressModel);
                 } catch (Exception e) {
@@ -418,26 +417,26 @@ public class HttpService {
         });
     }
 
-
-    public void getCityWeather(String longitude, String latitude) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(heweather_city)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .build();
-        NetInterfaceMethod netInterfaceMethod = retrofit.create(NetInterfaceMethod.class);
-        retrofit2.Call call = netInterfaceMethod.getCityWeather(longitude, latitude);
-        call.enqueue(new retrofit2.Callback() {
-            @Override
-            public void onResponse(retrofit2.Call call, retrofit2.Response response) {
-                Log.d(TAG, "onResponse: ................");
-            }
-
-            @Override
-            public void onFailure(retrofit2.Call call, Throwable t) {
-                Log.d(TAG, "onFailure:................. ");
-            }
-        });
-    }
+//
+//    public void getCityWeather(String longitude, String latitude) {
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(heweather_city)
+//                .addConverterFactory(ScalarsConverterFactory.create())
+//                .build();
+//        NetInterfaceMethod netInterfaceMethod = retrofit.create(NetInterfaceMethod.class);
+//        retrofit2.Call call = netInterfaceMethod.getCityWeather(longitude, latitude);
+//        call.enqueue(new retrofit2.Callback() {
+//            @Override
+//            public void onResponse(retrofit2.Call call, retrofit2.Response response) {
+//                Log.d(TAG, "onResponse: ................");
+//            }
+//
+//            @Override
+//            public void onFailure(retrofit2.Call call, Throwable t) {
+//                Log.d(TAG, "onFailure:................. ");
+//            }
+//        });
+//    }
 
 
 }
