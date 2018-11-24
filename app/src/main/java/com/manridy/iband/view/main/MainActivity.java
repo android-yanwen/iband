@@ -479,136 +479,143 @@ public class MainActivity extends BaseActivity {
 //                        Log.e(TAG, "onLocationChanged: ................." + amapLocation.getLongitude() );
 //                        Log.e(TAG, "onLocationChanged: ................." + amapLocation.getLatitude() );
 
-//                        HttpService.getInstance().getCityWeather(
-//                                ""+amapLocation.getLongitude(),
-//                                ""+amapLocation.getLatitude()
-//                        );
-
-                        //定位成功回调信息，设置相关消息
-                        HttpService.getInstance().getHeWeather_city("" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),localeCode, new OnResultCallBack() {
-                            @Override
-                            public void onResult(boolean result, Object o) {
-                                if(result){
-                                    AddressModel addressModel = (AddressModel)o;
-                                    int max = 0xFF;
-                                    int min = 0xFF;
-                                    int now = 0xFF;
-                                    if(addressModel.getForecastWeather().get(0).getTmp_now()!=null){
-                                        now = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_now());
-                                    }
-                                    if(addressModel.getForecastWeather().get(0).getTmp_max()!=null){
-                                        max = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_max());
-                                    }
-                                    if(addressModel.getForecastWeather().get(0).getTmp_min()!=null){
-                                        min = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_min());
-                                    }
-                                    LinkedList<Weather> forecastWeathers = new LinkedList<>();
-                                    Weather forecastWeather;
-                                    if (addressModel.getForecastWeather().size() == 3) {
-                                        for (int i = 1; i < 3; i++) {
-                                            com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = new com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean();
-                                            forecastWeatherBean.setWeather_type(addressModel.getForecastWeather().get(i).getWeater_type());
-                                            forecastWeatherBean.setTmp_max(addressModel.getForecastWeather().get(i).getTmp_max());
-                                            forecastWeatherBean.setTmp_min(addressModel.getForecastWeather().get(i).getTmp_min());
-                                            forecastWeather = new Weather(forecastWeatherBean.getWeather_type(), Integer.parseInt(forecastWeatherBean.getTmp_max()), Integer.parseInt(forecastWeatherBean.getTmp_min()), 0xFF, null);
-                                            forecastWeathers.add(forecastWeather);
-                                        }
-                                    }
-                                    Weather weatherBean = new Weather(addressModel.getForecastWeather().get(0).getWeater_type(),max,min,now,forecastWeathers);
-                                    IbandApplication.getIntance().weather =weatherBean;
-                                    Watch.getInstance().setWeather(weatherBean, new BleCallback() {
-                                        @Override
-                                        public void onSuccess(Object o) {
-
-                                        }
-
-                                        @Override
-                                        public void onFailure(BleException exception) {
-
-                                        }
-                                    });
-
-                                    /**************************存本地数据库***************************/
-                                    WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
-                                    weatherModel.setCountry(addressModel.getCnty());
-                                    weatherModel.setCity(addressModel.getParent_city());
-                                    weatherModel.setNowTemperature(addressModel.getForecastWeather().get(0).getTmp_now());
-                                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-                                    weatherModel.setDay(df.format(new Date()));
-                                    weatherModel.save();
-                                    EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
-
-
-/*
-                                    List<AddressModel.HeWeather6Bean> heWeather6Beans = addressModel.getHeWeather6();
-                                    if(heWeather6Beans.size()>0){
-                                        AddressModel.HeWeather6Bean heWeather6Bean = heWeather6Beans.get(0);
-                                        List<AddressModel.HeWeather6Bean.BasicBean> basicBeans = heWeather6Bean.getBasic();
-                                        if(basicBeans.size()<1)return;
-                                        final AddressModel.HeWeather6Bean.BasicBean basicBean = basicBeans.get(0);
-                                        IbandApplication.getIntance().country = basicBean.getCnty();
-                                        if(basicBean.getParent_city()!=null) {
-                                            IbandApplication.getIntance().city = basicBean.getParent_city();
-                                        }else{
-                                            IbandApplication.getIntance().city = basicBean.getLocation();
-                                        }
-                                        HttpService.getInstance().getWeather(IbandApplication.getIntance().city, new OnResultCallBack() {
-                                            @Override
-                                            public void onResult(boolean result, Object o) {
-                                                if(result){
-                                                    com.manridy.iband.bean.Weather weather = (com.manridy.iband.bean.Weather)o;
-                                                    int max = 0xFF;
-                                                    int min = 0xFF;
-                                                    int now = 0xFF;
-                                                    if(weather.getData().getNowWeather().getTmp()!=null){
-                                                        now = Integer.parseInt(weather.getData().getNowWeather().getTmp());
-                                                    }
-                                                    if(weather.getData().getNowWeather().getTmp_max()!=null){
-                                                        max = Integer.parseInt(weather.getData().getNowWeather().getTmp_max());
-                                                    }
-                                                    if(weather.getData().getNowWeather().getTmp_min()!=null){
-                                                        min = Integer.parseInt(weather.getData().getNowWeather().getTmp_min());
-                                                    }
-                                                    LinkedList<Weather> forecastWeathers = new LinkedList<>();
-                                                    Weather forecastWeather;
-                                                    if(weather.getData().getForecastWeather().size()>=4){
-                                                        for(int i = 1;i<=4;i++){
-                                                            com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = weather.getData().getForecastWeather().get(i);
-                                                            forecastWeather = new Weather(forecastWeatherBean.getWeather_type(),Integer.parseInt(forecastWeatherBean.getTmp_max()),Integer.parseInt(forecastWeatherBean.getTmp_min()),0xFF,null);
-                                                            forecastWeathers.add(forecastWeather);
-                                                        }
-
-                                                    }
-                                                    Weather weatherBean = new Weather(weather.getData().getNowWeather().getWeather_type(),max,min,now,forecastWeathers);
-                                                    IbandApplication.getIntance().weather =weatherBean;
-                                                    Watch.getInstance().setWeather(weatherBean, new BleCallback() {
-                                                        @Override
-                                                        public void onSuccess(Object o) {
-
-                                                        }
-
-                                                        @Override
-                                                        public void onFailure(BleException exception) {
-
-                                                        }
-                                                    });
-                                                    weatherModel = new WeatherModel(IbandApplication.getIntance().country,basicBean.getAdmin_area(),IbandApplication.getIntance().city,basicBean.getCid());
-                                                    weatherModel.setWeatherInfo(""+weatherBean.getWeatherRegime(),""+weatherBean.getNowTemperature());
-                                                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-                                                    weatherModel.setDay(df.format(new Date()));
-                                                    weatherModel.save();
-                                                    EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
-                                                }else{
-                                                    EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
+                        HttpService.getInstance().getCityWeather(
+                                "" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),
+//                                "116.310316,39.956074",
+                                new OnResultCallBack() {
+                                    @Override
+                                    public void onResult(boolean result, Object o) {
+                                        if(result){
+                                            AddressModel addressModel = (AddressModel)o;
+                                            int max = 0xFF;
+                                            int min = 0xFF;
+                                            int now = 0xFF;
+                                            if(addressModel.getForecastWeather().get(0).getTmp_now()!=null){
+                                                now = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_now());
+                                            }
+                                            if(addressModel.getForecastWeather().get(0).getTmp_max()!=null){
+                                                max = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_max());
+                                            }
+                                            if(addressModel.getForecastWeather().get(0).getTmp_min()!=null){
+                                                min = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_min());
+                                            }
+                                            LinkedList<Weather> forecastWeathers = new LinkedList<>();
+                                            Weather forecastWeather;
+                                            if (addressModel.getForecastWeather().size() == 3) {
+                                                for (int i = 1; i < 3; i++) {
+                                                    com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = new com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean();
+                                                    forecastWeatherBean.setWeather_type(addressModel.getForecastWeather().get(i).getWeater_type());
+                                                    forecastWeatherBean.setTmp_max(addressModel.getForecastWeather().get(i).getTmp_max());
+                                                    forecastWeatherBean.setTmp_min(addressModel.getForecastWeather().get(i).getTmp_min());
+                                                    forecastWeather = new Weather(forecastWeatherBean.getWeather_type(), Integer.parseInt(forecastWeatherBean.getTmp_max()), Integer.parseInt(forecastWeatherBean.getTmp_min()), 0xFF, null);
+                                                    forecastWeathers.add(forecastWeather);
                                                 }
                                             }
-                                        });
-                                    }*/
-                                }else{
-                                    Log.d(TAG, "获取失败");
+                                            Weather weatherBean = new Weather(addressModel.getForecastWeather().get(0).getWeater_type(),max,min,now,forecastWeathers);
+                                            IbandApplication.getIntance().weather =weatherBean;
+                                            Watch.getInstance().setWeather(weatherBean, new BleCallback() {
+                                                @Override
+                                                public void onSuccess(Object o) {
+
+                                                }
+
+                                                @Override
+                                                public void onFailure(BleException exception) {
+
+                                                }
+                                            });
+
+                                            /**************************存本地数据库***************************/
+                                            WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
+                                            weatherModel.setCountry(addressModel.getCnty());
+                                            weatherModel.setCity(addressModel.getParent_city());
+                                            weatherModel.setNowTemperature(addressModel.getForecastWeather().get(0).getTmp_now());
+                                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+                                            weatherModel.setDay(df.format(new Date()));
+                                            weatherModel.save();
+                                            EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
+                                        }else{
+                                            Log.d(TAG, "获取失败");
+                                        }
+                                    }
                                 }
-                            }
-                        });
+                        );
+
+                        //定位成功回调信息，设置相关消息
+//                        HttpService.getInstance().getHeWeather_city("" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),localeCode, new OnResultCallBack() {
+//                            @Override
+//                            public void onResult(boolean result, Object o) {
+//                                if(result){
+//                                    AddressModel addressModel = (AddressModel)o;
+//                                    List<AddressModel.HeWeather6Bean> heWeather6Beans = addressModel.getHeWeather6();
+//                                    if(heWeather6Beans.size()>0){
+//                                        AddressModel.HeWeather6Bean heWeather6Bean = heWeather6Beans.get(0);
+//                                        List<AddressModel.HeWeather6Bean.BasicBean> basicBeans = heWeather6Bean.getBasic();
+//                                        if(basicBeans.size()<1)return;
+//                                        final AddressModel.HeWeather6Bean.BasicBean basicBean = basicBeans.get(0);
+//                                        IbandApplication.getIntance().country = basicBean.getCnty();
+//                                        if(basicBean.getParent_city()!=null) {
+//                                            IbandApplication.getIntance().city = basicBean.getParent_city();
+//                                        }else{
+//                                            IbandApplication.getIntance().city = basicBean.getLocation();
+//                                        }
+//                                        HttpService.getInstance().getWeather(IbandApplication.getIntance().city, new OnResultCallBack() {
+//                                            @Override
+//                                            public void onResult(boolean result, Object o) {
+//                                                if(result){
+//                                                    com.manridy.iband.bean.Weather weather = (com.manridy.iband.bean.Weather)o;
+//                                                    int max = 0xFF;
+//                                                    int min = 0xFF;
+//                                                    int now = 0xFF;
+//                                                    if(weather.getData().getNowWeather().getTmp()!=null){
+//                                                        now = Integer.parseInt(weather.getData().getNowWeather().getTmp());
+//                                                    }
+//                                                    if(weather.getData().getNowWeather().getTmp_max()!=null){
+//                                                        max = Integer.parseInt(weather.getData().getNowWeather().getTmp_max());
+//                                                    }
+//                                                    if(weather.getData().getNowWeather().getTmp_min()!=null){
+//                                                        min = Integer.parseInt(weather.getData().getNowWeather().getTmp_min());
+//                                                    }
+//                                                    LinkedList<Weather> forecastWeathers = new LinkedList<>();
+//                                                    Weather forecastWeather;
+//                                                    if(weather.getData().getForecastWeather().size()>=4){
+//                                                        for(int i = 1;i<=4;i++){
+//                                                            com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = weather.getData().getForecastWeather().get(i);
+//                                                            forecastWeather = new Weather(forecastWeatherBean.getWeather_type(),Integer.parseInt(forecastWeatherBean.getTmp_max()),Integer.parseInt(forecastWeatherBean.getTmp_min()),0xFF,null);
+//                                                            forecastWeathers.add(forecastWeather);
+//                                                        }
+//
+//                                                    }
+//                                                    Weather weatherBean = new Weather(weather.getData().getNowWeather().getWeather_type(),max,min,now,forecastWeathers);
+//                                                    IbandApplication.getIntance().weather =weatherBean;
+//                                                    Watch.getInstance().setWeather(weatherBean, new BleCallback() {
+//                                                        @Override
+//                                                        public void onSuccess(Object o) {
+//
+//                                                        }
+//
+//                                                        @Override
+//                                                        public void onFailure(BleException exception) {
+//
+//                                                        }
+//                                                    });
+//                                                    weatherModel = new WeatherModel(IbandApplication.getIntance().country,basicBean.getAdmin_area(),IbandApplication.getIntance().city,basicBean.getCid());
+//                                                    weatherModel.setWeatherInfo(""+weatherBean.getWeatherRegime(),""+weatherBean.getNowTemperature());
+//                                                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+//                                                    weatherModel.setDay(df.format(new Date()));
+//                                                    weatherModel.save();
+//                                                    EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
+//                                                }else{
+//                                                    EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
+//                                                }
+//                                            }
+//                                        });
+//                                    }
+//                                }else{
+//                                    Log.d(TAG, "获取失败");
+//                                }
+//                            }
+//                        });
                     } else {
                         //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
                         Log.e("AmapError","location Error, ErrCode:"

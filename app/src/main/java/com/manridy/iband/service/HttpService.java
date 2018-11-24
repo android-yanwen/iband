@@ -33,6 +33,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
@@ -100,15 +101,9 @@ public class HttpService {
         }
     }
 
-    private String getWeatherCityUrl(String longitudeAndLatitude) {
-        String heweather_city = "https://api.heweather.com/s6/weather/forecast?location="+longitudeAndLatitude+"&key=e778b60bd3004e309d51fe0a2d69dd39";
-        return heweather_city;
-    }
 
     public void getHeWeather_city(String location,String lang ,final OnResultCallBack onResultCallBack){
-//        Request request = new Request.Builder().url(heweather_city+location+"&lang="+lang).build();
-        Request request = new Request.Builder().url(getWeatherCityUrl(location)).build();
-//        Request request = new Request.Builder().url("https://api.heweather.com/s6/weather/forecast?location=116.310316,39.956074&key=e778b60bd3004e309d51fe0a2d69dd39").build();
+        Request request = new Request.Builder().url(heweather_city+location+"&lang="+lang).build();
         OkHttpClient client = new OkHttpClient();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -119,21 +114,10 @@ public class HttpService {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-//                Log.d(TAG, "onResponse: ........................");
                 try {
                     String result = response.body().string();
                     Log.d(TAG, "onResponse: " + result);
-//                    AddressModel addressModel = new Gson().fromJson(result, AddressModel.class);
-                    JsonObject jsonObject = (JsonObject) new JsonParser().parse(result);
-                    AddressModel addressModel = new AddressModel(3);//json返回未来3天的天气状况
-                    addressModel.setCnty(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("basic").getAsJsonObject().get("cnty").getAsString());
-                    addressModel.setParent_city(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("basic").getAsJsonObject().get("parent_city").getAsString());
-                    for (int i = 0; i < 3; i++) {
-                        addressModel.getForecastWeather().get(i).setCond_txt_d(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("cond_txt_d").getAsString());
-                        addressModel.getForecastWeather().get(i).setTmp_max(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_max").getAsString());
-                        addressModel.getForecastWeather().get(i).setTmp_min(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_min").getAsString());
-                        addressModel.getForecastWeather().get(i).setTmp_now(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_max").getAsString());
-                    }
+                    AddressModel addressModel = new Gson().fromJson(result, AddressModel.class);
                     onResultCallBack.onResult(true, addressModel);
                 } catch (Exception e) {
                     onResultCallBack.onResult(false, null);
@@ -417,26 +401,53 @@ public class HttpService {
         });
     }
 
-//
-//    public void getCityWeather(String longitude, String latitude) {
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(heweather_city)
-//                .addConverterFactory(ScalarsConverterFactory.create())
-//                .build();
-//        NetInterfaceMethod netInterfaceMethod = retrofit.create(NetInterfaceMethod.class);
-//        retrofit2.Call call = netInterfaceMethod.getCityWeather(longitude, latitude);
-//        call.enqueue(new retrofit2.Callback() {
-//            @Override
-//            public void onResponse(retrofit2.Call call, retrofit2.Response response) {
-//                Log.d(TAG, "onResponse: ................");
-//            }
-//
-//            @Override
-//            public void onFailure(retrofit2.Call call, Throwable t) {
-//                Log.d(TAG, "onFailure:................. ");
-//            }
-//        });
-//    }
+
+    /**
+     *  @Name yanwen
+     *  @Date 18/11/24
+     *  访问和风的天气接口
+     * */
+    public static final String heweather_city = "https://api.heweather.com/s6/weather/";
+    private static final String heweather_key = "e778b60bd3004e309d51fe0a2d69dd39";
+
+    public void getCityWeather(String longitudeAndLatitude, final OnResultCallBack onResultCallBack) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(heweather_city)
+                .build();
+        NetInterfaceMethod netInterfaceMethod = retrofit.create(NetInterfaceMethod.class);
+        retrofit2.Call<ResponseBody> call = netInterfaceMethod.getCityWeather(longitudeAndLatitude, heweather_key);
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                String result = null;
+                try {
+                    result = response.body().string();
+                    Log.d(TAG, "onResponse: ................" +result);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                JsonObject jsonObject = (JsonObject) new JsonParser().parse(result);
+                AddressModel addressModel = new AddressModel(3);//json返回未来3天的天气状况
+                addressModel.setCnty(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("basic").getAsJsonObject().get("cnty").getAsString());
+                addressModel.setParent_city(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("basic").getAsJsonObject().get("parent_city").getAsString());
+                for (int i = 0; i < 3; i++) {
+                    addressModel.getForecastWeather().get(i).setCond_txt_d(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("cond_txt_d").getAsString());
+                    addressModel.getForecastWeather().get(i).setTmp_max(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_max").getAsString());
+                    addressModel.getForecastWeather().get(i).setTmp_min(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_min").getAsString());
+                    addressModel.getForecastWeather().get(i).setTmp_now(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_max").getAsString());
+                }
+                onResultCallBack.onResult(true, addressModel);
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "onFailure:................. ");
+                onResultCallBack.onResult(false, null);
+
+            }
+        });
+
+    }
 
 
 }
