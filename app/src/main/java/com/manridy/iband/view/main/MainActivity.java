@@ -527,6 +527,9 @@ public class MainActivity extends BaseActivity {
 
                                             /**************************存本地数据库***************************/
                                             WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
+                                            if (weatherModel == null) {
+                                                weatherModel = new WeatherModel();
+                                            }
                                             weatherModel.setCountry(addressModel.getCnty());
                                             weatherModel.setCity(addressModel.getParent_city());
                                             weatherModel.setNowTemperature(addressModel.getForecastWeather().get(0).getTmp_now());

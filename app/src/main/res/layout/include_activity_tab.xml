@@ -13,7 +13,7 @@
             android:src="@mipmap/nav_ic_back"
             android:background="#00000000"/>
 
-        <TextView
+        <com.manridy.iband.ui.MarqueeTextView
             android:id="@+id/tb_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,7 +21,12 @@
             android:layout_marginTop="32dp"
             android:textColor="#ffffff"
             android:textSize="17sp"
-            android:text="2017/10/27"/>
+            android:text="2017/10/27"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true" />
 
         <ImageView
             android:id="@+id/tb_share"

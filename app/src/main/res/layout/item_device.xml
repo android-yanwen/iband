@@ -61,15 +61,21 @@
         android:textSize="12sp"
         android:text="@string/hint_state_unconnect"/>
 
-    <TextView
+    <com.manridy.iband.ui.MarqueeTextView
         android:id="@+id/tv_device_battery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxWidth="150dp"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@id/tv_device_connect_state"
         android:layout_marginBottom="16dp"
         android:textColor="@color/text_device_hint"
-        android:textSize="12sp"/>
+        android:textSize="12sp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"/>
 
     <RelativeLayout
         android:id="@+id/rl_un_bind"

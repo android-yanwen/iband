@@ -20,15 +20,22 @@
         android:layout_marginLeft="2dp"
         android:src="@mipmap/set_interface"/>
 
-    <TextView
+    <com.manridy.iband.ui.MarqueeTextView
         android:id="@+id/tv_menu_name"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/iv_menu_icon"
         android:layout_centerVertical="true"
         android:layout_marginLeft="36dp"
         android:textColor="#de000000"
         android:textSize="16sp"
+
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+
         android:text="界面选择"/>
 
 

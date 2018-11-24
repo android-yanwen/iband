@@ -15,6 +15,7 @@ import com.manridy.applib.base.BaseActivity;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.R;
+import com.manridy.iband.ui.MarqueeTextView;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.exception.BleException;
 
@@ -81,7 +82,7 @@ public abstract class BaseActionActivity extends BaseActivity {
                 exitFinish();
             }
         });
-        ((TextView)findViewById(R.id.tb_title)).setText(title);
+        ((MarqueeTextView)findViewById(R.id.tb_title)).setText(title);
     }
 
     protected void setTitleBar(String title,int color){
@@ -91,7 +92,7 @@ public abstract class BaseActionActivity extends BaseActivity {
                 exitFinish();
             }
         });
-        ((TextView)findViewById(R.id.tb_title)).setText(title);
+        ((MarqueeTextView)findViewById(R.id.tb_title)).setText(title);
         findViewById(R.id.rl_tab).setBackgroundColor(color);
     }
 
@@ -102,7 +103,7 @@ public abstract class BaseActionActivity extends BaseActivity {
                 exitFinish();
             }
         });
-        ((TextView)findViewById(R.id.tb_title)).setText(title);
+        ((MarqueeTextView)findViewById(R.id.tb_title)).setText(title);
         ImageView tbMenu = (ImageView)findViewById(R.id.tb_share);
         tbMenu.setImageResource(res);
         tbMenu.setVisibility(View.VISIBLE);
@@ -115,7 +116,7 @@ public abstract class BaseActionActivity extends BaseActivity {
                 exitFinish();
             }
         });
-        ((TextView)findViewById(R.id.tb_title)).setText(title);
+        ((MarqueeTextView)findViewById(R.id.tb_title)).setText(title);
         TextView tbMenu = (TextView)findViewById(R.id.tb_menu);
         tbMenu.setText(menu);
         tbMenu.setVisibility(View.VISIBLE);

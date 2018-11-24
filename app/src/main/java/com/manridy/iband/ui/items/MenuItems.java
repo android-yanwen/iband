@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.manridy.iband.R;
+import com.manridy.iband.ui.MarqueeTextView;
 
 /**
  * 菜单选项item
@@ -32,7 +33,7 @@ public class MenuItems extends RelativeLayout {
     private void init(Context context, AttributeSet attrs) {
         View view = View.inflate(context, R.layout.item_menu,this);
         ImageView menuIcon = (ImageView) view.findViewById(R.id.iv_menu_icon);
-        TextView menuName = (TextView) view.findViewById(R.id.tv_menu_name);
+        MarqueeTextView menuName = (MarqueeTextView) view.findViewById(R.id.tv_menu_name);
         menuCheck = (ImageView) view.findViewById(R.id.iv_menu_check);
         menuState = (TextView) view.findViewById(R.id.tv_menu_state);
         TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.MenuItems);

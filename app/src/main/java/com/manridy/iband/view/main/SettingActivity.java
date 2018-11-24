@@ -25,6 +25,7 @@ import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.service.HttpService;
+import com.manridy.iband.ui.MarqueeTextView;
 import com.manridy.iband.ui.items.MenuItems;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.iband.view.setting.AboutActivity;
@@ -79,7 +80,7 @@ public class SettingActivity extends BaseActionActivity {
     @BindView(R.id.tv_device_connect_state)
     TextView tvDeviceConnectState;
     @BindView(R.id.tv_device_battery)
-    TextView tvDeviceBattery;
+    MarqueeTextView tvDeviceBattery;
     @BindView(R.id.rl_un_bind)
     RelativeLayout rlUnBind;
     @BindView(R.id.sv_menu)
