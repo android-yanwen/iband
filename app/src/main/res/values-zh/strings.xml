@@ -522,4 +522,5 @@
     <string name="calorie">卡路里</string>
     <string name="hint_outdoors_run">户外跑</string>
     <string name="hint_only_use_amap">仅使用高德地图</string>
+    <string name="hint_lastRecord">上次记录</string>
 </resources>

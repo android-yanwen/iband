@@ -491,7 +491,7 @@ public class MainActivity extends BaseActivity {
                                             int min = 0xFF;
                                             int now = 0xFF;
                                             if(addressModel.getForecastWeather().get(0).getTmp_now()!=null){
-                                                now = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_now());
+                                                now = 0xff;
                                             }
                                             if(addressModel.getForecastWeather().get(0).getTmp_max()!=null){
                                                 max = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_max());
@@ -530,6 +530,7 @@ public class MainActivity extends BaseActivity {
                                             if (weatherModel == null) {
                                                 weatherModel = new WeatherModel();
                                             }
+                                            weatherModel.setWeatherRegime(Integer.toString(addressModel.getForecastWeather().get(0).getWeater_type()));
                                             weatherModel.setCountry(addressModel.getCnty());
                                             weatherModel.setCity(addressModel.getParent_city());
                                             weatherModel.setNowTemperature(addressModel.getForecastWeather().get(0).getTmp_now());

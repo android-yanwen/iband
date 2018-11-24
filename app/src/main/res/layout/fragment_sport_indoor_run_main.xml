@@ -48,14 +48,22 @@
                 android:src="@mipmap/sp_ic_signal_0"
                 android:visibility="invisible"
                 />
-            <TextView
-                android:layout_width="wrap_content"
+
+            <com.manridy.iband.ui.MarqueeTextView
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:text="@string/hint_lastRecord"
-                android:textSize="22sp"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                />
+                android:layout_marginTop="6dp"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:textAlignment="center"
+                android:text="@string/hint_lastRecord"
+                android:textSize="22sp" />
             <ImageView
                 android:id="@+id/iv_ic_his"
                 android:layout_height="28dp"

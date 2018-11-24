@@ -409,7 +409,6 @@ public class HttpService {
      * */
     public static final String heweather_city = "https://api.heweather.com/s6/weather/";
     private static final String heweather_key = "e778b60bd3004e309d51fe0a2d69dd39";
-
     public void getCityWeather(String longitudeAndLatitude, final OnResultCallBack onResultCallBack) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(heweather_city)
@@ -432,9 +431,11 @@ public class HttpService {
                 addressModel.setParent_city(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("basic").getAsJsonObject().get("parent_city").getAsString());
                 for (int i = 0; i < 3; i++) {
                     addressModel.getForecastWeather().get(i).setCond_txt_d(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("cond_txt_d").getAsString());
-                    addressModel.getForecastWeather().get(i).setTmp_max(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_max").getAsString());
-                    addressModel.getForecastWeather().get(i).setTmp_min(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_min").getAsString());
-                    addressModel.getForecastWeather().get(i).setTmp_now(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_max").getAsString());
+                    String tmp_max = jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_max").getAsString();
+                    addressModel.getForecastWeather().get(i).setTmp_max(tmp_max);
+                    String tmp_min = jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_min").getAsString();
+                    addressModel.getForecastWeather().get(i).setTmp_min(tmp_min);
+                    addressModel.getForecastWeather().get(i).setTmp_now(tmp_max+"°-"+tmp_min);
                 }
                 onResultCallBack.onResult(true, addressModel);
             }
@@ -443,10 +444,8 @@ public class HttpService {
             public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
                 Log.d(TAG, "onFailure:................. ");
                 onResultCallBack.onResult(false, null);
-
             }
         });
-
     }
 
 

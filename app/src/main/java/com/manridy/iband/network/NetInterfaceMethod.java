@@ -14,7 +14,7 @@ import retrofit2.http.Query;
 public interface NetInterfaceMethod {
     //forecast?location="+longitudeAndLatitude+"&key=e778b60bd3004e309d51fe0a2d69dd39
     //forecast?location=113.988807,22.682011&key=e778b60bd3004e309d51fe0a2d69dd39
-    //116.310316,39.956074
+    //116.310316,39.956074 经度，纬度
 
     /**
      * 和风天气接口
