@@ -430,10 +430,10 @@ public class HttpService {
                 addressModel.setCnty(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("basic").getAsJsonObject().get("cnty").getAsString());
                 addressModel.setParent_city(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("basic").getAsJsonObject().get("parent_city").getAsString());
                 for (int i = 0; i < 3; i++) {
-                    addressModel.getForecastWeather().get(i).setCond_txt_d(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("cond_txt_d").getAsString());
-                    String tmp_max = jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_max").getAsString();
+                    addressModel.getForecastWeather().get(i).setCond_txt_d(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("cond_txt_d").getAsString());
+                    String tmp_max = jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("tmp_max").getAsString();
                     addressModel.getForecastWeather().get(i).setTmp_max(tmp_max);
-                    String tmp_min = jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(0).getAsJsonObject().get("tmp_min").getAsString();
+                    String tmp_min = jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("tmp_min").getAsString();
                     addressModel.getForecastWeather().get(i).setTmp_min(tmp_min);
                     addressModel.getForecastWeather().get(i).setTmp_now(tmp_max+"°-"+tmp_min);
                 }

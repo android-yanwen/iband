@@ -857,7 +857,8 @@ public class BleCmd {
     public static byte[] setWeather(byte[] data){
         type = 0x29;
         body= new byte[17];
-        body[0] = 0x04;
+//        body[0] = 0x04;
+        body[0] = 0x03;  //天气推送协议中的en位 0x1表示当天，0x2表示当天和未来1天，0x3表示当天及未来两天，0x4表示当天及未来三天
         for(int i=0 ; data.length > i ; i++){
             body[i+1] = data[i];
         }

@@ -2,7 +2,9 @@ package com.manridy.iband.view.setting;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.manridy.applib.utils.SPUtil;
@@ -24,6 +26,8 @@ import com.tencent.bugly.beta.upgrade.UpgradeListener;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -174,6 +178,9 @@ public class UpdateActivity extends BaseActionActivity {
         });
     }
 
+    /*******固件更新时间间隔*******/
+    private int updateIntervalHour = 0;
+    private DeviceUpdate deviceUpdate = null;
     @OnClick({R.id.hi_update_soft, R.id.hi_update_firm})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -209,10 +216,31 @@ public class UpdateActivity extends BaseActionActivity {
 //                info.append("图片地址：").append(upgradeInfo.imageUrl);
                 break;
             case R.id.hi_update_firm:
-                if (!checkEditBluetoothName()) {//判断蓝牙名称是否修改过，修改名称的不支持ota升级，以免恢复默认
-                    new DeviceUpdate(mContext).getOTAVersion(deviceType,firm,isForce);
-                }else {
-                    showToast(getString(R.string.hint_ota_newest));
+                Calendar c = Calendar.getInstance();
+                int hour_of_day = c.get(Calendar.HOUR_OF_DAY);
+//                Log.d(TAG, "current hour: " + hour_of_day);
+                if (hour_of_day >= updateIntervalHour) {
+                    updateIntervalHour = hour_of_day+2;
+                    if (!checkEditBluetoothName()) {//判断蓝牙名称是否修改过，修改名称的不支持ota升级，以免恢复默认
+                        if (deviceUpdate == null) {
+                            deviceUpdate = new DeviceUpdate(mContext);
+                        }
+                        deviceUpdate.getOTAVersion(deviceType,firm,isForce);
+                    }else {
+                        showToast(getString(R.string.hint_ota_newest));
+                    }
+                } else if (updateIntervalHour >= 25 && hour_of_day == 1) {
+                    updateIntervalHour = hour_of_day + 2;
+                    if (!checkEditBluetoothName()) {
+                        if (deviceUpdate == null) {
+                            deviceUpdate = new DeviceUpdate(mContext);
+                        }
+                        deviceUpdate.getOTAVersion(deviceType, firm, isForce);
+                    } else {
+                        showToast(getString(R.string.hint_ota_newest));
+                    }
+                } else {
+                    Toast.makeText(ibandApplication, "请两小时后再试", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
