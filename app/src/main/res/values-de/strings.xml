@@ -472,6 +472,6 @@ Wenn WeRun nicht mit iband verknüpft ist, können die Daten nicht synchronisier
     <string name="calorie">Kalorien</string>
     <string name="hint_outdoors_run">Joggen</string>
     <string name="hint_only_use_amap">Genaue Aufzeichnung</string>
-    <string name="hint_only_use_amap_info">Möchten Sie nur die Daten der\nKartenaufzeichnung verwenden?</string>
+    <string name="hint_only_use_amap_info">Möchten Sie nur die Daten der Kartenaufzeichnung verwenden?</string>
     <string name="hint_lastRecord">Letzte Aufzeichnung</string>
 </resources>
