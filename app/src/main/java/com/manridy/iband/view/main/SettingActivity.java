@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -117,8 +118,11 @@ public class SettingActivity extends BaseActionActivity {
     MenuItems menuHrTest;
     @BindView(R.id.menu_clean)
     MenuItems menuClean;
+    @BindView(R.id.menu_do_not_disturb)
+    MenuItems menu_do_not_disturb;
 
     private String bindName;
+
     private int connectState;
     private int curBatteryNum;
     private int curBatteryState;
@@ -189,6 +193,17 @@ public class SettingActivity extends BaseActionActivity {
                     }else{
                         menuHrTest.setVisibility(View.GONE);
                     }
+
+
+                    String no_exec = resultBean.getNo_exec();
+                    // 判断固件版本是否有支持勿扰模式
+                    if (!"0".equals(no_exec) && no_exec.compareTo(deviceFirm) <= 0) {
+//                        Log.d(TAG, "checkMenuVisibility: " + no_exec);
+                        menu_do_not_disturb.setVisibility(View.VISIBLE);
+                    } else {
+                        menu_do_not_disturb.setVisibility(View.GONE);
+                    }
+
                         return;
                 }
             }
