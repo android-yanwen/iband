@@ -31,7 +31,7 @@
             android:layout_marginTop="0dp"
             android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"
-            android:visibility="gone"
+            android:visibility="visible"
             android:id="@+id/ll_weather"
             >
             <LinearLayout
@@ -42,28 +42,30 @@
                 android:layout_gravity="right"
 
                 >
+                <ImageView
+                    android:paddingTop="2dp"
+                    android:id="@+id/iv_weather"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:src="@mipmap/weather_sunny"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/tv_tempetature"
                     android:text="-"
                     android:textColor="#FFFFFF"
-                    android:textSize="22dp"
-                    />
-                <ImageView
-                    android:paddingTop="2dp"
-                    android:id="@+id/iv_weather"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:textSize="20dp"
                     />
             </LinearLayout>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_addr"
                 android:text="-"
                 android:textColor="#5e5e5f"
                 android:textSize="14dp"
+                android:textAlignment="textEnd"
                 />
         </LinearLayout>
         <com.manridy.iband.ui.CircularView

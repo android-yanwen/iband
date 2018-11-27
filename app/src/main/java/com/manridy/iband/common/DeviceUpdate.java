@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -37,13 +38,17 @@ public class DeviceUpdate {
         this.mContext = mContext;
     }
 
-    public void checkDeviceUpdate(final OnResultCallBack onResultCallBack){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                HttpService.getInstance().downloadXml(url+version,onResultCallBack);
-            }
-        }).start();
+    private Thread otaUpdateThread = null;
+    public void checkDeviceUpdate(final OnResultCallBack onResultCallBack) {
+        if (otaUpdateThread == null) {
+            otaUpdateThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    HttpService.getInstance().downloadXml(url + version, onResultCallBack);
+                }
+            });
+            otaUpdateThread.start();
+        }
     }
 
 
@@ -81,6 +86,7 @@ public class DeviceUpdate {
                     showToast(R.string.error_update_fail);
 //                    showNoNetWorkDlg(mContext);
                 }
+                otaUpdateThread = null;
             }
         });
     }

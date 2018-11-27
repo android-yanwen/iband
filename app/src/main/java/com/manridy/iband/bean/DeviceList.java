@@ -74,6 +74,15 @@ public class DeviceList {
         private String is_heart_rate_timing_chk;
         private String is_heart_rate_call_police;
         private String ecg;
+        private String no_exec;
+
+        public void setNo_exec(String no_exec) {
+            this.no_exec = no_exec;
+        }
+
+        public String getNo_exec() {
+            return no_exec;
+        }
 
         public String getDevice_name() {
             return device_name;

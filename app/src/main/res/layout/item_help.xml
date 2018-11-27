@@ -11,15 +11,20 @@
         android:layout_alignParentBottom="true"
         android:background="#26000000"/>
 
-    <TextView
+    <com.manridy.iband.ui.MarqueeTextView
         android:id="@+id/tv_menu_name"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:textColor="@color/text_title"
         android:maxEms="18"
         android:textSize="14sp"
-        android:text="检测升级"/>
+        android:text="检测升级"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"/>
 
 
     <TextView

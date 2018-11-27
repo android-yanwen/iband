@@ -1,9 +1,105 @@
 package com.manridy.iband.bean;
 
+import com.manridy.sdk.bean.Weather;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddressModel {
-    //{"HeWeather6":[{"basic":[{"cid":"CN101090608","location":"霸州","parent_city":"廊坊","admin_area":"河北","cnty":"中国","lat":"39.11733246","lon":"116.39202118","tz":"+8.00","type":"city"}],"status":"ok"}]}
+
+
+    private String cnty;
+    private String parent_city;
+    private List<ForecastWeather> forecastWeather = new ArrayList<>();
+
+    public class ForecastWeather{
+        private String cond_txt_d;
+        private String tmp_max;
+        private String tmp_min;
+        private String tmp_now;
+        private int weater_type;
+
+        public int getWeater_type() {
+            return weater_type;
+        }
+
+        public void setCond_txt_d(String cond_txt_d) {
+            this.cond_txt_d = cond_txt_d;
+            if (cond_txt_d ==null) return;
+            if (cond_txt_d.equals("多云")) {
+                weater_type = 1;
+            }else if (cond_txt_d.equals("晴")){
+                weater_type = 0;
+            } else if (cond_txt_d.equals("小雨")) {
+                weater_type = 2;
+            } else if (cond_txt_d.equals("小雪")) {
+                weater_type = 3;
+            } else if (cond_txt_d.equals("阴霾")) {
+                weater_type = 4;
+            } else if (cond_txt_d.equals("沙尘暴")) {
+                weater_type = 5;
+            }
+        }
+
+        public void setTmp_max(String tmp_max) {
+            this.tmp_max = tmp_max;
+        }
+
+        public void setTmp_min(String tmp_min) {
+            this.tmp_min = tmp_min;
+        }
+
+        public String getCond_txt_d() {
+            return cond_txt_d;
+        }
+
+        public String getTmp_max() {
+            return tmp_max;
+        }
+
+        public String getTmp_min() {
+            return tmp_min;
+        }
+
+        public void setTmp_now(String tmp_now) {
+            this.tmp_now = tmp_now;
+        }
+
+        public String getTmp_now() {
+            return tmp_now;
+        }
+    }
+
+    public AddressModel(int num) {
+        for (int i = 0; i < num; i++) {
+            ForecastWeather weather = new ForecastWeather();
+            forecastWeather.add(weather);
+        }
+    }
+
+    public List<ForecastWeather> getForecastWeather() {
+        return forecastWeather;
+    }
+
+    public void setCnty(String cnty) {
+        this.cnty = cnty;
+    }
+
+    public void setParent_city(String parent_city) {
+        this.parent_city = parent_city;
+    }
+
+
+    public String getCnty() {
+        return cnty;
+    }
+
+    public String getParent_city() {
+        return parent_city;
+    }
+
+
+//    {"HeWeather6":[{"basic":[{"cid":"CN101090608","location":"霸州","parent_city":"廊坊","admin_area":"河北","cnty":"中国","lat":"39.11733246","lon":"116.39202118","tz":"+8.00","type":"city"}],"status":"ok"}]}
 
     private List<HeWeather6Bean> HeWeather6;
 

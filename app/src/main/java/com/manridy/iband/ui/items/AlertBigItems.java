@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.manridy.iband.R;
+import com.manridy.iband.ui.MarqueeTextView;
 
 /**
  * 提醒大item
@@ -33,7 +34,7 @@ public class AlertBigItems extends RelativeLayout {
         View view = View.inflate(context, R.layout.item_alert_big,this);
         alertImg = (ImageView) view.findViewById(R.id.iv_menu_img);
         TextView alertName = (TextView) view.findViewById(R.id.tv_menu_name);
-        TextView alertHint = (TextView) view.findViewById(R.id.tv_menu_hint);
+        MarqueeTextView alertHint = (MarqueeTextView) view.findViewById(R.id.tv_menu_hint);
         TextView alertLine = (TextView) view.findViewById(R.id.tv_menu_line);
         TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.AlertBigItems);
         boolean is = typedArray.getBoolean(R.styleable.AlertBigItems_big_onoff,false);

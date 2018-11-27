@@ -450,6 +450,8 @@ public class StepFragment extends BaseEventFragment {
             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_STEP));
         }else if (event.getWhat() == EventGlobal.DATA_LOAD_WEATHER){
 
+            IbandApplication.getIntance().country = IbandDB.getInstance().getLastWeather().getCountry();
+            IbandApplication.getIntance().city = IbandDB.getInstance().getLastWeather().getCity();
             country = IbandApplication.getIntance().country;
             city = IbandApplication.getIntance().city;
 
@@ -651,7 +653,8 @@ public class StepFragment extends BaseEventFragment {
                 case 1:
                     if(weatherModel!=null){
                         ll_weather.setVisibility(View.VISIBLE);
-                        String cityName = ""+IbandApplication.getIntance().city.replace("市", "");
+                        String city = IbandApplication.getIntance().city;
+                        String cityName = ""+city.replace("市", "");
                         tvAddr.setText(""+IbandApplication.getIntance().country+"•"+cityName);
                         tvTempetature.setText(weatherModel.getNowTemperature()+"°");
                         if(!"".equals(weatherModel.getWeatherRegime())){

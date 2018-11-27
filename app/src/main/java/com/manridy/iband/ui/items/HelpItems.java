@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.manridy.iband.R;
+import com.manridy.iband.ui.MarqueeTextView;
 
 /**
  * 帮助item
@@ -30,7 +31,7 @@ public class HelpItems extends RelativeLayout {
 
     private void init(Context context, AttributeSet attrs) {
         View view = View.inflate(context, R.layout.item_help,this);
-        TextView menuName = (TextView) view.findViewById(R.id.tv_menu_name);
+        MarqueeTextView menuName = (MarqueeTextView) view.findViewById(R.id.tv_menu_name);
         menuContent = (TextView) view.findViewById(R.id.tv_menu_content);
         menuBt = (TextView) view.findViewById(R.id.tv_menu_bt);
         menuArrows = (ImageView) view.findViewById(R.id.iv_menu_arrows);

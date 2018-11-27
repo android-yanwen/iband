@@ -41,7 +41,7 @@ public class DoNotDisturbActivity extends BaseActionActivity {
         setTitleAndMenu("勿扰模式",getString(R.string.hint_save));
         curDoNotDisturbModel = IbandDB.getInstance().getDoNotDisturbModel();
         if (curDoNotDisturbModel == null) {
-            curDoNotDisturbModel = new DoNotDisturbModel(0,9,10,18,30);
+            curDoNotDisturbModel = new DoNotDisturbModel(0,0x9,0x10,0x18,0x30);
         }
 
         int onOff = curDoNotDisturbModel.getDoNotDisturbOnOff();
@@ -76,8 +76,7 @@ public class DoNotDisturbActivity extends BaseActionActivity {
                 ai_do_not_disturb.setAlertCheck(onOrOff);
                 ai_do_not_disturb_start_time.setVisibility(onOrOff ? View.VISIBLE : View.GONE);
                 ai_do_not_disturb_end_time.setVisibility(onOrOff ? View.VISIBLE : View.GONE);
-                curDoNotDisturbModel.setDoNotDisturbOnOff(onOrOff ? 1 : 0);
-                curDoNotDisturbModel.save();
+//                curDoNotDisturbModel.save();
             }
         });
 
@@ -134,6 +133,8 @@ public class DoNotDisturbActivity extends BaseActionActivity {
                                 Toast.makeText(ibandApplication, getString(R.string.hint_save_success), Toast.LENGTH_SHORT).show();
                             }
                         });
+                        curDoNotDisturbModel.setDoNotDisturbOnOff(onOrOff ? 1 : 0);
+                        curDoNotDisturbModel.save();
                         onBackPressed();
                     }
 

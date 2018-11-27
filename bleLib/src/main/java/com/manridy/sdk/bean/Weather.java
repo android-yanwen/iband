@@ -10,7 +10,7 @@ public class Weather {
     private int nowTemperature;
     private String day;
     private LinkedList<Weather> forecastWeathers;
-    public Weather(){};
+    public Weather(){}
 
     public Weather(int weatherRegime, int maxTemperature, int minTemperature, int nowTemperature, String day,LinkedList<Weather> forecastWeathers){
         this.weatherRegime = weatherRegime;

@@ -23,16 +23,21 @@
         android:layout_centerVertical="true"
         android:src="@mipmap/ic_on"/>
 
-    <TextView
+    <com.manridy.iband.ui.MarqueeTextView
         android:id="@+id/tv_menu_hint"
-        android:layout_width="wrap_content"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_menu_name"
         android:layout_marginTop="2dp"
         android:textColor="@color/text_title"
         android:textSize="14sp"
         android:text="12:00~14:00不进行提醒"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"/>
 
     <TextView
         android:id="@+id/tv_menu_line"

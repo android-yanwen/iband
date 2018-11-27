@@ -24,14 +24,19 @@
         style="@style/ToolBarButton"
         android:src="@mipmap/ic_back"/>
 
-    <TextView
+    <com.manridy.iband.ui.MarqueeTextView
         android:id="@+id/tb_title"
-        android:layout_width="200dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textColor="@color/color_white"
         android:textSize="18sp"
         android:gravity="center"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
         android:text="标题"/>
 
     <TextView
