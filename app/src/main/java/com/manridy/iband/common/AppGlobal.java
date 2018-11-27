@@ -73,4 +73,10 @@ public class AppGlobal {
     public static final int DEVICE_STATE_SYNC_NO = 8;
     public static final int DEVICE_STATE_BLUETOOTH_DISENABLE = 9;
     public static final int DEVICE_STATE_BLUETOOTH_ENABLEING = 10;
+
+
+
+    public static final String DATA_UPDATE_INTERVAL_HOUR = "updateIntervalHour";
+    public static final String DATA_UPDATE_INTERVAL_MINUTE = "updateIntervalMinute";
+
 }

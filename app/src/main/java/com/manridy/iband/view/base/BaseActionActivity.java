@@ -177,6 +177,19 @@ public abstract class BaseActionActivity extends BaseActivity {
         });
         builder.create().show();
     }
+    public void showWarmDialog(String msg){
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage(msg);
+        builder.setTitle(R.string.hint_warm_alert);
+        builder.setCancelable(false);
+        builder.setPositiveButton(getString(R.string.hint_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
 
     @Override
     public void onBackPressed() {

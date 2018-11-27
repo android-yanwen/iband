@@ -41,7 +41,7 @@ public class DoNotDisturbActivity extends BaseActionActivity {
         setTitleAndMenu("勿扰模式",getString(R.string.hint_save));
         curDoNotDisturbModel = IbandDB.getInstance().getDoNotDisturbModel();
         if (curDoNotDisturbModel == null) {
-            curDoNotDisturbModel = new DoNotDisturbModel(0,0x9,0x10,0x18,0x30);
+            curDoNotDisturbModel = new DoNotDisturbModel(0,0x19,0x10,0x7,0x30);
         }
 
         int onOff = curDoNotDisturbModel.getDoNotDisturbOnOff();

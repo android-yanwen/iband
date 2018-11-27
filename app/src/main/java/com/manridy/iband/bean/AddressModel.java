@@ -26,19 +26,44 @@ public class AddressModel {
         public void setCond_txt_d(String cond_txt_d) {
             this.cond_txt_d = cond_txt_d;
             if (cond_txt_d ==null) return;
-            if (cond_txt_d.equals("多云")) {
-                weater_type = 1;
-            }else if (cond_txt_d.equals("晴")){
-                weater_type = 0;
-            } else if (cond_txt_d.equals("小雨")) {
-                weater_type = 2;
-            } else if (cond_txt_d.equals("小雪")) {
-                weater_type = 3;
-            } else if (cond_txt_d.equals("阴霾")) {
-                weater_type = 4;
-            } else if (cond_txt_d.equals("沙尘暴")) {
-                weater_type = 5;
+
+            for (int i =0; i <WeatherType.WeatherSunny.length;i++) {
+                if (cond_txt_d.equals(WeatherType.WeatherSunny[i])) {
+                    weater_type = 0;
+                    return;
+                }
             }
+            for (int i =0; i <WeatherType.WeatherOvercast.length;i++) {
+                if (cond_txt_d.equals(WeatherType.WeatherOvercast[i])) {
+                    weater_type = 1;
+                    return;
+                }
+            }
+            for (int i =0; i <WeatherType.WeatherRain.length;i++) {
+                if (cond_txt_d.equals(WeatherType.WeatherRain[i])) {
+                    weater_type = 2;
+                    return;
+                }
+            }
+            for (int i =0; i <WeatherType.WeatherSnow.length;i++) {
+                if (cond_txt_d.equals(WeatherType.WeatherSnow[i])) {
+                    weater_type = 3;
+                    return;
+                }
+            }
+            for (int i =0; i <WeatherType.WeatherFoggy.length;i++) {
+                if (cond_txt_d.equals(WeatherType.WeatherFoggy[i])) {
+                    weater_type = 4;
+                    return;
+                }
+            }
+            for (int i =0; i <WeatherType.WeatherRain.length;i++) {
+                if (cond_txt_d.equals(WeatherType.WeatherRain[i])) {
+                    weater_type = 5;
+                    return;
+                }
+            }
+
         }
 
         public void setTmp_max(String tmp_max) {
