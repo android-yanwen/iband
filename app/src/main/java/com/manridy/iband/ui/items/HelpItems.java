@@ -18,7 +18,7 @@ import com.manridy.iband.ui.MarqueeTextView;
 
 public class HelpItems extends RelativeLayout {
     private TextView menuContent;
-    private TextView menuBt;
+    private MarqueeTextView menuBt;
     private ImageView menuArrows;
     public HelpItems(Context context) {
         super(context);
@@ -33,7 +33,7 @@ public class HelpItems extends RelativeLayout {
         View view = View.inflate(context, R.layout.item_help,this);
         MarqueeTextView menuName = (MarqueeTextView) view.findViewById(R.id.tv_menu_name);
         menuContent = (TextView) view.findViewById(R.id.tv_menu_content);
-        menuBt = (TextView) view.findViewById(R.id.tv_menu_bt);
+        menuBt = (MarqueeTextView) view.findViewById(R.id.tv_menu_bt);
         menuArrows = (ImageView) view.findViewById(R.id.iv_menu_arrows);
         TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.HelpItems);
         int color = typedArray.getColor(R.styleable.HelpItems_help_name_color,-1);

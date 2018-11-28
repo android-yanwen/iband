@@ -479,7 +479,7 @@ public class MainActivity extends BaseActivity {
 //                        Log.e(TAG, "onLocationChanged: ................." + amapLocation.getLongitude() );
 //                        Log.e(TAG, "onLocationChanged: ................." + amapLocation.getLatitude() );
 
-                        HttpService.getInstance().getCityWeather(
+                        HttpService.getInstance().getCityWeather(mContext,
                                 "" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),
 //                                "116.310316,39.956074",
                                 new OnResultCallBack() {

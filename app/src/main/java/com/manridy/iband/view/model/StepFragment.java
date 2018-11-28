@@ -55,6 +55,7 @@ import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.CircularView;
+import com.manridy.iband.ui.MarqueeTextView;
 import com.manridy.iband.ui.items.DataItems;
 import com.manridy.iband.view.main.SportActivity;
 import com.manridy.iband.view.main.TrainActivity;
@@ -108,7 +109,7 @@ public class StepFragment extends BaseEventFragment {
     @BindView(R.id.tv_empty)
     TextView tvEmpty;
     @BindView(R.id.tv_addr)
-    TextView tvAddr;
+    MarqueeTextView tvAddr;
     @BindView(R.id.tv_tempetature)
     TextView tvTempetature;
     @BindView(R.id.iv_weather)

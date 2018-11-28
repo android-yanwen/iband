@@ -14,6 +14,7 @@ public class AddressModel {
 
     public class ForecastWeather{
         private String cond_txt_d;
+        private String cond_code_d;
         private String tmp_max;
         private String tmp_min;
         private String tmp_now;
@@ -23,46 +24,65 @@ public class AddressModel {
             return weater_type;
         }
 
+        public void setCond_code_d(String cond_code_d) {
+            this.cond_code_d = cond_code_d;
+            int code_d = Integer.parseInt(cond_code_d);
+            if (code_d == 100 || code_d == 900 || code_d == 901 || code_d == 999) {
+                weater_type = 0;
+            } else if (code_d > 100 && code_d < 220) {
+                weater_type = 1;
+            }else if (code_d >= 300 && code_d < 400) {
+                weater_type = 2;
+            }else if (code_d >= 400 && code_d < 500) {
+                weater_type = 3;
+            }else if (code_d >= 500 && code_d <= 515) {
+                weater_type = 4;
+            }else if (code_d >= 503 && code_d <= 508) {
+                weater_type = 5;
+            }
+
+        }
+
         public void setCond_txt_d(String cond_txt_d) {
             this.cond_txt_d = cond_txt_d;
             if (cond_txt_d ==null) return;
-
-            for (int i =0; i <WeatherType.WeatherSunny.length;i++) {
-                if (cond_txt_d.equals(WeatherType.WeatherSunny[i])) {
-                    weater_type = 0;
-                    return;
-                }
-            }
-            for (int i =0; i <WeatherType.WeatherOvercast.length;i++) {
-                if (cond_txt_d.equals(WeatherType.WeatherOvercast[i])) {
-                    weater_type = 1;
-                    return;
-                }
-            }
-            for (int i =0; i <WeatherType.WeatherRain.length;i++) {
-                if (cond_txt_d.equals(WeatherType.WeatherRain[i])) {
-                    weater_type = 2;
-                    return;
-                }
-            }
-            for (int i =0; i <WeatherType.WeatherSnow.length;i++) {
-                if (cond_txt_d.equals(WeatherType.WeatherSnow[i])) {
-                    weater_type = 3;
-                    return;
-                }
-            }
-            for (int i =0; i <WeatherType.WeatherFoggy.length;i++) {
-                if (cond_txt_d.equals(WeatherType.WeatherFoggy[i])) {
-                    weater_type = 4;
-                    return;
-                }
-            }
-            for (int i =0; i <WeatherType.WeatherRain.length;i++) {
-                if (cond_txt_d.equals(WeatherType.WeatherRain[i])) {
-                    weater_type = 5;
-                    return;
-                }
-            }
+//
+//            for (int i =0; i <WeatherType.WeatherSunny.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherSunny[i])) {
+//                    weater_type = 0;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherOvercast.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherOvercast[i])) {
+//                    weater_type = 1;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherRain.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherRain[i])) {
+//                    weater_type = 2;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherSnow.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherSnow[i])) {
+//                    weater_type = 3;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherFoggy.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherFoggy[i])) {
+//                    weater_type = 4;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherRain.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherRain[i])) {
+//                    weater_type = 5;
+//                    return;
+//                }
+//            }
 
         }
 

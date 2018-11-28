@@ -22,6 +22,8 @@ public interface NetInterfaceMethod {
      */
     @GET("forecast")
     Call<ResponseBody> getCityWeather(@Query("location") String longitude, @Query("key") String latitude);
+    @GET("forecast")
+    Call<ResponseBody> getCityWeather(@Query("location") String longitude, @Query("key") String latitude, @Query("lang") String lang);
 
 
     // 微信运动数注册

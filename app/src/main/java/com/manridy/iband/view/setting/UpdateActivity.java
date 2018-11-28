@@ -235,7 +235,8 @@ public class UpdateActivity extends BaseActionActivity {
                         }
                         deviceUpdate.getOTAVersion(deviceType,firm,isForce);
                     }else {
-                        showToast(getString(R.string.hint_ota_newest));
+//                        showToast(getString(R.string.hint_ota_newest));
+                        showWarmDialog(getString(R.string.hint_ota_newest));
                     }
                 } else if (updateIntervalHour >= 23+INTERVAL_TIME && hour_of_day == INTERVAL_TIME-1) {
                     updateIntervalHour = hour_of_day + INTERVAL_TIME;
@@ -247,12 +248,13 @@ public class UpdateActivity extends BaseActionActivity {
                         }
                         deviceUpdate.getOTAVersion(deviceType, firm, isForce);
                     } else {
-                        showToast(getString(R.string.hint_ota_newest));
+//                        showToast(getString(R.string.hint_ota_newest));
+                        showWarmDialog(getString(R.string.hint_ota_newest));
                     }
                 } else {
 //                    Toast.makeText(ibandApplication, "请两小时后再试", Toast.LENGTH_SHORT).show();
-                    int intervalHour = updateIntervalHour >= 23+INTERVAL_TIME ? INTERVAL_TIME-1 : updateIntervalHour;
-                    showWarmDialog("请" + intervalHour + ":" + updateIntervalMinute + "后再试");
+//                    int intervalHour = updateIntervalHour >= 23+INTERVAL_TIME ? INTERVAL_TIME-1 : updateIntervalHour;
+                    showWarmDialog(getString(R.string.hint_ota_newest));
                 }
                 break;
         }

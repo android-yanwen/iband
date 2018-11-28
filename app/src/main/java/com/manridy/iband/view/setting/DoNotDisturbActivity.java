@@ -113,6 +113,7 @@ public class DoNotDisturbActivity extends BaseActionActivity {
         tb_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                curDoNotDisturbModel.setDoNotDisturbOnOff(onOrOff ? 1 : 0);
                 DoNotDisturb notDisturb = new DoNotDisturb(
                         curDoNotDisturbModel.getDoNotDisturbOnOff(),
                         curDoNotDisturbModel.getStartHour(),
@@ -125,7 +126,7 @@ public class DoNotDisturbActivity extends BaseActionActivity {
                 ibandApplication.service.watch.setDoNotDisturb(notDisturb, new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {
-                        Log.d(TAG, "onSuccess: ");
+                        Log.d(TAG, "onSuccess: "+o);
                         dismissProgress();
                         runOnUiThread(new Runnable() {
                             @Override
@@ -133,7 +134,6 @@ public class DoNotDisturbActivity extends BaseActionActivity {
                                 Toast.makeText(ibandApplication, getString(R.string.hint_save_success), Toast.LENGTH_SHORT).show();
                             }
                         });
-                        curDoNotDisturbModel.setDoNotDisturbOnOff(onOrOff ? 1 : 0);
                         curDoNotDisturbModel.save();
                         onBackPressed();
                     }

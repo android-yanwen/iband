@@ -18,12 +18,14 @@ import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.DomXmlParse;
 import com.manridy.iband.network.NetInterfaceMethod;
 import com.manridy.iband.view.setting.FeedbackActivity;
+import com.manridy.iband.view.setting.LangueActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.Call;
@@ -409,12 +411,21 @@ public class HttpService {
      * */
     public static final String heweather_city = "https://api.heweather.com/s6/weather/";
     private static final String heweather_key = "e778b60bd3004e309d51fe0a2d69dd39";
-    public void getCityWeather(String longitudeAndLatitude, final OnResultCallBack onResultCallBack) {
+    public void getCityWeather(Context context, String longitudeAndLatitude, final OnResultCallBack onResultCallBack) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(heweather_city)
                 .build();
         NetInterfaceMethod netInterfaceMethod = retrofit.create(NetInterfaceMethod.class);
-        retrofit2.Call<ResponseBody> call = netInterfaceMethod.getCityWeather(longitudeAndLatitude, heweather_key);
+        int curLangSelect = (int) SPUtil.get(context, AppGlobal.DATA_APP_LANGUE, 0);
+        // 获取本地语言
+        Locale locale = LangueActivity.getLocale(curLangSelect);
+        String localeLang = locale.getLanguage();
+        retrofit2.Call<ResponseBody> call=null;
+        if (localeLang.equals("zh")) {
+            call = netInterfaceMethod.getCityWeather(longitudeAndLatitude, heweather_key);
+        } else {
+            call = netInterfaceMethod.getCityWeather(longitudeAndLatitude, heweather_key, "en");
+        }
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -430,6 +441,7 @@ public class HttpService {
                 addressModel.setCnty(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("basic").getAsJsonObject().get("cnty").getAsString());
                 addressModel.setParent_city(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("basic").getAsJsonObject().get("parent_city").getAsString());
                 for (int i = 0; i < 3; i++) {
+                    addressModel.getForecastWeather().get(i).setCond_code_d(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("cond_code_d").getAsString());
                     addressModel.getForecastWeather().get(i).setCond_txt_d(jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("cond_txt_d").getAsString());
                     String tmp_max = jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("tmp_max").getAsString();
                     addressModel.getForecastWeather().get(i).setTmp_max(tmp_max);
