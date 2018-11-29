@@ -15,7 +15,7 @@
         app:help_name_color="@color/text_content"
         app:help_name="@string/hint_soft_version"
         app:help_content="v1.0.0"
-        app:help_bt="@string/hint_check_version"/>
+        app:help_bt=""/>
 
     <com.manridy.iband.ui.items.HelpItems
         android:id="@+id/hi_update_firm"
