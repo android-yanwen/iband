@@ -27,17 +27,17 @@ public class AddressModel {
         public void setCond_code_d(String cond_code_d) {
             this.cond_code_d = cond_code_d;
             int code_d = Integer.parseInt(cond_code_d);
-            if (code_d == 100 || code_d == 900 || code_d == 901 || code_d == 999) {
+            if (code_d == 100 || code_d == 900 || code_d == 901 || code_d == 999) { //晴
                 weater_type = 0;
-            } else if (code_d > 100 && code_d < 220) {
+            } else if ((code_d >= 101 && code_d <= 104) || (code_d >= 200 && code_d <= 213)) {//阴
                 weater_type = 1;
-            }else if (code_d >= 300 && code_d < 400) {
+            } else if ((code_d >= 300 && code_d <= 318) || code_d == 399) { //雨
                 weater_type = 2;
-            }else if (code_d >= 400 && code_d < 500) {
+            } else if ((code_d >= 400 && code_d <= 410) || code_d == 499) { //雪
                 weater_type = 3;
-            }else if (code_d >= 500 && code_d <= 515) {
+            } else if ((code_d >= 500 && code_d <= 502) || (code_d >= 509 && code_d <= 515)) {//雾霾
                 weater_type = 4;
-            }else if (code_d >= 503 && code_d <= 508) {
+            } else if (code_d == 503 || code_d == 504 || code_d == 507 || code_d == 508) {//沙尘
                 weater_type = 5;
             }
 
@@ -46,7 +46,7 @@ public class AddressModel {
         public void setCond_txt_d(String cond_txt_d) {
             this.cond_txt_d = cond_txt_d;
             if (cond_txt_d ==null) return;
-//
+//WeatherType类目前没有用到可删除
 //            for (int i =0; i <WeatherType.WeatherSunny.length;i++) {
 //                if (cond_txt_d.equals(WeatherType.WeatherSunny[i])) {
 //                    weater_type = 0;
