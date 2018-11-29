@@ -190,15 +190,16 @@ public class UpdateActivity extends BaseActionActivity {
                 if(isGoogle){
                     break;
                 }
-                Beta.checkUpgrade(true,false);
-                Beta.upgradeListener = new UpgradeListener() {
-                    @Override
-                    public void onUpgrade(int i, UpgradeInfo upgradeInfo, boolean b, boolean b1) {
-                        if (upgradeInfo == null) {
-                            showToast(getString(R.string.hint_ota_newest));
-                        }
-                    }
-                };
+//                Beta.checkUpgrade(true,false);
+//                Beta.upgradeListener = new UpgradeListener() {
+//                    @Override
+//                    public void onUpgrade(int i, UpgradeInfo upgradeInfo, boolean b, boolean b1) {
+//                        if (upgradeInfo == null) {
+////                            showToast(getString(R.string.hint_ota_newest));
+//                            showWarmDialog(getString(R.string.hint_ota_newest));
+//                        }
+//                    }
+//                };
 
 //                UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
 //                StringBuilder info = new StringBuilder();
@@ -233,7 +234,13 @@ public class UpdateActivity extends BaseActionActivity {
                         if (deviceUpdate == null) {
                             deviceUpdate = new DeviceUpdate(mContext);
                         }
-                        deviceUpdate.getOTAVersion(deviceType,firm,isForce);
+                        deviceUpdate.getOTAVersion(deviceType,firm,isForce,
+                        new DeviceUpdate.UpdateListener() {
+                            @Override
+                            public void prompt() {
+                                showWarmDialog(getString(R.string.hint_ota_newest));
+                            }
+                        });
                     }else {
 //                        showToast(getString(R.string.hint_ota_newest));
                         showWarmDialog(getString(R.string.hint_ota_newest));
