@@ -64,11 +64,10 @@
                 android:id="@+id/tv_addr"
                 android:text="-"
                 android:textColor="#5e5e5f"
+                android:textAlignment="center"
                 android:textSize="14dp"
-                android:textAlignment="textEnd"
                 android:ellipsize="marquee"
                 android:focusable="true"
-                android:focusableInTouchMode="true"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
                 />
