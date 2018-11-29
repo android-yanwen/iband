@@ -96,6 +96,7 @@ import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -479,71 +480,82 @@ public class MainActivity extends BaseActivity {
 //                        Log.e(TAG, "onLocationChanged: ................." + amapLocation.getLongitude() );
 //                        Log.e(TAG, "onLocationChanged: ................." + amapLocation.getLatitude() );
 
-                        HttpService.getInstance().getCityWeather(mContext,
-                                "" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),
+                        Calendar c = Calendar.getInstance();
+                        final int date = c.get(Calendar.DATE);
+                        int last_date = (int) SPUtil.get(mContext, AppGlobal.DATA_DATE, 0);
+                        if (last_date != date) {
+                            HttpService.getInstance().getCityWeather(mContext,
+                                    "" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),
 //                                "116.310316,39.956074",
-                                new OnResultCallBack() {
-                                    @Override
-                                    public void onResult(boolean result, Object o) {
-                                        if(result){
-                                            AddressModel addressModel = (AddressModel)o;
-                                            int max = 0xFF;
-                                            int min = 0xFF;
-                                            int now = 0xFF;
-                                            if(addressModel.getForecastWeather().get(0).getTmp_now()!=null){
-                                                now = 0xff;
-                                            }
-                                            if(addressModel.getForecastWeather().get(0).getTmp_max()!=null){
-                                                max = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_max());
-                                            }
-                                            if(addressModel.getForecastWeather().get(0).getTmp_min()!=null){
-                                                min = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_min());
-                                            }
-                                            LinkedList<Weather> forecastWeathers = new LinkedList<>();
-                                            Weather forecastWeather;
-                                            if (addressModel.getForecastWeather().size() == 3) {
-                                                for (int i = 1; i < 3; i++) {
-                                                    com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = new com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean();
-                                                    forecastWeatherBean.setWeather_type(addressModel.getForecastWeather().get(i).getWeater_type());
-                                                    forecastWeatherBean.setTmp_max(addressModel.getForecastWeather().get(i).getTmp_max());
-                                                    forecastWeatherBean.setTmp_min(addressModel.getForecastWeather().get(i).getTmp_min());
-                                                    forecastWeather = new Weather(forecastWeatherBean.getWeather_type(), Integer.parseInt(forecastWeatherBean.getTmp_max()), Integer.parseInt(forecastWeatherBean.getTmp_min()), 0xFF, null);
-                                                    forecastWeathers.add(forecastWeather);
+                                    new OnResultCallBack() {
+                                        @Override
+                                        public void onResult(boolean result, Object o) {
+                                            if (result) {
+                                                AddressModel addressModel = (AddressModel) o;
+                                                int max = 0xFF;
+                                                int min = 0xFF;
+                                                int now = 0xFF;
+                                                if (addressModel.getForecastWeather().get(0).getTmp_now() != null) {
+                                                    now = 0xff;
                                                 }
-                                            }
-                                            Weather weatherBean = new Weather(addressModel.getForecastWeather().get(0).getWeater_type(),max,min,now,forecastWeathers);
-                                            IbandApplication.getIntance().weather =weatherBean;
-                                            Watch.getInstance().setWeather(weatherBean, new BleCallback() {
-                                                @Override
-                                                public void onSuccess(Object o) {
-
+                                                if (addressModel.getForecastWeather().get(0).getTmp_max() != null) {
+                                                    max = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_max());
                                                 }
-
-                                                @Override
-                                                public void onFailure(BleException exception) {
-
+                                                if (addressModel.getForecastWeather().get(0).getTmp_min() != null) {
+                                                    min = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_min());
                                                 }
-                                            });
+                                                LinkedList<Weather> forecastWeathers = new LinkedList<>();
+                                                Weather forecastWeather;
+                                                if (addressModel.getForecastWeather().size() == 3) {
+                                                    for (int i = 1; i < 3; i++) {
+                                                        com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = new com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean();
+                                                        forecastWeatherBean.setWeather_type(addressModel.getForecastWeather().get(i).getWeater_type());
+                                                        forecastWeatherBean.setTmp_max(addressModel.getForecastWeather().get(i).getTmp_max());
+                                                        forecastWeatherBean.setTmp_min(addressModel.getForecastWeather().get(i).getTmp_min());
+                                                        forecastWeather = new Weather(forecastWeatherBean.getWeather_type(), Integer.parseInt(forecastWeatherBean.getTmp_max()), Integer.parseInt(forecastWeatherBean.getTmp_min()), 0xFF, null);
+                                                        forecastWeathers.add(forecastWeather);
+                                                    }
+                                                }
+                                                Weather weatherBean = new Weather(addressModel.getForecastWeather().get(0).getWeater_type(), max, min, now, forecastWeathers);
+                                                IbandApplication.getIntance().weather = weatherBean;
+                                                Watch.getInstance().setWeather(weatherBean, new BleCallback() {
+                                                    @Override
+                                                    public void onSuccess(Object o) {
 
-                                            /**************************存本地数据库***************************/
-                                            WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
-                                            if (weatherModel == null) {
-                                                weatherModel = new WeatherModel();
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(BleException exception) {
+
+                                                    }
+                                                });
+
+                                                /**************************存本地数据库***************************/
+                                                WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
+                                                if (weatherModel == null) {
+                                                    weatherModel = new WeatherModel();
+                                                }
+                                                weatherModel.setWeatherRegime(Integer.toString(addressModel.getForecastWeather().get(0).getWeater_type()));
+                                                weatherModel.setCountry(addressModel.getCnty());
+                                                weatherModel.setCity(addressModel.getParent_city());
+                                                weatherModel.setNowTemperature(addressModel.getForecastWeather().get(0).getTmp_now());
+                                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+                                                weatherModel.setDay(df.format(new Date()));
+                                                weatherModel.save();
+                                                EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
+
+                                                SPUtil.put(mContext, AppGlobal.DATA_DATE, date);
+                                                Log.i(TAG, "onLocationChanged: 当天获取天气成功");
+                                            } else {
+                                                Log.d(TAG, "获取失败");
                                             }
-                                            weatherModel.setWeatherRegime(Integer.toString(addressModel.getForecastWeather().get(0).getWeater_type()));
-                                            weatherModel.setCountry(addressModel.getCnty());
-                                            weatherModel.setCity(addressModel.getParent_city());
-                                            weatherModel.setNowTemperature(addressModel.getForecastWeather().get(0).getTmp_now());
-                                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-                                            weatherModel.setDay(df.format(new Date()));
-                                            weatherModel.save();
-                                            EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
-                                        }else{
-                                            Log.d(TAG, "获取失败");
                                         }
                                     }
-                                }
-                        );
+                            );
+                        } else {
+                            Log.i(TAG, "onLocationChanged: 下一天在获取天气");
+                        } 
+
 
                         //定位成功回调信息，设置相关消息
 //                        HttpService.getInstance().getHeWeather_city("" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),localeCode, new OnResultCallBack() {

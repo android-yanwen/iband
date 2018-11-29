@@ -79,4 +79,8 @@ public class AppGlobal {
     public static final String DATA_UPDATE_INTERVAL_HOUR = "updateIntervalHour";
     public static final String DATA_UPDATE_INTERVAL_MINUTE = "updateIntervalMinute";
 
+
+
+    public static final String DATA_DATE = "data_date";
+
 }
