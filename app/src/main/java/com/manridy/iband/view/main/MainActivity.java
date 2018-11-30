@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -69,6 +70,7 @@ import com.manridy.iband.common.DomXmlParse;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.common.Utils;
+import com.manridy.iband.language.LanguageUtil;
 import com.manridy.iband.service.BleService;
 import com.manridy.iband.service.HttpService;
 import com.manridy.iband.ui.SimpleView;
@@ -1648,5 +1650,18 @@ public class MainActivity extends BaseActivity {
             moveTaskToBack(true);//Activity活动于后台
         }
     }
+
+
+    /**
+     *  多国语言切换华为手机支持不稳定，后面有时间更改
+     * */
+/*
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences preferences = newBase.getSharedPreferences("language", Context.MODE_PRIVATE);
+        String selectedLanguage = preferences.getString("language", "");
+        super.attachBaseContext(LanguageUtil.attachBaseContext(newBase, selectedLanguage));
+    }
+*/
 
 }

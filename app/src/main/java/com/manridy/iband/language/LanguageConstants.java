@@ -1,5 +1,7 @@
-package net.yeah.liliLearne.utils;
-
+package com.manridy.iband.language;
+/**
+ *  多国语言切换华为手机支持不稳定，后面有时间更改
+ * */
 public class LanguageConstants {
     // 简体中文
     public static final String SIMPLIFIED_CHINESE = "zh";

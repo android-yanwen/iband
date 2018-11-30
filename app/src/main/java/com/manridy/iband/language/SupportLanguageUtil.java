@@ -1,4 +1,4 @@
-package net.yeah.liliLearne.utils;
+package com.manridy.iband.language;
 
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -8,7 +8,9 @@ import android.support.annotation.RequiresApi;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
+/**
+ *  多国语言切换华为手机支持不稳定，后面有时间更改
+ * */
 public class SupportLanguageUtil {
     private static Map<String, Locale> mSupportLanguages = new HashMap<String, Locale>(7) {{
         put(LanguageConstants.ENGLISH, Locale.ENGLISH);

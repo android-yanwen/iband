@@ -1,4 +1,4 @@
-package net.yeah.liliLearne.utils;
+package com.manridy.iband.language;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -9,7 +9,9 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import java.util.Locale;
-
+/**
+ *  多国语言切换华为手机支持不稳定，后面有时间更改
+ * */
 public class LanguageUtil {
     public static void applyLanguage(Context context, String newLanguage) {
         Resources resources = context.getResources();
