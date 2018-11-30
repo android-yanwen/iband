@@ -63,7 +63,7 @@ public class IbandApplication extends Application {
         if(!UpdateActivity.isGoogle) {
             initBugly();//初始化bugly
         }
-        initNotificationService();//初始化通知
+//        initNotificationService();//初始化通知
         initLangue();//初始化语言
 //        CrashHandler.getInstance().init(intance);
         MobSDK.init(this);
@@ -112,7 +112,7 @@ public class IbandApplication extends Application {
         Beta.initDelay = 5 * 1000;//延迟两秒检测版本信息
     }
 
-    private void initNotificationService() {
+    public void initNotificationService() {
         boolean appOnOff = (boolean) SPUtil.get(this, AppGlobal.DATA_ALERT_APP,false);
         if (appOnOff) {
             startService(new Intent(this, NotificationCollectorMonitorService.class));
