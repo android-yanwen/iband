@@ -87,8 +87,8 @@ public class DoNotDisturbActivity extends BaseActionActivity {
                     @Override
                     public void getTime(String hour, String minute) {
                         ai_do_not_disturb_start_time.setAlertContent(hour + ":" + minute);
-//                        curDoNotDisturbModel.setStartHour(Integer.parseInt(hour,16));
-//                        curDoNotDisturbModel.setStartMinute(Integer.parseInt(minute,16));
+                        curDoNotDisturbModel.setStartHour(Integer.parseInt(hour,16));
+                        curDoNotDisturbModel.setStartMinute(Integer.parseInt(minute,16));
 //                        curDoNotDisturbModel.save();
                     }
                 }).show();
@@ -102,8 +102,8 @@ public class DoNotDisturbActivity extends BaseActionActivity {
                     @Override
                     public void getTime(String hour, String minute) {
                         ai_do_not_disturb_end_time.setAlertContent(hour + ":" + minute);
-//                        curDoNotDisturbModel.setEndHour(Integer.parseInt(hour, 16));
-//                        curDoNotDisturbModel.setEndMinute(Integer.parseInt(minute, 16));
+                        curDoNotDisturbModel.setEndHour(Integer.parseInt(hour, 16));
+                        curDoNotDisturbModel.setEndMinute(Integer.parseInt(minute, 16));
 //                        curDoNotDisturbModel.save();
                     }
                 }).show();
