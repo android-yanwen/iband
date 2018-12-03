@@ -1224,13 +1224,13 @@ public class MainActivity extends BaseActivity {
     private void selectTitle(int position) {
         switch (position) {
             case 0:
-                tbTitle.setText(R.string.hint_view_step);
+                tbTitle.setText(getResources().getString(R.string.hint_view_step));
                 break;
             case 1:
-                tbTitle.setText(R.string.hint_view_sleep);
+                tbTitle.setText(getResources().getString(R.string.hint_view_sleep));
                 break;
             case 2:
-                tbTitle.setText(R.string.hint_view_hr);
+                tbTitle.setText(getResources().getString(R.string.hint_view_hr));
                 break;
             case 3:
                 String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
@@ -1250,13 +1250,13 @@ public class MainActivity extends BaseActivity {
             case 4:
                 String deviceType1 = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
                 if(isShowBo||deviceType1.equals("")||!isDeviceIdInService){
-                    tbTitle.setText(R.string.hint_view_bo);
+                    tbTitle.setText(getResources().getString(R.string.hint_view_bo));
                 }else{
-                    tbTitle.setText(R.string.hint_view_ecg);
+                    tbTitle.setText(getResources().getString(R.string.hint_view_ecg));
                 }
                 break;
             case 5:
-                tbTitle.setText(R.string.hint_view_ecg);
+                tbTitle.setText(getResources().getString(R.string.hint_view_ecg));
                 break;
         }
     }
@@ -1264,43 +1264,43 @@ public class MainActivity extends BaseActivity {
     private void setHintState(int state){
         String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
         if (bindMac == null || bindMac.isEmpty()) {
-            tbSync.setText(R.string.hint_un_bind);
+            tbSync.setText(getResources().getString(R.string.hint_un_bind));
             return;
         }else if (!Watch.getInstance().isBluetoothEnable()){
-            tbSync.setText(R.string.hint_bluetooth_close);
+            tbSync.setText(getResources().getString(R.string.hint_bluetooth_close));
             return;
         }
         switch (state) {
             case AppGlobal.DEVICE_STATE_UNCONNECT:
-                tbSync.setText(R.string.hint_un_connect);
+                tbSync.setText(getResources().getString(R.string.hint_un_connect));
                 break;
             case AppGlobal.DEVICE_STATE_CONNECTED:
-                tbSync.setText(R.string.hint_connected);
+                tbSync.setText(getResources().getString(R.string.hint_connected));
                 break;
             case AppGlobal.DEVICE_STATE_CONNECTING:
-                tbSync.setText(R.string.hint_connecting);
+                tbSync.setText(getResources().getString(R.string.hint_connecting));
                 break;
             case AppGlobal.DEVICE_STATE_CONNECT_FAIL:
-                tbSync.setText(R.string.hint_connect_fail);
+                tbSync.setText(getResources().getString(R.string.hint_connect_fail));
                 break;
             case AppGlobal.DEVICE_STATE_CONNECT_SUCCESS:
-                tbSync.setText(R.string.hint_connect_success);
+                tbSync.setText(getResources().getString(R.string.hint_connect_success));
                 break;
             case AppGlobal.DEVICE_STATE_UNFIND:
-                tbSync.setText(R.string.hint_un_find);
+                tbSync.setText(getResources().getString(R.string.hint_un_find));
                 break;
             case AppGlobal.DEVICE_STATE_SYNC_OK:
-                tbSync.setText(R.string.hint_sync_ok);
+                tbSync.setText(getResources().getString(R.string.hint_sync_ok));
                 handler2.post(updatePageRunnable);
                 break;
             case AppGlobal.DEVICE_STATE_SYNC_NO:
-                tbSync.setText(R.string.hint_sync_no);
+                tbSync.setText(getResources().getString(R.string.hint_sync_no));
                 break;
             case AppGlobal.DEVICE_STATE_BLUETOOTH_DISENABLE:
-                tbSync.setText(R.string.hint_bluetooth_close);
+                tbSync.setText(getResources().getString(R.string.hint_bluetooth_close));
                 break;
             case AppGlobal.DEVICE_STATE_BLUETOOTH_ENABLEING:
-                tbSync.setText(R.string.hint_bluetooth_opening);
+                tbSync.setText(getResources().getString(R.string.hint_bluetooth_opening));
                 break;
         }
     }
