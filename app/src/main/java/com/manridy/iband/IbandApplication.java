@@ -2,12 +2,15 @@ package com.manridy.iband;
 
 import android.app.Application;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.IBinder;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -18,7 +21,6 @@ import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.service.AlertService;
 import com.manridy.iband.service.BleService;
 import com.manridy.iband.service.NotificationCollectorMonitorService;
-import com.manridy.iband.service.AppNotificationListenerService;
 import com.manridy.iband.view.setting.UpdateActivity;
 import com.manridy.sdk.Watch;
 import com.manridy.sdk.bean.Weather;
@@ -34,9 +36,13 @@ import static com.manridy.iband.view.setting.LangueActivity.getLocale;
 /**
  * 应用全局
  * Created by jarLiao on 17/5/16.
+ *
+ * 18/12/4更改继承MultiDexApplication可以解决dex超出方法数导致安卓5.0以下系统NotClassFind异常抛出
+ * 安装5.0以上系统会自动分包解析，而5.0以下原声系统使用short字长索引，最大执行65536个方法超出则异常，系统没有进行自动分包解析
  */
 
-public class IbandApplication extends Application {
+//public class IbandApplication extends Application {
+public class IbandApplication extends MultiDexApplication {
     private static final String TAG = IbandApplication.class.getSimpleName();
     private static IbandApplication intance;
     public BleService service = null;
@@ -167,5 +173,16 @@ public class IbandApplication extends Application {
 //        if (appOnOff) {
             stopService(new Intent(this, NotificationCollectorMonitorService.class));
 //        }
+    }
+
+
+    /**
+     *  异常NotClassFind
+     *  解决Dex超出方法数的限制问题
+     * */
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(base);
     }
 }

@@ -1235,11 +1235,11 @@ public class MainActivity extends BaseActivity {
             case 3:
                 String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
                 if(deviceType.equals("")||isShowBp||!isDeviceIdInService){
-                    tbTitle.setText(R.string.hint_view_hp);
+                    tbTitle.setText(getString(R.string.hint_view_hp));
                 }else if(!isShowBp&&isShowBo){
-                    tbTitle.setText(R.string.hint_view_bo);
+                    tbTitle.setText(getString(R.string.hint_view_bo));
                 }else if(!isShowBp&&!isShowBo){
-                    tbTitle.setText(R.string.hint_view_ecg);
+                    tbTitle.setText(getString(R.string.hint_view_ecg));
                 }
 //                if(isShowBp||deviceType.equals("")){
 //                    tbTitle.setText(R.string.hint_view_hp);
