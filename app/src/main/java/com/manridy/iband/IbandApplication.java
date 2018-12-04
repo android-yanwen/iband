@@ -69,7 +69,7 @@ public class IbandApplication extends MultiDexApplication {
         if(!UpdateActivity.isGoogle) {
             initBugly();//初始化bugly
         }
-//        initNotificationService();//初始化通知
+        initNotificationService();//初始化通知
         initLangue();//初始化语言
 //        CrashHandler.getInstance().init(intance);
         MobSDK.init(this);
