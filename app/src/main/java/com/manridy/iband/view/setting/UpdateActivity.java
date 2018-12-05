@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.VersionUtil;
+import com.manridy.iband.ConfigurationParameter;
 import com.manridy.iband.R;
 import com.manridy.iband.SyncAlert;
 import com.manridy.iband.bean.DeviceList;
