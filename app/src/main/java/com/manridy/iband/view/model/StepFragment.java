@@ -178,28 +178,29 @@ public class StepFragment extends BaseEventFragment {
     @Override
     public void initData(Bundle savedInstanceState) {
         EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_STEP));
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-        WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
-        if(weatherModel!=null){
-            ll_weather.setVisibility(View.VISIBLE);
-            String cityName = weatherModel.getCity().replace("市", "");
-            tvAddr.setText(weatherModel.getCountry()+"•"+cityName);
-            tvTempetature.setText(weatherModel.getNowTemperature()+"°");
-            if(!"".equals(weatherModel.getWeatherRegime())){
-//                            String weatherType = getWeatherType(weatherModel.getWeatherRegime());
-                weatherImg = getWeatherImg(weatherModel.getWeatherRegime());
-                if(weatherImg!=0){
-                    ivWeather.setImageResource(weatherImg);
-                }
-            }
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
 
-        }
+//        WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
+//        if(weatherModel!=null){
+//            ll_weather.setVisibility(View.VISIBLE);
+//            String cityName = weatherModel.getCity().replace("市", "");
+//            tvAddr.setText(weatherModel.getCountry()+"•"+cityName);
+//            tvTempetature.setText(weatherModel.getNowTemperature()+"°");
+//            if(!"".equals(weatherModel.getWeatherRegime())){
+////                            String weatherType = getWeatherType(weatherModel.getWeatherRegime());
+//                weatherImg = getWeatherImg(weatherModel.getWeatherRegime());
+//                if(weatherImg!=0){
+//                    ivWeather.setImageResource(weatherImg);
+//                }
+//            }
+//        }
 
 
 
