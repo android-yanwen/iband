@@ -183,7 +183,7 @@ public class StepFragment extends BaseEventFragment {
     public void onResume() {
         super.onResume();
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
         WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
         if(weatherModel!=null){
             ll_weather.setVisibility(View.VISIBLE);
@@ -197,7 +197,6 @@ public class StepFragment extends BaseEventFragment {
                     ivWeather.setImageResource(weatherImg);
                 }
             }
-
         }
 
 
