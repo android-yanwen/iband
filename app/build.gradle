@@ -8,9 +8,9 @@ android {
         applicationId "com.manridy.iband"
         minSdkVersion 18
         targetSdkVersion 26
-        versionCode 106
-        versionName "1.9.34"
-//        versionName "1.9.34(beta)"
+        versionCode 108
+//        versionName "1.9.34"
+        versionName "1.9.36(beta)"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
