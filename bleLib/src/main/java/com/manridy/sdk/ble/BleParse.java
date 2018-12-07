@@ -259,7 +259,7 @@ public class BleParse {
                     result = parseHrBaseLine();
                     break;
                 case CALL_DO_NOT_DISTURB:  //免打扰
-                    result = "success";
+                    result = BitUtil.parseByte2HexStr(data);
                     break;
             }
             if (bleCallback == null) {

@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:alert_names="@string/hint_alert_sedentary_time_start"
-        app:alert_text="09:00"
+        app:alert_text="19:00"
         app:alert_img="@mipmap/ic_chevron_right"
         android:visibility="gone"/>
 
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:alert_names="@string/hint_alert_sedentary_time_end"
-        app:alert_text="21:00"
+        app:alert_text="7:00"
         app:alert_img="@mipmap/ic_chevron_right"
         android:visibility="gone"/>
 </LinearLayout>

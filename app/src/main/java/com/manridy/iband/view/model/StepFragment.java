@@ -55,6 +55,7 @@ import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.CircularView;
+import com.manridy.iband.ui.MarqueeTextView;
 import com.manridy.iband.ui.items.DataItems;
 import com.manridy.iband.view.main.SportActivity;
 import com.manridy.iband.view.main.TrainActivity;
@@ -108,7 +109,7 @@ public class StepFragment extends BaseEventFragment {
     @BindView(R.id.tv_empty)
     TextView tvEmpty;
     @BindView(R.id.tv_addr)
-    TextView tvAddr;
+    MarqueeTextView tvAddr;
     @BindView(R.id.tv_tempetature)
     TextView tvTempetature;
     @BindView(R.id.iv_weather)
@@ -177,6 +178,7 @@ public class StepFragment extends BaseEventFragment {
     @Override
     public void initData(Bundle savedInstanceState) {
         EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_STEP));
+
     }
 
     @Override
@@ -186,6 +188,10 @@ public class StepFragment extends BaseEventFragment {
 //        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
         WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
         if(weatherModel!=null){
+            if (weatherModel.getCity() == null || weatherModel.getCity().equals("")) {
+                ll_weather.setVisibility(View.GONE);
+                return;
+            }
             ll_weather.setVisibility(View.VISIBLE);
             String cityName = weatherModel.getCity().replace("市", "");
             tvAddr.setText(weatherModel.getCountry()+"•"+cityName);
@@ -651,8 +657,12 @@ public class StepFragment extends BaseEventFragment {
             switch (msg.what){
                 case 1:
                     if(weatherModel!=null){
-                        ll_weather.setVisibility(View.VISIBLE);
                         String city = IbandApplication.getIntance().city;
+                        if (city.equals("")) {
+                            ll_weather.setVisibility(View.GONE);
+                            break;
+                        }
+                        ll_weather.setVisibility(View.VISIBLE);
                         String cityName = ""+city.replace("市", "");
                         tvAddr.setText(""+IbandApplication.getIntance().country+"•"+cityName);
                         tvTempetature.setText(weatherModel.getNowTemperature()+"°");

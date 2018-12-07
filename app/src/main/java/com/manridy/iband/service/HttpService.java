@@ -5,6 +5,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.manridy.applib.utils.FileUtil;
@@ -18,12 +20,14 @@ import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.DomXmlParse;
 import com.manridy.iband.network.NetInterfaceMethod;
 import com.manridy.iband.view.setting.FeedbackActivity;
+import com.manridy.iband.view.setting.LangueActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.Call;
@@ -409,15 +413,25 @@ public class HttpService {
      * */
     public static final String heweather_city = "https://api.heweather.com/s6/weather/";
     private static final String heweather_key = "e778b60bd3004e309d51fe0a2d69dd39";
-    public void getCityWeather(String longitudeAndLatitude, final OnResultCallBack onResultCallBack) {
+    public void getCityWeather(Context context, String longitudeAndLatitude, final OnResultCallBack onResultCallBack) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(heweather_city)
                 .build();
         NetInterfaceMethod netInterfaceMethod = retrofit.create(NetInterfaceMethod.class);
-        retrofit2.Call<ResponseBody> call = netInterfaceMethod.getCityWeather(longitudeAndLatitude, heweather_key);
+        int curLangSelect = (int) SPUtil.get(context, AppGlobal.DATA_APP_LANGUE, 0);
+        // 获取本地语言
+        Locale locale = LangueActivity.getLocale(curLangSelect);
+        String localeLang = locale.getLanguage();
+        retrofit2.Call<ResponseBody> call=null;
+        if (localeLang.equals("zh")) {
+            call = netInterfaceMethod.getCityWeather(longitudeAndLatitude, heweather_key);
+        } else {
+            call = netInterfaceMethod.getCityWeather(longitudeAndLatitude, heweather_key, "en");
+        }
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+<<<<<<< HEAD
                 if (response != null) {
                     String result = null;
                     try {
@@ -439,6 +453,31 @@ public class HttpService {
                         addressModel.getForecastWeather().get(i).setTmp_now(tmp_max+"°-"+tmp_min);
                     }
                     onResultCallBack.onResult(true, addressModel);
+=======
+                if (response == null) {
+                    onResultCallBack.onResult(false, null);
+                    return;
+                }
+                String result = null;
+                try {
+                    result = response.body().string();
+//                    Log.d(TAG, "onResponse: ................" +result);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                JsonObject jsonObject = (JsonObject) new JsonParser().parse(result);
+                AddressModel addressModel = new AddressModel(3);//json返回未来3天的天气状况
+                addressModel.setCnty(getJsonCnty(jsonObject));
+                addressModel.setParent_city(getJsonParent_city(jsonObject));
+                for (int i = 0; i < 3; i++) {
+                    addressModel.getForecastWeather().get(i).setCond_code_d(getJsonCond_code_d(jsonObject, i));
+                    addressModel.getForecastWeather().get(i).setCond_txt_d(getJsonCond_txt_d(jsonObject, i));
+                    String tmp_max = getJsontmp_max(jsonObject, i);
+                    addressModel.getForecastWeather().get(i).setTmp_max(tmp_max);
+                    String tmp_min = getJsontmp_min(jsonObject, i);
+                    addressModel.getForecastWeather().get(i).setTmp_min(tmp_min);
+                    addressModel.getForecastWeather().get(i).setTmp_now(tmp_max+"°-"+tmp_min);
+>>>>>>> dev
                 }
             }
 
@@ -450,5 +489,134 @@ public class HttpService {
         });
     }
 
+
+
+
+
+
+
+    private String getJsonCnty(JsonObject jsonObject) {
+        String jsonCnty = "";
+        if (jsonObject != null) {
+            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
+            if (heWeather6 != null) {
+                JsonElement HeWeather6_0 = heWeather6.get(0);
+                if (HeWeather6_0 != null) {
+                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("basic");
+                    if (basicOb != null) {
+                        jsonCnty = basicOb.get("cnty").getAsString();
+                    }
+                }
+            }
+        }
+        return jsonCnty;
+    }
+
+
+    private String getJsonParent_city(JsonObject jsonObject) {
+        String jsonParent_city = "";
+        if (jsonObject != null) {
+            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
+            if (heWeather6 != null) {
+                JsonElement HeWeather6_0 = heWeather6.get(0);
+                if (HeWeather6_0 != null) {
+                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("basic");
+                    if (basicOb != null) {
+                        jsonParent_city = basicOb.get("parent_city").getAsString();
+                    }
+                }
+            }
+        }
+        return jsonParent_city;
+    }
+
+
+    private String getJsonCond_code_d(JsonObject jsonObject, int i) {
+//        jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("cond_code_d").getAsString()
+        String jsonCond_code_d = "";
+        if (jsonObject != null) {
+            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
+            if (heWeather6 != null) {
+                JsonElement HeWeather6_0 = heWeather6.get(0);
+                if (HeWeather6_0 != null) {
+                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
+                    if (basicOb != null) {
+                        JsonElement jsondaily_forecast = basicOb.getAsJsonArray().get(i);
+                        if (jsondaily_forecast != null) {
+                            jsonCond_code_d = jsondaily_forecast.getAsJsonObject().get("cond_code_d").getAsString();
+                        }
+                    }
+                }
+            }
+        }
+        return jsonCond_code_d;
+    }
+
+
+    private String getJsonCond_txt_d(JsonObject jsonObject, int i) {
+//        jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("cond_txt_d").getAsString()
+        String jsoncond_txt_d = "";
+        if (jsonObject != null) {
+            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
+            if (heWeather6 != null) {
+                JsonElement HeWeather6_0 = heWeather6.get(0);
+                if (HeWeather6_0 != null) {
+                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
+                    if (basicOb != null) {
+                        JsonElement jsondaily_forecast = basicOb.getAsJsonArray().get(i);
+                        if (jsondaily_forecast != null) {
+                            jsoncond_txt_d = jsondaily_forecast.getAsJsonObject().get("cond_txt_d").getAsString();
+                        }
+                    }
+                }
+            }
+        }
+        return jsoncond_txt_d;
+    }
+
+
+
+
+
+    private String getJsontmp_max(JsonObject jsonObject, int i) {
+//        jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("tmp_max").getAsString()
+        String jsontmp_max = "";
+        if (jsonObject != null) {
+            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
+            if (heWeather6 != null) {
+                JsonElement HeWeather6_0 = heWeather6.get(0);
+                if (HeWeather6_0 != null) {
+                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
+                    if (basicOb != null) {
+                        JsonElement jsondaily_forecast = basicOb.getAsJsonArray().get(i);
+                        if (jsondaily_forecast != null) {
+                            jsontmp_max = jsondaily_forecast.getAsJsonObject().get("tmp_max").getAsString();
+                        }
+                    }
+                }
+            }
+        }
+        return jsontmp_max;
+    }
+    private String getJsontmp_min(JsonObject jsonObject, int i) {
+//        jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("tmp_min").getAsString()
+        String jsontmp_min = "";
+        if (jsonObject != null) {
+            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
+            if (heWeather6 != null) {
+                JsonElement HeWeather6_0 = heWeather6.get(0);
+                if (HeWeather6_0 != null) {
+                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
+                    if (basicOb != null) {
+                        JsonElement jsondaily_forecast = basicOb.getAsJsonArray().get(i);
+                        if (jsondaily_forecast != null) {
+                            jsontmp_min = jsondaily_forecast.getAsJsonObject().get("tmp_min").getAsString();
+                        }
+                    }
+                }
+            }
+        }
+        return jsontmp_min;
+    }
 
 }

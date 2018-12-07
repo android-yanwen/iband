@@ -15,6 +15,7 @@ import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.TimeUtil;
 import com.manridy.iband.bean.BoModel;
 import com.manridy.iband.bean.BpModel;
+import com.manridy.iband.bean.DoNotDisturbModel;
 import com.manridy.iband.bean.HeartModel;
 import com.manridy.iband.bean.SleepModel;
 import com.manridy.iband.bean.StepModel;
@@ -339,6 +340,19 @@ public class SyncData {
 //                    next();
 //                }
 //                break;
+            case 14:  //发送勿打扰模式设置
+                if(isH1F1())break;//
+                DoNotDisturbModel curDoNotDisturbModel = IbandDB.getInstance().getDoNotDisturbModel();
+                if (curDoNotDisturbModel == null) {
+                    curDoNotDisturbModel = new DoNotDisturbModel(0,0x19,0x10,0x7,0x30);
+                }
+                watch.sendCmd(BleCmd.setDoNotDisturbCmd(curDoNotDisturbModel.getDoNotDisturbOnOff(),
+                        curDoNotDisturbModel.getStartHour(),
+                        curDoNotDisturbModel.getStartMinute(),
+                        curDoNotDisturbModel.getEndHour(),
+                        curDoNotDisturbModel.getEndMinute())
+                );
+                break;
 
         }
         timeOutIndex = 0;

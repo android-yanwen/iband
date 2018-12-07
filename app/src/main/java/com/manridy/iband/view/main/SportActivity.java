@@ -102,9 +102,9 @@ public class SportActivity extends BaseActivity {
 
         PageAdapter adapter = new PageAdapter(
                 getSupportFragmentManager(), FragmentPagerItems.with(this)
-                .add(R.string.hint_outdoors_run, OutdoorRunFragment.class)
-                .add(R.string.hint_indoors_run, IndoorRunFragment.class)
-                .add(R.string.hint_cycling, BikingFragment.class)
+                .add(getResources().getString(R.string.hint_outdoors_run), OutdoorRunFragment.class)
+                .add(getResources().getString(R.string.hint_indoors_run), IndoorRunFragment.class)
+                .add(getResources().getString(R.string.hint_cycling), BikingFragment.class)
 //                .add("血压", BpFragment.class)
 //                .add("血氧", BoFragment.class)
                 .create());

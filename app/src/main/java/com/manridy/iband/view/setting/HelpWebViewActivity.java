@@ -17,6 +17,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.manridy.iband.ConfigurationParameter;
 import com.manridy.iband.R;
 import com.manridy.iband.adapter.HelpAdapter;
 import com.manridy.iband.common.OnItemClickListener;
@@ -82,11 +83,16 @@ public class HelpWebViewActivity extends BaseActionActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (ConfigurationParameter.publishPlatform.equals("google")) {
+            UpdateActivity.isGoogle = true;
+        } else {
+            UpdateActivity.isGoogle = false;
+        }
         if(UpdateActivity.isGoogle){
             wv_help.loadUrl("https://sites.google.com/view/iband");
-        }else{
+        }/*else{
             wv_help.loadUrl("http://iband.flzhan.com/index.html");
-        }
+        }*/
 
         wv_help.addJavascriptInterface(this,"android");//添加js监听 这样html就能调用客户端
         wv_help.setWebChromeClient(webChromeClient);

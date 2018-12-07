@@ -90,6 +90,54 @@ public class DeviceUpdate {
             }
         });
     }
+    /**
+     * @Date 18/11/29
+     */
+    public void getOTAVersion(final String deviceType, final String deviceVersion, final boolean isForce, final UpdateListener updateListener){
+
+        LogUtil.d(TAG, "getOTAVersion() called with: deviceType = [" + deviceType + "], deviceVersion = [" + deviceVersion + "], isForce = [" + isForce + "]");
+        checkDeviceUpdate(new OnResultCallBack() {
+            @Override
+            public void onResult(boolean result, Object o) {
+                if (result) {
+                    LogUtil.d(TAG, "onResult() called with: result = [" + result + "], o = [" + o.toString() + "]");
+                    if (o != null) {
+                        List<DomXmlParse.Image> imageList = (List<DomXmlParse.Image>) o;
+                        boolean isShow = false;
+                        for (DomXmlParse.Image image : imageList) {
+                            if (image.id.equals(deviceType)) {
+                                if (image.least.compareTo(deviceVersion) > 0 || isForce) {
+                                    SPUtil.put(mContext,AppGlobal.DATA_FIRMWARE_VERSION_NEW,image.least);
+                                    isShow = true;
+                                    final String fileUrl = url+"/"+image.id+"/"+image.file;
+                                    ((Activity)mContext).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            show(fileUrl);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        if (!isShow) {
+                            if (updateListener !=null)
+                                updateListener.prompt();
+                        }
+                    }
+                }else{
+                    if (updateListener !=null)
+                        updateListener.prompt();
+                }
+                otaUpdateThread = null;
+            }
+        });
+    }
+    /**
+     * @Date 18/11/29
+     */
+    public interface UpdateListener {
+        void prompt();
+    }
 
 
     public void show_delay(final String fileUrl){

@@ -309,6 +309,10 @@ public class DeviceActivity extends BaseActionActivity {
         SPUtil.remove(mContext, AppGlobal.DATA_TIMING_HR);
         SPUtil.remove(mContext, AppGlobal.DATA_TIMING_HR_SPACE);
 
+        //删除时间间隔
+        SPUtil.remove(mContext, AppGlobal.DATA_UPDATE_INTERVAL_HOUR);
+        SPUtil.remove(mContext, AppGlobal.DATA_UPDATE_INTERVAL_MINUTE);
+
         curPosition = -1;
         bindName = "";
         eventSend(EventGlobal.STATE_DEVICE_UNBIND);

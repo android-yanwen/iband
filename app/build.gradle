@@ -8,9 +8,9 @@ android {
         applicationId "com.manridy.iband"
         minSdkVersion 18
         targetSdkVersion 26
-        versionCode 104
-//        versionName "1.9.33"
-        versionName "1.9.33(beta11)"
+        versionCode 110
+//        versionName "1.9.37"
+        versionName "1.9.37(beta1)"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -163,6 +163,8 @@ dependencies {
         exclude group: 'com.google.code.gson'
     }
     compile 'com.squareup.retrofit2:converter-scalars:2.0.0'
+    //Android5.0以下怎么分包.解决超出方法数限制问题，需要导入multidex包
+    dependencies { compile 'com.android.support:multidex:1.0.0' }
 }
 
 

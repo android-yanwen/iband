@@ -524,4 +524,33 @@ Exit iband app（Apple users should ignore the device on Bluetooth.）. At this 
 2. After binding WeRun, you can make iband app and WeRun connected to the device at the same time without interference.
 </item>
     </string-array>
+    <string name="hint_update_delay">一个星期内不重复提醒</string>
+    <string name="hint_view_ecg">心电</string>
+    <string name="title_ecg_history">心电记录</string>
+    <string name="notifyTitle">提示</string>
+    <string name="gpsNotifyMsg">当前应用需要打开定位功能。 请点击设置-定位服务-打开定位功能。</string>
+    <string name="hint_sportpace">配速(min/km)</string>
+    <string name="hint_not_support_google_map">本机不支持Google地图!</string>
+    <string name="hint_pace">配速</string>
+    <string name="hint_sporting">运动中</string>
+    <string name="hint_stopsport">结束本次运动</string>
+    <string name="hint_pausesport">暂停运动</string>
+    <string name="hint_no_gps">当前GPS信号强度弱,无法计算运动数据,请移步至信号较强处运动</string>
+    <string name="hint_no_data">暂无数据</string>
+    <string name="hint_unit_pace">(min/km)</string>
+    <string name="hint_indoors_run">室内跑</string>
+    <string name="hint_sportstep">运动步数</string>
+    <string name="hint_sporttime">时间(H/Min/Sec)</string>
+    <string name="calorie">卡路里</string>
+    <string name="hint_outdoors_run">户外跑</string>
+    <string name="hint_only_use_amap">仅使用高德地图</string>
+    <string name="hint_only_use_amap_info">设置运动模式中是否仅使用高德地图</string>
+    <string name="hint_lastRecord">上次记录</string>
+    <string name="activity_input_question">请输入问题描述</string>
+    <string name="activity_input_email">请填写Email地址</string>
+    <string name="text_send">发送</string>
+    <string name="text_contact_address">联系邮箱</string>
+    <string name="text_please_input_infomation">填写方便我们联系你</string>
+    <string name="text_please_input_question_and_opinion">请输入遇到的问题或建议</string>
+    <string name="text_do_not_disturb">勿扰模式</string>
 </resources>

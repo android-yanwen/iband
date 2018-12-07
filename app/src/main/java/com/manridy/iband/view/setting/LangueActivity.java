@@ -1,6 +1,7 @@
 package com.manridy.iband.view.setting;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -106,6 +107,18 @@ public class LangueActivity extends BaseActionActivity {
                 }
                 res.updateConfiguration(conf, dm);
                 SPUtil.put(mContext,AppGlobal.DATA_APP_LANGUE,curSelect);
+
+
+                /**
+                 *  多国语言切换华为手机支持不稳定，后面有时间更改
+                 * */
+               /* SharedPreferences preferences = getSharedPreferences("language", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("language", getLocale(curSelect).getLanguage());
+                editor.apply();*/
+
+
+
                 AppManage.getInstance().finishAllActivity();
                 startActivity(MainActivity.class);
             }

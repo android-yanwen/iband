@@ -14,6 +14,7 @@ public class AddressModel {
 
     public class ForecastWeather{
         private String cond_txt_d;
+        private String cond_code_d;
         private String tmp_max;
         private String tmp_min;
         private String tmp_now;
@@ -23,30 +24,85 @@ public class AddressModel {
             return weater_type;
         }
 
+        public void setCond_code_d(String cond_code_d) {
+            if (cond_code_d.equals("") || cond_code_d == null) {
+                return;
+            }
+            this.cond_code_d = cond_code_d;
+            int code_d = Integer.parseInt(cond_code_d);
+            if (code_d == 100 || code_d == 900 || code_d == 901 || code_d == 999) { //晴
+                weater_type = 0;
+            } else if ((code_d >= 101 && code_d <= 104) || (code_d >= 200 && code_d <= 213)) {//阴
+                weater_type = 1;
+            } else if ((code_d >= 300 && code_d <= 318) || code_d == 399) { //雨
+                weater_type = 2;
+            } else if ((code_d >= 400 && code_d <= 410) || code_d == 499) { //雪
+                weater_type = 3;
+            } else if ((code_d >= 500 && code_d <= 502) || (code_d >= 509 && code_d <= 515)) {//雾霾
+                weater_type = 4;
+            } else if (code_d == 503 || code_d == 504 || code_d == 507 || code_d == 508) {//沙尘
+                weater_type = 5;
+            }
+
+        }
+
         public void setCond_txt_d(String cond_txt_d) {
             this.cond_txt_d = cond_txt_d;
             if (cond_txt_d ==null) return;
-            if (cond_txt_d.equals("多云")) {
-                weater_type = 1;
-            }else if (cond_txt_d.equals("晴")){
-                weater_type = 0;
-            } else if (cond_txt_d.equals("小雨")) {
-                weater_type = 2;
-            } else if (cond_txt_d.equals("小雪")) {
-                weater_type = 3;
-            } else if (cond_txt_d.equals("阴霾")) {
-                weater_type = 4;
-            } else if (cond_txt_d.equals("沙尘暴")) {
-                weater_type = 5;
-            }
+//WeatherType类目前没有用到可删除
+//            for (int i =0; i <WeatherType.WeatherSunny.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherSunny[i])) {
+//                    weater_type = 0;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherOvercast.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherOvercast[i])) {
+//                    weater_type = 1;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherRain.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherRain[i])) {
+//                    weater_type = 2;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherSnow.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherSnow[i])) {
+//                    weater_type = 3;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherFoggy.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherFoggy[i])) {
+//                    weater_type = 4;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherRain.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherRain[i])) {
+//                    weater_type = 5;
+//                    return;
+//                }
+//            }
+
         }
 
         public void setTmp_max(String tmp_max) {
-            this.tmp_max = tmp_max;
+            if (tmp_max == null || tmp_max.equals("")) {
+                this.tmp_max = "0";
+            } else {
+                this.tmp_max = tmp_max;
+            }
         }
 
         public void setTmp_min(String tmp_min) {
-            this.tmp_min = tmp_min;
+            if (tmp_min == null || tmp_min.equals("")) {
+                this.tmp_min = "0";
+            } else {
+                this.tmp_min = tmp_min;
+            }
         }
 
         public String getCond_txt_d() {

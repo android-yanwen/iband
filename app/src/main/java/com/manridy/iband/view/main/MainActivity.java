@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -69,6 +70,7 @@ import com.manridy.iband.common.DomXmlParse;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.common.Utils;
+import com.manridy.iband.language.LanguageUtil;
 import com.manridy.iband.service.BleService;
 import com.manridy.iband.service.HttpService;
 import com.manridy.iband.ui.SimpleView;
@@ -96,6 +98,7 @@ import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -479,71 +482,82 @@ public class MainActivity extends BaseActivity {
 //                        Log.e(TAG, "onLocationChanged: ................." + amapLocation.getLongitude() );
 //                        Log.e(TAG, "onLocationChanged: ................." + amapLocation.getLatitude() );
 
-                        HttpService.getInstance().getCityWeather(
-                                "" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),
+                        Calendar c = Calendar.getInstance();
+                        final int date = c.get(Calendar.DATE);
+                        int last_date = (int) SPUtil.get(mContext, AppGlobal.DATA_DATE, 0);
+                        if (last_date != date) {
+                            HttpService.getInstance().getCityWeather(mContext,
+                                    "" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),
 //                                "116.310316,39.956074",
-                                new OnResultCallBack() {
-                                    @Override
-                                    public void onResult(boolean result, Object o) {
-                                        if(result){
-                                            AddressModel addressModel = (AddressModel)o;
-                                            int max = 0xFF;
-                                            int min = 0xFF;
-                                            int now = 0xFF;
-                                            if(addressModel.getForecastWeather().get(0).getTmp_now()!=null){
-                                                now = 0xff;
-                                            }
-                                            if(addressModel.getForecastWeather().get(0).getTmp_max()!=null){
-                                                max = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_max());
-                                            }
-                                            if(addressModel.getForecastWeather().get(0).getTmp_min()!=null){
-                                                min = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_min());
-                                            }
-                                            LinkedList<Weather> forecastWeathers = new LinkedList<>();
-                                            Weather forecastWeather;
-                                            if (addressModel.getForecastWeather().size() == 3) {
-                                                for (int i = 1; i < 3; i++) {
-                                                    com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = new com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean();
-                                                    forecastWeatherBean.setWeather_type(addressModel.getForecastWeather().get(i).getWeater_type());
-                                                    forecastWeatherBean.setTmp_max(addressModel.getForecastWeather().get(i).getTmp_max());
-                                                    forecastWeatherBean.setTmp_min(addressModel.getForecastWeather().get(i).getTmp_min());
-                                                    forecastWeather = new Weather(forecastWeatherBean.getWeather_type(), Integer.parseInt(forecastWeatherBean.getTmp_max()), Integer.parseInt(forecastWeatherBean.getTmp_min()), 0xFF, null);
-                                                    forecastWeathers.add(forecastWeather);
+                                    new OnResultCallBack() {
+                                        @Override
+                                        public void onResult(boolean result, Object o) {
+                                            if (result) {
+                                                AddressModel addressModel = (AddressModel) o;
+                                                int max = 0xFF;
+                                                int min = 0xFF;
+                                                int now = 0xFF;
+                                                if (addressModel.getForecastWeather().get(0).getTmp_now() != null) {
+                                                    now = 0xff;
                                                 }
-                                            }
-                                            Weather weatherBean = new Weather(addressModel.getForecastWeather().get(0).getWeater_type(),max,min,now,forecastWeathers);
-                                            IbandApplication.getIntance().weather =weatherBean;
-                                            Watch.getInstance().setWeather(weatherBean, new BleCallback() {
-                                                @Override
-                                                public void onSuccess(Object o) {
-
+                                                if (addressModel.getForecastWeather().get(0).getTmp_max() != null) {
+                                                    max = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_max());
                                                 }
-
-                                                @Override
-                                                public void onFailure(BleException exception) {
-
+                                                if (addressModel.getForecastWeather().get(0).getTmp_min() != null) {
+                                                    min = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_min());
                                                 }
-                                            });
+                                                LinkedList<Weather> forecastWeathers = new LinkedList<>();
+                                                Weather forecastWeather;
+                                                if (addressModel.getForecastWeather().size() == 3) {
+                                                    for (int i = 1; i < 3; i++) {
+                                                        com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = new com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean();
+                                                        forecastWeatherBean.setWeather_type(addressModel.getForecastWeather().get(i).getWeater_type());
+                                                        forecastWeatherBean.setTmp_max(addressModel.getForecastWeather().get(i).getTmp_max());
+                                                        forecastWeatherBean.setTmp_min(addressModel.getForecastWeather().get(i).getTmp_min());
+                                                        forecastWeather = new Weather(forecastWeatherBean.getWeather_type(), Integer.parseInt(forecastWeatherBean.getTmp_max()), Integer.parseInt(forecastWeatherBean.getTmp_min()), 0xFF, null);
+                                                        forecastWeathers.add(forecastWeather);
+                                                    }
+                                                }
+                                                Weather weatherBean = new Weather(addressModel.getForecastWeather().get(0).getWeater_type(), max, min, now, forecastWeathers);
+                                                IbandApplication.getIntance().weather = weatherBean;
+                                                Watch.getInstance().setWeather(weatherBean, new BleCallback() {
+                                                    @Override
+                                                    public void onSuccess(Object o) {
 
-                                            /**************************存本地数据库***************************/
-                                            WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
-                                            if (weatherModel == null) {
-                                                weatherModel = new WeatherModel();
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(BleException exception) {
+
+                                                    }
+                                                });
+
+                                                /**************************存本地数据库***************************/
+                                                WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
+                                                if (weatherModel == null) {
+                                                    weatherModel = new WeatherModel();
+                                                }
+                                                weatherModel.setWeatherRegime(Integer.toString(addressModel.getForecastWeather().get(0).getWeater_type()));
+                                                weatherModel.setCountry(addressModel.getCnty());
+                                                weatherModel.setCity(addressModel.getParent_city());
+                                                weatherModel.setNowTemperature(addressModel.getForecastWeather().get(0).getTmp_now());
+                                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+                                                weatherModel.setDay(df.format(new Date()));
+                                                weatherModel.save();
+                                                EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
+
+                                                SPUtil.put(mContext, AppGlobal.DATA_DATE, date);
+                                                Log.i(TAG, "onLocationChanged: 当天获取天气成功");
+                                            } else {
+                                                Log.d(TAG, "获取失败");
                                             }
-                                            weatherModel.setWeatherRegime(Integer.toString(addressModel.getForecastWeather().get(0).getWeater_type()));
-                                            weatherModel.setCountry(addressModel.getCnty());
-                                            weatherModel.setCity(addressModel.getParent_city());
-                                            weatherModel.setNowTemperature(addressModel.getForecastWeather().get(0).getTmp_now());
-                                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-                                            weatherModel.setDay(df.format(new Date()));
-                                            weatherModel.save();
-                                            EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
-                                        }else{
-                                            Log.d(TAG, "获取失败");
                                         }
                                     }
-                                }
-                        );
+                            );
+                        } else {
+                            Log.i(TAG, "onLocationChanged: 下一天在获取天气");
+                        }
+
 
                         //定位成功回调信息，设置相关消息
 //                        HttpService.getInstance().getHeWeather_city("" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),localeCode, new OnResultCallBack() {
@@ -1210,22 +1224,22 @@ public class MainActivity extends BaseActivity {
     private void selectTitle(int position) {
         switch (position) {
             case 0:
-                tbTitle.setText(R.string.hint_view_step);
+                tbTitle.setText(getResources().getString(R.string.hint_view_step));
                 break;
             case 1:
-                tbTitle.setText(R.string.hint_view_sleep);
+                tbTitle.setText(getResources().getString(R.string.hint_view_sleep));
                 break;
             case 2:
-                tbTitle.setText(R.string.hint_view_hr);
+                tbTitle.setText(getResources().getString(R.string.hint_view_hr));
                 break;
             case 3:
                 String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
                 if(deviceType.equals("")||isShowBp||!isDeviceIdInService){
-                    tbTitle.setText(R.string.hint_view_hp);
+                    tbTitle.setText(getString(R.string.hint_view_hp));
                 }else if(!isShowBp&&isShowBo){
-                    tbTitle.setText(R.string.hint_view_bo);
+                    tbTitle.setText(getString(R.string.hint_view_bo));
                 }else if(!isShowBp&&!isShowBo){
-                    tbTitle.setText(R.string.hint_view_ecg);
+                    tbTitle.setText(getString(R.string.hint_view_ecg));
                 }
 //                if(isShowBp||deviceType.equals("")){
 //                    tbTitle.setText(R.string.hint_view_hp);
@@ -1236,13 +1250,13 @@ public class MainActivity extends BaseActivity {
             case 4:
                 String deviceType1 = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
                 if(isShowBo||deviceType1.equals("")||!isDeviceIdInService){
-                    tbTitle.setText(R.string.hint_view_bo);
+                    tbTitle.setText(getResources().getString(R.string.hint_view_bo));
                 }else{
-                    tbTitle.setText(R.string.hint_view_ecg);
+                    tbTitle.setText(getResources().getString(R.string.hint_view_ecg));
                 }
                 break;
             case 5:
-                tbTitle.setText(R.string.hint_view_ecg);
+                tbTitle.setText(getResources().getString(R.string.hint_view_ecg));
                 break;
         }
     }
@@ -1250,43 +1264,43 @@ public class MainActivity extends BaseActivity {
     private void setHintState(int state){
         String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
         if (bindMac == null || bindMac.isEmpty()) {
-            tbSync.setText(R.string.hint_un_bind);
+            tbSync.setText(getResources().getString(R.string.hint_un_bind));
             return;
         }else if (!Watch.getInstance().isBluetoothEnable()){
-            tbSync.setText(R.string.hint_bluetooth_close);
+            tbSync.setText(getResources().getString(R.string.hint_bluetooth_close));
             return;
         }
         switch (state) {
             case AppGlobal.DEVICE_STATE_UNCONNECT:
-                tbSync.setText(R.string.hint_un_connect);
+                tbSync.setText(getResources().getString(R.string.hint_un_connect));
                 break;
             case AppGlobal.DEVICE_STATE_CONNECTED:
-                tbSync.setText(R.string.hint_connected);
+                tbSync.setText(getResources().getString(R.string.hint_connected));
                 break;
             case AppGlobal.DEVICE_STATE_CONNECTING:
-                tbSync.setText(R.string.hint_connecting);
+                tbSync.setText(getResources().getString(R.string.hint_connecting));
                 break;
             case AppGlobal.DEVICE_STATE_CONNECT_FAIL:
-                tbSync.setText(R.string.hint_connect_fail);
+                tbSync.setText(getResources().getString(R.string.hint_connect_fail));
                 break;
             case AppGlobal.DEVICE_STATE_CONNECT_SUCCESS:
-                tbSync.setText(R.string.hint_connect_success);
+                tbSync.setText(getResources().getString(R.string.hint_connect_success));
                 break;
             case AppGlobal.DEVICE_STATE_UNFIND:
-                tbSync.setText(R.string.hint_un_find);
+                tbSync.setText(getResources().getString(R.string.hint_un_find));
                 break;
             case AppGlobal.DEVICE_STATE_SYNC_OK:
-                tbSync.setText(R.string.hint_sync_ok);
+                tbSync.setText(getResources().getString(R.string.hint_sync_ok));
                 handler2.post(updatePageRunnable);
                 break;
             case AppGlobal.DEVICE_STATE_SYNC_NO:
-                tbSync.setText(R.string.hint_sync_no);
+                tbSync.setText(getResources().getString(R.string.hint_sync_no));
                 break;
             case AppGlobal.DEVICE_STATE_BLUETOOTH_DISENABLE:
-                tbSync.setText(R.string.hint_bluetooth_close);
+                tbSync.setText(getResources().getString(R.string.hint_bluetooth_close));
                 break;
             case AppGlobal.DEVICE_STATE_BLUETOOTH_ENABLEING:
-                tbSync.setText(R.string.hint_bluetooth_opening);
+                tbSync.setText(getResources().getString(R.string.hint_bluetooth_opening));
                 break;
         }
     }
@@ -1636,5 +1650,18 @@ public class MainActivity extends BaseActivity {
             moveTaskToBack(true);//Activity活动于后台
         }
     }
+
+
+    /**
+     *  多国语言切换华为手机支持不稳定，后面有时间更改
+     * */
+/*
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences preferences = newBase.getSharedPreferences("language", Context.MODE_PRIVATE);
+        String selectedLanguage = preferences.getString("language", "");
+        super.attachBaseContext(LanguageUtil.attachBaseContext(newBase, selectedLanguage));
+    }
+*/
 
 }
