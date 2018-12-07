@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AppLib</string>
+    <string name="hint_cancel">取消</string>
+    <string name="hint_ok">确定</string>
+</resources>

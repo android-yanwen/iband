@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/activity_background">
+    <include layout="@layout/tab_activity"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/text_title"
+        android:textSize="14sp"
+        android:text="@string/hint_watch_light"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_background"/>
+
+    <TextView
+        android:id="@+id/tv_light_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="29dp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/toolbar_background"
+        android:textSize="16sp"
+        android:text="@string/hint_normal"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:visibility="gone">
+
+        <com.jaygoo.widget.RangeSeekbar
+            android:id="@+id/rs_light"
+            android:layout_width="280dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            app:seekBarResId="@mipmap/brightness_slide"
+            app:lineColorSelected="@color/text_content"
+            app:lineColorEdge="@color/text_title"
+            app:cellMode="other"
+            app:seekBarMode="single"
+            app:hideProgressHint="true"
+            app:cells="2"
+            app:max="2"/>
+
+        <TextView
+            android:id="@+id/tv_reduce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/rs_light"
+            android:layout_centerVertical="true"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:textColor="#1e1e1e"
+            android:textSize="30dp"
+            android:text="-"/>
+
+        <TextView
+            android:id="@+id/tv_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/rs_light"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="10dp"
+            android:textColor="#1e1e1e"
+            android:textSize="30dp"
+            android:text="+"/>
+    </RelativeLayout>
+
+
+    <RadioGroup
+        android:id="@+id/rg_light"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:visibility="visible">
+        <RadioButton
+            android:id="@+id/rb_left"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:button="@null"
+            android:checked="true"
+            android:background="@drawable/select_left"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:text="@string/hint_low"/>
+        <RadioButton
+            android:id="@+id/rb_center"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:button="@null"
+            android:checked="false"
+            android:background="@drawable/select_center"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:text="@string/hint_centre"/>
+        <RadioButton
+            android:id="@+id/rb_right"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:button="@null"
+            android:checked="false"
+            android:background="@drawable/select_right"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:text="@string/hint_high"/>
+    </RadioGroup>
+
+</LinearLayout>

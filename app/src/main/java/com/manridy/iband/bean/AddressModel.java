@@ -1,0 +1,293 @@
+package com.manridy.iband.bean;
+
+import com.manridy.sdk.bean.Weather;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class AddressModel {
+
+
+    private String cnty;
+    private String parent_city;
+    private List<ForecastWeather> forecastWeather = new ArrayList<>();
+
+    public class ForecastWeather{
+        private String cond_txt_d;
+        private String cond_code_d;
+        private String tmp_max;
+        private String tmp_min;
+        private String tmp_now;
+        private int weater_type;
+
+        public int getWeater_type() {
+            return weater_type;
+        }
+
+        public void setCond_code_d(String cond_code_d) {
+            if (cond_code_d.equals("") || cond_code_d == null) {
+                return;
+            }
+            this.cond_code_d = cond_code_d;
+            int code_d = Integer.parseInt(cond_code_d);
+            if (code_d == 100 || code_d == 900 || code_d == 901 || code_d == 999) { //晴
+                weater_type = 0;
+            } else if ((code_d >= 101 && code_d <= 104) || (code_d >= 200 && code_d <= 213)) {//阴
+                weater_type = 1;
+            } else if ((code_d >= 300 && code_d <= 318) || code_d == 399) { //雨
+                weater_type = 2;
+            } else if ((code_d >= 400 && code_d <= 410) || code_d == 499) { //雪
+                weater_type = 3;
+            } else if ((code_d >= 500 && code_d <= 502) || (code_d >= 509 && code_d <= 515)) {//雾霾
+                weater_type = 4;
+            } else if (code_d == 503 || code_d == 504 || code_d == 507 || code_d == 508) {//沙尘
+                weater_type = 5;
+            }
+
+        }
+
+        public void setCond_txt_d(String cond_txt_d) {
+            this.cond_txt_d = cond_txt_d;
+            if (cond_txt_d ==null) return;
+//WeatherType类目前没有用到可删除
+//            for (int i =0; i <WeatherType.WeatherSunny.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherSunny[i])) {
+//                    weater_type = 0;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherOvercast.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherOvercast[i])) {
+//                    weater_type = 1;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherRain.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherRain[i])) {
+//                    weater_type = 2;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherSnow.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherSnow[i])) {
+//                    weater_type = 3;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherFoggy.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherFoggy[i])) {
+//                    weater_type = 4;
+//                    return;
+//                }
+//            }
+//            for (int i =0; i <WeatherType.WeatherRain.length;i++) {
+//                if (cond_txt_d.equals(WeatherType.WeatherRain[i])) {
+//                    weater_type = 5;
+//                    return;
+//                }
+//            }
+
+        }
+
+        public void setTmp_max(String tmp_max) {
+            if (tmp_max == null || tmp_max.equals("")) {
+                this.tmp_max = "0";
+            } else {
+                this.tmp_max = tmp_max;
+            }
+        }
+
+        public void setTmp_min(String tmp_min) {
+            if (tmp_min == null || tmp_min.equals("")) {
+                this.tmp_min = "0";
+            } else {
+                this.tmp_min = tmp_min;
+            }
+        }
+
+        public String getCond_txt_d() {
+            return cond_txt_d;
+        }
+
+        public String getTmp_max() {
+            return tmp_max;
+        }
+
+        public String getTmp_min() {
+            return tmp_min;
+        }
+
+        public void setTmp_now(String tmp_now) {
+            this.tmp_now = tmp_now;
+        }
+
+        public String getTmp_now() {
+            return tmp_now;
+        }
+    }
+
+    public AddressModel(int num) {
+        for (int i = 0; i < num; i++) {
+            ForecastWeather weather = new ForecastWeather();
+            forecastWeather.add(weather);
+        }
+    }
+
+    public List<ForecastWeather> getForecastWeather() {
+        return forecastWeather;
+    }
+
+    public void setCnty(String cnty) {
+        this.cnty = cnty;
+    }
+
+    public void setParent_city(String parent_city) {
+        this.parent_city = parent_city;
+    }
+
+
+    public String getCnty() {
+        return cnty;
+    }
+
+    public String getParent_city() {
+        return parent_city;
+    }
+
+
+//    {"HeWeather6":[{"basic":[{"cid":"CN101090608","location":"霸州","parent_city":"廊坊","admin_area":"河北","cnty":"中国","lat":"39.11733246","lon":"116.39202118","tz":"+8.00","type":"city"}],"status":"ok"}]}
+
+    private List<HeWeather6Bean> HeWeather6;
+
+    public List<HeWeather6Bean> getHeWeather6() {
+        return HeWeather6;
+    }
+
+    public void setHeWeather6(List<HeWeather6Bean> HeWeather6) {
+        this.HeWeather6 = HeWeather6;
+    }
+
+    public static class HeWeather6Bean {
+        /**
+         * basic : [{"cid":"CN101090608","location":"霸州","parent_city":"廊坊","admin_area":"河北","cnty":"中国","lat":"39.11733246","lon":"116.39202118","tz":"+8.00","type":"city"}]
+         * status : ok
+         */
+
+        private String status;
+        private List<BasicBean> basic;
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public List<BasicBean> getBasic() {
+            return basic;
+        }
+
+        public void setBasic(List<BasicBean> basic) {
+            this.basic = basic;
+        }
+
+        public static class BasicBean {
+            /**
+             * cid : CN101090608
+             * location : 霸州
+             * parent_city : 廊坊
+             * admin_area : 河北
+             * cnty : 中国
+             * lat : 39.11733246
+             * lon : 116.39202118
+             * tz : +8.00
+             * type : city
+             */
+
+            private String cid;
+            private String location;
+            private String parent_city;
+            private String admin_area;
+            private String cnty;
+            private String lat;
+            private String lon;
+            private String tz;
+            private String type;
+
+            public String getCid() {
+                return cid;
+            }
+
+            public void setCid(String cid) {
+                this.cid = cid;
+            }
+
+            public String getLocation() {
+                return location;
+            }
+
+            public void setLocation(String location) {
+                this.location = location;
+            }
+
+            public String getParent_city() {
+                return parent_city;
+            }
+
+            public void setParent_city(String parent_city) {
+                this.parent_city = parent_city;
+            }
+
+            public String getAdmin_area() {
+                return admin_area;
+            }
+
+            public void setAdmin_area(String admin_area) {
+                this.admin_area = admin_area;
+            }
+
+            public String getCnty() {
+                return cnty;
+            }
+
+            public void setCnty(String cnty) {
+                this.cnty = cnty;
+            }
+
+            public String getLat() {
+                return lat;
+            }
+
+            public void setLat(String lat) {
+                this.lat = lat;
+            }
+
+            public String getLon() {
+                return lon;
+            }
+
+            public void setLon(String lon) {
+                this.lon = lon;
+            }
+
+            public String getTz() {
+                return tz;
+            }
+
+            public void setTz(String tz) {
+                this.tz = tz;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            public void setType(String type) {
+                this.type = type;
+            }
+        }
+    }
+
+
+}

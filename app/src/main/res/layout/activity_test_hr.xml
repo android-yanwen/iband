@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#f5f5f5">
+    <include layout="@layout/tab_activity"/>
+
+    <com.manridy.iband.ui.items.AlertBigItems2
+        android:id="@+id/ai_hr_correcting"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:big_name="@string/hint_hr_correcting"
+        app:big_hint=""
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/ai_hr_correcting_baseline"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="#26000000"
+        android:visibility="gone"
+        />
+
+    <com.manridy.iband.ui.items.AlertBigItems3
+        android:id="@+id/ai_alert"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:big_name="@string/hint_test_hr_timing"
+        app:big_center="-"
+        app:big_onoff="false"
+        android:visibility="gone"
+        />
+    <!--app:big_hint="@string/hint_hr_test_timing_content"-->
+    <RelativeLayout
+        android:id="@+id/rl_space"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/text_content"
+            android:textSize="16sp"
+            android:text="@string/hint_space"/>
+
+        <TextView
+            android:id="@+id/tv_space"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#de2196f3"
+            android:textSize="16sp"
+            android:text=""/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/line_background"/>
+    </RelativeLayout>
+
+</LinearLayout>

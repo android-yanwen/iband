@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <include layout="@layout/tab_activity"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_history"
+        android:layout_width="match_parent"
+        android:layout_height="248dp">
+        <TextView
+            android:id="@+id/tv_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="22dp"
+            android:textColor="#8a000000"
+            android:textSize="12sp"
+            android:text="@string/hint_last_hr"/>
+
+        <TextView
+            android:id="@+id/tv_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/tv_hint"
+            android:textColor="#de000000"
+            android:textSize="48sp"
+            android:text="--"/>
+
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/tv_num"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="60dp"
+            android:src="@mipmap/his_ic_ecg"/>
+
+        <TextView
+            android:id="@+id/tv_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tv_num"
+            android:layout_marginTop="75dp"
+            android:layout_marginLeft="8dp"
+            android:textColor="#de000000"
+            android:textSize="10sp"
+            android:text="@string/hint_unit_hr"/>
+
+        <TextView
+            android:id="@+id/line"
+            android:layout_width="150dp"
+            android:layout_height="1px"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/tv_num"
+            android:background="#de000000"/>
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/line"
+            android:layout_marginTop="5dp"
+            android:textColor="#8a000000"
+            android:textSize="14sp"
+            android:text="@string/hint_date"/>
+
+        <TextView
+            android:layout_below="@+id/tv_time"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正常"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="#8a000000"
+            />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="136dp"
+            android:textColor="#de000000"
+            android:textSize="14dp"
+            android:text="@string/hint_month_current"/>
+
+
+
+        <LinearLayout android:orientation="horizontal"
+                      android:layout_width="match_parent"
+                      android:layout_height="72dp"
+                      android:layout_alignParentBottom="true">
+
+            <com.manridy.iband.ui.items.DataItems
+                android:id="@+id/di_data1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:data_type="left"
+                app:line_color="#26ef5350"
+                app:data_hint="@string/hint_hr_avg"
+                app:data_unit="@string/hint_unit_hr"
+                app:data="--"/>
+
+            <com.manridy.iband.ui.items.DataItems
+                android:id="@+id/di_data2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:line_color="#26ef5350"
+                app:data_type="center"
+                app:data_hint="@string/hint_hr_min"
+                app:data_unit="@string/hint_unit_hr"
+                app:data="--"/>
+
+            <com.manridy.iband.ui.items.DataItems
+                android:id="@+id/di_data3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:line_color="#26ef5350"
+                app:data_type="right"
+                app:data_hint="@string/hint_hr_max"
+                app:data_unit="@string/hint_unit_hr"
+                app:data="--"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

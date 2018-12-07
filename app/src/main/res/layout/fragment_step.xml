@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="#2196f3"/>
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1px"-->
+        <!--android:background="#0cffffff"/>-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="288dp"
+        android:background="#2196f3"
+       >
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="5dp"
+            android:src="@mipmap/step_ic" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:id="@+id/ll_weather"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_gravity="right"
+
+                >
+                <ImageView
+                    android:paddingTop="2dp"
+                    android:id="@+id/iv_weather"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:src="@mipmap/weather_sunny"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_tempetature"
+                    android:text="-"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20dp"
+                    />
+            </LinearLayout>
+            <com.manridy.iband.ui.MarqueeTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_addr"
+                android:text="-"
+                android:textColor="#5e5e5f"
+                android:textAlignment="center"
+                android:textSize="14dp"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                />
+        </LinearLayout>
+        <com.manridy.iband.ui.CircularView
+            android:id="@+id/cv_step"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            app:cv_background_color="#26ffffff"
+            app:cv_progressbar_color="#deffeb3b"
+            app:cv_icon="@mipmap/all_walkicon"
+            app:cv_title="@string/hint_step_today"
+            app:cv_text="--"
+            app:cv_unit="@string/hint_unit_step"
+            app:cv_state="@string/hint_step_history_num"
+            app:cv_progress="0.5"/>
+
+        <ImageView
+            android:id="@+id/iv_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/all_history"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="13dp"
+            android:paddingRight="16dp"/>
+
+        <ImageView
+            android:id="@+id/iv_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/iv_history"
+            android:paddingRight="8dp"
+            android:paddingBottom="13dp"
+            android:src="@mipmap/walk_walkicon"/>
+
+        <ImageView
+            android:id="@+id/iv_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="18dp"
+            android:src="@mipmap/sp_ic_locate"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+    <include layout="@layout/tab_data"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/bc_step"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
+        android:background="#16000000"/>
+
+        <TextView
+            android:id="@+id/tv_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:drawableLeft="@mipmap/all_note"
+            android:text="@string/hint_empty_data"
+            android:visibility="gone"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="3dp"
+            android:textColor="#8a000000"
+            android:textSize="10sp"
+            android:text="00:00"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="3dp"
+            android:textColor="#8a000000"
+            android:textSize="10sp"
+            android:text="23:59"/>
+
+
+    </RelativeLayout>
+</LinearLayout>

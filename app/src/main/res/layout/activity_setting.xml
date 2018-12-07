@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/activity_background">
+    <include layout="@layout/tab_activity"/>
+
+    <ScrollView
+        android:id="@+id/sv_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/iv_user_icon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="13dp"
+                app:actualImageScaleType="fitXY"
+                app:placeholderImage="@mipmap/set_avatar"
+                app:roundAsCircle="true"/>
+            <RelativeLayout
+                android:id="@+id/rl_user_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/text_name"
+                    android:textSize="16sp"
+                    android:text="cecboy"/>
+
+                <TextView
+                    android:id="@+id/tv_hint_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/tv_user_name"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/text_hint"
+                    android:textSize="14sp"
+                    android:text="@string/hint_user_info"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tv_hint_name"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginLeft="6dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_chevron_right"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:textColor="@color/text_title"
+                android:textSize="14sp"
+                android:text="@string/title_device_connect"/>
+
+
+            <include layout="@layout/item_device"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="#26000000"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:textColor="#8a000000"
+                android:textSize="14sp"
+                android:text="@string/title_menu"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="#26000000"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_interface"
+                app:menus_name="@string/hint_menu_view"
+                android:visibility="gone"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_camera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_camera"
+                app:menus_name="@string/hint_menu_camera"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_find"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_find"
+                app:menus_name="@string/hint_menu_find"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_alert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_phone"
+                app:menus_name="@string/hint_menu_alert"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_wechat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_wechat"
+                app:menus_name="@string/hint_menu_wechat"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_wrist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_wrist"
+                app:menus_name="@string/hint_menu_wrist"/>
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_do_not_disturb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/nodisturb"
+                app:menus_name="@string/text_do_not_disturb"
+                android:visibility="gone"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_dimming"
+                app:menus_name="@string/hint_menu_light"
+                android:visibility="visible"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_unit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_unit"
+                app:menus_name="@string/hint_menu_unit"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_time"
+                app:menus_name="@string/hint_menu_time"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_target"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_goal"
+                app:menus_name="@string/hint_menu_target"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_hr_test"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_heart_rate"
+                app:menus_name="@string/hint_hr_set"
+                android:visibility="gone"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_clean"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_clear"
+                app:menus_name="@string/hint_clean"
+                android:visibility="gone"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_reset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_restore"
+                app:menus_name="@string/hint_reset"
+                android:visibility="visible"/>
+
+            <com.manridy.iband.ui.items.MenuItems
+                android:id="@+id/menu_about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menus_icon="@mipmap/set_info"
+                app:menus_name="@string/hint_title_about"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

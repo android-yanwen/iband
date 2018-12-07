@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/activity_background">
+    <include layout="@layout/tab_activity"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="232dp"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="43dp"
+            android:src="@mipmap/about_pic01"/>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp"
+            android:textColor="@color/text_content"
+            android:text="iband"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tv_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/text_content"
+            android:text=""/>
+    </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="#26000000"/>
+
+    <com.manridy.iband.ui.items.HelpItems
+        android:id="@+id/hi_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:help_name="@string/hint_menu_update"/>
+
+    <com.manridy.iband.ui.items.HelpItems
+        android:id="@+id/hi_langue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:help_name="@string/hint_langue"
+        android:visibility="gone"
+        />
+
+    <com.manridy.iband.ui.items.HelpItems
+        android:id="@+id/hi_help"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:help_name="@string/hint_menu_help"/>
+
+    <com.manridy.iband.ui.items.HelpItems
+        android:id="@+id/hi_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:help_name="@string/hint_data_export"/>
+
+    <com.manridy.iband.ui.items.HelpItems
+        android:id="@+id/hi_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:help_name="@string/activity_feedback"
+        android:visibility="gone"/>
+</LinearLayout>

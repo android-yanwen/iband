@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+    <include layout="@layout/tab_activity"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_bind_state"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:padding="10dp">
+            <EditText
+                android:id="@+id/et_question"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@null"
+                android:hint="@string/text_please_input_question_and_opinion"
+                android:textColor="#000000"
+                android:textCursorDrawable="@null"
+                android:textSize="16sp"
+                android:gravity="top"
+                android:visibility="visible" />
+        </ScrollView>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="#26000000"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_help"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <com.manridy.iband.ui.EditItem
+            android:id="@+id/ei_age"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:ei_title="@string/text_contact_address"
+            app:ei_et_hint="@string/text_please_input_infomation"
+            app:ei_max_length = "20"
+            app:ei_single_line="true"/>
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/bt_send"
+        android:layout_width="288dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="88dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/shape_button_alert"
+        android:textColor="#c703a9f4"
+        android:textSize="12sp"
+        android:text="@string/text_send"
+        android:visibility="visible"/>
+
+
+
+</LinearLayout>

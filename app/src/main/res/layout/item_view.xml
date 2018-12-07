@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="vertical"
+                android:id="@+id/ll_view">
+    <ImageView
+        android:id="@+id/iv_view_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="18dp"
+        android:src="@mipmap/selection_about"/>
+
+    <TextView
+        android:id="@+id/tv_view_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/iv_view_icon"
+        android:layout_marginLeft="18dp"
+        android:textColor="@color/text_name"
+        android:textSize="16sp"
+        android:text="待机"/>
+
+    <ImageView
+        android:id="@+id/iv_view_onoff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="18dp"
+        android:src="@mipmap/selection_tick_color"/>
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="1px"
+    android:layout_alignParentBottom="true"
+    android:background="#26000000"/>
+</RelativeLayout>

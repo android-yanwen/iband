@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/rl_device">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentTop="true"
+        android:background="@color/line_background"/>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/iv_device_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:placeholderImage="@mipmap/set_product01"
+        android:layout_centerVertical="true"/>
+
+    <TextView
+        android:id="@+id/tv_device_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iv_device_icon"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/text_device_name"
+        android:textSize="16sp"
+        android:text="X9Plus"/>
+
+    <TextView
+        android:id="@+id/tv_device_bind_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/iv_device_icon"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/text_device_hint"
+        android:textSize="12sp"
+        android:text="@string/hint_state_bind"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="14dp"
+        android:layout_marginRight="4dp"
+        android:src="@mipmap/ic_chevron_right"/>
+
+    <TextView
+        android:id="@+id/tv_device_connect_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="18dp"
+        android:textColor="@color/text_device_hint"
+        android:textSize="12sp"
+        android:text="@string/hint_state_unconnect"/>
+
+    <com.manridy.iband.ui.MarqueeTextView
+        android:id="@+id/tv_device_battery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="150dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@id/tv_device_connect_state"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/text_device_hint"
+        android:textSize="12sp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_un_bind"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="1dp"
+        android:background="@color/activity_background">
+        <TextView
+            android:id="@+id/tv_un_bind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/hint_bind_new_device"/>
+        <ImageView
+            android:id="@+id/iv_un_bind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/tv_un_bind"
+            android:src="@mipmap/set_add"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

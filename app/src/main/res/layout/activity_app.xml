@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/activity_background">
+
+        <include layout="@layout/tab_activity"/>
+
+    <com.manridy.iband.ui.items.AlertBigItems
+        android:id="@+id/ai_alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:big_name="@string/hint_title_alert_app"
+        app:big_hint="@string/hint_alert_app"
+        app:big_onoff="false"
+        app:big_line="false"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingLeft="16dp"
+            android:gravity="center_vertical"
+            android:background="#10000000"
+            android:textColor="@color/text_title"
+            android:textSize="14sp"
+            android:text="@string/hint_select_alert_app"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_app"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.manridy.iband.ui.items.AlertItems
+        android:id="@+id/ai_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:alert_names="@string/hint_notify_more"
+        app:alert_img="@mipmap/ic_off"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_more"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:textSize="18sp"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:text="设置步数"/>
+    <EditText
+        android:id="@+id/et_step_num"
+        android:layout_width="250dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="18dp"
+        android:textSize="16sp"
+        android:inputType="number"
+        android:hint="请输入步数"
+        android:background="@null"/>
+
+    <TextView
+        android:layout_width="250dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:background="#eeeeee"/>
+    <RelativeLayout
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center">
+        <Button
+            android:id="@+id/bt_cancel"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:text="取消"/>
+
+        <Button
+            android:id="@+id/bt_ok"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:text="确定"/>
+    </RelativeLayout>
+</LinearLayout>

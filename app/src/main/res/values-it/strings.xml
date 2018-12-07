@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hint_bluetooth_close">Il Bluetooth è disattivato</string>
+    <string name="hint_alert_app">APP avviso, l\'orologio si agita</string>
+    <string name="hint_ota_progress">Preparazione per l\'aggiornamento, si prega di attendere...</string>
+    <string name="hint_menu_wrist">smart display</string>
+    <string name="app_name">iband</string>
+    <string name="hint_sleep_deep_avg">Il sonno profondo giornaliero medio</string>
+    <string name="hint_bluetooth_opening">Il Bluetooth è attivo</string>
+    <string name="hint_wechat_query">query di stato del dispositivo, attendere prego...</string>
+    <string name="hint_save">Salva</string>
+    <string name="hint_stop">Stop</string>
+    <string name="hint_title_alert_phone">Tieni Bluetooth aperto e il braccialetto rimane collegato al telefono</string>
+    <string name="hint_step_history_num">- km / - kcal</string>
+    <string name="hint_sync_no">Sincronizzazione non riuscita</string>
+    <string name="hint_sleep_light_avg">Il sonno leggero medio giornaliero</string>
+    <string name="hint_camera">Utilizzare gli orologi telecamera remoti</string>
+    <string name="hint_device_connected">Il braccialetto è collegato</string>
+    <string name="hint_not_save">Le tue impostazioni non sono ancora state salvate, conferma la tua uscita?</string>
+    <string name="hint_mi">chilometraggio</string>
+    <string name="hint_steps">Numero di passi</string>
+    <string name="hint_menu_light">Regolazione della luminosità</string>
+    <string name="hint_select_alert_app">Selezionare un promemoria APP</string>
+    <string name="hint_sleep_target">bersaglio sonno</string>
+    <string name="hint_view_sleep">addormentato</string>
+    <string name="hint_cancel">annullato</string>
+    <string name="hint_firm_version">Versione firmware</string>
+    <string name="hint_menu_alert_sedentary">sedentario promemoria</string>
+    <string name="hint_alert_sedentary_nap">12:00~14:00 Nessuna vibrazione</string>
+    <string name="title_wechat">Utilizza il metodo di WeChat</string>
+    <string name="hint_sleep_everyday">Dormire ogni giorno</string>
+    <string name="hint_menu_alert_clock">Alarm Clock</string>
+    <string name="hint_view_basketball">pallacanestro</string>
+    <string name="hint_sync_data">Sincronizzare le impostazioni...</string>
+    <string name="hint_alert_sedentary_title_nap">Tempo di pranzo</string>
+    <string name="hint_bluetooth_open">Attiva Bluetooth</string>
+    <string name="hint_clock">È possibile impostare fino a tre sveglie</string>
+    <string name="hint_test">misura</string>
+    <string name="hint_lost_nap_content">23:00~06:00Non ricordare</string>
+    <string name="hint_unit_mi">chilometro</string>
+    <string name="hint_step_history_mi">Chilometraggio totale</string>
+    <string name="title_app">Applica il promemoria</string>
+    <string name="hint_alert_open">Aprire il promemoria</string>
+    <string name="title_menu">Impostazioni di funzione</string>
+    <string name="hint_input_user_name">Inserisci un nome utente</string>
+    <string name="hint_un_bind_fail">Bind fallito, riprova</string>
+    <string name="hint_sleep_start">La scorsa notte di sonno</string>
+    <string name="hint_app_facebook">Facebook</string>
+    <string name="local">Album locale</string>
+    <string name="hint_alert_phone">Quando il telefono chiama, l\'orologio vibra</string>
+    <string name="hint_device_finding">Trova braccialetto...</string>
+    <string name="hint_view_pingpong">Ping-pong</string>
+    <string name="hint_menu_about">Chi siamo</string>
+    <string name="hint_photo">galleria</string>
+    <string name="hint_device_unbind">Dispositivo non legato</string>
+    <string name="hint_reset">Ripristina fabbrica</string>
+    <string name="hint_data_export_succes">L\'esportazione dei dati è completa, apri il file?</string>
+    <string name="hint_action_connect">collegamento</string>
+    <string name="hint_year">anno</string>
+    <string name="hint_activateing">Il dispositivo è attivo, attendi prego</string>
+    <string name="hint_join_wechat">Partecipa al WeChatSport e un piccolo partner con PK!</string>
+    <string name="hint_tarin">formazione</string>
+    <string name="hint_height">altezza</string>
+    <string name="hint_device_connecting">Collegare il braccialetto...</string>
+    <string name="hint_reset_text">Ciò cancellerà tutti i dati sull\'APP e sul dispositivo e non verrà ripristinato?</string>
+    <string name="hint_update_alert_content">L\'orologio attuale presenta una nuova versione del firmware, sia per l\'aggiornamento?</string>
+    <string name="hint_un_bind_success">Sbloccare il successo</string>
+    <string name="hint_step_history_sum">Numero totale di passaggi</string>
+    <string name="hint_view_sport">sportivo</string>
+    <string name="hint_camera_start">Inizia a scattare foto</string>
+    <string name="hint_sleep_avg">Il sonno medio giornaliero</string>
+    <string name="hint_sleep_history_avg">Il sonno medio giornaliero</string>
+    <string name="hint_push">push-up</string>
+    <string name="hint_step_history">Registrazione passo</string>
+    <string name="hint_lp">Pressione arteriosa diastolica</string>
+    <string name="hint_alert_lost">Quando la connessione è rotta, l\'orologio vibra</string>
+    <string name="hint_bluetooth_open_alert">Per poter utilizzare correttamente iband devi attivare Bluetooth</string>
+    <string name="hint_view_hp">Pressione arteriosa</string>
+    <string name="hint_unit_set">Impostazioni del sistema metrico</string>
+    <string name="hint_view_hr">Frequenza cardiaca</string>
+    <string name="hint_unit_sleep">ora</string>
+    <string name="hint_net_error">anomalie di rete, controllare la rete e riprovare！</string>
+    <string name="hint_sleep_end">Svegliatevi oggi</string>
+    <string name="error_end_before">Ora di fine non può essere anteriore al tempo della fine</string>
+    <string name="hint_data_export">Esportazione dati</string>
+    <string name="hint_hr_correct1">Nota: non modificare questi dati se il dispositivo è in grado di misurare la frequenza cardiaca normalmente！</string>
+    <string name="hint_alert_lost1">Bracciale rilevato:</string>
+    <string name="hint_lost_nap">Anti-perso promemoria Chiudi</string>
+    <string name="title_test">Tenere l\'orologio in connessione con il telefono durante la misurazione</string>
+    <string name="hint_ota_success">Aggiorna con successo</string>
+    <string name="hint_time_12">12-h</string>
+    <string name="hint_set">Impostare</string>
+    <string name="hint_contacts">Persona di contatto</string>
+    <string name="hint_ota_newest">Sei già aggiornato</string>
+    <string name="hint_find_title">Se si trova un braccialetto, il braccialetto vibrerà</string>
+    <string name="hint_view_mac">MAC codice bidimensionale</string>
+    <string name="hint_device_unconnect">Il braccialetto non è collegato</string>
+    <string name="hint_unit_th">più</string>
+    <string name="hint_restart">Questa operazione ripristinerà il dispositivo alla sua modalità originale e cancellerà tutti i dati.</string>
+    <string name="hint_finding_phone">Il dispositivo sta cercando un telefono cellulare...</string>
+    <string name="title_bp_history">record di pressione sanguigna</string>
+    <string name="hint_sleep_today">Sonno oggi</string>
+    <string name="hint_view_clock">Alarm Clock</string>
+    <string name="hint_view_download">Scaricare il codice bidimensionale</string>
+    <string name="hint_action_bind">tempo...</string>
+    <string name="hint_device_binding">attrezzature Bound...</string>
+    <string name="hint_app_whatsapp">WhatsApp</string>
+    <string name="hint_menu_view">Selezionare Interfaccia</string>
+    <string name="hint_permisson_phone">Le seguenti autorizzazioni sono necessarie per l\'utilizzo normale degli avvisi di chiamata</string>
+    <string name="hint_select_height">Scegli l\'altezza</string>
+    <string name="hint_title_about">A proposito di questo</string>
+    <string name="hint_alert_cancel">Chiudi la notifica</string>
+    <string name="hint_alert_sms">Quando il telefono cellulare un messaggio di testo, l\'orologio vibrerà</string>
+    <string name="hint_watch_light">orologi impostare la luminosità</string>
+    <string name="hint_view_off">Chiudi</string>
+    <string name="hint_device">attrezzatura</string>
+    <string name="hint_select_month">Seleziona mese</string>
+    <string name="hint_unopen">non è in esecuzione</string>
+    <string name="hint_syncing">Sincronizzato</string>
+    <string name="hint_menu_alert_app">Applica il promemoria</string>
+    <string name="hint_view_select">interfaccia di selezione da visualizzare sul dispositivo</string>
+    <string name="hint_hr_avg">Frequenza cardiaca media</string>
+    <string name="hint_switch_langue">Cambiare lingua, per favore aspetta ...</string>
+    <string name="hint_low">inferiore</string>
+    <string name="hint_title_alert_app">Aprire l\'avviso di APP</string>
+    <string name="hint_ota_completed">È stato completato</string>
+    <string name="error_update_fail">Get upgrade informazioni fallisce, riprovare</string>
+    <string name="hint_time_24">24-h</string>
+    <string name="hint_bind_new_device">Legare il nuovo dispositivo</string>
+    <string name="hint_device_bind">Legare il dispositivo</string>
+    <string name="hint_title_correct">Rafforzare la misurazione della frequenza cardiaca</string>
+    <string name="hint_permission_location">Informazioni sulla posizione</string>
+    <string name="hint_select_pic">Selezionare l\'immagine</string>
+    <string name="hint_check_version">Controllare la versione</string>
+    <string name="hint_step_history_avg">Numero medio giornaliero di passi</string>
+    <string name="hint_sync_fail">Sincronizzazione non riuscita</string>
+    <string name="hint_hr_test_timing_content">Dopo aver attivato questa funzione, il dispositivo misurerà la frequenza cardiaca regolarmente.</string>
+    <string name="hint_alert_sms_open">Apri SMS</string>
+    <string name="hint_view_stand">Standby</string>
+    <string name="hint_ka">calorie</string>
+    <string name="hint_device_activate">Il dispositivo è attivato</string>
+    <string name="hint_click_look">Clicca per vedere</string>
+    <string name="hint_menu_time">Formato orario</string>
+    <string name="hint_menu_alert_phone">Notifica di chiamata</string>
+    <string name="hint_menu_help">Usa l\'aiuto</string>
+    <string name="hint_woman">donna</string>
+    <string name="hint_open">aperto</string>
+    <string name="hint_app_wechat">WeChat</string>
+    <string name="hint_next">La prossima volta per dire</string>
+    <string name="hint_alert_bind">Si prega di liberare l\'apparecchiatura prima</string>
+    <string name="hint_alert_sedentary_time_start">Ora di inizio</string>
+    <string name="hint_view_div">Personalizza codice bidimensionale</string>
+    <string name="hint_wechat_2">2.Origine dati - Aggiungi origine dati-深圳曼瑞德科技</string>
+    <string name="hint_wechat_3">3.completo</string>
+    <string name="hint_user_info">Informazioni utente</string>
+    <string name="hint_title_ota">Aggiornamento del firmware</string>
+    <string name="error_not_install">Installare prima WeChat</string>
+    <string name="hint_centre">normale</string>
+    <string name="hint_select_sex">Seleziona il sesso</string>
+    <string name="hint_install_success">Attivazione di successo</string>
+    <string name="hint_view_run">jogging</string>
+    <string name="hint_saveing">Salva...</string>
+    <string name="hint_unit_height">(cm)</string>
+    <string name="hint_sleep_deep">Sonno profondo</string>
+    <string name="hint_sleep_light">Sonno poco profondo</string>
+    <string name="hint_state_connected">collegato</string>
+    <string name="hint_init_step_target">8000passo</string>
+    <string name="hint_wechat_1">1.Apri WeChatSport - Impostazioni</string>
+    <string name="hint_time">tempo</string>
+    <string name="hint_permission_camera">Il permesso di scattare foto</string>
+    <string name="hint_date">--Mese - Giorno --:--</string>
+    <string name="hint_now">Aggiorna ora</string>
+    <string name="hint_step_everyday">Camminate ogni giorno</string>
+    <string name="hint_alert_sedentary_time_end">Fine del tempo</string>
+    <string name="hint_space">intervallo</string>
+    <string name="hint_sync_success">la sincronizzazione di successo</string>
+    <string name="error_start_after">L\'ora di inizio non può essere più tardi del tempo di fine</string>
+    <string name="hint_device_searching">Cerca il dispositivo...</string>
+    <string name="hint_call">telegramma in arrivo</string>
+    <string name="hint_phone">telefono</string>
+    <string name="hintUnConnect">Assicurarsi che il dispositivo sia collegato</string>
+    <string name="hint_device_find_cancel">Annulla la ricerca</string>
+    <string name="hint_alert_sedentary_title">Sedetevi per un\'ora, braccialetto vibrerà</string>
+    <string name="hint_menu_target">Goal Setting</string>
+    <string name="hint_month">mese</string>
+    <string name="hint_unit_metric">Metriche (m / km / kg)</string>
+    <string name="hint_menu_alert_sms">SMS promemoria</string>
+    <string name="hint_hr_max">La frequenza cardiaca più alta</string>
+    <string name="hint_ota_file_download">Inizia a scaricare i file OTA</string>
+    <string name="hint_bind_success">successo binding</string>
+    <string name="hint_unit_inch_mi">miglio</string>
+    <string name="hint_ota">Non lasciare il dispositivo lontano dal telefono durante l\'aggiornamento</string>
+    <string name="hint_alert_lost2">Disconnesso dal telefono e potrebbe essere persa!</string>
+    <string name="hint_avg">significare</string>
+    <string name="title_hr_history">Record di frequenza cardiaca</string>
+    <string name="hint_device_findings">Trova il dispositivo..</string>
+    <string name="title_bo_history">Record di ossigeno</string>
+    <string name="hint_end">La fine</string>
+    <string name="hint_state_battery">Elettricità rimanente:</string>
+    <string name="hint_sms">SMS</string>
+    <string name="title_find">Trova braccialetto</string>
+    <string name="hint_connected">Il dispositivo è collegato</string>
+    <string name="hint_camera_exit">fotocamera Exit</string>
+    <string name="hint_unit_step">passo</string>
+    <string name="hint_request_sms_alert">Per poter utilizzare i normali avvisi SMS, sono necessarie le seguenti autorizzazioni</string>
+    <string name="hint_day_max">Top, si prega di riselezionare！</string>
+    <string name="hint_menu_update">Controllare gli aggiornamenti</string>
+    <string name="hint_notify_more">Più applicazioni</string>
+    <string name="hint_langue">Impostazione della lingua</string>
+    <string name="hint_network_available">La rete attuale non è disponibile</string>
+    <string name="hint_sex">genere</string>
+    <string name="camera">Fotocamera per scattare foto</string>
+    <string name="hint_request_alert_app">Per poter utilizzare il promemoria di App, devi ricevere la notifica</string>
+    <string name="hint_click_save">Clicca sull\'immagine per salvare nell\'album</string>
+    <string name="hint_start">iniziare</string>
+    <string name="hint_swim">nuotata</string>
+    <string name="hint_current_version">Versione corrente:V</string>
+    <string name="hint_deivce_un_bind">unbundling</string>
+    <string name="title_alert">Funzione di promemoria</string>
+    <string name="hint_time_after">Vibra</string>
+    <string name="hint_ota_file_success">file di OTA viene scaricato con successo</string>
+    <string name="hint_app_qq">QQ</string>
+    <string name="hint_man">maschio</string>
+    <string name="hint_un_find">Dispositivo non trovato</string>
+    <string name="hint_alert_phone_open">Attiva avvisi di chiamata</string>
+    <string name="hint_select_day">Selezionare Data</string>
+    <string name="hint_unit_weight">(kg)</string>
+    <string name="hint_menu_more">completo</string>
+    <string name="hint_menu_wechat">WeChat Sport</string>
+    <string name="hint_select_age">Scegli l\'età</string>
+    <string name="hint_sync_ok">Completamento sincrono</string>
+    <string name="hint_reset_success">Riprendi il successo, riavvia l\'applicazione</string>
+    <string name="hint_hr_testing">Nella misurazione</string>
+    <string name="hint_max">Il valore più alto</string>
+    <string name="hint_clock2">Clock2</string>
+    <string name="hint_clock1">Clock1</string>
+    <string name="hint_last_hr">Ultimo risultato della misurazione</string>
+    <string name="hint_month_current">Questo mese</string>
+    <string name="hint_hr_current_test">Misura in tempo reale</string>
+    <string name="hint_skip">Saltare la corda</string>
+    <string name="hint_view_find">ricercare</string>
+    <string name="hint_warm_alert">promemoria</string>
+    <string name="hint_alert_ok">Lo so</string>
+    <string name="error_mac">Errore di informazioni Bracciale, riprova!</string>
+    <string name="error_time_space">Prego impostarlo per almeno un\'ora</string>
+    <string name="hint_soft_version">Versione software</string>
+    <string name="hint_menu_unit">Unità Set</string>
+    <string name="hint_age">età</string>
+    <string name="hint_hp">Pressione sanguigna sistolica</string>
+    <string name="hint_min">Valore minimo</string>
+    <string name="hint_step_today">Oggi, il numero di passi</string>
+    <string name="hint_menu_find">Trova braccialetto</string>
+    <string name="hint_clean">Cancella dati</string>
+    <string name="title_camera">fotocamera a distanza</string>
+    <string name="hint_activate">attivazione</string>
+    <string name="hint_view_info">informazioni</string>
+    <string name="hint_run">jogging</string>
+    <string name="unit_min">minuto</string>
+    <string name="hint_data_export_help">Posizione di archiviazione dei dati</string>
+    <string name="hint_find_phone">Trova telefono</string>
+    <string name="hint_sleep_history">sonno Record</string>
+    <string name="hint_set_correct">Impostare l\'intensità della misurazione della frequenza cardiaca</string>
+    <string name="hint_bluetooth">Bluetooth</string>
+    <string name="hint_phone_num_unknow">Numero sconosciuto</string>
+    <string name="hint_connect_fail">Connessione dispositivo non riuscita</string>
+    <string name="hint_un_connect">Il dispositivo è scollegato</string>
+    <string name="hint_alert_wrist">Girare il polso e accendere lo schermo</string>
+    <string name="hint_lp_avg">La pressione sanguigna diastolica media</string>
+    <string name="hint_view_bo">Sangue ossigeno</string>
+    <string name="hint_ok">OK </string>
+    <string name="title_device_connect">Connessione del dispositivo</string>
+    <string name="hint_wechat_open">Apri WeChat</string>
+    <string name="hint_sleep_history_time">Sonno profondo - ore / sonno leggero - ore</string>
+    <string name="hint_opens">È stato aperto</string>
+    <string name="hint_unit_inch">Britannico (pollice / miglio / sterlina)</string>
+    <string name="hint_alert_wrist_open">Accendere la visualizzazione intelligente</string>
+    <string name="hint_device_binded">L\'apparecchiatura è già legato</string>
+    <string name="bt_next">Prossimo passo</string>
+    <string name="hint_state_bind">già legato</string>
+    <string name="hint_init_sleep_target">8ora</string>
+    <string name="hint_update_alert">Promemoria di aggiornamento</string>
+    <string name="title_alert_sms">Tieni Bluetooth aperto e il braccialetto rimane collegato al telefono</string>
+    <string name="hint_langue_normal">Lingua predefinita</string>
+    <string name="hint_sleep_light1">/Sonno poco profondo</string>
+    <string name="hint_unit_ka">kcal</string>
+    <string name="hint_weight">peso</string>
+    <string name="hint_action_sync">sincrono</string>
+    <string name="hint_time_set">Impostazione dell\'unità di tempo</string>
+    <string name="hint_unit_age">(età)</string>
+    <string name="hint_find">Utilizzando questa funzione richiede bracciale con un telefono cellulare per rimanere in contatto</string>
+    <string name="hint_un_bind">Attrezzatura non legato</string>
+    <string name="hint_permission_sd">Spazio di stoccaggio</string>
+    <string name="hint_sleep_sober">sobrio</string>
+    <string name="hint_app_line">Line</string>
+    <string name="hint_times">tempo</string>
+    <string name="hint_connecting">Connessione del dispositivo</string>
+    <string name="error_call_end">Riagganciare il telefono non è riuscito, si prega di controllare iband permesso è acceso</string>
+    <string name="hint_wechart_alert">L\'orologio deve essere attivato innanzitutto</string>
+    <string name="hint_step_history_ka">Calorie totali</string>
+    <string name="hint_search">ricerca</string>
+    <string name="hint_save_success">Salvato con successo</string>
+    <string name="hint_save_fail">Salva fallito</string>
+    <string name="hint_alert_sedentary_open">iniziare</string>
+    <string name="hint_state_unconnect">non collegato</string>
+    <string name="hint_cycling">bicicletta</string>
+    <string name="hint_connect_success">Il dispositivo è collegato correttamente</string>
+    <string name="error_ota_fail">L\'aggiornamento non riesce</string>
+    <string name="hint_step_target">piano di esercizio</string>
+    <string name="hint_select_weight">Selezionare Peso</string>
+    <string name="toast_ota_battery_low">batteria del dispositivo bassa corrente, prego carica aggiornamento!</string>
+    <string name="hint_state_connecting">In connessione</string>
+    <string name="hint_view_step">pedometro</string>
+    <string name="title_clock">Alarm Clock</string>
+    <string name="hint_export_excel">Mobile - Gestione file - cartella iband - database.xls con dati in formato excel</string>
+    <string name="hint_alert_lost_open">Aperto anti-perso promemoria</string>
+    <string name="hint_menu_alert_lost">Anti-perso promemoria</string>
+    <string name="hint_menu_alert">Funzione di promemoria</string>
+    <string name="hint_sync_last">Ultima sincronizzazione</string>
+    <string name="hint_reset_failure">Ripristino non riuscito</string>
+    <string name="hint_view_badminton">badminton</string>
+    <string name="hint_wechat_sport">WeChat Sport</string>
+    <string name="hint_sleep_awake">sobrio</string>
+    <string name="hint_hp_avg">La pressione sanguigna sistolica media</string>
+    <string name="hint_step">pedometro</string>
+    <string name="hint_notification">preavviso</string>
+    <string name="hint_stay">a piedi</string>
+    <string name="error_connect_fail">Connessione non riesce, riprovare！</string>
+    <string name="hint_normal">centro</string>
+    <string name="hint_high">massimo</string>
+    <string name="hint_hr_min">Frequenza cardiaca minima</string>
+    <string name="hint_unit_hr">Battiti / min</string>
+    <string name="hint_bind">legame</string>
+    <string name="hint_clock3">Clock3</string>
+    <string name="hint_ota_file_fail">OTA download di file non riesce</string>
+    <string name="hint_view_hill">alpinista</string>
+    <string name="hint_state_charge">ricarica</string>
+    <string name="hint_hr_test_timing">Misurazione automatica della frequenza cardiaca</string>
+    <string name="hint_menu_camera">fotocamera a distanza</string>
+    <string name="hint_hr_set">impostazioni di frequenza cardiaca</string>
+
+    <string name="hint_test_hr_timing">Timing misurazioni</string>
+
+    <string name="hint_hr_correcting">Calibrazione della frequenza cardiaca</string>
+
+    <string name="hint_hr_reseting">Ripristino della frequenza cardiaca</string>
+
+    <string name="hint_hr_police">Allarme della frequenza cardiaca</string>
+
+    <string name="hr_correcting">Calibrazione, attendere prego</string>
+
+    <string name="hr_reseting">Reset, si prega di attendere</string>
+
+    <string name="hr_correcting_success">Calibrazione completata</string>
+
+    <string name="hr_reseting_success">Ripristina completato</string>
+
+    <string name="hr_correcting_fail">Calibrazione fallita</string>
+
+    <string name="hr_reseting_fail">Ripristino fallito</string>
+
+    <string name="button_correcting">taratura</string>
+
+    <string name="button_reseting">reset</string>
+
+    <string name="hint_not_get_devicelist">Impossibile ottenere l\'elenco dei dispositivi</string>
+
+    <string name="heart_rate_instructions">
+        Calibrazione: utilizzare la funzione di calibrazione quando si scopre che non è possibile misurare la frequenza cardiaca o se la misurazione è soggetta a cedimenti.\n
+Ripristina: ripristina la funzione frequenza cardiaca alle impostazioni di fabbrica.\n
+Metodo di operazione:\n\n
+
+1. Indossare l\'orologio e assicurarsi che l\'orologio sia collegato correttamente all\'app.\n
+2. Rimanere immobili e fare clic sul pulsante "Calibration" / "Reset"\n
+3. Dopo che l\'APP ha richiesto correttamente, è possibile eseguire l\'effetto di verifica della misurazione.\n
+4. Se il prompt APP fallisce, si prega di confermare che l\'APP è connessa al dispositivo e riprovare.\n\n
+
+
+Nota: assicurati di rimanere fermo durante la calibrazione o il ripristino e assicurati che l\'APP sia collegata all\'orologio.\n\n
+    </string>
+    //数据库显示 不需要翻译
+    <string-array name="db">
+        <item>计步</item>
+        <item>睡眠</item>
+        <item>心率</item>
+        <item>血压</item>
+        <item>血氧</item>
+    </string-array>
+
+    <string-array name="corrects">
+        <item >Il più debole</item>
+        <!-- 正常 -->
+        <item>normale</item>
+        <!-- 最强 -->
+        <item>Il più forte</item>
+    </string-array>
+
+
+    <string-array name="helpTitleList">
+        <item >If you\’ re informed that iband couldn\’ t be found, tips are as follows？</item>
+        <item >If you’re informed of failing to bind:</item>
+        <item >How can you sync iband\’ s data？If you\’ re prompted for failure to sync the data.</item>
+        <item >Why didn’ t I be reminded for having a phone call though I set Call notification？ (Android)</item>
+        <item >I received messages without reminding though I set Message notification. Why？</item>
+        <item >Why didn’t I be reminded for receiving messages on QQ and WeChat though I set Application reminder？</item>
+        <item >I long pressed on the icon of iband to cancel a phone call when receiving a call notification. But I failed. Why? </item>
+        <item>Why did my HR measurement fail？</item>
+    </string-array>
+
+    <string-array name="helpContentList">
+        <item>1）Make sure the iband has enough power and the screen of it can be brightened up.
+            2）keep it close to your phone.
+            3）check whether the Bluetooth Icon on iband displays connected. If yes, please reboot your iband once；
+            If the tips above don’t work，try to turn on Bluetooth and your phone again。
+            Tips:
+	        Apple users should go to settings, check your iband’ s information on Bluetooth, and click and ignore the iband. Then turn on Bluetooth again.
+	        Android users with system version at or above 6.0 are required to turn on location service to search for iband in need of location info.
+        </item>
+        <item>
+            1）Make sure the iband has enough power and the screen of it can be brightened up.
+            2）keep it close to your phone.
+            3）check whether the Bluetooth Icon on iband displays connected. If yes, please reboot your iband once;
+            If the tips above don’ t work，try to turn on Bluetooth and your phone again。
+            Tips:
+	        Apple users should go to settings, check your iband’s information on Bluetooth, and click and ignore the iband. Then turn on Bluetooth again.
+        </item>
+        <item>
+             1) When you open iband app, the data can be synced automatically；Also, you can go to the main interface of the app, and slide list down to refresh the interface and to sync.
+2) If you’ re prompted to fail to connect when syncing：
+1) Refresh the main interface again；
+2)Restart the app；
+3) If these tips don’t work, turn on Bluetooth again or reboot your phone.（Before rebooting the phone, you can try eliminating the shared info on Bluetooth. ）
+Tips：
+Apple users should go to settings, check your iband’ s information on Bluetooth, and click and ignore the iband. Then turn on Bluetooth again.
+        </item>
+        <item>
+            1)	Make sure that Bluetooth is turned on and connected to your iband；
+2)	Check if iband app runs normally; (it is okay to run in the background.)
+3)	Check if phone and contacts is authorized.
+Tips:
+	The process of iband app could be cleaned up and blocked up by one-click cleaning up memory or some protecting software. Please add the app into white list.
+        </item>
+        <item>
+            1)	Make sure that Bluetooth is turned on and connected to your iband；
+2)	Check if iband app runs normally; (it is okay to run in the background.)
+3)	Check if messages and contacts is authorized；
+Tips:
+	The process of iband app could be cleaned up and blocked up by one-click cleaning up memory or some protecting software. Please add the app into white list.
+        </item>
+        <item>
+            1）	Make sure that Bluetooth is turned on and connected to your iband；
+2）	Check if iband app runs normally; (it is okay to run in the background.)
+3）	Make sure that you turn on the function of message notifywin on qq and WeChat.
+Tips: If the tips above don’t work, please restart iband app or phone.
+        </item>
+        <item>
+            1)	Make sure that Bluetooth is turned on and connected to your iband；
+2)	Check if iband app runs normally; (it is okay to run in the background.)
+3)	Check if phone call is authorized.
+Operating steps：
+Settings-Authorization-Application authorization-iband-Setting for single authorization-Phone call, please allow phone call authorization.
+
+Tips:
+	The process of iband app could be cleaned up and blocked up by one-click cleaning up memory or some protecting software. Please add the app into white list.
+
+        </item>
+        <item>
+            1）	Keep calm and quiet and your wrist should be close against to the bottom of iband’ s screen. Do not swing your arm when measuring.
+2）	Nonstandard wearing manners influence HR measurement like iband not exactly close against your wrist, arm swinging or iband moving on skin a little. Moreover, tighter wearing, lifted-up arm and clenched fist have bad impact on blood circulation, which can lead to failure on HR measurement. The proper ways to measure your HR are to keep your arm flat and keep yourself relaxed and calm and keep your wrist close against the iband. However, although you wear the iband in the proper ways, HR measurement can be failed by the influence of individual difference like scars on skin.
+        </item>
+    </string-array>
+
+    <string-array name="wechat_titles">
+        <item>The things you need to do before binding WeRun</item>
+        <item>WeRun binding method</item>
+        <item>Do I need to sync the data by myself every time I refresh WeRun data？</item>
+        <item>Why can I check the data updates immediately though WeRun is added？</item>
+        <item>How can I know that WeRun has been added into my device？</item>
+        <item>How can I delete WeRun from my device？</item>
+        <item>Why does my iband stop refreshing and not keep in sync, though I added WeRun？</item>
+        <item>How can I know whether my iband is conneted to WeRun？</item>
+        <item>Do I need to unbind or ignore device every time I use WeRun？</item>
+    </string-array>
+
+    <string-array name="wechat_contents">
+        <item>1.	Unbind device（Apple users should ignore the device on Bluetooth）.\n
+2.	Enable the Bluetooth on your phone.\n
+3.	Make sure that the Bluetooth on iband is disconnected.
+
+       </item>
+        <item>1.The interface of the picture has been stored in the phone album, open WeChat "Scan QR Code"\n
+2. Choose "QR Code from Album" in the upper right corner\n
+3. Find the picture stored in the phone, identify the QR code\n
+4. In the page that is displayed, select Binding Device, enter the public number, and complete the binding.
+
+       </item>
+        <item>No, if WeRun is enabled, it can update every 2 hours automatically.
+Every time you click Ranking, it will update automatically too.
+（But sometimes it doesn’ t work, and you need to click more than once.）
+</item>
+        <item>It relates to mobile systems and WeChat servers. When WeRun is bound with your device, the time you can check the data updates for the first time is different.
+According to our incomplete tests, android users can check the data updates in a minute, while apple users need to wait 3 minutes at most to check them.
+</item>
+        <item>1.	Exit iband app（Apple users should ignore the device on Bluetooth.）.\n
+2.	Turn on WeChat-Me-Settings-Devices, if you see the device of MRD Sports connected, it indicates that you’ve added WeRun.
+
+        </item>
+        <item>Turn on WeChat-Me-Settings-Devices-Choose a device-Delete device</item>
+        <item>Reason 1：If your WeRun not only bind iband, but also bind other devices like your phone, WeRun will only display the data of the device that has most steps.\n
+Reason 2：If WeRun is not connected to your iband, the data cannot be synced either.
+
+        </item>
+        <item>Put your iband close to phone and make sure that the Bluetooth of the phone is enabled.
+Exit iband app（Apple users should ignore the device on Bluetooth.）. At this time, the Bluetooth of the device should be disconnected.  With WeChat turned on, the Bluetooth display “connected”, indicating that WeRun is connected to the device.
+</item>
+        <item>1. No, it is for the first time that you need to do it. In this way, your device can be searched by WeRun successfully. (If the device has been bound with your phone, WeRun will fail to search for the device.)\n
+2. After binding WeRun, you can make iband app and WeRun connected to the device at the same time without interference.
+</item>
+    </string-array>
+    <string name="hint_empty_data">Nessun dato di attività</string>
+    <string name="hint_alert_space">Ricorda intervallo</string>
+</resources>
