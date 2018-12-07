@@ -17,6 +17,7 @@ import android.util.Log;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
+import com.manridy.iband.bean.AppModel;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.service.AlertService;
 import com.manridy.iband.service.BleService;
@@ -29,6 +30,8 @@ import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 
 import org.litepal.LitePalApplication;
+
+import java.util.List;
 
 import static com.manridy.iband.common.AppGlobal.DEVICE_STATE_UNCONNECT;
 import static com.manridy.iband.view.setting.LangueActivity.getLocale;
@@ -63,6 +66,9 @@ public class IbandApplication extends MultiDexApplication {
         SPUtil.put(this, AppGlobal.STATE_APP_OTA_RUN, false);
 //        startService(new Intent(this, AppNotificationListenerService.class));
         LitePalApplication.initialize(this);//初始化数据库
+//        IbandDB db = IbandDB.getInstance();
+//        List<AppModel> model = db.getAppList();
+
         Fresco.initialize(this);//初始化图片加载
 //        initBleSevrice();//初始化蓝牙服务
         initAlertService();//初始化提醒服务

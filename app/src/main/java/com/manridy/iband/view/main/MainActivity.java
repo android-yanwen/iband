@@ -556,7 +556,7 @@ public class MainActivity extends BaseActivity {
                             );
                         } else {
                             Log.i(TAG, "onLocationChanged: 下一天在获取天气");
-                        } 
+                        }
 
 
                         //定位成功回调信息，设置相关消息

@@ -25,6 +25,9 @@ public class AddressModel {
         }
 
         public void setCond_code_d(String cond_code_d) {
+            if (cond_code_d.equals("") || cond_code_d == null) {
+                return;
+            }
             this.cond_code_d = cond_code_d;
             int code_d = Integer.parseInt(cond_code_d);
             if (code_d == 100 || code_d == 900 || code_d == 901 || code_d == 999) { //晴
@@ -87,11 +90,19 @@ public class AddressModel {
         }
 
         public void setTmp_max(String tmp_max) {
-            this.tmp_max = tmp_max;
+            if (tmp_max == null || tmp_max.equals("")) {
+                this.tmp_max = "0";
+            } else {
+                this.tmp_max = tmp_max;
+            }
         }
 
         public void setTmp_min(String tmp_min) {
-            this.tmp_min = tmp_min;
+            if (tmp_min == null || tmp_min.equals("")) {
+                this.tmp_min = "0";
+            } else {
+                this.tmp_min = tmp_min;
+            }
         }
 
         public String getCond_txt_d() {

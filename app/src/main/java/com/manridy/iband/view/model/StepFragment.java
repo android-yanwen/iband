@@ -186,21 +186,24 @@ public class StepFragment extends BaseEventFragment {
         super.onResume();
 
 //        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-
-//        WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
-//        if(weatherModel!=null){
-//            ll_weather.setVisibility(View.VISIBLE);
-//            String cityName = weatherModel.getCity().replace("市", "");
-//            tvAddr.setText(weatherModel.getCountry()+"•"+cityName);
-//            tvTempetature.setText(weatherModel.getNowTemperature()+"°");
-//            if(!"".equals(weatherModel.getWeatherRegime())){
-////                            String weatherType = getWeatherType(weatherModel.getWeatherRegime());
-//                weatherImg = getWeatherImg(weatherModel.getWeatherRegime());
-//                if(weatherImg!=0){
-//                    ivWeather.setImageResource(weatherImg);
-//                }
-//            }
-//        }
+        WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
+        if(weatherModel!=null){
+            if (weatherModel.getCity() == null || weatherModel.getCity().equals("")) {
+                ll_weather.setVisibility(View.GONE);
+                return;
+            }
+            ll_weather.setVisibility(View.VISIBLE);
+            String cityName = weatherModel.getCity().replace("市", "");
+            tvAddr.setText(weatherModel.getCountry()+"•"+cityName);
+            tvTempetature.setText(weatherModel.getNowTemperature()+"°");
+            if(!"".equals(weatherModel.getWeatherRegime())){
+//                            String weatherType = getWeatherType(weatherModel.getWeatherRegime());
+                weatherImg = getWeatherImg(weatherModel.getWeatherRegime());
+                if(weatherImg!=0){
+                    ivWeather.setImageResource(weatherImg);
+                }
+            }
+        }
 
 
 
@@ -654,8 +657,12 @@ public class StepFragment extends BaseEventFragment {
             switch (msg.what){
                 case 1:
                     if(weatherModel!=null){
-                        ll_weather.setVisibility(View.VISIBLE);
                         String city = IbandApplication.getIntance().city;
+                        if (city.equals("")) {
+                            ll_weather.setVisibility(View.GONE);
+                            break;
+                        }
+                        ll_weather.setVisibility(View.VISIBLE);
                         String cityName = ""+city.replace("市", "");
                         tvAddr.setText(""+IbandApplication.getIntance().country+"•"+cityName);
                         tvTempetature.setText(weatherModel.getNowTemperature()+"°");
