@@ -83,7 +83,6 @@
     <string name="hint_sleep_end">Waking up</string>
     <string name="error_end_before">End time cannot be earlier than start time.</string>
     <string name="hint_data_export">Data output</string>
-    <string name="activity_feedback">Feedback</string>
     <string name="hint_hr_correct1">Note: Do not modify this data if your device is capable of measuring heart rate normally！</string>
     <string name="hint_alert_lost1">Detect the watch </string>
     <string name="hint_lost_nap">Anti-Lost-Funktion ist ausgeschaltet</string>
@@ -354,14 +353,16 @@
     <string name="button_reseting">Reset</string>
     <string name="hint_not_get_devicelist">Failed to get device list</string>
 
-    <string name="hint_exporting">Exporting data, please wait ...</string>
-    <string name="hint_searched">Search complete</string>
 
     <string name="activity_sending">Sending...</string>
     <string name="activity_send_success">Send success</string>
     <string name="activity_send_fail">Send fail</string>
+
+    <string name="activity_feedback">Feedback</string>
+    <string name="hint_exporting">Exporting data, please wait ...</string>
+    <string name="hint_searched">Search complete</string>
     <string name="heart_rate_instructions">
-        Calibration: Use the calibration function when you find that you cannot measure your heart rate, or if your measurement is prone to failure.\n
+     Calibration: Use the calibration function when you find that you cannot measure your heart rate, or if your measurement is prone to failure.\n
 Reset: Restores the heart rate function to the factory settings.\n
 Operation method:\n\n
 
