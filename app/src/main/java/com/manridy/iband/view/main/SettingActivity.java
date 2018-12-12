@@ -199,6 +199,7 @@ public class SettingActivity extends BaseActionActivity {
                     // 判断固件版本是否有支持勿扰模式
                     if (!"0".equals(no_exec) && no_exec.compareTo(deviceFirm) <= 0) {
 //                        Log.d(TAG, "checkMenuVisibility: " + no_exec);
+
                         menu_do_not_disturb.setVisibility(View.VISIBLE);
                     } else {
                         menu_do_not_disturb.setVisibility(View.GONE);
