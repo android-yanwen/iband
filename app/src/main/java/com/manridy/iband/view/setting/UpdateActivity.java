@@ -226,8 +226,9 @@ public class UpdateActivity extends BaseActionActivity {
 
                 /*******固件更新时间间隔*******/
                 int updateIntervalHour = (int) SPUtil.get(mContext, AppGlobal.DATA_UPDATE_INTERVAL_HOUR, hour_of_day);
-                int updateIntervalMinute = (int) SPUtil.get(mContext, AppGlobal.DATA_UPDATE_INTERVAL_MINUTE, minute);
-                if (hour_of_day >= updateIntervalHour) {
+//                int updateIntervalMinute = (int) SPUtil.get(mContext, AppGlobal.DATA_UPDATE_INTERVAL_MINUTE, minute);
+//                if (hour_of_day >= updateIntervalHour) {
+                if (true) {
                     updateIntervalHour = hour_of_day+INTERVAL_TIME;
                     SPUtil.put(mContext, AppGlobal.DATA_UPDATE_INTERVAL_HOUR, updateIntervalHour);
                     SPUtil.put(mContext, AppGlobal.DATA_UPDATE_INTERVAL_MINUTE, minute);

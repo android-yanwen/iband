@@ -1616,7 +1616,9 @@ public class MainActivity extends BaseActivity {
                 if (bluetoothDialog != null && bluetoothDialog.isShowing()) {
                     bluetoothDialog.dismiss();
                 }
-                IbandApplication.getIntance().service.watch.BluetoothEnable(AppManage.getInstance().currentActivity());
+                if (IbandApplication.getIntance().service.watch != null) {
+                    IbandApplication.getIntance().service.watch.BluetoothEnable(AppManage.getInstance().currentActivity());
+                }
             }
         });
         if (bluetoothDialog != null && bluetoothDialog.isShowing()) {

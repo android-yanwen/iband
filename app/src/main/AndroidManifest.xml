@@ -23,8 +23,8 @@
     <!-- 震动 -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <!-- 定位 6.0以上需要动态授权 -->
-    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--<uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
+    <!--<uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />-->
     <!-- 网络or其他 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -38,8 +38,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- 定位 6.0以上需要动态授权 -->
-    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--<uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
+    <!--<uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />-->
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
