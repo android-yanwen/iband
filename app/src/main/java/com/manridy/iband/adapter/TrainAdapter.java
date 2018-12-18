@@ -134,7 +134,8 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.MyViewHolder
             }
             itemIcon.setImageResource(itemRes);
 
-            Date date = TimeUtil.getDate(step.getStepDate());
+            String stepDate = step.getStepDate();
+            Date date = TimeUtil.getDate(stepDate);
             if(date==null){
                 date = new Date();
             }

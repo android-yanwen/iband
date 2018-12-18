@@ -27,10 +27,13 @@ import com.manridy.sdk.common.TimeUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 
@@ -965,9 +968,11 @@ public class BleParse {
         int mi = Integer.parseInt(dd.substring(39,56),2);
 
         byte[] bsDate = new byte[4];
-        System.arraycopy(body,12,bsDate,0,bsDate.length);
+        System.arraycopy(body, 12, bsDate, 0, bsDate.length);
         long date = BitUtil.bytesToLong(bsDate)*1000;
         date -= TimeZone.getDefault().getRawOffset();//减去时区
+        String date2 = BitUtil.timeStamp2Date(String.valueOf(date),"");
+//        Log.i(TAG, "parseSport: " + date2);
 
         byte[] bsTime = new byte[2];
         System.arraycopy(body,16,bsTime,0,bsTime.length);
@@ -980,8 +985,10 @@ public class BleParse {
             stepModel.setStepCalorie(ka);
             stepModel.setHisLength(packageLength);
             stepModel.setHisCount(packageNum);
-            stepModel.setStepDate(new Date(date));
-            stepModel.setStepDay(TimeUtil.getYMD(new Date(date)));
+            Date date1 = new Date(date);
+            stepModel.setStepDate(date1);
+            String s_date1 = TimeUtil.getYMD(date1);
+            stepModel.setStepDay(s_date1);
             stepModel.setStepTime(time);
             stepModel.setStepType(ss+2);//0代表当前 1代表分段计步
             stepModel.setSportMode(mode);

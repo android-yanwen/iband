@@ -10,7 +10,7 @@ android {
         targetSdkVersion 26
         versionCode 112
 //        versionName "1.9.38"
-        versionName "1.9.38(beta1)"
+        versionName "1.9.38(beta2)"
 
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

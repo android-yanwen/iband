@@ -321,6 +321,8 @@ public class TimeUtil {
 
     @SuppressLint("SimpleDateFormat")
     public static Date getDate(String ymdhms) {
+//        ymdhms = "2018-12-12 19:22:21";
+        ymdhms = formatDate1(ymdhms);
         SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date;
         try {
@@ -334,4 +336,58 @@ public class TimeUtil {
     }
 
 
+    /**
+     *  Created by yw on 18/12/18
+     * 时间格式转换为 yyyy-MM-dd HH:mm:ss
+     * @param dateStr
+     * @return yyyy-MM-dd HH:mm:ss
+     */
+    public static String formatDate1(String dateStr) {
+        String s_one = dateStr.substring(0, 1);
+        if (s_one.matches("[a-zA-Z]")) {
+            String s_MM = dateStr.substring(0, 3);
+            if (s_MM.equals("Jan")) {
+                s_MM = "01";
+            }
+            if (s_MM.equals("Feb")) {
+                s_MM = "02";
+            }
+            if (s_MM.equals("Mar")) {
+                s_MM = "03";
+            }
+            if (s_MM.equals("Apr")) {
+                s_MM = "04";
+            }
+            if (s_MM.equals("May")) {
+                s_MM = "05";
+            }
+            if (s_MM.equals("Jun")) {
+                s_MM = "06";
+            }
+            if (s_MM.equals("Jul")) {
+                s_MM = "07";
+            }
+            if (s_MM.equals("Aug")) {
+                s_MM = "08";
+            }
+            if (s_MM.equals("Sep")) {
+                s_MM = "09";
+            }
+            if (s_MM.equals("Oct")) {
+                s_MM = "10";
+            }
+            if (s_MM.equals("Nov")) {
+                s_MM = "11";
+            }
+            if (s_MM.equals("Dec")) {
+                s_MM = "12";
+            }
+            String s_DD = dateStr.substring(4, 6);
+            String s_YY = dateStr.substring(8, 12);
+            String s_Time = dateStr.substring(13, 21);
+            String s_yyyyMMddHHmmss = s_YY + "-" + s_MM + "-" + s_DD + " " + s_Time;
+            return s_yyyyMMddHHmmss;
+        }
+        return dateStr;
+    }
 }
