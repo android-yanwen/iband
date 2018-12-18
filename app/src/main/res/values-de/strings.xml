@@ -474,4 +474,14 @@ Wenn WeRun nicht mit iband verknüpft ist, können die Daten nicht synchronisier
     <string name="hint_only_use_amap">Genaue Aufzeichnung</string>
     <string name="hint_only_use_amap_info">Möchten Sie nur die Daten der Kartenaufzeichnung verwenden?</string>
     <string name="hint_lastRecord">Letzte Aufzeichnung</string>
+    <string name="activity_sending">Senden ...</string>
+    <string name="activity_send_success">Erfolgreich gesendet</string>
+    <string name="activity_send_fail">Senden fehlgeschlagen</string>
+    <string name="activity_input_question">Bitte geben Sie eine Beschreibung des Problems ein</string>
+    <string name="activity_input_email">Bitte geben Sie die E-Mail-Adresse ein</string>
+    <string name="text_send">Senden</string>
+    <string name="text_contact_address">E-Mail kontaktieren</string>
+    <string name="text_please_input_infomation">Füllen Sie bitte aus, wir können Sie kontaktieren.</string>
+    <string name="text_please_input_question_and_opinion">Bitte geben Sie eine Frage oder einen Vorschlag ein</string>
+    <string name="text_do_not_disturb">Bitte nicht stören</string>
 </resources>
