@@ -308,6 +308,7 @@ public class TrainActivity extends BaseActionActivity {
         int[] colors = new int[dayData.size()];
         for (int i = 0; i < dayData.size(); i++) {
             BarEntry barEntry = new BarEntry(i + 1, new float[]{dayData.get(i).getStepCalorie()});
+            int sportMode = dayData.get(i).getSportMode();
             if (dayData.get(i).getSportMode() == 0) {
                 colors[i] = Color.parseColor("#ab00d6f9");
             } else if (dayData.get(i).getSportMode() == 1) {
@@ -324,6 +325,8 @@ public class TrainActivity extends BaseActionActivity {
                 colors[i] = Color.parseColor("#1E877C");
             } else if(dayData.get(i).getSportMode() == 1003){
                 colors[i] = Color.parseColor("#E55F37");
+            } else if (sportMode == 5) {
+                colors[i] = Color.parseColor("#7cb342");
             }
             set.addEntry(barEntry);
         }
@@ -351,7 +354,8 @@ public class TrainActivity extends BaseActionActivity {
         public void onValueSelected(Entry e, Highlight h) {
             if (curRunList != null && curRunList.size() >= e.getX()) {
                 StepModel stepModel = curRunList.get((int) e.getX() > 0 ? (int) e.getX() - 1 : 0);
-                Date date = TimeUtil.getDate(stepModel.getStepDate());
+//                Date date = TimeUtil.getDate(stepModel.getStepDate());//com.manridy.applib.utils.TimeUtil.getDate()弃用
+                Date date = com.manridy.sdk.common.TimeUtil.getDate(stepModel.getStepDate());
                 if(date==null){
                     date = new Date();
                 }
@@ -360,6 +364,7 @@ public class TrainActivity extends BaseActionActivity {
 
                 String num = stepModel.getStepNum() + getString(R.string.hint_unit_step);
                 String mode = getString(R.string.hint_run);
+                int sportModel = stepModel.getSportMode();
                 if (stepModel.getSportMode() == 1) {
                     num = stepModel.getStepCalorie() + getString(R.string.hint_unit_ka);
                     mode = getString(R.string.hint_cycling);
@@ -378,6 +383,9 @@ public class TrainActivity extends BaseActionActivity {
                 } else if(stepModel.getSportMode() == 1003){
                     num = stepModel.getStepCalorie() + getString(R.string.hint_unit_ka);
                     mode = getString(R.string.hint_cycling);
+                } else if (sportModel == 5) {  //5爬山
+                    num = stepModel.getStepCalorie() + getString(R.string.hint_unit_ka);
+                    mode = getString(R.string.hint_mountain_climbing);
                 }
                 tvHint.setText(mode + " " + start + "~" + end + " " + num);
             }
