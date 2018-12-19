@@ -232,7 +232,7 @@ public class BleParse {
                 case 0x1A://分段计步
                     result = parseStepSection(body);
                     break;
-                case 0x1B:
+                case 0x1B://训练模式协议头
                     result = parseSport();
                     break;
                 case 0x23:

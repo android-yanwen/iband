@@ -554,4 +554,5 @@ Exit iband app（Apple users should ignore the device on Bluetooth.）. At this 
     <string name="text_please_input_question_and_opinion">Please enter a question or suggestion</string>
     <string name="text_do_not_disturb">Do not disturb mode</string>
     <string name="hint_update_delay">Do not repeat reminders within one week</string>
+    <string name="hint_mountain_climbing">Mountain climbing</string>
 </resources>
