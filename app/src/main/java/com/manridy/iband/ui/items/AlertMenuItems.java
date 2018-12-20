@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.manridy.iband.R;
+import com.manridy.iband.ui.MarqueeTextView;
 import com.manridy.iband.view.setting.AlertActivity;
 
 /**
@@ -32,7 +33,8 @@ public class AlertMenuItems extends RelativeLayout {
     private void init(Context context, AttributeSet attrs) {
         View view = View.inflate(context, R.layout.item_alert_menu,this);
         ImageView alertIcon = (ImageView) view.findViewById(R.id.iv_alert_icon);
-        TextView alertName = (TextView) view.findViewById(R.id.tv_alert_name);
+//        TextView alertName = (TextView) view.findViewById(R.id.tv_alert_name);
+        MarqueeTextView alertName = view.findViewById(R.id.tv_alert_name);
         alertState = (TextView) view.findViewById(R.id.tv_alert_state);
         TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.AlertMenuItems);
         int icon = typedArray.getResourceId(R.styleable.AlertMenuItems_alert_icon,-1);

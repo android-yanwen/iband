@@ -15,6 +15,7 @@ import com.manridy.iband.ui.items.AlertMenuItems;
 import com.manridy.iband.view.alert.AlertMenuActivity;
 import com.manridy.iband.view.alert.AppActivity;
 import com.manridy.iband.view.alert.ClockActivity;
+import com.manridy.iband.view.alert.HearBloodAlertActivity;
 import com.manridy.iband.view.alert.LostActivity;
 import com.manridy.iband.view.alert.PhoneActivity;
 import com.manridy.iband.view.alert.SedentaryActivity;
@@ -52,8 +53,12 @@ public class AlertActivity extends BaseActionActivity {
     @BindView(R.id.menu_lost_rightline)
     TextView menuLostRightline;
 
+    @BindView(R.id.menu_heart_blood_alert)
+    AlertMenuItems menuHeartBloodAlert;
+
     @Override
     protected void initView(Bundle savedInstanceState) {
+
         setContentView(R.layout.activity_alert);
         ButterKnife.bind(this);
     }
@@ -71,7 +76,10 @@ public class AlertActivity extends BaseActionActivity {
 
     }
 
-    @OnClick({R.id.menu_phone, R.id.menu_sms, R.id.menu_sedentary, R.id.menu_clock, R.id.menu_lost, R.id.menu_app, R.id.bt_alert_more})
+    @OnClick({
+            R.id.menu_phone, R.id.menu_sms, R.id.menu_sedentary, R.id.menu_clock,
+            R.id.menu_lost, R.id.menu_app, R.id.bt_alert_more, R.id.menu_heart_blood_alert
+    })
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.menu_phone:
@@ -95,6 +103,9 @@ public class AlertActivity extends BaseActionActivity {
             case R.id.menu_app:
                 startActivity(AppActivity.class);
                 break;
+            case R.id.menu_heart_blood_alert:
+                startActivity(HearBloodAlertActivity.class);
+                break;
         }
     }
 
@@ -112,12 +123,14 @@ public class AlertActivity extends BaseActionActivity {
         boolean clockEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_CLOCK, false);
         boolean lostEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_LOST, false);
         boolean appEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_APP, false);
+        boolean heartBloodEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_HEART_BLOOD, false);//心率血压报警设置标志位
         menuPhone.setAlertState(phoneEnable);
         menuSms.setAlertState(smsEnable);
         menuSedentary.setAlertState(sedentaryEnable);
         menuClock.setAlertState(clockEnable);
         menuLost.setAlertState(lostEnable);
         menuApp.setAlertState(appEnable);
+        menuHeartBloodAlert.setAlertState(heartBloodEnable);
 
         menuLost.setVisibility(View.VISIBLE);
         menuLostRightline.setVisibility(View.VISIBLE);

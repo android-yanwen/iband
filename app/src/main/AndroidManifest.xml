@@ -138,6 +138,7 @@
         <activity android:name=".view.alert.SmsActivity" />
         <activity android:name=".view.alert.LostActivity" />
         <activity android:name=".view.alert.AppActivity" />
+        <activity android:name=".view.alert.HearBloodAlertActivity" />
         <activity android:name=".view.main.TrainActivity" />
         <activity android:name=".view.test.TestHrTimingActivity" />
         <activity android:name=".view.main.UserActivity" />

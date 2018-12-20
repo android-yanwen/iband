@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_background">
+    <include layout="@layout/tab_activity"/>
+
+    <com.manridy.iband.ui.items.AlertBigItems4
+        android:id="@+id/abt_heart_alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:big_name="@string/hint_heart_rate_alarm"
+        app:big_value="150"
+        app:big_unit="bpm"
+        app:big_onoff="false" >
+    </com.manridy.iband.ui.items.AlertBigItems4>
+
+    <com.manridy.iband.ui.items.AlertBigItems4
+        android:id="@+id/abt_blood_alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:big_name="@string/hint_blood_pressure_alarm"
+        app:big_value="140"
+        app:big_unit="mmHg"
+        app:big_onoff="false" >
+    </com.manridy.iband.ui.items.AlertBigItems4>
+</LinearLayout>

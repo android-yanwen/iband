@@ -23,6 +23,9 @@ public class AppGlobal {
     public static final String DATA_ALERT_CLOCK = "data_alert_clock";
     public static final String DATA_ALERT_SEDENTARY = "data_alert_sedentary";
     public static final String DATA_ALERT_APP = "data_alert_app";
+    public static final String DATA_ALERT_HEART_BLOOD = "data_alert_heart_blood";
+    public static final String DATA_ALERT_HEART = "data_alert_heart";
+    public static final String DATA_ALERT_BLOOD = "data_alert_blood";
     public static final String DATA_ALERT_WRIST = "data_alert_wrist";
     public static final String DATA_APP_VERSINO = "data_app_version";
     public static final String DATA_WECHAT_QR = "data_wehcat_qr";

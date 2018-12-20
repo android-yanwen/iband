@@ -525,4 +525,9 @@
     <string name="text_please_input_question_and_opinion">请输入遇到的问题或建议</string>
     <string name="text_do_not_disturb">勿扰模式</string>
     <string name="hint_mountain_climbing">爬山</string>
+    <string name="hint_heart_rate_alert_selection">心率报警选择</string>
+    <string name="hint_hear_rate_blood_pressure_alert">心率血压报警</string>
+    <string name="hint_blood_pressure_alarm_selection">血压报警选择</string>
+    <string name="hint_blood_pressure_alarm">血压报警</string>
+    <string name="hint_heart_rate_alarm">心率报警</string>
 </resources>

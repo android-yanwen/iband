@@ -84,6 +84,15 @@ public class HrFragment extends BaseEventFragment {
     List<HeartModel> curHeartList;
     int avgHr, maxHr, minHr;
     boolean isTestData = true;
+    //疲劳度等级
+    private static final String[] listFatigue = new String[]{
+            "精力充沛",
+            "精力良好",
+            "轻度疲劳",
+            "中度疲劳",
+            "极度疲劳"
+    };
+
 
     @Override
     public View initView(LayoutInflater inflater, @Nullable ViewGroup container) {
