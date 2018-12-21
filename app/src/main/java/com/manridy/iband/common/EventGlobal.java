@@ -42,6 +42,7 @@ public class EventGlobal {
     public static final int REFRESH_VIEW_ALL = 2805;
     public static final int REFRESH_VIEW_ECG = 2808;
     public static final int REFRESH_VIEW_ECG_HR = 2809;
+    public static final int REFRESH_VIEW_ECG_FATIGUE = 3809;
 
     //历史界面刷新
     public static final int REFRESH_VIEW_STEP_HISTORY  = 2810;

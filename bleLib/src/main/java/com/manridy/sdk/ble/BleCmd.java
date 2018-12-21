@@ -536,6 +536,19 @@ public class BleCmd {
         return body;
     }
 
+    /**
+     * 获取疲劳状态
+     * */
+    public static byte[] getFatigueCmd() {
+        // FC 31 Ty Fa Hr 00 00 00 00 00 00 00 00 00 00 00 00 00
+        byte[] body = new byte[20];
+        body[0] = head;
+        body[1] = 0x31;
+        for (int i = 2; i < 20; ++i) {
+            body[i] = 0x00;
+        }
+        return body;
+    }
 
 
 

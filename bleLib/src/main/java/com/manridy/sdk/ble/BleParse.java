@@ -10,6 +10,7 @@ import com.manridy.sdk.bean.BloodOxygen;
 import com.manridy.sdk.bean.BloodPressure;
 import com.manridy.sdk.bean.Clock;
 import com.manridy.sdk.bean.Ecg;
+import com.manridy.sdk.bean.Fatigue;
 import com.manridy.sdk.bean.Gps;
 import com.manridy.sdk.bean.Heart;
 import com.manridy.sdk.bean.Sleep;
@@ -66,6 +67,7 @@ public class BleParse {
     private final byte CALL_ECG_HEART_RATE = 0x41;
 
     private final byte CALL_DO_NOT_DISTURB = 0x2e; //免打扰消息命令
+    private final byte CALL_FATIGUE = 0x31; //疲劳度
 
     private static BleParse instance;
     private byte[] data;//蓝牙数据
@@ -78,6 +80,7 @@ public class BleParse {
     private BleNotifyListener sportNotifyListener;
     private BleNotifyListener sleepNotifyListener;
     private BleNotifyListener hrNotifyListener;
+    private BleNotifyListener fatigueNotifyListener;
     private BleNotifyListener ecgHrNotifyListener;
     private BleNotifyListener bpNotifyListener;
     private BleNotifyListener boNotifyListener;
@@ -263,6 +266,9 @@ public class BleParse {
                     break;
                 case CALL_DO_NOT_DISTURB:  //免打扰
                     result = BitUtil.parseByte2HexStr(data);
+                    break;
+                case CALL_FATIGUE:  //疲劳度
+                    result = parseFatigue();
                     break;
             }
             if (bleCallback == null) {
@@ -638,6 +644,29 @@ public class BleParse {
         LogUtil.i(TAG,"心率数据："+ result);
         return result;
     }
+
+    /**
+     * 解析疲劳度
+     * */
+    private String parseFatigue() {
+        String result;
+        int ty = body[0];//获取疲劳状态
+        int fa = body[1];//疲劳状态
+        Fatigue fatigue = new Fatigue();
+        fatigue.setFa(fa);
+        fatigue.setTy(ty);
+        result = gson.toJson(fatigue);
+
+//        if (bleCallback == null) {
+            if (fatigueNotifyListener != null) {
+                fatigueNotifyListener.onNotify(result);
+            }
+//        }
+
+        LogUtil.i(TAG,"疲劳度数据："+ result);
+        return result;
+    }
+
 
     private String parseStatsSleep(){
         String result = "";
@@ -1028,6 +1057,10 @@ public class BleParse {
 
     public void setHrNotifyListener(BleNotifyListener hrNotifyListener) {
         this.hrNotifyListener = hrNotifyListener;
+    }
+
+    public void setFatigueNotifyListener(BleNotifyListener fatigueNotifyListener) {
+        this.fatigueNotifyListener = fatigueNotifyListener;
     }
 
     public void setEcgHrNotifyListener(BleNotifyListener ecgHrNotifyListener) {

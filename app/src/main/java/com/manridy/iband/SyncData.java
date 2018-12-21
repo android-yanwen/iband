@@ -25,6 +25,7 @@ import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.ble.BleParse;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleHistoryListener;
+import com.manridy.sdk.callback.BleNotifyListener;
 import com.manridy.sdk.exception.BleException;
 import com.manridy.sdk.type.InfoType;
 
@@ -230,7 +231,8 @@ public class SyncData {
     private synchronized void next(){
         syncIndex++;
         LogUtil.d("SyncData", "next() called syncIndex == "+syncIndex);
-        if (syncIndex < 14) {
+//        if (syncIndex < 14) {
+        if (syncIndex <= 15) {
             send();
         }else {
             if (syncAlertListener != null) {
@@ -352,12 +354,18 @@ public class SyncData {
                         curDoNotDisturbModel.getEndHour(),
                         curDoNotDisturbModel.getEndMinute())
                 );
+                next();
+                break;
+            case 15:
+                if(isH1F1()) break;
+                watch.sendCmd(BleCmd.getFatigueCmd(), bleCallback);
                 break;
 
         }
         timeOutIndex = 0;
     }
 
+    private static final String TAG = "SyncData";
     private synchronized void parse(Object o){
         switch (syncIndex) {
             case 0:
@@ -402,6 +410,10 @@ public class SyncData {
             case 7:
                 StepModel curStep = mGson.fromJson(o.toString(), StepModel.class);
                 saveCurStep(curStep);
+                next();
+                break;
+            case 15://疲劳状态
+//                Log.i(TAG, "parse: " + o.toString());
                 next();
                 break;
         }
