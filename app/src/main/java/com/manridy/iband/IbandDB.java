@@ -80,7 +80,7 @@ public class IbandDB {
      * @Date 18/11/22
      * */
     public DoNotDisturbModel getDoNotDisturbModel() {
-        return DataSupport.findLast(DoNotDisturbModel.class);
+        return DataSupport.findFirst(DoNotDisturbModel.class);
     }
 
 

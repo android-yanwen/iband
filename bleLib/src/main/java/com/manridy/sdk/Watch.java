@@ -725,6 +725,13 @@ public class Watch extends BluetoothLeManager implements WatchApi {
     }
 
     /**
+     * 疲劳度上报数据监听
+     * @param fatigueNotifyListener
+     */
+    public void setFatigueNotifyListener(BleNotifyListener fatigueNotifyListener) {
+        BleParse.getInstance().setFatigueNotifyListener(fatigueNotifyListener);
+    }
+    /**
      * ecg心率上报数据监听
      * @param hrNotifyListener
      */

@@ -39,7 +39,8 @@ public class AlertMenuItems extends RelativeLayout {
         TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.AlertMenuItems);
         int icon = typedArray.getResourceId(R.styleable.AlertMenuItems_alert_icon,-1);
         String name = typedArray.getString(R.styleable.AlertMenuItems_alert_name);
-        alertIcon.setImageResource(icon);
+        if (icon != -1)
+            alertIcon.setImageResource(icon);
         alertName.setText(name);
         typedArray.recycle();
     }

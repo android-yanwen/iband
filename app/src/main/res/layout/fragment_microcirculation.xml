@@ -7,17 +7,13 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:background="#00897b"/>
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1px"-->
-        <!--android:background="#0cffffff"/>-->
+        android:background="#3949ab"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="288dp"
-        android:background="#00897b">
+        android:background="#3949ab">
         <com.manridy.iband.ui.CircularView
-            android:id="@+id/cv_hr"
+            android:id="@+id/cv_microcirculation"
             android:layout_width="220dp"
             android:layout_height="220dp"
             android:layout_centerHorizontal="true"
@@ -27,29 +23,20 @@
             app:cv_title="@string/hint_last_hr"
             app:cv_text="--"
             app:cv_state=""
-            app:cv_unit="@string/hint_unit_hr"
+            app:cv_unit="1/s"
             app:cv_progress="0.5"
-            app:cv_icon="@mipmap/ecg_ic_ecg"/>
+            app:cv_icon="@mipmap/cycle_ic"/>
 
-        <!--<Button-->
-            <!--android:id="@+id/bt_test"-->
-            <!--android:layout_width="92dp"-->
-            <!--android:layout_height="36dp"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_marginTop="180dp"-->
-            <!--android:textSize="14sp"-->
-            <!--android:textColor="@color/color_white"-->
-            <!--android:text="@string/hint_test"-->
-            <!--android:background="@drawable/shape_button_hr"/>-->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Button
+            android:id="@+id/bt_microcirculation_test"
+            android:layout_width="92dp"
+            android:layout_height="36dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="180dp"
-            android:textSize="22sp"
+            android:textSize="14sp"
             android:textColor="@color/color_white"
-            android:text="正常"
-            />
+            android:text="@string/hint_test"
+            android:background="@drawable/shape_button_hr"/>
 
         <ImageView
             android:id="@+id/iv_history"
@@ -61,26 +48,14 @@
             android:paddingBottom="13dp"
             android:paddingRight="16dp"/>
 
-        <TextView
-            android:id="@+id/iv_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableTop="@mipmap/heart_measure"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="57dp"
-            android:layout_marginBottom="20dp"
-            android:textColor="#deffffff"
-            android:textSize="10sp"
-            android:text="@string/hint_hr_current_test"
-            android:visibility="gone"/>
     </RelativeLayout>
 
-    <LinearLayout android:orientation="horizontal"
-                  android:layout_width="match_parent"
-                  android:layout_height="72dp"
-                  android:layout_marginTop="8dp"
-                  android:layout_marginBottom="8dp">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
 
         <com.manridy.iband.ui.items.DataItems
             android:id="@+id/di_data1"
@@ -88,8 +63,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:data_type="left"
-            app:data_hint="@string/hint_hr_avg"
-            app:data_unit="@string/hint_unit_hr"
+            app:data_hint="@string/hint_average_cycle"
+            app:data_unit="1/s"
             app:data="--"/>
 
         <com.manridy.iband.ui.items.DataItems
@@ -98,8 +73,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:data_type="center"
-            app:data_hint="@string/hint_hr_min"
-            app:data_unit="@string/hint_unit_hr"
+            app:data_hint="@string/hint_minimum_cycle"
+            app:data_unit="1/s"
             app:data="--"/>
 
         <com.manridy.iband.ui.items.DataItems
@@ -108,8 +83,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:data_type="right"
-            app:data_hint="@string/hint_hr_max"
-            app:data_unit="@string/hint_unit_hr"
+            app:data_hint="@string/hint_highest_cycle"
+            app:data_unit="1/s"
             app:data="--"/>
 
     </LinearLayout>
@@ -119,48 +94,13 @@
         android:layout_height="match_parent"
         >
 
-        <!--<com.github.mikephil.charting.charts.LineChart-->
-            <!--android:id="@+id/lc_hr"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginBottom="20dp"-->
-            <!--android:background="#16000000"/>-->
-        <!--android:layout_width="328dp"-->
-        <!--android:layout_height="482dp"-->
-        <RelativeLayout
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lc_microcirculation"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#E9E9E9"
-            android:paddingBottom="12dp"
-            >
+            android:layout_marginBottom="20dp"
+            android:background="#16000000"/>
 
-            <com.manridy.iband.ui.chars.SuperTable
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                android:layout_centerHorizontal="true"/>
-            <com.manridy.iband.ui.chars.SuperCharts
-                android:id="@+id/chart_ecg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                android:layout_centerHorizontal="true"
-                />
-        </RelativeLayout>
-
-
-
-        <!--<TextView-->
-            <!--android:id="@+id/tv_empty"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:gravity="center"-->
-            <!--android:drawableLeft="@mipmap/all_note"-->
-            <!--android:text="@string/hint_empty_data"-->
-            <!--android:visibility="gone"/>-->
 
         <TextView
             android:id="@+id/tv_start"

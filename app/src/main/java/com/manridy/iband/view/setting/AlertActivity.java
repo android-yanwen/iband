@@ -134,15 +134,15 @@ public class AlertActivity extends BaseActionActivity {
 
         menuLost.setVisibility(View.VISIBLE);
         menuLostRightline.setVisibility(View.VISIBLE);
-        String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"");
-        String deviceIDs[] = {"8077","8078","8079","8080","8092"};
-        if(deviceType==null||"".equals(deviceType)){
+        String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE, "");
+        String deviceIDs[] = {"8077", "8078", "8079", "8080", "8092"};
+        if (deviceType == null || "".equals(deviceType)) {
             menuLost.setAlertState(false);
             menuLost.setVisibility(View.GONE);
             menuLostRightline.setVisibility(View.GONE);
         }
-        for(int i = 0;i<deviceIDs.length;i++){
-            if(deviceType!=null&&deviceIDs[i].equals(deviceType.trim())){
+        for (int i = 0; i < deviceIDs.length; i++) {
+            if (deviceType != null && deviceIDs[i].equals(deviceType.trim())) {
                 menuLost.setAlertState(false);
                 menuLost.setVisibility(View.GONE);
                 menuLostRightline.setVisibility(View.GONE);
@@ -151,4 +151,10 @@ public class AlertActivity extends BaseActionActivity {
     }
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

@@ -530,4 +530,8 @@
     <string name="hint_blood_pressure_alarm_selection">血压报警选择</string>
     <string name="hint_blood_pressure_alarm">血压报警</string>
     <string name="hint_heart_rate_alarm">心率报警</string>
+    <string name="hint_average_cycle">平均循环</string>
+    <string name="hint_minimum_cycle">最低循环</string>
+    <string name="hint_highest_cycle">最高循环</string>
+    <string name="hint_microcirculation">微循环</string>
 </resources>

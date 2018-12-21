@@ -7,7 +7,9 @@
               android:background="@color/activity_background">
     <include layout="@layout/tab_activity"/>
 
-    <ScrollView
+    <include layout="@layout/activity_alert_layout" />
+
+    <!--<ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
@@ -159,6 +161,6 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </ScrollView>-->
 
 </LinearLayout>

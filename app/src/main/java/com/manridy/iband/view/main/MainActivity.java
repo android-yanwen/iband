@@ -78,6 +78,7 @@ import com.manridy.iband.view.model.BoFragment;
 import com.manridy.iband.view.model.BpFragment;
 import com.manridy.iband.view.model.EcgFragment;
 import com.manridy.iband.view.model.HrFragment;
+import com.manridy.iband.view.model.MicrocirculationFragment;
 import com.manridy.iband.view.model.SleepFragment;
 import com.manridy.iband.view.model.StepFragment;
 import com.manridy.sdk.BluetoothLeManager;
@@ -785,10 +786,12 @@ public class MainActivity extends BaseActivity {
     BpFragment bpFragment;
     BoFragment boFragment;
     EcgFragment ecgFragment;
+    private MicrocirculationFragment microcirculationFragment;
     private void initViewPager() {
         bpFragment = new BpFragment();
         boFragment = new BoFragment();
         ecgFragment = new EcgFragment();
+        microcirculationFragment = new MicrocirculationFragment();
 
         viewList.add(new StepFragment());
         viewList.add(new SleepFragment());
@@ -796,6 +799,7 @@ public class MainActivity extends BaseActivity {
         viewList.add(bpFragment);
         viewList.add(boFragment);
         viewList.add(ecgFragment);
+        viewList.add(microcirculationFragment);
 
 
         viewAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -1014,6 +1018,9 @@ public class MainActivity extends BaseActivity {
                         break;
                     case 5:
                         view.setBackgroundColor(Color.parseColor("#00897b"));
+                        break;
+                    case 6:
+                        view.setBackgroundColor(Color.parseColor("#3949ab"));
                         break;
                 }
             }
@@ -1257,6 +1264,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case 5:
                 tbTitle.setText(getResources().getString(R.string.hint_view_ecg));
+                break;
+            case 6:
+                tbTitle.setText(getResources().getString(R.string.hint_microcirculation));
                 break;
         }
     }
