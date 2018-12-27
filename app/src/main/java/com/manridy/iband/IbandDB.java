@@ -15,6 +15,7 @@ import com.manridy.iband.bean.DoNotDisturbModel;
 import com.manridy.iband.bean.EcgDataBean;
 import com.manridy.iband.bean.EcgHistoryModel;
 import com.manridy.iband.bean.HeartModel;
+import com.manridy.iband.bean.MicrocirculationModel;
 import com.manridy.iband.bean.SedentaryModel;
 import com.manridy.iband.bean.SleepModel;
 import com.manridy.iband.bean.SleepStatsModel;
@@ -132,6 +133,14 @@ public class IbandDB {
         return DataSupport.order("heartDate desc").findFirst(HeartModel.class);
     }
 
+    public MicrocirculationModel getLastMicro(){
+        return DataSupport.order("date desc").findFirst(MicrocirculationModel.class);
+    }
+
+    public List<MicrocirculationModel> getLastsMicro(){
+        return DataSupport.order("date desc").limit(15).find(MicrocirculationModel.class);
+    }
+
     public List<HeartModel> getLastsHeart(){
         return DataSupport.order("heartDate desc").limit(15).find(HeartModel.class);
     }
@@ -213,6 +222,33 @@ public class IbandDB {
                         continue;
                     }
                     HistoryAdapter.Item dayBean = new HistoryAdapter.Item(time,"",heartModel.getHeartRate()+"","");
+                    dayData.add(dayBean);
+                    lastTime = time;
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return dayData;
+    }
+
+
+    public List<HistoryAdapter.Item> getMonthMicro(List<String> days){
+        List<HistoryAdapter.Item> dayData = new ArrayList<>();
+        SimpleDateFormat dateFormFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateToFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
+        String lastTime = "";
+        for (int i = days.size() - 1; i >= 0; i--) {
+            List<MicrocirculationModel> heartModels =DataSupport.where("day = ?", days.get(i)).order("date desc").find(MicrocirculationModel.class);
+            for (MicrocirculationModel heartModel : heartModels) {
+                String time ="";
+                try {
+                    Date date = dateFormFormat.parse(heartModel.getDate());
+                    time = dateToFormat.format(date);
+                    if(time!=null&&time.equals(lastTime)){
+                        continue;
+                    }
+                    HistoryAdapter.Item dayBean = new HistoryAdapter.Item(time,"",heartModel.getMicro()+"","");
                     dayData.add(dayBean);
                     lastTime = time;
                 } catch (ParseException e) {

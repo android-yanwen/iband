@@ -83,6 +83,7 @@ import com.manridy.iband.view.model.SleepFragment;
 import com.manridy.iband.view.model.StepFragment;
 import com.manridy.sdk.BluetoothLeManager;
 import com.manridy.sdk.Watch;
+import com.manridy.sdk.bean.Sleep;
 import com.manridy.sdk.bean.Weather;
 import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
@@ -206,10 +207,10 @@ public class MainActivity extends BaseActivity {
                     boolean isShowBp = (boolean)SPUtil.get(mContext,"isShowBp",false);
                     boolean isShowBo = (boolean)SPUtil.get(mContext,"isShowBo",false);
                     boolean isShowEcg = (boolean)SPUtil.get(mContext,"isShowEcg",false);
+                    boolean isShowMicro = (boolean)SPUtil.get(mContext,"isShowMicro",false);
                     try {
                         if (!isShowBp) {
                             viewList.remove(bpFragment);
-
                         }
                         if (!isShowBo) {
                             viewList.remove(boFragment);
@@ -217,59 +218,74 @@ public class MainActivity extends BaseActivity {
                         if(!isShowEcg){
                             viewList.remove(ecgFragment);
                         }
-                        if (!isShowBp || !isShowBo||!isShowEcg){
-                        viewAdapter.notifyDataSetChanged();
+                        if (!isShowMicro) {
+                            viewList.remove(microcirculationFragment);
+                        }
+                        if (!isShowBp || !isShowBo || !isShowEcg || !isShowMicro) {
+                            viewAdapter.notifyDataSetChanged();
 //                            handler2.sendMessage(handler2.obtainMessage(4));
                         }
-
                     }catch (Exception e){
                         e.printStackTrace();
                     }
 
                     boolean isnotifyDataSetChanged = false;
 
-                    if(isShowBp||isShowBo||isShowEcg){
+                    if (isShowBp || isShowBo || isShowEcg || isShowMicro) {
                         boolean isHaveBp = false;
                         boolean isHaveBo = false;
                         boolean isHaveEcg = false;
+                        boolean isHaveMicro = false;
                         Iterator it = viewList.iterator();
-                        while (it.hasNext()){
+                        while (it.hasNext()) {
                             Object o = it.next();
-                            if(BpFragment.class.equals(o.getClass())){
+                            if (BpFragment.class.equals(o.getClass())) {
                                 isHaveBp = true;
-                            }else if(BoFragment.class.equals(o.getClass())){
+                            } else if (BoFragment.class.equals(o.getClass())) {
                                 isHaveBo = true;
-                            }else if(EcgFragment.class.equals(o.getClass())){
+                            } else if (EcgFragment.class.equals(o.getClass())) {
                                 isHaveEcg = true;
+                            } else if (MicrocirculationFragment.class.equals(o.getClass())) {
+                                isHaveMicro = true;
                             }
                         }
-                        if(isShowBp&&(!isHaveBp)){
-                            if(bpFragment!=null){
+                        if (isShowBp && (!isHaveBp)) {
+                            if (bpFragment != null) {
                                 viewList.add(bpFragment);
                                 isnotifyDataSetChanged = true;
-                            }else{
+                            } else {
                                 bpFragment = new BpFragment();
                                 viewList.add(bpFragment);
                                 isnotifyDataSetChanged = true;
                             }
                         }
-                        if(isShowBo&&(!isHaveBo)){
-                            if(boFragment!=null){
+                        if (isShowBo && (!isHaveBo)) {
+                            if (boFragment != null) {
                                 viewList.add(boFragment);
                                 isnotifyDataSetChanged = true;
-                            }else{
+                            } else {
                                 boFragment = new BoFragment();
                                 viewList.add(boFragment);
                                 isnotifyDataSetChanged = true;
                             }
                         }
-                        if(isShowEcg&&(!isHaveEcg)){
-                            if(ecgFragment!=null){
+                        if (isShowEcg && (!isHaveEcg)) {
+                            if (ecgFragment != null) {
                                 viewList.add(ecgFragment);
                                 isnotifyDataSetChanged = true;
-                            }else{
+                            } else {
                                 ecgFragment = new EcgFragment();
                                 viewList.add(ecgFragment);
+                                isnotifyDataSetChanged = true;
+                            }
+                        }
+                        if (isShowMicro && (!isHaveMicro)) {
+                            if (microcirculationFragment != null) {
+                                viewList.add(microcirculationFragment);
+                                isnotifyDataSetChanged = true;
+                            } else {
+                                microcirculationFragment = new MicrocirculationFragment();
+                                viewList.add(microcirculationFragment);
                                 isnotifyDataSetChanged = true;
                             }
                         }
@@ -302,6 +318,7 @@ public class MainActivity extends BaseActivity {
             isShowBp = (boolean) SPUtil.get(mContext,"isShowBp",false);
             isShowBo = (boolean) SPUtil.get(mContext,"isShowBo",false);
             isShowEcg = (boolean) SPUtil.get(mContext,"isShowEcg",false);
+            isShowMicro = (boolean) SPUtil.get(mContext,"isShowMicro",false);
             String strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
             String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
             String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
@@ -333,6 +350,14 @@ public class MainActivity extends BaseActivity {
                             isShowEcg = true;
                         }
                         SPUtil.put(mContext,"isShowEcg",isShowEcg);
+
+                        if ("0".equals(resultBean.getMicrocirculation())) {
+                            isShowMicro = false;
+                        }else{
+                            isShowMicro = true;
+                        }
+                        SPUtil.put(mContext,"isShowMicro",isShowMicro);
+
 
                         handler2.sendMessage(handler2.obtainMessage(4));
 
@@ -422,23 +447,26 @@ public class MainActivity extends BaseActivity {
     private boolean isShowBp;
     private boolean isShowBo;
     private boolean isShowEcg;
+    private boolean isShowMicro;
     @Override
     protected void onResume() {
         super.onResume();
-
-        int connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
-        if (connectState == AppGlobal.DEVICE_STATE_CONNECTED) {
-            long time = (long) SPUtil.get(mContext, AppGlobal.DATA_SYNC_TIME, 0L);
-            if (time != 0 && tbSync != null) {
-                SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-                String str = format.format(new Date(time));
-                tbSync.setText(getString(R.string.hint_sync_last) +" "+str);
+//        String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
+//        if (bindMac == null || bindMac.isEmpty()) {
+            int connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
+            if (connectState == AppGlobal.DEVICE_STATE_CONNECTED) {
+                long time = (long) SPUtil.get(mContext, AppGlobal.DATA_SYNC_TIME, 0L);
+                if (time != 0 && tbSync != null) {
+                    SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+                    String str = format.format(new Date(time));
+                    tbSync.setText(getString(R.string.hint_sync_last) +" "+str);
+                }
+                Watch.getInstance().sendCmd(BleCmd.setTime());
             }
-            Watch.getInstance().sendCmd(BleCmd.setTime());
-        }
 
-        updateDeviceList();
-        getLocation();
+            updateDeviceList();
+            getLocation();
+//        }
 
     }
 
@@ -783,42 +811,95 @@ public class MainActivity extends BaseActivity {
         mp.setLooping(true);
     }
 
+    private boolean isViewListHaveFregment(Fragment fragment) {
+        if (viewList.size() > 0) {
+            for (int i = 0; i < viewList.size(); i++) {
+                Fragment fragment1 = viewList.get(i);
+                if (fragment.equals(fragment1)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void removeOtherFragment() {
+
+        int size = viewList.size();
+        vpModel.setCurrentItem(0);
+
+        for (int i = size; i > 3;) {
+            viewList.remove(i-1);//移除list元素建议调用remove(index)
+            i = viewList.size();
+        }
+//        Iterator it = viewList.iterator();
+//        int index=0;
+//        while (it.hasNext()) {
+//            Object o = it.next();
+//            if (StepFragment.class.equals(o.getClass()) || SleepFragment.class.equals(o.getClass()) || HrFragment.class.equals(o.getClass())) {
+//                continue;
+//            } else {
+//                viewList.remove(0);
+//                break;
+//            }
+//        }
+        viewAdapter.notifyDataSetChanged();
+    }
+
+    private StepFragment stepFragment = new StepFragment();
+    private SleepFragment sleepFragment = new SleepFragment();
+    private HrFragment hrFragment = new HrFragment();
     BpFragment bpFragment;
     BoFragment boFragment;
     EcgFragment ecgFragment;
     private MicrocirculationFragment microcirculationFragment;
     private void initViewPager() {
-        bpFragment = new BpFragment();
-        boFragment = new BoFragment();
-        ecgFragment = new EcgFragment();
-        microcirculationFragment = new MicrocirculationFragment();
+        if (bpFragment == null) {
+            bpFragment = new BpFragment();
+        }
+        if (boFragment == null) {
+            boFragment = new BoFragment();
+        }
+        if (ecgFragment == null) {
+            ecgFragment = new EcgFragment();
+        }
+        if (microcirculationFragment == null) {
+            microcirculationFragment = new MicrocirculationFragment();
+        }
 
-        viewList.add(new StepFragment());
-        viewList.add(new SleepFragment());
-        viewList.add(new HrFragment());
-        viewList.add(bpFragment);
-        viewList.add(boFragment);
-        viewList.add(ecgFragment);
-        viewList.add(microcirculationFragment);
+        if (!isViewListHaveFregment(stepFragment)) {
+            viewList.add(stepFragment);
+        }
+        if (!isViewListHaveFregment(sleepFragment)) {
+            viewList.add(sleepFragment);
+        }
+        if (!isViewListHaveFregment(hrFragment)) {
+            viewList.add(hrFragment);
+        }
+//        viewList.add(bpFragment);
+//        viewList.add(boFragment);
+//        viewList.add(ecgFragment);
+//        viewList.add(microcirculationFragment);
 
+        if (viewAdapter == null) {
+            viewAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+                @Override
+                public Fragment getItem(int position) {
+                    return viewList.get(position);
+                }
 
-        viewAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
-            @Override
-            public Fragment getItem(int position) {
-                return viewList.get(position);
-            }
+                @Override
+                public int getCount() {
+                    Log.i("MainActivity", "viewList.size():" + viewList.size());
+                    return viewList.size();
+                }
 
-            @Override
-            public int getCount() {
-                Log.i("MainActivity","viewList.size():"+viewList.size());
-                return viewList.size();
-            }
-
-            @Override
-            public void destroyItem(ViewGroup container, int position, Object object) {
+                @Override
+                public void destroyItem(ViewGroup container, int position, Object object) {
                     super.destroyItem(container, position, object);
-            }
-        };
+                }
+            };
+        }
         vpModel.setAdapter(viewAdapter);
         pivDots.setViewPager(vpModel);
         vpModel.setOnTouchListener(new View.OnTouchListener() {
@@ -955,7 +1036,7 @@ public class MainActivity extends BaseActivity {
     }
 
 
-
+    private static final String TAG = "MainActivity";
     @Override
     protected void initListener() {
         ivShare.setOnClickListener(new View.OnClickListener(){
@@ -980,7 +1061,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 Log.i("onPageScrolled","position:"+position);
-                if(position>viewList.size()){
+                if (position > viewList.size()) {
                     return;
                 }
                 float alpha;
@@ -992,7 +1073,25 @@ public class MainActivity extends BaseActivity {
                     index++;
                 }
                 rlTitle.setAlpha(alpha);
-                selectTitle(index);
+                if (index >= 0 && index <= 3) {
+                    selectTitle(index);
+                } else {
+                    if (boFragment != null && boFragment.equals(viewList.get(index))) {
+                        tbTitle.setText(getResources().getString(R.string.hint_view_bo));
+                    }
+                    if (bpFragment != null && bpFragment.equals(viewList.get(index))){
+                        tbTitle.setText(getResources().getString(R.string.hint_view_hp));
+                    }
+                    if (ecgFragment != null && ecgFragment.equals(viewList.get(index))) {
+                        tbTitle.setText(getResources().getString(R.string.hint_view_ecg));
+                    }
+                    if (microcirculationFragment != null && microcirculationFragment.equals(viewList.get(index))) {
+                        tbTitle.setText(getResources().getString(R.string.hint_microcirculation));
+//                        view.setBackgroundColor(Color.parseColor("#3949ab"));
+                    }
+                }
+
+
                 Log.i("pagenum",String.valueOf(viewList.size()));
             }
 
@@ -1017,11 +1116,16 @@ public class MainActivity extends BaseActivity {
                         view.setBackgroundColor(Color.parseColor("#ff4081"));
                         break;
                     case 5:
-                        view.setBackgroundColor(Color.parseColor("#00897b"));
+                        if (microcirculationFragment != null && microcirculationFragment.equals(viewList.get(5))) {
+                            tbTitle.setText(getResources().getString(R.string.hint_microcirculation));
+                            view.setBackgroundColor(Color.parseColor("#3949ab"));
+                        } else {
+                            view.setBackgroundColor(Color.parseColor("#00897b"));
+                        }
                         break;
-                    case 6:
-                        view.setBackgroundColor(Color.parseColor("#3949ab"));
-                        break;
+//                    case 6:
+//                        view.setBackgroundColor(Color.parseColor("#3949ab"));
+//                        break;
                 }
             }
 
@@ -1265,15 +1369,17 @@ public class MainActivity extends BaseActivity {
             case 5:
                 tbTitle.setText(getResources().getString(R.string.hint_view_ecg));
                 break;
-            case 6:
-                tbTitle.setText(getResources().getString(R.string.hint_microcirculation));
-                break;
+//            case 6:
+//                tbTitle.setText(getResources().getString(R.string.hint_microcirculation));
+//                break;
         }
     }
 
     private void setHintState(int state){
         String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
         if (bindMac == null || bindMac.isEmpty()) {
+            removeOtherFragment();
+            SPUtil.remove(mContext,"isShowMicro");
             tbSync.setText(getResources().getString(R.string.hint_un_bind));
             return;
         }else if (!Watch.getInstance().isBluetoothEnable()){
@@ -1312,6 +1418,9 @@ public class MainActivity extends BaseActivity {
             case AppGlobal.DEVICE_STATE_BLUETOOTH_ENABLEING:
                 tbSync.setText(getResources().getString(R.string.hint_bluetooth_opening));
                 break;
+//            case AppGlobal.DEVICE_STATE_UNBIND://取消绑定
+////                initViewPager();
+//                break;
         }
     }
 

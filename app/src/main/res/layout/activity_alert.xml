@@ -7,9 +7,11 @@
               android:background="@color/activity_background">
     <include layout="@layout/tab_activity"/>
 
-    <include layout="@layout/activity_alert_layout" />
+    <include
+        android:visibility="gone"
+        layout="@layout/activity_alert_layout" />
 
-    <!--<ScrollView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
@@ -125,18 +127,32 @@
                 android:weightSum="2"
                 >
                 <com.manridy.iband.ui.items.AlertMenuItems
-                    android:id="@+id/menu_heart_blood_alert"
+                    android:id="@+id/menu_heart_alert"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    app:alert_icon="@mipmap/remind_hb"
-                    app:alert_name="@string/hint_hear_rate_blood_pressure_alert"/>
+                    app:alert_icon="@mipmap/remind_ic_hr"
+                    android:visibility="gone"
+                    app:alert_name="@string/hint_hear_rate_alert"/>
 
                 <TextView
                     android:layout_width="1px"
                     android:layout_height="match_parent"
                     android:background="@color/line_background"/>
 
+                <com.manridy.iband.ui.items.AlertMenuItems
+                    android:id="@+id/menu_blood_alert"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    app:alert_icon="@mipmap/remind_ic_bp"
+                    app:alert_name="@string/hint_blood_pressure_alarm"/>
+
+                <TextView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="@color/line_background"/>
             </LinearLayout>
 
 
@@ -161,6 +177,6 @@
 
         </LinearLayout>
 
-    </ScrollView>-->
+    </ScrollView>
 
 </LinearLayout>

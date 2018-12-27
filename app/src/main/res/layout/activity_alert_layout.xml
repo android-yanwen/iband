@@ -25,7 +25,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
                     <com.manridy.iband.ui.items.AlertMenuItems
-                        android:id="@+id/menu_phone"
+                        android:id="@+id/menu_phone1"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         app:alert_icon="@mipmap/remind_phone01"
@@ -35,7 +35,7 @@
                         android:layout_height="1px"
                         android:background="@color/line_background"/>
                     <com.manridy.iband.ui.items.AlertMenuItems
-                        android:id="@+id/menu_sedentary"
+                        android:id="@+id/menu_sedentary1"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         app:alert_icon="@mipmap/remind_sit01"
@@ -45,22 +45,23 @@
                         android:layout_height="1px"
                         android:background="@color/line_background"/>
                     <com.manridy.iband.ui.items.AlertMenuItems
-                        android:id="@+id/menu_lost"
+                        android:id="@+id/menu_lost1"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         app:alert_icon="@mipmap/remind_antilost02"
                         app:alert_name="@string/hint_menu_alert_lost"/>
                     <TextView
-                        android:id="@+id/menu_lost_rightline"
+                        android:id="@+id/menu_lost_rightline1"
                         android:layout_width="match_parent"
                         android:layout_height="1px"
                         android:background="@color/line_background"/>
                     <com.manridy.iband.ui.items.AlertMenuItems
-                        android:id="@+id/menu_heart_blood_alert"
+                        android:id="@+id/menu_heart_blood_alert1"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         app:alert_icon="@mipmap/remind_hb"
-                        app:alert_name="@string/hint_hear_rate_blood_pressure_alert"/>
+                        android:visibility="gone"
+                        app:alert_name="@string/hint_hear_rate_alert"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="1px"
@@ -77,7 +78,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
                     <com.manridy.iband.ui.items.AlertMenuItems
-                        android:id="@+id/menu_sms"
+                        android:id="@+id/menu_sms11"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         app:alert_icon="@mipmap/remind_mgs01"
@@ -87,7 +88,7 @@
                         android:layout_height="1px"
                         android:background="@color/line_background"/>
                     <com.manridy.iband.ui.items.AlertMenuItems
-                        android:id="@+id/menu_clock"
+                        android:id="@+id/menu_clock1"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         app:alert_icon="@mipmap/remind_alarm01"
@@ -97,7 +98,7 @@
                         android:layout_height="1px"
                         android:background="@color/line_background"/>
                     <com.manridy.iband.ui.items.AlertMenuItems
-                        android:id="@+id/menu_app"
+                        android:id="@+id/menu_app1"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         app:alert_icon="@mipmap/remind_app02"

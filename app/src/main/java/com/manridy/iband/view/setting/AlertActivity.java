@@ -14,7 +14,9 @@ import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.items.AlertMenuItems;
 import com.manridy.iband.view.alert.AlertMenuActivity;
 import com.manridy.iband.view.alert.AppActivity;
+import com.manridy.iband.view.alert.BloodAlertActivity;
 import com.manridy.iband.view.alert.ClockActivity;
+import com.manridy.iband.view.alert.HearAlertActivity;
 import com.manridy.iband.view.alert.HearBloodAlertActivity;
 import com.manridy.iband.view.alert.LostActivity;
 import com.manridy.iband.view.alert.PhoneActivity;
@@ -53,8 +55,12 @@ public class AlertActivity extends BaseActionActivity {
     @BindView(R.id.menu_lost_rightline)
     TextView menuLostRightline;
 
-    @BindView(R.id.menu_heart_blood_alert)
-    AlertMenuItems menuHeartBloodAlert;
+//    @BindView(R.id.menu_heart_blood_alert)
+//    AlertMenuItems menuHeartBloodAlert;
+    @BindView(R.id.menu_heart_alert)
+    AlertMenuItems menuHeartAlert;
+    @BindView(R.id.menu_blood_alert)
+    AlertMenuItems menuBloodAlert;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -78,7 +84,8 @@ public class AlertActivity extends BaseActionActivity {
 
     @OnClick({
             R.id.menu_phone, R.id.menu_sms, R.id.menu_sedentary, R.id.menu_clock,
-            R.id.menu_lost, R.id.menu_app, R.id.bt_alert_more, R.id.menu_heart_blood_alert
+            R.id.menu_lost, R.id.menu_app, R.id.bt_alert_more, /*R.id.menu_heart_blood_alert,*/
+            R.id.menu_heart_alert, R.id.menu_blood_alert
     })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -103,8 +110,14 @@ public class AlertActivity extends BaseActionActivity {
             case R.id.menu_app:
                 startActivity(AppActivity.class);
                 break;
-            case R.id.menu_heart_blood_alert:
-                startActivity(HearBloodAlertActivity.class);
+//            case R.id.menu_heart_blood_alert:
+//                startActivity(HearBloodAlertActivity.class);
+//                break;
+            case R.id.menu_heart_alert:
+                startActivity(HearAlertActivity.class);
+                break;
+            case R.id.menu_blood_alert:
+                startActivity(BloodAlertActivity.class);
                 break;
         }
     }
@@ -124,13 +137,17 @@ public class AlertActivity extends BaseActionActivity {
         boolean lostEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_LOST, false);
         boolean appEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_APP, false);
         boolean heartBloodEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_HEART_BLOOD, false);//心率血压报警设置标志位
+        boolean heartEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_HEART_IFG, false);//心率血压报警设置标志位
+        boolean bloodEnable = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_BLOOD_IFG, false);//心率血压报警设置标志位
         menuPhone.setAlertState(phoneEnable);
         menuSms.setAlertState(smsEnable);
         menuSedentary.setAlertState(sedentaryEnable);
         menuClock.setAlertState(clockEnable);
         menuLost.setAlertState(lostEnable);
         menuApp.setAlertState(appEnable);
-        menuHeartBloodAlert.setAlertState(heartBloodEnable);
+//        menuHeartBloodAlert.setAlertState(heartBloodEnable);
+        menuHeartAlert.setAlertState(heartEnable);
+        menuBloodAlert.setAlertState(bloodEnable);
 
         menuLost.setVisibility(View.VISIBLE);
         menuLostRightline.setVisibility(View.VISIBLE);
@@ -148,6 +165,20 @@ public class AlertActivity extends BaseActionActivity {
                 menuLostRightline.setVisibility(View.GONE);
             }
         }
+
+        // 判断id是否显示心率血压报警选项
+        if (deviceType != null && "8105".equals(deviceType.trim())) {
+            //隐藏血压心率报警按钮
+            menuHeartAlert.setVisibility(View.VISIBLE);
+            menuBloodAlert.setVisibility(View.VISIBLE);
+        } else {
+            //隐藏血压心率报警按钮
+            menuHeartAlert.setAlertState(false);
+            menuHeartAlert.setVisibility(View.GONE);
+            menuBloodAlert.setAlertState(false);
+            menuBloodAlert.setVisibility(View.GONE);
+        }
+
     }
 
 
@@ -157,4 +188,5 @@ public class AlertActivity extends BaseActionActivity {
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
     }
+
 }

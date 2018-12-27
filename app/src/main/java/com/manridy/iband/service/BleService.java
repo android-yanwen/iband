@@ -77,6 +77,7 @@ import static com.manridy.iband.common.EventGlobal.ACTION_HEALTH_TESTED;
 import static com.manridy.iband.common.EventGlobal.ACTION_HEALTH_TEST;
 import static com.manridy.iband.common.EventGlobal.ACTION_HR_TEST;
 import static com.manridy.iband.common.EventGlobal.ACTION_HR_TESTED;
+import static com.manridy.iband.common.EventGlobal.ACTION_MICRO_TESTED;
 import static com.manridy.sdk.BluetoothLeManager.ACTION_DATA_AVAILABLE;
 import static com.manridy.sdk.BluetoothLeManager.ACTION_GATT_CONNECT;
 import static com.manridy.sdk.BluetoothLeManager.ACTION_GATT_DISCONNECTED;
@@ -523,6 +524,12 @@ public class BleService extends Service {
                     break;
                 case ACTION_CALL_RUN:
                     answerRingingCall(BleService.this);
+                    break;
+                case ACTION_MICRO_TESTED:
+                    byte[] data = (byte[]) o;
+                    if (0x03 == data[1]) {  //32 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00微循环测量完成
+                        EventBus.getDefault().post(new EventMessage(ACTION_MICRO_TESTED));
+                    }
                     break;
                 default:
                     break;

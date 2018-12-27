@@ -339,6 +339,30 @@ public class BleCmd {
         return BleProtocol.cmd(head,type,body);
     }
 
+    /**
+     * 微循环测试
+     * 00 停止, 01 开始
+     * @return
+     */
+    public static byte[] setMcroTest(int onOff){
+        type = 0x32;
+        body= new byte[17];
+        body[0] = (byte) onOff;
+        return BleProtocol.cmd(head,type,body);
+    }
+
+
+    /**
+     * 获取微循环数据
+     * 00 最近一次, 01 历史微循环
+     * @return
+     */
+    public static byte[] getMicroData(int dateType){
+        type = 0x33;
+        body= new byte[17];
+        body[0] = (byte) dateType;
+        return BleProtocol.cmd(head,type,body);
+    }
 
 
     /**
@@ -460,6 +484,23 @@ public class BleCmd {
         body[0] = 0x02;
         body[1] = (byte) onOff;
         body[2] = (byte) timeout;
+        return BleProtocol.cmd(head,type,body);
+    }
+
+
+    /**
+     * 心率血压报警
+     * @param onOff 开关
+     * @param hv_value 心率报警值
+     *         bh_value 血压报警值
+     * @return
+     */
+    public static byte[] setHeartBloodAlert(int onOff,int hv_value, int bh_value) {
+        type = (byte) 0x30;
+        body= new byte[17];
+        body[0] = (byte) onOff;
+        body[1] = (byte) hv_value;
+        body[2] = (byte) bh_value;
         return BleProtocol.cmd(head,type,body);
     }
 

@@ -76,6 +76,17 @@ public class DeviceList {
         private String ecg;
         private String no_exec;
 
+
+        private String microcirculation;
+
+        public String getMicrocirculation() {
+            return microcirculation;
+        }
+
+        public void setMicrocirculation(String microcirculation) {
+            this.microcirculation = microcirculation;
+        }
+
         public void setNo_exec(String no_exec) {
             this.no_exec = no_exec;
         }

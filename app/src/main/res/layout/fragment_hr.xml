@@ -17,9 +17,11 @@
         android:layout_height="288dp"
         android:background="#ef5350">
         <LinearLayout
+            android:id="@+id/ll_fatugue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
+            android:visibility="gone"
             android:padding="2dp"
             android:orientation="vertical">
             <TextView

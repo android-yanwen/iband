@@ -390,4 +390,19 @@ public class TimeUtil {
         }
         return dateStr;
     }
+
+    /**
+     * 将时间戳转换为时间
+     * format : "yyyy-MM-dd HH:mm:ss"
+     *          "HH:mm:ss"
+     */
+    public static String stampToDate(long s, String format){
+        String res;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+//        long lt = new Long(s);
+        long lt = s;
+        Date date = new Date(lt);
+        res = simpleDateFormat.format(date);
+        return res;
+    }
 }

@@ -16,6 +16,8 @@ import com.manridy.sdk.ble.WatchApi;
 import com.manridy.sdk.callback.BleActionListener;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleNotifyListener;
+import com.manridy.sdk.common.BitUtil;
+import com.manridy.sdk.common.LogUtil;
 import com.manridy.sdk.exception.BleException;
 import com.manridy.sdk.exception.OtherException;
 import com.manridy.sdk.exception.TimeOutException;
@@ -195,9 +197,9 @@ public class Watch extends BluetoothLeManager implements WatchApi {
     public synchronized void sendCmd(byte[] data, BleCallback bleCallback){
         String datas = "";
         for (int i = 0;i<data.length;i++){
-            datas+=" ["+i+"]:"+data[i];
+            datas += " " + Integer.toHexString(data[i]&0xff);
         }
-        Log.i("sendCmd","sendCmd:"+datas);
+        Log.i("sendCmd", "data length:" + data.length + " cmd:" + datas);
         messageList.add(new cmdMessage(data, bleCallback));
         if (thread != null) {
             synchronized (thread) {
@@ -582,6 +584,22 @@ public class Watch extends BluetoothLeManager implements WatchApi {
             sendCmd(BleCmd.getHrData(2),bleCallback);
         }
     }
+    /**
+     * 获取微循环
+     * @param infoType CURRENT_INFO 当前数据，HISTORY_INFO 历史数据，HISTORY_NUM 历史数量
+     */
+    public void getMicroInfo(InfoType infoType, BleCallback bleCallback) {
+        if (infoType == null) {
+            throw new IllegalArgumentException("getMicroInfo infoType is null !");
+        }
+        if (infoType == InfoType.CURRENT_INFO) {
+//            sendCmd(BleCmd.getHrData(0),bleCallback);
+        }else if (infoType == InfoType.HISTORY_INFO){
+            sendCmd(BleCmd.getMicroData(1),bleCallback);
+        }else if (infoType == InfoType.HISTORY_NUM){
+            sendCmd(BleCmd.getMicroData(2),bleCallback);
+        }
+    }
 
     /**
      * 获取睡眠
@@ -722,6 +740,13 @@ public class Watch extends BluetoothLeManager implements WatchApi {
      */
     public void setHrNotifyListener(BleNotifyListener hrNotifyListener) {
         BleParse.getInstance().setHrNotifyListener(hrNotifyListener);
+    }
+    /**
+     * 微循环上报数据监听
+     * @param microNotifyListener
+     */
+    public void setMicroNotifyListener(BleNotifyListener microNotifyListener) {
+        BleParse.getInstance().setMicroNotifyListener(microNotifyListener);
     }
 
     /**

@@ -16,6 +16,7 @@
             android:layout_height="200dp"
             android:background="#2196f3"/>
         <com.baoyz.widget.PullRefreshLayout
+            android:background="@color/transparent"
             android:id="@+id/prl_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

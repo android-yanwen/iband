@@ -201,8 +201,10 @@ public class SettingActivity extends BaseActionActivity {
 //                        Log.d(TAG, "checkMenuVisibility: " + no_exec);
 
                         menu_do_not_disturb.setVisibility(View.VISIBLE);
+                        SPUtil.get(mContext, AppGlobal.DATA_DO_NOT_DISTURB_IFG, true);
                     } else {
                         menu_do_not_disturb.setVisibility(View.GONE);
+                        SPUtil.get(mContext, AppGlobal.DATA_DO_NOT_DISTURB_IFG, false);
                     }
 
                         return;

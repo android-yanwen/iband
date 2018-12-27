@@ -139,6 +139,8 @@
         <activity android:name=".view.alert.LostActivity" />
         <activity android:name=".view.alert.AppActivity" />
         <activity android:name=".view.alert.HearBloodAlertActivity" />
+        <activity android:name=".view.alert.HearAlertActivity" />
+        <activity android:name=".view.alert.BloodAlertActivity" />
         <activity android:name=".view.main.TrainActivity" />
         <activity android:name=".view.test.TestHrTimingActivity" />
         <activity android:name=".view.main.UserActivity" />
@@ -147,6 +149,7 @@
             android:name=".view.main.OtaActivity"
             android:launchMode="singleTask" />
         <activity android:name=".view.history.HrHistoryActivity" />
+        <activity android:name=".view.history.MicroHistoryActivity" />
         <activity
             android:name=".view.history.EcgHistoryActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />

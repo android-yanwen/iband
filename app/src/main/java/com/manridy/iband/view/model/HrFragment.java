@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -19,10 +20,12 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.gson.Gson;
 import com.manridy.applib.utils.LogUtil;
+import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.bean.HeartModel;
+import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.CircularView;
@@ -91,17 +94,30 @@ public class HrFragment extends BaseEventFragment {
             "精力良好",
             "轻度疲劳",
             "中度疲劳",
-            "极度疲劳"
+            "极度疲劳",
+            ""
     };
     @BindView(R.id.id_iv_fatigue)
     TextView idIvFatigue;
     Unbinder unbinder;
+    @BindView(R.id.ll_fatugue)
+    LinearLayout llFatugue;
 
+    private boolean isShowFatigueLayout() {
+        boolean isShowMicro = (boolean) SPUtil.get(mContext, "isShowMicro", false);
+        return isShowMicro;
+    }
 
     @Override
     public View initView(LayoutInflater inflater, @Nullable ViewGroup container) {
         root = inflater.inflate(R.layout.fragment_hr, container, false);
         ButterKnife.bind(this, root);
+        if (isShowFatigueLayout()) {
+            llFatugue.setVisibility(View.VISIBLE);
+        } else {
+            llFatugue.setVisibility(View.GONE);
+        }
+
         return root;
     }
 
@@ -109,6 +125,9 @@ public class HrFragment extends BaseEventFragment {
     protected void initVariables() {
         initChartView(lcHr);
         initChartAxis(lcHr);
+
+        int i_fatigue = (int) SPUtil.get(mContext, AppGlobal.DATA_FATIGUE_LEVEL, 5);
+        idIvFatigue.setText(listFatigue[i_fatigue]);
     }
 
     @Override
@@ -202,6 +221,7 @@ public class HrFragment extends BaseEventFragment {
             Integer msg = (Integer) event.getObject();
             String sFatigue = listFatigue[msg];
             idIvFatigue.setText(sFatigue);
+            SPUtil.put(mContext, AppGlobal.DATA_FATIGUE_LEVEL, msg);
         }
     }
 

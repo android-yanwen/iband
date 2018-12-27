@@ -555,7 +555,7 @@ Exit iband app（Apple users should ignore the device on Bluetooth.）. At this 
     <string name="text_do_not_disturb">Do not disturb mode</string>
     <string name="hint_update_delay">Do not repeat reminders within one week</string>
     <string name="hint_mountain_climbing">Mountain climbing</string>
-    <string name="hint_hear_rate_blood_pressure_alert">Heart rate blood pressure alarm</string>
+    <string name="hint_hear_rate_alert">Heart rate alarm</string>
     <string name="hint_heart_rate_alert_selection">Heart rate alarm selection</string>
     <string name="hint_blood_pressure_alarm_selection">Blood pressure alarm selection</string>
     <string name="hint_heart_rate_alarm">Hear rate alarm</string>
@@ -564,4 +564,5 @@ Exit iband app（Apple users should ignore the device on Bluetooth.）. At this 
     <string name="hint_minimum_cycle">Minimum cycle</string>
     <string name="hint_highest_cycle">Highest_cycle</string>
     <string name="hint_microcirculation">Microcirculation</string>
+    <string name="hint_blood_pressure_alert">Blood pressure alarm</string>
 </resources>
