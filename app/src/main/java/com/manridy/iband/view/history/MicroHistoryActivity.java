@@ -22,6 +22,7 @@ import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.items.DataItems;
 import com.manridy.iband.view.base.BaseActionActivity;
+import com.manridy.iband.view.model.MicrocirculationFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -422,7 +423,7 @@ public class MicroHistoryActivity extends BaseActionActivity {
             }
             if (itemList.size() != 0) {
                 dataAvg1 /= itemList.size();
-                dataAvg1 = (float) Math.round(dataAvg1 * 1000) / 1000;//保留三位小数
+                dataAvg1 = (float) Math.round(dataAvg1 * MicrocirculationFragment.f_MicroPointNum) / MicrocirculationFragment.f_MicroPointNum;//保留三位小数
             }
             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_MICRO_HISTORY));
         }

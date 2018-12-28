@@ -34,7 +34,7 @@
                 android:layout_gravity="center"
                 android:textColor="@color/color_white"
                 android:textSize="15sp"
-                android:text="0x055-0x115"/>
+                android:text="0.055-0.115"/>
         </LinearLayout>
 
         <com.manridy.iband.ui.CircularView

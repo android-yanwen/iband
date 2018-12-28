@@ -85,6 +85,7 @@ public class MicrocirculationFragment extends BaseEventFragment {
     private List<MicrocirculationModel> curMicroList;
     boolean isTestData = true;
     private static final float yAxisMaxNum = 0.115f;  //y轴最大值
+    public static final float f_MicroPointNum = 10000;//4位小数
 
     @Override
     public View initView(LayoutInflater inflater, @Nullable ViewGroup container) {
@@ -158,7 +159,7 @@ public class MicrocirculationFragment extends BaseEventFragment {
                 minMicro = minMicro < hr ? minMicro : hr;
             }
             avarMicro /= curMicroList.size();
-            avarMicro = (float) Math.round(avarMicro * 1000) / 1000;//保留三位小数
+            avarMicro = (float) Math.round(avarMicro * f_MicroPointNum) / f_MicroPointNum;//保留三位小数
 
             String start = curMicroList.get(0).getDate().substring(11, 19);
             String end = curMicroList.get(curMicroList.size() - 1).getDate().substring(11, 19);
@@ -226,7 +227,8 @@ public class MicrocirculationFragment extends BaseEventFragment {
         if (curMicro == null) {
             return;
         }
-        String text = curMicro.getMicro() + "";
+        float micro = (float) Math.round(curMicro.getMicro() * f_MicroPointNum) / f_MicroPointNum;//保留4位小数
+        String text = micro + "";
         float progress = ((curMicro.getMicro() / yAxisMaxNum) * 100);
 //        cvHr.setProgressWithAnimation(progress);
         cvMicrocirculation.setText(text)

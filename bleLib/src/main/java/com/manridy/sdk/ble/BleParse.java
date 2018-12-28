@@ -678,7 +678,7 @@ public class BleParse {
         int i_micro = ((0xff000000 & (microData[3] << 24)) | (0x00ff0000 & (microData[2] << 16)) |
                 (0x0000ff00 & (microData[1] << 8)) | (microData[0] & 0x000000ff));
         float f_micro = Float.intBitsToFloat(i_micro);
-        float micro = (float) Math.round(f_micro * 1000) / 1000;//保留三位小数
+        float micro = (float) Math.round(f_micro * 10000) / 10000;//保留4位小数
 //        Log.d(TAG, "parseMicro: " + micro);
         long date = BitUtil.bytesToLong(bsDate)*1000;//转换为毫秒
         date -= TimeZone.getDefault().getRawOffset();//减去时区
