@@ -120,7 +120,7 @@ public class TestHrTimingActivity extends BaseActionActivity {
         aiAlert.setIvMenuCenterIsView(false);
         curOnoff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
         aiAlert.setAlertCheck(curOnoff);
-        curSpace = (int) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
+        curSpace = (int) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR_SPACE, curSpace);
         aiAlert.setAlertCenterContent(curSpace+getString(R.string.unit_min));
         tvSpace.setText(curSpace+getString(R.string.unit_min));
         checkMenuVisibility();

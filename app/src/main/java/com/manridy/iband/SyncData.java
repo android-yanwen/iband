@@ -193,7 +193,7 @@ public class SyncData {
             public void onHistory(Object o) {
                 Log.d(TAG, "onHistory: " + o.toString());
                 MicrocirculationModel microcirculation = mGson.fromJson(o.toString(), MicrocirculationModel.class);
-                if (microcirculation.getMicroNum() != 0 && microcirculation.getDate().compareTo(TimeUtil.getNowYMDHMSTime()) <= 0) {
+                if (microcirculation.getMicroLength() != 0 && microcirculation.getDate().compareTo(TimeUtil.getNowYMDHMSTime()) <= 0) {
                     microcirculation.saveToDate();
                     timeOutIndex = 0;
                     progress();
@@ -385,21 +385,23 @@ public class SyncData {
                 if (isSupportDoNotDisturbFunction()) { //支持勿扰模式功能才发送命令，否则不发送此命令给设备
                     DoNotDisturbModel curDoNotDisturbModel = IbandDB.getInstance().getDoNotDisturbModel();
                     if (curDoNotDisturbModel == null) {
-                        curDoNotDisturbModel = new DoNotDisturbModel(0,0x19,0x10,0x7,0x30);
+                        curDoNotDisturbModel = new DoNotDisturbModel(0, 0x19, 0x10, 0x7, 0x30);
                     }
                     watch.sendCmd(BleCmd.setDoNotDisturbCmd(curDoNotDisturbModel.getDoNotDisturbOnOff(),
                             curDoNotDisturbModel.getStartHour(),
                             curDoNotDisturbModel.getStartMinute(),
                             curDoNotDisturbModel.getEndHour(),
                             curDoNotDisturbModel.getEndMinute())
-                    );
+                            , bleCallback);
+                } else {
+                    next();
                 }
-                next();
                 break;
             case 15:
                 if(isH1F1()) break;
                 if (isSupportMicroFunction()) {  //判断是否有微循环功能，有则发送这条命令
                     watch.sendCmd(BleCmd.getFatigueCmd(), bleCallback);
+//                    Log.i(TAG, "send: ---------------疲劳度测试命令");
                 } else {
                     next();
                 }
@@ -415,6 +417,7 @@ public class SyncData {
             case 17:
                 if(isH1F1()) break;
                 if (isSupportMicroFunction()) {
+//                    Log.i(TAG, "send: 微循环数据条数-------------------->>>>>>>>" + microSum);
                     if (microSum != 0) {
                         watch.getMicroInfo(InfoType.HISTORY_INFO, bleCallback);
                     } else {
@@ -475,8 +478,12 @@ public class SyncData {
                 saveCurStep(curStep);
                 next();
                 break;
+            case 14:
+                next();
+                Log.i(TAG, "勿扰模式parse:---==============================------- " + o.toString());
+                break;
             case 15://疲劳状态
-//                Log.i(TAG, "parse: " + o.toString());
+//                Log.i(TAG, "疲劳状态接收parse:---==============================------- " + o.toString());
                 next();
                 break;
             case 16: //微循环
@@ -484,7 +491,7 @@ public class SyncData {
                 microSum = microcirculation.getMicroLength();
                 progressSum += microSum;
                 next();
-//                Log.d(TAG, "parse: " + o.toString());
+//                Log.d(TAG, "微循环接收parse:-------------------------------------------->>>>>>>> " + o.toString());
                 break;
         }
     }
