@@ -110,7 +110,14 @@ public class UpdateActivity extends BaseActionActivity {
                     }
                 }else if("1".equals(resultBean.getNeed_update())){
                     isViewBtUpdate = true;
+                } else if ("1.0.0".compareTo(resultBean.getNeed_update()) <= 0) {
+                    isViewBtUpdate = true;
                 }
+//                String need_update = resultBean.getNeed_update();
+//                int a = "1.0.1".compareTo(need_update);
+//                int b = "1.0.0".compareTo(need_update);
+//                int c = "1.0".compareTo(need_update);
+
             }
         }
 
