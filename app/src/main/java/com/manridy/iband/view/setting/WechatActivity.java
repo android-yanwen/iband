@@ -276,6 +276,7 @@ public class WechatActivity extends BaseActionActivity {
                                         showError();
                                     }
                                 } catch (JSONException e) {
+                                    dismissProgress();/////////
                                     e.printStackTrace();
                                 }
                             } else {
