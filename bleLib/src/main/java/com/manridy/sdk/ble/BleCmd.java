@@ -912,7 +912,11 @@ public class BleCmd {
         type = 0x29;
         body= new byte[17];
 //        body[0] = 0x04;
-        body[0] = 0x03;  //天气推送协议中的en位 0x1表示当天，0x2表示当天和未来1天，0x3表示当天及未来两天，0x4表示当天及未来三天
+        if (data[0] == 0 && data[1] == 0 && data[2] == 0x00) {//天气信息全部为0时en也设置为0
+            body[0] = 0;
+        } else {
+            body[0] = 0x03;  //天气推送协议中的en位 0x1表示当天，0x2表示当天和未来1天，0x3表示当天及未来两天，0x4表示当天及未来三天
+        }
         for(int i=0 ; data.length > i ; i++){
             body[i+1] = data[i];
         }

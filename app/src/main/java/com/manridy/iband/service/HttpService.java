@@ -456,6 +456,7 @@ public class HttpService {
                     addressModel.getForecastWeather().get(i).setTmp_min(tmp_min);
                     addressModel.getForecastWeather().get(i).setTmp_now(tmp_max+"°-"+tmp_min);
                 }
+                onResultCallBack.onResult(true, addressModel);
             }
 
             @Override

@@ -515,6 +515,7 @@ public class MainActivity extends BaseActivity {
                         final int date = c.get(Calendar.DATE);
                         int last_date = (int) SPUtil.get(mContext, AppGlobal.DATA_DATE, 0);
                         if (last_date != date) {
+//                        if (true) {//测试用
                             HttpService.getInstance().getCityWeather(mContext,
                                     "" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),
 //                                "116.310316,39.956074",
@@ -552,11 +553,12 @@ public class MainActivity extends BaseActivity {
                                                 Watch.getInstance().setWeather(weatherBean, new BleCallback() {
                                                     @Override
                                                     public void onSuccess(Object o) {
-
+                                                        Log.d(TAG, "onSuccess: 推送天气信息成功");
                                                     }
 
                                                     @Override
                                                     public void onFailure(BleException exception) {
+                                                        Log.d(TAG, "onSuccess: 推送天气信息失败");
 
                                                     }
                                                 });
