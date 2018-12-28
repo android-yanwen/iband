@@ -47,7 +47,7 @@ public class TestHrTimingActivity extends BaseActionActivity {
     @BindView(R.id.ai_hr_correcting_baseline)
     TextView aiHrCorrectingBaseline;
     private static boolean curOnoff;
-    private static int curSpace;
+    private static int curSpace = 30;//默认定时间隔
 
 
 
