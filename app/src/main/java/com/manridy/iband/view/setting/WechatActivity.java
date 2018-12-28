@@ -272,12 +272,14 @@ public class WechatActivity extends BaseActionActivity {
                                         SPUtil.put(IbandApplication.getIntance(), AppGlobal.DATA_WECHAT_QR, qr);
                                         showQrCode();
                                     } else {
+                                        dismissProgress();/////////
                                         showError();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             } else {
+                                dismissProgress();////////
                                 showError();
                             }
                         }
