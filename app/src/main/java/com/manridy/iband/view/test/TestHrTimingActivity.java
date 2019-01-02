@@ -47,7 +47,7 @@ public class TestHrTimingActivity extends BaseActionActivity {
     @BindView(R.id.ai_hr_correcting_baseline)
     TextView aiHrCorrectingBaseline;
     private static boolean curOnoff;
-    private static int curSpace = 30;//默认定时间隔
+    private static int curSpace = 0;//默认定时间隔
 
 
 
@@ -155,6 +155,12 @@ public class TestHrTimingActivity extends BaseActionActivity {
                         aiAlert.setIvMenuCenterIsView(false);
                         curSpace = 30;
                     }
+                    //heartrate_interval
+                    String heart_rate_interval = resultBean.getHeartrate_interval();
+                    if (!"0".equals(heart_rate_interval)) {
+                        aiAlert.setAlertCenterContent(heart_rate_interval);
+                        curSpace = Integer.parseInt(heart_rate_interval);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -260,7 +266,7 @@ public class TestHrTimingActivity extends BaseActionActivity {
     }
 
     private String[] getSpaces() {
-        return new String[]{"5","15","30","60","90","120"};
+        return new String[]{"5", "10", "15","30", "60", "90", "120"};
 //        return new String[]{"30"};
     }
 

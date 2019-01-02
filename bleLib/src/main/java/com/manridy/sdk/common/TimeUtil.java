@@ -343,35 +343,45 @@ public class TimeUtil {
      * @return yyyy-MM-dd HH:mm:ss
      */
     public static String formatDate1(String dateStr) {
+        boolean isIfg = false;
         String s_one = dateStr.substring(0, 1);
         if (s_one.matches("[a-zA-Z]")) {
             String s_MM = dateStr.substring(0, 3);
             if (s_MM.equals("Jan")) {
                 s_MM = "01";
+                isIfg = true;
             }
             if (s_MM.equals("Feb")) {
                 s_MM = "02";
+                isIfg = true;
             }
             if (s_MM.equals("Mar")) {
                 s_MM = "03";
+                isIfg = true;
             }
             if (s_MM.equals("Apr")) {
                 s_MM = "04";
+                isIfg = true;
             }
             if (s_MM.equals("May")) {
                 s_MM = "05";
+                isIfg = true;
             }
             if (s_MM.equals("Jun")) {
                 s_MM = "06";
+                isIfg = true;
             }
             if (s_MM.equals("Jul")) {
                 s_MM = "07";
+                isIfg = true;
             }
             if (s_MM.equals("Aug")) {
                 s_MM = "08";
+                isIfg = true;
             }
             if (s_MM.equals("Sep")) {
                 s_MM = "09";
+                isIfg = true;
             }
             if (s_MM.equals("Oct")) {
                 s_MM = "10";
@@ -382,10 +392,18 @@ public class TimeUtil {
             if (s_MM.equals("Dec")) {
                 s_MM = "12";
             }
-            String s_DD = dateStr.substring(4, 6);
-            String s_YY = dateStr.substring(8, 12);
-            String s_Time = dateStr.substring(13, 21);
-            String s_yyyyMMddHHmmss = s_YY + "-" + s_MM + "-" + s_DD + " " + s_Time;
+            String s_yyyyMMddHHmmss = "";
+            if (isIfg) {
+                String s_DD = dateStr.substring(4, 5);
+                String s_YY = dateStr.substring(7, 11);
+                String s_Time = dateStr.substring(12, 20);
+                s_yyyyMMddHHmmss = s_YY + "-" + s_MM + "-" + s_DD + " " + s_Time;
+            } else {
+                String s_DD = dateStr.substring(4, 6);
+                String s_YY = dateStr.substring(8, 12);
+                String s_Time = dateStr.substring(13, 21);
+                s_yyyyMMddHHmmss = s_YY + "-" + s_MM + "-" + s_DD + " " + s_Time;
+            }
             return s_yyyyMMddHHmmss;
         }
         return dateStr;
