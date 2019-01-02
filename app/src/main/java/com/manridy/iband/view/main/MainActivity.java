@@ -162,6 +162,7 @@ public class MainActivity extends BaseActivity {
 
     private String filePath;
     WeatherModel weatherModel;
+    private static AddressModel addressModel;
 
     private boolean isViewEcg = true;
 
@@ -524,44 +525,8 @@ public class MainActivity extends BaseActivity {
                                         public void onResult(boolean result, Object o) {
                                             if (result) {
                                                 AddressModel addressModel = (AddressModel) o;
-                                                int max = 0xFF;
-                                                int min = 0xFF;
-                                                int now = 0xFF;
-                                                if (addressModel.getForecastWeather().get(0).getTmp_now() != null) {
-                                                    now = 0xff;
-                                                }
-                                                if (addressModel.getForecastWeather().get(0).getTmp_max() != null) {
-                                                    max = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_max());
-                                                }
-                                                if (addressModel.getForecastWeather().get(0).getTmp_min() != null) {
-                                                    min = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_min());
-                                                }
-                                                LinkedList<Weather> forecastWeathers = new LinkedList<>();
-                                                Weather forecastWeather;
-                                                if (addressModel.getForecastWeather().size() == 3) {
-                                                    for (int i = 1; i < 3; i++) {
-                                                        com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = new com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean();
-                                                        forecastWeatherBean.setWeather_type(addressModel.getForecastWeather().get(i).getWeater_type());
-                                                        forecastWeatherBean.setTmp_max(addressModel.getForecastWeather().get(i).getTmp_max());
-                                                        forecastWeatherBean.setTmp_min(addressModel.getForecastWeather().get(i).getTmp_min());
-                                                        forecastWeather = new Weather(forecastWeatherBean.getWeather_type(), Integer.parseInt(forecastWeatherBean.getTmp_max()), Integer.parseInt(forecastWeatherBean.getTmp_min()), 0xFF, null);
-                                                        forecastWeathers.add(forecastWeather);
-                                                    }
-                                                }
-                                                Weather weatherBean = new Weather(addressModel.getForecastWeather().get(0).getWeater_type(), max, min, now, forecastWeathers);
-                                                IbandApplication.getIntance().weather = weatherBean;
-                                                Watch.getInstance().setWeather(weatherBean, new BleCallback() {
-                                                    @Override
-                                                    public void onSuccess(Object o) {
-                                                        Log.d(TAG, "onSuccess: 推送天气信息成功");
-                                                    }
-
-                                                    @Override
-                                                    public void onFailure(BleException exception) {
-                                                        Log.d(TAG, "onSuccess: 推送天气信息失败");
-
-                                                    }
-                                                });
+                                                MainActivity.addressModel = addressModel;//保存天气数据
+//                                                pushWeatherToWatch();//推送天气到手环
 
                                                 /**************************存本地数据库***************************/
                                                 WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
@@ -1148,6 +1113,7 @@ public class MainActivity extends BaseActivity {
                             SPUtil.put(mContext,AppGlobal.DATA_SYNC_TIME,System.currentTimeMillis());
                             setHintState(AppGlobal.DEVICE_STATE_SYNC_OK);
                             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_ALL));
+                            pushWeatherToWatch();//推送天气信息到手环
                         } else {
                             setHintState(AppGlobal.DEVICE_STATE_SYNC_NO);
                         }
@@ -1737,9 +1703,12 @@ public class MainActivity extends BaseActivity {
                 if (bluetoothDialog != null && bluetoothDialog.isShowing()) {
                     bluetoothDialog.dismiss();
                 }
-                if (IbandApplication.getIntance().service.watch != null) {
-                    IbandApplication.getIntance().service.watch.BluetoothEnable(AppManage.getInstance().currentActivity());
+                if (IbandApplication.getIntance().service != null){
+                    if (IbandApplication.getIntance().service.watch != null) {
+                        IbandApplication.getIntance().service.watch.BluetoothEnable(AppManage.getInstance().currentActivity());
+                    }
                 }
+
             }
         });
         if (bluetoothDialog != null && bluetoothDialog.isShowing()) {
@@ -1787,4 +1756,48 @@ public class MainActivity extends BaseActivity {
     }
 */
 
+
+    private void pushWeatherToWatch() {
+        if (addressModel == null) {
+            return;
+        }
+        int max = 0xFF;
+        int min = 0xFF;
+        int now = 0xFF;
+        if (addressModel.getForecastWeather().get(0).getTmp_now() != null) {
+            now = 0xff;
+        }
+        if (addressModel.getForecastWeather().get(0).getTmp_max() != null) {
+            max = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_max());
+        }
+        if (addressModel.getForecastWeather().get(0).getTmp_min() != null) {
+            min = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_min());
+        }
+        LinkedList<Weather> forecastWeathers = new LinkedList<>();
+        Weather forecastWeather;
+        if (addressModel.getForecastWeather().size() == 3) {
+            for (int i = 1; i < 3; i++) {
+                com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = new com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean();
+                forecastWeatherBean.setWeather_type(addressModel.getForecastWeather().get(i).getWeater_type());
+                forecastWeatherBean.setTmp_max(addressModel.getForecastWeather().get(i).getTmp_max());
+                forecastWeatherBean.setTmp_min(addressModel.getForecastWeather().get(i).getTmp_min());
+                forecastWeather = new Weather(forecastWeatherBean.getWeather_type(), Integer.parseInt(forecastWeatherBean.getTmp_max()), Integer.parseInt(forecastWeatherBean.getTmp_min()), 0xFF, null);
+                forecastWeathers.add(forecastWeather);
+            }
+        }
+        Weather weatherBean = new Weather(addressModel.getForecastWeather().get(0).getWeater_type(), max, min, now, forecastWeathers);
+        IbandApplication.getIntance().weather = weatherBean;
+        Watch.getInstance().setWeather(weatherBean, new BleCallback() {
+            @Override
+            public void onSuccess(Object o) {
+                Log.d(TAG, "onSuccess: 推送天气信息成功");
+            }
+
+            @Override
+            public void onFailure(BleException exception) {
+                Log.d(TAG, "onSuccess: 推送天气信息失败");
+
+            }
+        });
+    }
 }

@@ -517,9 +517,11 @@ public class HttpService {
             if (heWeather6 != null) {
                 JsonElement HeWeather6_0 = heWeather6.get(0);
                 if (HeWeather6_0 != null) {
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
+//                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
+                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject();
                     if (basicOb != null) {
-                        JsonElement jsondaily_forecast = basicOb.getAsJsonArray().get(i);
+                        JsonElement jsonElement = basicOb.get("daily_forecast");
+                        JsonElement jsondaily_forecast = jsonElement.getAsJsonArray().get(i);
                         if (jsondaily_forecast != null) {
                             jsonCond_code_d = jsondaily_forecast.getAsJsonObject().get("cond_code_d").getAsString();
                         }
@@ -539,9 +541,11 @@ public class HttpService {
             if (heWeather6 != null) {
                 JsonElement HeWeather6_0 = heWeather6.get(0);
                 if (HeWeather6_0 != null) {
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
+//                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
+                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject();
                     if (basicOb != null) {
-                        JsonElement jsondaily_forecast = basicOb.getAsJsonArray().get(i);
+                        JsonElement jsonElement = basicOb.get("daily_forecast");
+                        JsonElement jsondaily_forecast = jsonElement.getAsJsonArray().get(i);
                         if (jsondaily_forecast != null) {
                             jsoncond_txt_d = jsondaily_forecast.getAsJsonObject().get("cond_txt_d").getAsString();
                         }
@@ -564,9 +568,11 @@ public class HttpService {
             if (heWeather6 != null) {
                 JsonElement HeWeather6_0 = heWeather6.get(0);
                 if (HeWeather6_0 != null) {
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
+//                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
+                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject();
                     if (basicOb != null) {
-                        JsonElement jsondaily_forecast = basicOb.getAsJsonArray().get(i);
+                        JsonElement jsonElement = basicOb.get("daily_forecast");
+                        JsonElement jsondaily_forecast = jsonElement.getAsJsonArray().get(i);
                         if (jsondaily_forecast != null) {
                             jsontmp_max = jsondaily_forecast.getAsJsonObject().get("tmp_max").getAsString();
                         }
@@ -584,9 +590,11 @@ public class HttpService {
             if (heWeather6 != null) {
                 JsonElement HeWeather6_0 = heWeather6.get(0);
                 if (HeWeather6_0 != null) {
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
+//                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
+                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject();
                     if (basicOb != null) {
-                        JsonElement jsondaily_forecast = basicOb.getAsJsonArray().get(i);
+                        JsonElement jsonElement = basicOb.get("daily_forecast");
+                        JsonElement jsondaily_forecast = jsonElement.getAsJsonArray().get(i);
                         if (jsondaily_forecast != null) {
                             jsontmp_min = jsondaily_forecast.getAsJsonObject().get("tmp_min").getAsString();
                         }
