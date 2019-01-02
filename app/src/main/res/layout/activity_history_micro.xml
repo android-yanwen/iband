@@ -93,7 +93,7 @@
                 app:data_type="left"
                 app:line_color="#26ef5350"
                 app:data_hint="@string/hint_hr_avg"
-                app:data_unit="@string/hint_unit_hr"
+                app:data_unit="1/s"
                 app:data="--"/>
 
             <com.manridy.iband.ui.items.DataItems
@@ -104,7 +104,7 @@
                 app:line_color="#26ef5350"
                 app:data_type="center"
                 app:data_hint="@string/hint_hr_min"
-                app:data_unit="@string/hint_unit_hr"
+                app:data_unit="1/s"
                 app:data="--"/>
 
             <com.manridy.iband.ui.items.DataItems
@@ -115,7 +115,7 @@
                 app:line_color="#26ef5350"
                 app:data_type="right"
                 app:data_hint="@string/hint_hr_max"
-                app:data_unit="@string/hint_unit_hr"
+                app:data_unit="1/s"
                 app:data="--"/>
 
         </LinearLayout>

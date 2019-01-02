@@ -285,9 +285,9 @@ public class MicroHistoryActivity extends BaseActionActivity {
     public void onMainEvent(EventMessage event){
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_MICRO_HISTORY) {
             historyAdapter.setItemList(itemList);
-            diData1.setItemData(getString(R.string.hint_average_cycle), dataAvg1 +"",getString(R.string.hint_unit_hr),lineColor);
-            diData2.setItemData(getString(R.string.hint_minimum_cycle),dataMin1 +"",getString(R.string.hint_unit_hr),lineColor);
-            diData3.setItemData(getString(R.string.hint_highest_cycle),dataMax1 +"",getString(R.string.hint_unit_hr),lineColor);
+            diData1.setItemData(getString(R.string.hint_average_cycle), dataAvg1 +"","1/s",lineColor);
+            diData2.setItemData(getString(R.string.hint_minimum_cycle),dataMin1 +"","1/s",lineColor);
+            diData3.setItemData(getString(R.string.hint_highest_cycle),dataMax1 +"","1/s",lineColor);
             dataAvg1 = dataMin1 = dataMax1 = 0.0f;
             if (curItem !=null){
                 tvNum.setText(curItem.itemNum);

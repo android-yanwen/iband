@@ -248,7 +248,7 @@ public class IbandDB {
                     if(time!=null&&time.equals(lastTime)){
                         continue;
                     }
-                    HistoryAdapter.Item dayBean = new HistoryAdapter.Item(time,"",heartModel.getMicro()+"","");
+                    HistoryAdapter.Item dayBean = new HistoryAdapter.Item(time,"",heartModel.getMicro()+"","1/s");
                     dayData.add(dayBean);
                     lastTime = time;
                 } catch (ParseException e) {
