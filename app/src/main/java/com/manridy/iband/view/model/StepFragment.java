@@ -67,6 +67,7 @@ import com.manridy.sdk.callback.BleNotifyListener;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -186,7 +187,8 @@ public class StepFragment extends BaseEventFragment {
         super.onResume();
 
 //        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-        WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
+//        WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
+        WeatherModel weatherModel = DataSupport.findFirst(WeatherModel.class);
         if(weatherModel!=null){
             if (weatherModel.getCity() == null || weatherModel.getCity().equals("")) {
                 ll_weather.setVisibility(View.GONE);

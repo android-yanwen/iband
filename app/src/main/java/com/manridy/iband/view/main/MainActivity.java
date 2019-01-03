@@ -1,15 +1,11 @@
 package com.manridy.iband.view.main;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -17,14 +13,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NotificationCompat;
@@ -40,7 +33,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -58,7 +50,7 @@ import com.manridy.applib.utils.TimeUtil;
 import com.manridy.iband.DeviceListDataSpare;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
-import com.manridy.iband.bean.AddressModel;
+import com.manridy.iband.bean.AddressModel1;
 import com.manridy.iband.bean.WeatherModel;
 import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.R;
@@ -70,8 +62,6 @@ import com.manridy.iband.common.DomXmlParse;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.common.Utils;
-import com.manridy.iband.language.LanguageUtil;
-import com.manridy.iband.service.BleService;
 import com.manridy.iband.service.HttpService;
 import com.manridy.iband.ui.SimpleView;
 import com.manridy.iband.view.model.BoFragment;
@@ -81,9 +71,7 @@ import com.manridy.iband.view.model.HrFragment;
 import com.manridy.iband.view.model.MicrocirculationFragment;
 import com.manridy.iband.view.model.SleepFragment;
 import com.manridy.iband.view.model.StepFragment;
-import com.manridy.sdk.BluetoothLeManager;
 import com.manridy.sdk.Watch;
-import com.manridy.sdk.bean.Sleep;
 import com.manridy.sdk.bean.Weather;
 import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
@@ -94,10 +82,10 @@ import com.rd.PageIndicatorView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -114,9 +102,6 @@ import butterknife.ButterKnife;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
-import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
-import cn.sharesdk.tencent.qq.QQ;
-import cn.sharesdk.wechat.friends.Wechat;
 import me.weyye.hipermission.PermissionAdapter;
 import me.weyye.hipermission.PermissionItem;
 import me.weyye.hipermission.PermissionView;
@@ -162,7 +147,6 @@ public class MainActivity extends BaseActivity {
 
     private String filePath;
     WeatherModel weatherModel;
-    private static AddressModel addressModel;
 
     private boolean isViewEcg = true;
 
@@ -471,6 +455,7 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    int last_date;
     AMapLocationClient mlocationClient = null;
     AMapLocationListener aMapLocationListener = null;
     private void getLocation(){
@@ -514,7 +499,7 @@ public class MainActivity extends BaseActivity {
 
                         Calendar c = Calendar.getInstance();
                         final int date = c.get(Calendar.DATE);
-                        int last_date = (int) SPUtil.get(mContext, AppGlobal.DATA_DATE, 0);
+                        last_date = (int) SPUtil.get(mContext, AppGlobal.DATA_DATE, 0);
                         if (last_date != date) {
 //                        if (true) {//测试用
                             HttpService.getInstance().getCityWeather(mContext,
@@ -524,28 +509,17 @@ public class MainActivity extends BaseActivity {
                                         @Override
                                         public void onResult(boolean result, Object o) {
                                             if (result) {
-                                                AddressModel addressModel = (AddressModel) o;
-                                                MainActivity.addressModel = addressModel;//保存天气数据
-//                                                pushWeatherToWatch();//推送天气到手环
-
+                                                AddressModel1 addressModel = (AddressModel1) o;
+//                                                MainActivity.addressModel = addressModel;//保存天气数据
+//                                                pushForecastWeatherToWatch();//推送天气到手环
                                                 /**************************存本地数据库***************************/
-                                                WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
-                                                if (weatherModel == null) {
-                                                    weatherModel = new WeatherModel();
-                                                }
-                                                weatherModel.setWeatherRegime(Integer.toString(addressModel.getForecastWeather().get(0).getWeater_type()));
-                                                weatherModel.setCountry(addressModel.getCnty());
-                                                weatherModel.setCity(addressModel.getParent_city());
-                                                weatherModel.setNowTemperature(addressModel.getForecastWeather().get(0).getTmp_now());
-                                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-                                                weatherModel.setDay(df.format(new Date()));
-                                                weatherModel.save();
+                                                saveForecastWeatherInfoToDatabase(addressModel);
                                                 EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
-
                                                 SPUtil.put(mContext, AppGlobal.DATA_DATE, date);
                                                 Log.i(TAG, "onLocationChanged: 当天获取天气成功");
                                             } else {
                                                 Log.d(TAG, "获取失败");
+                                                last_date = -1;
                                             }
                                         }
                                     }
@@ -857,7 +831,7 @@ public class MainActivity extends BaseActivity {
 
                 @Override
                 public int getCount() {
-                    Log.i("MainActivity", "viewList.size():" + viewList.size());
+//                    Log.i("MainActivity", "viewList.size():" + viewList.size());
                     return viewList.size();
                 }
 
@@ -1113,7 +1087,7 @@ public class MainActivity extends BaseActivity {
                             SPUtil.put(mContext,AppGlobal.DATA_SYNC_TIME,System.currentTimeMillis());
                             setHintState(AppGlobal.DEVICE_STATE_SYNC_OK);
                             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_ALL));
-                            pushWeatherToWatch();//推送天气信息到手环
+                            pushForecastWeatherToWatch();//推送天气信息到手环
                         } else {
                             setHintState(AppGlobal.DEVICE_STATE_SYNC_NO);
                         }
@@ -1757,8 +1731,8 @@ public class MainActivity extends BaseActivity {
 */
 
 
-    private void pushWeatherToWatch() {
-        if (addressModel == null) {
+    private void pushForecastWeatherToWatch() {
+        /*if (addressModel == null) {
             return;
         }
         int max = 0xFF;
@@ -1784,8 +1758,28 @@ public class MainActivity extends BaseActivity {
                 forecastWeather = new Weather(forecastWeatherBean.getWeather_type(), Integer.parseInt(forecastWeatherBean.getTmp_max()), Integer.parseInt(forecastWeatherBean.getTmp_min()), 0xFF, null);
                 forecastWeathers.add(forecastWeather);
             }
+        }*/
+
+        WeatherModel currentDayWeather = DataSupport.findFirst(WeatherModel.class);
+        if (currentDayWeather == null) return;
+        int s_tempType = Integer.parseInt(currentDayWeather.getWeatherRegime());
+        String s_tempMax = currentDayWeather.getMaxTemperature();
+        String s_tempMin = currentDayWeather.getMinTemperature();
+        int max = Integer.parseInt(s_tempMax);
+        int min = Integer.parseInt(s_tempMin);
+        int now = 0xff;
+        LinkedList<Weather> forecastWeathers = new LinkedList<>();
+        List<WeatherModel> weatherModelList = DataSupport.findAll(WeatherModel.class, 2, 3);
+        for (int i = 0; i < weatherModelList.size();i++) {
+            WeatherModel weatherModel = weatherModelList.get(i);
+            String s_type = weatherModel.getWeatherRegime();
+            int i_type = Integer.parseInt(s_type);
+            int i_tempMax = Integer.parseInt(weatherModel.getMaxTemperature());
+            int i_tempMin = Integer.parseInt(weatherModel.getMinTemperature());
+            Weather weather = new Weather(i_type, i_tempMax, i_tempMin, 0xff, null);
+            forecastWeathers.add(weather);
         }
-        Weather weatherBean = new Weather(addressModel.getForecastWeather().get(0).getWeater_type(), max, min, now, forecastWeathers);
+        Weather weatherBean = new Weather(s_tempType, max, min, now, forecastWeathers);
         IbandApplication.getIntance().weather = weatherBean;
         Watch.getInstance().setWeather(weatherBean, new BleCallback() {
             @Override
@@ -1796,8 +1790,149 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onFailure(BleException exception) {
                 Log.d(TAG, "onSuccess: 推送天气信息失败");
-
             }
         });
+    }
+
+    private String getWeatherType(AddressModel1 addressModel, int forecastDay) {
+        int weater_type=0;
+        if (addressModel.getHeWeather6().size() == 0) {
+            return "";
+        }
+        AddressModel1.HeWeather6Bean heWeather6Bean;
+        heWeather6Bean = addressModel.getHeWeather6().get(0);
+        AddressModel1.HeWeather6Bean.DailyForecastBean dailyForecastBean;
+        if (forecastDay >= heWeather6Bean.getDaily_forecast().size()) {
+            forecastDay = heWeather6Bean.getDaily_forecast().size() - 1;
+        }
+        dailyForecastBean = heWeather6Bean.getDaily_forecast().get(forecastDay);
+        String cond_code_d = dailyForecastBean.getCond_code_d();
+        int code_d = Integer.parseInt(cond_code_d);
+        if (code_d == 100 || code_d == 900 || code_d == 901 || code_d == 999) { //晴
+            weater_type = 0;
+        } else if ((code_d >= 101 && code_d <= 104) || (code_d >= 200 && code_d <= 213)) {//阴
+            weater_type = 1;
+        } else if ((code_d >= 300 && code_d <= 318) || code_d == 399) { //雨
+            weater_type = 2;
+        } else if ((code_d >= 400 && code_d <= 410) || code_d == 499) { //雪
+            weater_type = 3;
+        } else if ((code_d >= 500 && code_d <= 502) || (code_d >= 509 && code_d <= 515)) {//雾霾
+            weater_type = 4;
+        } else if (code_d == 503 || code_d == 504 || code_d == 507 || code_d == 508) {//沙尘
+            weater_type = 5;
+        }
+        return Integer.toString(weater_type);
+    }
+
+    private String getCountry(AddressModel1 addressModel) {
+        String cnty;
+        if (addressModel.getHeWeather6().size() == 0) {
+            return "";
+        }
+        AddressModel1.HeWeather6Bean heWeather6Bean;
+        heWeather6Bean = addressModel.getHeWeather6().get(0);
+        AddressModel1.HeWeather6Bean.BasicBean basicBean = heWeather6Bean.getBasic();
+        cnty = basicBean.getCnty();
+        return cnty;
+    }
+    private String getCity(AddressModel1 addressModel) {
+        String city;
+        AddressModel1.HeWeather6Bean heWeather6Bean;
+        if (addressModel.getHeWeather6().size() == 0) {
+            return "";
+        }
+        heWeather6Bean = addressModel.getHeWeather6().get(0);
+        AddressModel1.HeWeather6Bean.BasicBean basicBean = heWeather6Bean.getBasic();
+//        city = basicBean.getParent_city();
+        city = basicBean.getLocation();
+        return city;
+    }
+
+    private String getTempNow(AddressModel1 addressModel, int forecastDay) {
+        if (addressModel.getHeWeather6().size() == 0) {
+            return "";
+        }
+        AddressModel1.HeWeather6Bean heWeather6Bean;
+        heWeather6Bean = addressModel.getHeWeather6().get(0);
+        AddressModel1.HeWeather6Bean.DailyForecastBean dailyForecastBean;
+        if (forecastDay >= heWeather6Bean.getDaily_forecast().size()) {
+            forecastDay = heWeather6Bean.getDaily_forecast().size() - 1;
+        }
+        dailyForecastBean = heWeather6Bean.getDaily_forecast().get(forecastDay);
+        String tmp_max = dailyForecastBean.getTmp_max();
+        String tmp_min = dailyForecastBean.getTmp_min();
+        String tmpNow = tmp_max + "°-" + tmp_min;
+        return tmpNow;
+    }
+
+    private String getMaxTemp(AddressModel1 addressModel, int forecastDay) {
+        if (addressModel.getHeWeather6().size() == 0) {
+            return "";
+        }
+        AddressModel1.HeWeather6Bean heWeather6Bean;
+        heWeather6Bean = addressModel.getHeWeather6().get(0);
+        AddressModel1.HeWeather6Bean.DailyForecastBean dailyForecastBean;
+        if (forecastDay >= heWeather6Bean.getDaily_forecast().size()) {
+            forecastDay = heWeather6Bean.getDaily_forecast().size() - 1;
+        }
+        dailyForecastBean = heWeather6Bean.getDaily_forecast().get(forecastDay);
+        String tmp_max = dailyForecastBean.getTmp_max();
+        return tmp_max;
+    }
+    private String getMinTemp(AddressModel1 addressModel, int forecastDay) {
+        if (addressModel.getHeWeather6().size() == 0) {
+            return "";
+        }
+        AddressModel1.HeWeather6Bean heWeather6Bean;
+        heWeather6Bean = addressModel.getHeWeather6().get(0);
+        AddressModel1.HeWeather6Bean.DailyForecastBean dailyForecastBean;
+        if (forecastDay >= heWeather6Bean.getDaily_forecast().size()) {
+            forecastDay = heWeather6Bean.getDaily_forecast().size() - 1;
+        }
+        dailyForecastBean = heWeather6Bean.getDaily_forecast().get(forecastDay);
+        String tmp_min = dailyForecastBean.getTmp_min();
+        return tmp_min;
+    }
+
+
+    private String getDate(AddressModel1 addressModel, int forecastDay) {
+        if (addressModel.getHeWeather6().size() == 0) {
+            return "";
+        }
+        AddressModel1.HeWeather6Bean heWeather6Bean;
+        heWeather6Bean = addressModel.getHeWeather6().get(0);
+        AddressModel1.HeWeather6Bean.DailyForecastBean dailyForecastBean;
+        if (forecastDay >= heWeather6Bean.getDaily_forecast().size()) {
+            forecastDay = heWeather6Bean.getDaily_forecast().size() - 1;
+        }
+        dailyForecastBean = heWeather6Bean.getDaily_forecast().get(forecastDay);
+        String date = dailyForecastBean.getDate();
+        return date;
+    }
+
+    private void saveForecastWeatherInfoToDatabase(AddressModel1 addressModel) {
+        List<WeatherModel> modelList = DataSupport.findAll(WeatherModel.class);
+        if (modelList == null) {
+            modelList = new ArrayList<>();
+        }
+        for (int i = 0; i < 3; i++) {//保存当天和未来3天的天气状况
+            WeatherModel weatherModel = DataSupport.find(WeatherModel.class, i + 1);
+            if (weatherModel == null) {
+                weatherModel = new WeatherModel();
+            }
+            weatherModel.setWeatherRegime(getWeatherType(addressModel,i));
+            weatherModel.setCountry(getCountry(addressModel));
+            weatherModel.setCity(getCity(addressModel));
+            weatherModel.setMinTemperature(getMinTemp(addressModel,i));
+            weatherModel.setMaxTemperature(getMaxTemp(addressModel,i));
+            weatherModel.setNowTemperature(getTempNow(addressModel,i));
+//                                                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+//                                                    weatherModel.setDay(df.format(new Date()));
+            weatherModel.setDay(getDate(addressModel, i));
+            modelList.add(weatherModel);
+//                                                    weatherModel.update(i + 1);
+        }
+//                                                weatherModel.save();
+        DataSupport.saveAll(modelList);
     }
 }

@@ -2,24 +2,21 @@ package com.manridy.iband.service;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.manridy.applib.utils.FileUtil;
 import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
-import com.manridy.iband.bean.AddressModel;
+import com.manridy.iband.bean.AddressModel1;
 import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.bean.Weather;
 import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.DomXmlParse;
 import com.manridy.iband.network.NetInterfaceMethod;
-import com.manridy.iband.view.setting.FeedbackActivity;
 import com.manridy.iband.view.setting.LangueActivity;
 
 import java.io.File;
@@ -105,30 +102,30 @@ public class HttpService {
         }
     }
 
-
-    public void getHeWeather_city(String location,String lang ,final OnResultCallBack onResultCallBack){
-        Request request = new Request.Builder().url(heweather_city+location+"&lang="+lang).build();
-        OkHttpClient client = new OkHttpClient();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                onResultCallBack.onResult(false,null);
-//                Log.d(TAG, "onFailure: ......................");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    String result = response.body().string();
-                    Log.d(TAG, "onResponse: " + result);
-                    AddressModel addressModel = new Gson().fromJson(result, AddressModel.class);
-                    onResultCallBack.onResult(true, addressModel);
-                } catch (Exception e) {
-                    onResultCallBack.onResult(false, null);
-                }
-            }
-        });
-    }
+//
+//    public void getHeWeather_city(String location,String lang ,final OnResultCallBack onResultCallBack){
+//        Request request = new Request.Builder().url(heweather_city+location+"&lang="+lang).build();
+//        OkHttpClient client = new OkHttpClient();
+//        client.newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                onResultCallBack.onResult(false,null);
+////                Log.d(TAG, "onFailure: ......................");
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                try {
+//                    String result = response.body().string();
+//                    Log.d(TAG, "onResponse: " + result);
+//                    AddressModel addressModel = new Gson().fromJson(result, AddressModel.class);
+//                    onResultCallBack.onResult(true, addressModel);
+//                } catch (Exception e) {
+//                    onResultCallBack.onResult(false, null);
+//                }
+//            }
+//        });
+//    }
 
     public void getWeather(String city,final OnResultCallBack onResultCallBack){
         Request request = new Request.Builder().url(weather+city).build();
@@ -443,7 +440,7 @@ public class HttpService {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                JsonObject jsonObject = (JsonObject) new JsonParser().parse(result);
+                /*JsonObject jsonObject = (JsonObject) new JsonParser().parse(result);
                 AddressModel addressModel = new AddressModel(3);//json返回未来3天的天气状况
                 addressModel.setCnty(getJsonCnty(jsonObject));
                 addressModel.setParent_city(getJsonParent_city(jsonObject));
@@ -455,7 +452,8 @@ public class HttpService {
                     String tmp_min = getJsontmp_min(jsonObject, i);
                     addressModel.getForecastWeather().get(i).setTmp_min(tmp_min);
                     addressModel.getForecastWeather().get(i).setTmp_now(tmp_max+"°-"+tmp_min);
-                }
+                }*/
+                AddressModel1 addressModel = new Gson().fromJson(result, AddressModel1.class);
                 onResultCallBack.onResult(true, addressModel);
             }
 

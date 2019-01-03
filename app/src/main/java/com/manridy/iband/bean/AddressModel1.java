@@ -1,161 +1,9 @@
 package com.manridy.iband.bean;
 
-import com.manridy.sdk.bean.Weather;
-
-import java.util.ArrayList;
 import java.util.List;
 
-public class AddressModel {
+public class AddressModel1 {
 
-
-    private String cnty;
-    private String parent_city;
-    private List<ForecastWeather> forecastWeather = new ArrayList<>();
-
-    public class ForecastWeather{
-        private String cond_txt_d;
-        private String cond_code_d;
-        private String tmp_max;
-        private String tmp_min;
-        private String tmp_now;
-        private int weater_type;
-
-        public int getWeater_type() {
-            return weater_type;
-        }
-
-        public void setCond_code_d(String cond_code_d) {
-            if (cond_code_d.equals("") || cond_code_d == null) {
-                return;
-            }
-            this.cond_code_d = cond_code_d;
-            int code_d = Integer.parseInt(cond_code_d);
-            if (code_d == 100 || code_d == 900 || code_d == 901 || code_d == 999) { //晴
-                weater_type = 0;
-            } else if ((code_d >= 101 && code_d <= 104) || (code_d >= 200 && code_d <= 213)) {//阴
-                weater_type = 1;
-            } else if ((code_d >= 300 && code_d <= 318) || code_d == 399) { //雨
-                weater_type = 2;
-            } else if ((code_d >= 400 && code_d <= 410) || code_d == 499) { //雪
-                weater_type = 3;
-            } else if ((code_d >= 500 && code_d <= 502) || (code_d >= 509 && code_d <= 515)) {//雾霾
-                weater_type = 4;
-            } else if (code_d == 503 || code_d == 504 || code_d == 507 || code_d == 508) {//沙尘
-                weater_type = 5;
-            }
-
-        }
-
-        public void setCond_txt_d(String cond_txt_d) {
-            this.cond_txt_d = cond_txt_d;
-            if (cond_txt_d ==null) return;
-//WeatherType类目前没有用到可删除
-//            for (int i =0; i <WeatherType.WeatherSunny.length;i++) {
-//                if (cond_txt_d.equals(WeatherType.WeatherSunny[i])) {
-//                    weater_type = 0;
-//                    return;
-//                }
-//            }
-//            for (int i =0; i <WeatherType.WeatherOvercast.length;i++) {
-//                if (cond_txt_d.equals(WeatherType.WeatherOvercast[i])) {
-//                    weater_type = 1;
-//                    return;
-//                }
-//            }
-//            for (int i =0; i <WeatherType.WeatherRain.length;i++) {
-//                if (cond_txt_d.equals(WeatherType.WeatherRain[i])) {
-//                    weater_type = 2;
-//                    return;
-//                }
-//            }
-//            for (int i =0; i <WeatherType.WeatherSnow.length;i++) {
-//                if (cond_txt_d.equals(WeatherType.WeatherSnow[i])) {
-//                    weater_type = 3;
-//                    return;
-//                }
-//            }
-//            for (int i =0; i <WeatherType.WeatherFoggy.length;i++) {
-//                if (cond_txt_d.equals(WeatherType.WeatherFoggy[i])) {
-//                    weater_type = 4;
-//                    return;
-//                }
-//            }
-//            for (int i =0; i <WeatherType.WeatherRain.length;i++) {
-//                if (cond_txt_d.equals(WeatherType.WeatherRain[i])) {
-//                    weater_type = 5;
-//                    return;
-//                }
-//            }
-
-        }
-
-        public void setTmp_max(String tmp_max) {
-            if (tmp_max == null || tmp_max.equals("")) {
-                this.tmp_max = "0";
-            } else {
-                this.tmp_max = tmp_max;
-            }
-        }
-
-        public void setTmp_min(String tmp_min) {
-            if (tmp_min == null || tmp_min.equals("")) {
-                this.tmp_min = "0";
-            } else {
-                this.tmp_min = tmp_min;
-            }
-        }
-
-        public String getCond_txt_d() {
-            return cond_txt_d;
-        }
-
-        public String getTmp_max() {
-            return tmp_max;
-        }
-
-        public String getTmp_min() {
-            return tmp_min;
-        }
-
-        public void setTmp_now(String tmp_now) {
-            this.tmp_now = tmp_now;
-        }
-
-        public String getTmp_now() {
-            return tmp_now;
-        }
-    }
-
-    public AddressModel(int num) {
-        for (int i = 0; i < num; i++) {
-            ForecastWeather weather = new ForecastWeather();
-            forecastWeather.add(weather);
-        }
-    }
-
-    public List<ForecastWeather> getForecastWeather() {
-        return forecastWeather;
-    }
-
-    public void setCnty(String cnty) {
-        this.cnty = cnty;
-    }
-
-    public void setParent_city(String parent_city) {
-        this.parent_city = parent_city;
-    }
-
-
-    public String getCnty() {
-        return cnty;
-    }
-
-    public String getParent_city() {
-        return parent_city;
-    }
-
-
-//    {"HeWeather6":[{"basic":[{"cid":"CN101090608","location":"霸州","parent_city":"廊坊","admin_area":"河北","cnty":"中国","lat":"39.11733246","lon":"116.39202118","tz":"+8.00","type":"city"}],"status":"ok"}]}
 
     private List<HeWeather6Bean> HeWeather6;
 
@@ -169,12 +17,32 @@ public class AddressModel {
 
     public static class HeWeather6Bean {
         /**
-         * basic : [{"cid":"CN101090608","location":"霸州","parent_city":"廊坊","admin_area":"河北","cnty":"中国","lat":"39.11733246","lon":"116.39202118","tz":"+8.00","type":"city"}]
+         * basic : {"cid":"CN101010200","location":"海淀","parent_city":"北京","admin_area":"北京","cnty":"中国","lat":"39.95607376","lon":"116.31031799","tz":"+8.00"}
+         * update : {"loc":"2019-01-02 13:56","utc":"2019-01-02 05:56"}
          * status : ok
+         * daily_forecast : [{"cond_code_d":"101","cond_code_n":"101","cond_txt_d":"多云","cond_txt_n":"多云","date":"2019-01-02","hum":"30","pcpn":"0.0","pop":"0","pres":"1039","tmp_max":"1","tmp_min":"-10","uv_index":"2","vis":"20","wind_deg":"183","wind_dir":"南风","wind_sc":"1-2","wind_spd":"6"},{"cond_code_d":"502","cond_code_n":"502","cond_txt_d":"霾","cond_txt_n":"霾","date":"2019-01-03","hum":"33","pcpn":"0.0","pop":"0","pres":"1036","tmp_max":"3","tmp_min":"-8","uv_index":"1","vis":"20","wind_deg":"190","wind_dir":"南风","wind_sc":"1-2","wind_spd":"4"},{"cond_code_d":"101","cond_code_n":"101","cond_txt_d":"多云","cond_txt_n":"多云","date":"2019-01-04","hum":"26","pcpn":"0.0","pop":"0","pres":"1039","tmp_max":"3","tmp_min":"-8","uv_index":"2","vis":"20","wind_deg":"0","wind_dir":"北风","wind_sc":"3-4","wind_spd":"15"}]
          */
 
+        private BasicBean basic;
+        private UpdateBean update;
         private String status;
-        private List<BasicBean> basic;
+        private List<DailyForecastBean> daily_forecast;
+
+        public BasicBean getBasic() {
+            return basic;
+        }
+
+        public void setBasic(BasicBean basic) {
+            this.basic = basic;
+        }
+
+        public UpdateBean getUpdate() {
+            return update;
+        }
+
+        public void setUpdate(UpdateBean update) {
+            this.update = update;
+        }
 
         public String getStatus() {
             return status;
@@ -184,25 +52,24 @@ public class AddressModel {
             this.status = status;
         }
 
-        public List<BasicBean> getBasic() {
-            return basic;
+        public List<DailyForecastBean> getDaily_forecast() {
+            return daily_forecast;
         }
 
-        public void setBasic(List<BasicBean> basic) {
-            this.basic = basic;
+        public void setDaily_forecast(List<DailyForecastBean> daily_forecast) {
+            this.daily_forecast = daily_forecast;
         }
 
         public static class BasicBean {
             /**
-             * cid : CN101090608
-             * location : 霸州
-             * parent_city : 廊坊
-             * admin_area : 河北
+             * cid : CN101010200
+             * location : 海淀
+             * parent_city : 北京
+             * admin_area : 北京
              * cnty : 中国
-             * lat : 39.11733246
-             * lon : 116.39202118
+             * lat : 39.95607376
+             * lon : 116.31031799
              * tz : +8.00
-             * type : city
              */
 
             private String cid;
@@ -213,7 +80,6 @@ public class AddressModel {
             private String lat;
             private String lon;
             private String tz;
-            private String type;
 
             public String getCid() {
                 return cid;
@@ -278,16 +144,208 @@ public class AddressModel {
             public void setTz(String tz) {
                 this.tz = tz;
             }
+        }
 
-            public String getType() {
-                return type;
+        public static class UpdateBean {
+            /**
+             * loc : 2019-01-02 13:56
+             * utc : 2019-01-02 05:56
+             */
+
+            private String loc;
+            private String utc;
+
+            public String getLoc() {
+                return loc;
             }
 
-            public void setType(String type) {
-                this.type = type;
+            public void setLoc(String loc) {
+                this.loc = loc;
+            }
+
+            public String getUtc() {
+                return utc;
+            }
+
+            public void setUtc(String utc) {
+                this.utc = utc;
+            }
+        }
+
+        public static class DailyForecastBean {
+            /**
+             * cond_code_d : 101
+             * cond_code_n : 101
+             * cond_txt_d : 多云
+             * cond_txt_n : 多云
+             * date : 2019-01-02
+             * hum : 30
+             * pcpn : 0.0
+             * pop : 0
+             * pres : 1039
+             * tmp_max : 1
+             * tmp_min : -10
+             * uv_index : 2
+             * vis : 20
+             * wind_deg : 183
+             * wind_dir : 南风
+             * wind_sc : 1-2
+             * wind_spd : 6
+             */
+
+            private String cond_code_d;
+            private String cond_code_n;
+            private String cond_txt_d;
+            private String cond_txt_n;
+            private String date;
+            private String hum;
+            private String pcpn;
+            private String pop;
+            private String pres;
+            private String tmp_max;
+            private String tmp_min;
+            private String uv_index;
+            private String vis;
+            private String wind_deg;
+            private String wind_dir;
+            private String wind_sc;
+            private String wind_spd;
+
+            public String getCond_code_d() {
+                return cond_code_d;
+            }
+
+            public void setCond_code_d(String cond_code_d) {
+                this.cond_code_d = cond_code_d;
+            }
+
+            public String getCond_code_n() {
+                return cond_code_n;
+            }
+
+            public void setCond_code_n(String cond_code_n) {
+                this.cond_code_n = cond_code_n;
+            }
+
+            public String getCond_txt_d() {
+                return cond_txt_d;
+            }
+
+            public void setCond_txt_d(String cond_txt_d) {
+                this.cond_txt_d = cond_txt_d;
+            }
+
+            public String getCond_txt_n() {
+                return cond_txt_n;
+            }
+
+            public void setCond_txt_n(String cond_txt_n) {
+                this.cond_txt_n = cond_txt_n;
+            }
+
+            public String getDate() {
+                return date;
+            }
+
+            public void setDate(String date) {
+                this.date = date;
+            }
+
+            public String getHum() {
+                return hum;
+            }
+
+            public void setHum(String hum) {
+                this.hum = hum;
+            }
+
+            public String getPcpn() {
+                return pcpn;
+            }
+
+            public void setPcpn(String pcpn) {
+                this.pcpn = pcpn;
+            }
+
+            public String getPop() {
+                return pop;
+            }
+
+            public void setPop(String pop) {
+                this.pop = pop;
+            }
+
+            public String getPres() {
+                return pres;
+            }
+
+            public void setPres(String pres) {
+                this.pres = pres;
+            }
+
+            public String getTmp_max() {
+                return tmp_max;
+            }
+
+            public void setTmp_max(String tmp_max) {
+                this.tmp_max = tmp_max;
+            }
+
+            public String getTmp_min() {
+                return tmp_min;
+            }
+
+            public void setTmp_min(String tmp_min) {
+                this.tmp_min = tmp_min;
+            }
+
+            public String getUv_index() {
+                return uv_index;
+            }
+
+            public void setUv_index(String uv_index) {
+                this.uv_index = uv_index;
+            }
+
+            public String getVis() {
+                return vis;
+            }
+
+            public void setVis(String vis) {
+                this.vis = vis;
+            }
+
+            public String getWind_deg() {
+                return wind_deg;
+            }
+
+            public void setWind_deg(String wind_deg) {
+                this.wind_deg = wind_deg;
+            }
+
+            public String getWind_dir() {
+                return wind_dir;
+            }
+
+            public void setWind_dir(String wind_dir) {
+                this.wind_dir = wind_dir;
+            }
+
+            public String getWind_sc() {
+                return wind_sc;
+            }
+
+            public void setWind_sc(String wind_sc) {
+                this.wind_sc = wind_sc;
+            }
+
+            public String getWind_spd() {
+                return wind_spd;
+            }
+
+            public void setWind_spd(String wind_spd) {
+                this.wind_spd = wind_spd;
             }
         }
     }
-
-
 }
