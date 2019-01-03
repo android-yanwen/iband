@@ -71,7 +71,7 @@ public class IbandApplication extends MultiDexApplication {
 
         Fresco.initialize(this);//初始化图片加载
 //        initBleSevrice();//初始化蓝牙服务
-        initAlertService();//初始化提醒服务
+//        initAlertService();//初始化提醒服务
         if(!UpdateActivity.isGoogle) {
             initBugly();//初始化bugly
         }
@@ -115,7 +115,7 @@ public class IbandApplication extends MultiDexApplication {
         bindService(bindIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
-    private void initAlertService() {
+    public void initAlertService() {
         startService(new Intent(this,AlertService.class));
     }
 
