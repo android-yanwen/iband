@@ -238,17 +238,20 @@ public class SettingActivity extends BaseActionActivity {
 
     @Override
     protected void initListener() {
-        Watch.getInstance().getBatteryInfo(new BleCallback() {
-            @Override
-            public void onSuccess(Object o) {
+        String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
+        if (mac != "" && mac != null) {
+            Watch.getInstance().getBatteryInfo(new BleCallback() {
+                @Override
+                public void onSuccess(Object o) {
 
-            }
+                }
 
-            @Override
-            public void onFailure(BleException exception) {
+                @Override
+                public void onFailure(BleException exception) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     @OnClick({R.id.menu_view, R.id.menu_camera, R.id.menu_find,
