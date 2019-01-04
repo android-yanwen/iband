@@ -315,6 +315,7 @@ public class DeviceActivity extends BaseActionActivity {
         SPUtil.remove(mContext, AppGlobal.DATA_UPDATE_INTERVAL_HOUR);
         SPUtil.remove(mContext, AppGlobal.DATA_UPDATE_INTERVAL_MINUTE);
 
+        SPUtil.remove(mContext, AppGlobal.DATA_DATE);
         curPosition = -1;
         bindName = "";
         eventSend(EventGlobal.STATE_DEVICE_UNBIND);
