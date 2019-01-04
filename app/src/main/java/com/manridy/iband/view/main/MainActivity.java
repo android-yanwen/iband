@@ -1216,8 +1216,10 @@ public class MainActivity extends BaseActivity {
             showFloatView(getString(R.string.hint_device_unbind), getString(R.string.hint_bind));
         } else if (state == AppGlobal.DEVICE_STATE_UNCONNECT) {
             Log.i(TAG,"AppGlobal.DEVICE_STATE_UNCONNECT");
-            ibandApplication.service.initConnect(false);
-            setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
+            if (ibandApplication.service != null) {
+                ibandApplication.service.initConnect(false);
+                setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
+            }
             return;
         } else if (state == AppGlobal.DEVICE_STATE_CONNECTED) {
             EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));

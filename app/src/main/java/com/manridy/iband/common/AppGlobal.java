@@ -56,6 +56,7 @@ public class AppGlobal {
     //
     public static final String DATA_TIMING_HR = "data_timing_hr";
     public static final String DATA_TIMING_HR_SPACE = "data_timing_hr_space";
+    public static final String DATA_DEFAULT_TIME_HR_SPACE_IS_CHANGE = "data_default_time_hr_space_is_change";
     //
     public static final String DATA_BATTERY_NUM = "data_battery_num";
     public static final String DATA_BATTERY_STATE = "data_battery_state";

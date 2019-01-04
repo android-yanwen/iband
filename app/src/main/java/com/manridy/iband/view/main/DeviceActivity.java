@@ -308,6 +308,8 @@ public class DeviceActivity extends BaseActionActivity {
         SPUtil.remove(mContext, AppGlobal.DATA_FIRMWARE_VERSION);
         SPUtil.remove(mContext, AppGlobal.DATA_TIMING_HR);
         SPUtil.remove(mContext, AppGlobal.DATA_TIMING_HR_SPACE);
+        SPUtil.remove(mContext, AppGlobal.DATA_DEFAULT_TIME_HR_SPACE_IS_CHANGE);
+
 
         //删除时间间隔
         SPUtil.remove(mContext, AppGlobal.DATA_UPDATE_INTERVAL_HOUR);
