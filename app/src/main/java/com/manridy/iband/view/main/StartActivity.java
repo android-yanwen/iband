@@ -1,6 +1,7 @@
 package com.manridy.iband.view.main;
 
 import android.Manifest;
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,10 +31,12 @@ public class StartActivity extends BaseActivity {
     private final int SPLASH_DISPLAY_LENGTH = 1500; //延迟
     private View view;
     private boolean isFirstOpen;
+    private IbandApplication ibandApplication;
     @Override
     protected void initView(Bundle savedInstanceState) {
-        ((IbandApplication)getApplication()).initBleSevrice();//初始化蓝牙服务
-        ((IbandApplication)getApplication()).initAlertService();//初始化提醒服务
+        ibandApplication = (IbandApplication) getApplication();
+        ibandApplication.initBleSevrice();//初始化蓝牙服务
+        ibandApplication.initAlertService();//初始化提醒服务
 
 //        ((IbandApplication)getApplication()).initNotificationService();//初始化通知;
         isFirstOpen = (boolean) SPUtil.get(mContext, AppGlobal.DATA_APP_FIRST,true);
