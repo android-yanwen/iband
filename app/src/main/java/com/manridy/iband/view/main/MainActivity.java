@@ -500,8 +500,8 @@ public class MainActivity extends BaseActivity {
                         Calendar c = Calendar.getInstance();
                         final int date = c.get(Calendar.DATE);
                         last_date = (int) SPUtil.get(mContext, AppGlobal.DATA_DATE, 0);
-                        if (last_date != date) {
-//                        if (true) {//测试用
+//                        if (last_date != date) {
+                        if (true) {//测试用
                             HttpService.getInstance().getCityWeather(mContext,
                                     "" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),
 //                                "116.310316,39.956074",

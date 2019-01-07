@@ -251,7 +251,7 @@ public class SyncData {
         syncIndex++;
         LogUtil.d("SyncData", "next() called syncIndex == "+syncIndex);
 //        if (syncIndex < 14) {
-        if (syncIndex <= 17) {
+        if (syncIndex <= 18) {
             send();
         }else {
             if (syncAlertListener != null) {
@@ -427,6 +427,17 @@ public class SyncData {
                     next();
                 }
                 break;
+            case 18:
+                if(isH1F1())break;//
+                if (isSupportMicroFunction()) {
+                    String strHeartValue = (String) SPUtil.get(IbandApplication.getIntance().getApplicationContext(), AppGlobal.DATA_ALERT_HEART_VALUE, "150");
+                    String strBloodValue = (String) SPUtil.get(IbandApplication.getIntance().getApplicationContext(), AppGlobal.DATA_ALERT_BLOOD_VALUE, "140");
+                    int onOff_ = (int) SPUtil.get(IbandApplication.getIntance().getApplicationContext(), AppGlobal.DATA_ALERT_BLOOD_ON_OFF, 0x00);
+                    watch.sendCmd(BleCmd.setHeartBloodAlert(onOff_, Integer.parseInt(strHeartValue), Integer.parseInt(strBloodValue)), bleCallback);
+                } else {
+                    next();
+                }
+                break;
         }
         timeOutIndex = 0;
     }
@@ -480,7 +491,7 @@ public class SyncData {
                 break;
             case 14:
                 next();
-                Log.i(TAG, "勿扰模式parse:---==============================------- " + o.toString());
+//                Log.i(TAG, "勿扰模式parse:---==============================------- " + o.toString());
                 break;
             case 15://疲劳状态
 //                Log.i(TAG, "疲劳状态接收parse:---==============================------- " + o.toString());
@@ -492,6 +503,9 @@ public class SyncData {
                 progressSum += microSum;
                 next();
 //                Log.d(TAG, "微循环接收parse:-------------------------------------------->>>>>>>> " + o.toString());
+                break;
+            case 18://心率血压报警
+                next();
                 break;
         }
     }
