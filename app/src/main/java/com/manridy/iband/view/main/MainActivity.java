@@ -96,6 +96,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -500,8 +502,8 @@ public class MainActivity extends BaseActivity {
                         Calendar c = Calendar.getInstance();
                         final int date = c.get(Calendar.DATE);
                         last_date = (int) SPUtil.get(mContext, AppGlobal.DATA_DATE, 0);
-//                        if (last_date != date) {
-                        if (true) {//测试用
+                        if (last_date != date) {
+//                        if (false) {//测试用
                             HttpService.getInstance().getCityWeather(mContext,
                                     "" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),
 //                                "116.310316,39.956074",
@@ -650,16 +652,11 @@ public class MainActivity extends BaseActivity {
     }
 
 
-
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        ButterKnife.bind(this);
-
-
-
-
+        ButterKnife.bind(MainActivity.this);
 
     }
 

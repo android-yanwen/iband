@@ -423,7 +423,7 @@ public class BleParse {
                     }
                 }
                 break;
-            case 9:
+            case 9:  //心率定时测量完成fc 09 00
                 int ss = data[3];//测试类型
                 if (data[2] == 0) {
                     if (actionListener != null) {
@@ -706,6 +706,8 @@ public class BleParse {
             if (microHistoryListener != null) {
                 microHistoryListener.onHistory(result);
             }
+        } else if (2 == ty) {
+//            Log.d(TAG, "parseMicro: ty=========================================" + ty);
         }
         LogUtil.i(TAG,"微循环数据："+ result);
         return result;
