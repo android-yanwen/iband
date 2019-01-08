@@ -191,7 +191,7 @@ public class FeedbackActivity extends BaseActionActivity {
         if (!sId.equals("") && sId != null) {
             uploadInfo.deviceId = Integer.parseInt(sId);
         }
-        uploadInfo.phoneSysVersion = /*Build.BRAND + */Build.MODEL + " "+android.os.Build.VERSION.RELEASE;
+        uploadInfo.phoneSysVersion = /*Build.BRAND + */"Android "+Build.MODEL + " "+android.os.Build.VERSION.RELEASE;
         if (curUser == null) {
             return null;
         }

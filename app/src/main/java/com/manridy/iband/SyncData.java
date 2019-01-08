@@ -249,7 +249,7 @@ public class SyncData {
 
     private synchronized void next(){
         syncIndex++;
-        LogUtil.d("SyncData", "next() called syncIndex == "+syncIndex);
+        LogUtil.i("SyncData", "next() called syncIndex == "+syncIndex);
 //        if (syncIndex < 14) {
         if (syncIndex <= 18) {
             send();
@@ -380,8 +380,25 @@ public class SyncData {
 //                    next();
 //                }
 //                break;
-            case 14:  //发送勿打扰模式设置
-                if(isH1F1())break;//
+            case 14:
+                if(isH1F1()) break;
+                if (isSupportMicroFunction()) {  //判断是否有微循环功能，有则发送这条命令
+                    watch.getMicroInfo(InfoType.HISTORY_NUM,bleCallback);
+                } else {
+                    next();
+                }
+                break;
+            case 15:
+                if(isH1F1()) break;
+                if (isSupportMicroFunction()) {  //判断是否有微循环功能，有则发送这条命令
+                    watch.sendCmd(BleCmd.getFatigueCmd(), bleCallback);
+//                    Log.i(TAG, "send: ---------------疲劳度测试命令");
+                } else {
+                    next();
+                }
+                break;
+            case 16:
+                if(isH1F1())break;//发送勿打扰模式设置
                 if (isSupportDoNotDisturbFunction()) { //支持勿扰模式功能才发送命令，否则不发送此命令给设备
                     DoNotDisturbModel curDoNotDisturbModel = IbandDB.getInstance().getDoNotDisturbModel();
                     if (curDoNotDisturbModel == null) {
@@ -397,27 +414,9 @@ public class SyncData {
                     next();
                 }
                 break;
-            case 15:
-                if(isH1F1()) break;
-                if (isSupportMicroFunction()) {  //判断是否有微循环功能，有则发送这条命令
-                    watch.sendCmd(BleCmd.getFatigueCmd(), bleCallback);
-//                    Log.i(TAG, "send: ---------------疲劳度测试命令");
-                } else {
-                    next();
-                }
-                break;
-            case 16:
-                if(isH1F1()) break;
-                if (isSupportMicroFunction()) {  //判断是否有微循环功能，有则发送这条命令
-                    watch.getMicroInfo(InfoType.HISTORY_NUM,bleCallback);
-                } else {
-                    next();
-                }
-                break;
             case 17:
                 if(isH1F1()) break;
                 if (isSupportMicroFunction()) {
-//                    Log.i(TAG, "send: 微循环数据条数-------------------->>>>>>>>" + microSum);
                     if (microSum != 0) {
                         watch.getMicroInfo(InfoType.HISTORY_INFO, bleCallback);
                     } else {
@@ -489,20 +488,26 @@ public class SyncData {
                 saveCurStep(curStep);
                 next();
                 break;
-            case 14:
-                next();
-//                Log.i(TAG, "勿扰模式parse:---==============================------- " + o.toString());
+            case 14://微循环
+                Microcirculation microcirculation = mGson.fromJson(o.toString(), Microcirculation.class);
+                int typeMicro = microcirculation.getType();
+                if (typeMicro == BleParse.CALL_MICRO_INFO) {
+                    microSum = microcirculation.getMicroLength();
+                    progressSum += microSum;
+                    next();
+//                    Log.d(TAG, "微循环接收parse:-------------------------------------------->>>>>>>> " + o.toString());
+//                    Log.i(TAG, "send: 微循环数据条数-------------------->>>>>>>>" + microSum);
+                } else {
+                    send();
+                }
                 break;
             case 15://疲劳状态
 //                Log.i(TAG, "疲劳状态接收parse:---==============================------- " + o.toString());
                 next();
                 break;
-            case 16: //微循环
-                Microcirculation microcirculation = mGson.fromJson(o.toString(), Microcirculation.class);
-                microSum = microcirculation.getMicroLength();
-                progressSum += microSum;
+            case 16:
                 next();
-//                Log.d(TAG, "微循环接收parse:-------------------------------------------->>>>>>>> " + o.toString());
+////                Log.i(TAG, "勿扰模式parse:---==============================------- " + o.toString());
                 break;
             case 18://心率血压报警
                 next();

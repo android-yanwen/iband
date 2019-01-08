@@ -132,6 +132,7 @@ public class HrFragment extends BaseEventFragment {
 
     @Override
     protected void initListener() {
+        if (IbandApplication.getIntance().service == null) return;
         if (IbandApplication.getIntance().service.watch != null) {
             IbandApplication.getIntance().service.watch.setHrNotifyListener(new BleNotifyListener() {
                 @Override

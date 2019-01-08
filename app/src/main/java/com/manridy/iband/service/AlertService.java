@@ -217,6 +217,8 @@ public class AlertService extends Service {
      * @param incomingNumber
      */
     private void phoneReceived(String incomingNumber) {
+        if (ibandApplication.service == null) return;
+        if (ibandApplication.service.watch == null) return;
         //收到来电提醒
         if (incomingNumber == null || incomingNumber.isEmpty()) {//1.来电号码为空
             ibandApplication.service.watch.sendCmd(BleCmd.setPhoneAlert(1,getString(R.string.hint_phone_num_unknow)));

@@ -188,21 +188,24 @@ public class StepFragment extends BaseEventFragment {
 
 //        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
 //        WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
-        WeatherModel weatherModel = DataSupport.findFirst(WeatherModel.class);
-        if(weatherModel!=null){
-            if (weatherModel.getCity() == null || weatherModel.getCity().equals("")) {
-                ll_weather.setVisibility(View.GONE);
-                return;
-            }
-            ll_weather.setVisibility(View.VISIBLE);
-            String cityName = weatherModel.getCity().replace("市", "");
-            tvAddr.setText(weatherModel.getCountry()+"•"+cityName);
-            tvTempetature.setText(weatherModel.getNowTemperature()+"°");
-            if(!"".equals(weatherModel.getWeatherRegime())){
+        boolean isExist = DataSupport.isExist(WeatherModel.class);//必须先执行这条否则部分手机会卡在DataSupport.findFirst这个函数
+        if (isExist) {
+            WeatherModel weatherModel = DataSupport.findFirst(WeatherModel.class);
+            if(weatherModel!=null){
+                if (weatherModel.getCity() == null || weatherModel.getCity().equals("")) {
+                    ll_weather.setVisibility(View.GONE);
+                    return;
+                }
+                ll_weather.setVisibility(View.VISIBLE);
+                String cityName = weatherModel.getCity().replace("市", "");
+                tvAddr.setText(weatherModel.getCountry()+"•"+cityName);
+                tvTempetature.setText(weatherModel.getNowTemperature()+"°");
+                if(!"".equals(weatherModel.getWeatherRegime())){
 //                            String weatherType = getWeatherType(weatherModel.getWeatherRegime());
-                weatherImg = getWeatherImg(weatherModel.getWeatherRegime());
-                if(weatherImg!=0){
-                    ivWeather.setImageResource(weatherImg);
+                    weatherImg = getWeatherImg(weatherModel.getWeatherRegime());
+                    if(weatherImg!=0){
+                        ivWeather.setImageResource(weatherImg);
+                    }
                 }
             }
         }

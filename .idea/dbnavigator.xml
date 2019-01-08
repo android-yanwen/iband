@@ -24,21 +24,21 @@
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
     <loaded-nodes>
-      <connection connection-id="617a4b60-bb32-429b-a4a7-5e80dbc86d37">
-        <schema name="main" object-types="table" />
+      <connection connection-id="8f15db72-5810-4bbd-b2f6-1f8381bdcaf9">
+        <schema name="main" object-types="column, constraint, index, table, dataset trigger, view" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="617a4b60-bb32-429b-a4a7-5e80dbc86d37">
-      <console name="Connection" type="STANDARD" />
+    <connection id="8f15db72-5810-4bbd-b2f6-1f8381bdcaf9">
+      <console name="Connection" type="STANDARD"><![CDATA[select * from WeatherModel]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="617a4b60-bb32-429b-a4a7-5e80dbc86d37" />
+    <connection id="8f15db72-5810-4bbd-b2f6-1f8381bdcaf9" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-list connection-id="617a4b60-bb32-429b-a4a7-5e80dbc86d37" dataset="main.weathermodel" active-filter-id="EMPTY_FILTER" />
+    <filter-list connection-id="8f15db72-5810-4bbd-b2f6-1f8381bdcaf9" dataset="main.weathermodel" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -63,7 +63,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="617a4b60-bb32-429b-a4a7-5e80dbc86d37" active="true">
+      <connection id="8f15db72-5810-4bbd-b2f6-1f8381bdcaf9" active="true">
         <database>
           <name value="Connection" />
           <description value="" />

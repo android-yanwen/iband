@@ -347,6 +347,12 @@ public class DeviceActivity extends BaseActionActivity {
 
     //扫描设备
     private void scanDevice(boolean isCheckBind) {
+        if (ibandApplication.service == null) {
+            return;
+        }
+        if (ibandApplication.service.watch == null) {
+            return;
+        }
         if (!ibandApplication.service.watch.isBluetoothEnable()) {
             ibandApplication.service.watch.BluetoothEnable(mContext);
             return;

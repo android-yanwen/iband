@@ -1,11 +1,13 @@
 package com.manridy.iband.service;
 
 import android.app.ActivityManager;
+import android.app.Notification;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.Process;
 import android.util.Log;
@@ -35,6 +37,9 @@ public class NotificationCollectorMonitorService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {//适配8.0
+            startForeground(1, new Notification());
+        }
         LogUtil.d(TAG, "onCreate() called");
         ensureCollectorRunning();
     }
