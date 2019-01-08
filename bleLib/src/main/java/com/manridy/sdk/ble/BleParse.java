@@ -72,7 +72,7 @@ public class BleParse {
     private final byte CALL_DO_NOT_DISTURB = 0x2e; //免打扰消息命令
     private final byte CALL_FATIGUE = 0x31; //疲劳度
     private final byte CALL_MICRO_TEST = 0x32; //微循环测量
-    private final byte CALL_MICRO_INFO = 0x33; //微循环信息
+    public static final byte CALL_MICRO_INFO = 0x33; //微循环信息
 
     private static BleParse instance;
     private byte[] data;//蓝牙数据
@@ -423,7 +423,7 @@ public class BleParse {
                     }
                 }
                 break;
-            case 9:
+            case 9:  //心率定时测量完成fc 09 00
                 int ss = data[3];//测试类型
                 if (data[2] == 0) {
                     if (actionListener != null) {
@@ -434,6 +434,7 @@ public class BleParse {
                         actionListener.onAction(902,ss);
                     }
                 }
+//                Log.d(TAG, "parseOther: --------------------------------------------------->>>>>>>>>"+BitUtil.parseByte2HexStr(data));
                 break;
             case 8:
                 if (data[2] == 3 && data[3] == 0) {
@@ -687,6 +688,7 @@ public class BleParse {
 //        String day = TimeUtil.stampToDate(date, "HH:mm:ss");
         String day = TimeUtil.stampToDate(date, "yyyy-MM-dd");
 //        Log.i(TAG, "parseMicro data: " + data);
+        microcirculation.setType(CALL_MICRO_INFO);
         microcirculation.setTr(ty);
         microcirculation.setDate(data);
         microcirculation.setDay(day);
@@ -706,6 +708,8 @@ public class BleParse {
             if (microHistoryListener != null) {
                 microHistoryListener.onHistory(result);
             }
+        } else if (2 == ty) {
+//            Log.d(TAG, "parseMicro: ty=========================================" + ty);
         }
         LogUtil.i(TAG,"微循环数据："+ result);
         return result;

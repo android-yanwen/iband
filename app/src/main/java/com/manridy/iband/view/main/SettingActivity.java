@@ -238,8 +238,10 @@ public class SettingActivity extends BaseActionActivity {
 
     @Override
     protected void initListener() {
-        String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
-        if (mac != "" && mac != null) {
+//        String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
+//        connectState = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
+//        if (mac != "" && mac != null) {
+        if (connectState == AppGlobal.DEVICE_STATE_CONNECTED) {
             Watch.getInstance().getBatteryInfo(new BleCallback() {
                 @Override
                 public void onSuccess(Object o) {

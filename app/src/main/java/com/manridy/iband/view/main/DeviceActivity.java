@@ -308,11 +308,14 @@ public class DeviceActivity extends BaseActionActivity {
         SPUtil.remove(mContext, AppGlobal.DATA_FIRMWARE_VERSION);
         SPUtil.remove(mContext, AppGlobal.DATA_TIMING_HR);
         SPUtil.remove(mContext, AppGlobal.DATA_TIMING_HR_SPACE);
+        SPUtil.remove(mContext, AppGlobal.DATA_DEFAULT_TIME_HR_SPACE_IS_CHANGE);
+
 
         //删除时间间隔
         SPUtil.remove(mContext, AppGlobal.DATA_UPDATE_INTERVAL_HOUR);
         SPUtil.remove(mContext, AppGlobal.DATA_UPDATE_INTERVAL_MINUTE);
 
+        SPUtil.remove(mContext, AppGlobal.DATA_DATE);
         curPosition = -1;
         bindName = "";
         eventSend(EventGlobal.STATE_DEVICE_UNBIND);
@@ -344,6 +347,12 @@ public class DeviceActivity extends BaseActionActivity {
 
     //扫描设备
     private void scanDevice(boolean isCheckBind) {
+        if (ibandApplication.service == null) {
+            return;
+        }
+        if (ibandApplication.service.watch == null) {
+            return;
+        }
         if (!ibandApplication.service.watch.isBluetoothEnable()) {
             ibandApplication.service.watch.BluetoothEnable(mContext);
             return;

@@ -158,8 +158,12 @@ public class TestHrTimingActivity extends BaseActionActivity {
                     //heartrate_interval
                     String heart_rate_interval = resultBean.getHeartrate_interval();
                     if (!"0".equals(heart_rate_interval)) {
-                        aiAlert.setAlertCenterContent(heart_rate_interval);
-                        curSpace = Integer.parseInt(heart_rate_interval);
+                        boolean isDefaultTimeSpace = (boolean) SPUtil.get(mContext, AppGlobal.DATA_DEFAULT_TIME_HR_SPACE_IS_CHANGE, true);
+                        if (isDefaultTimeSpace) {
+                            aiAlert.setAlertCenterContent(heart_rate_interval+"分钟");
+                            int defaultSpace = Integer.parseInt(heart_rate_interval);
+                            curSpace = defaultSpace;
+                        }
                     }
                 }
             }
@@ -240,6 +244,7 @@ public class TestHrTimingActivity extends BaseActionActivity {
                     public void onSuccess(Object o) {
                         SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
                         SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
+                        SPUtil.put(mContext, AppGlobal.DATA_DEFAULT_TIME_HR_SPACE_IS_CHANGE,false);
                         dismissProgress();
                         runOnUiThread(new Runnable() {
                             @Override

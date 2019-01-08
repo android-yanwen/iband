@@ -3,12 +3,21 @@ package com.manridy.sdk.bean;
 public class Microcirculation {
 
     private int id;
-    private int tr;
+    private int type;
     private String date;
+    private int tr;
     private String day;
     private float micro;
     private int microLength;
     private int microNum;//编号
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public int getMicroLength() {
         return microLength;

@@ -96,6 +96,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -451,6 +453,7 @@ public class MainActivity extends BaseActivity {
 
             updateDeviceList();
             getLocation();
+        Log.e("Don't start application", "initView: ........................................."+number++);
 //        }
 
     }
@@ -649,28 +652,27 @@ public class MainActivity extends BaseActivity {
         return false;
     }
 
-
-
+    static public int number = 0;
     @Override
     protected void initView(Bundle savedInstanceState) {
+        Log.e("Don't start application", "initView: ........................................."+number++);
         setContentView(R.layout.activity_main);
+        Log.e("Don't start application", "initView: ........................................."+number++);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        ButterKnife.bind(this);
-
-
-
-
+        ButterKnife.bind(MainActivity.this);
 
     }
 
     @Override
     protected void initVariables() {
         EventBus.getDefault().register(this);
+        Log.e("Don't start application", "initView: ........................................."+number++);
         ibandApplication = (IbandApplication) getApplication();
         setStatusBar();
         initViewPager();
         initNotification();
         mSimpleView = new SimpleView(mContext.getApplicationContext());
+        Log.e("Don't start application", "initView: ........................................."+number++);
 //        initDeviceUpdate();
     }
 
@@ -1088,6 +1090,7 @@ public class MainActivity extends BaseActivity {
                             setHintState(AppGlobal.DEVICE_STATE_SYNC_OK);
                             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_ALL));
                             pushForecastWeatherToWatch();//推送天气信息到手环
+                            start5sTimer();//弥补同步显示错误，因为时间关系不得已采取的临时办法，根本解决问题需要优化同步数据那块
                         } else {
                             setHintState(AppGlobal.DEVICE_STATE_SYNC_NO);
                         }
@@ -1149,6 +1152,7 @@ public class MainActivity extends BaseActivity {
                 return true;
             }
         });
+        Log.e("Don't start application", "initView: ........................................."+number++);
     }
 
     @Override
@@ -1216,8 +1220,10 @@ public class MainActivity extends BaseActivity {
             showFloatView(getString(R.string.hint_device_unbind), getString(R.string.hint_bind));
         } else if (state == AppGlobal.DEVICE_STATE_UNCONNECT) {
             Log.i(TAG,"AppGlobal.DEVICE_STATE_UNCONNECT");
-            ibandApplication.service.initConnect(false);
-            setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
+            if (ibandApplication.service != null) {
+                ibandApplication.service.initConnect(false);
+                setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
+            }
             return;
         } else if (state == AppGlobal.DEVICE_STATE_CONNECTED) {
             EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));
@@ -1762,9 +1768,13 @@ public class MainActivity extends BaseActivity {
 
         WeatherModel currentDayWeather = DataSupport.findFirst(WeatherModel.class);
         if (currentDayWeather == null) return;
-        int s_tempType = Integer.parseInt(currentDayWeather.getWeatherRegime());
+        String weatherRegime = currentDayWeather.getWeatherRegime();
+        if (weatherRegime == null || weatherRegime == "") return;
+        int s_tempType = Integer.parseInt(weatherRegime);
         String s_tempMax = currentDayWeather.getMaxTemperature();
+        if (s_tempMax == null || s_tempMax == "") return;
         String s_tempMin = currentDayWeather.getMinTemperature();
+        if (s_tempMin == null || s_tempMin == "") return;
         int max = Integer.parseInt(s_tempMax);
         int min = Integer.parseInt(s_tempMin);
         int now = 0xff;
@@ -1934,5 +1944,27 @@ public class MainActivity extends BaseActivity {
         }
 //                                                weatherModel.save();
         DataSupport.saveAll(modelList);
+    }
+
+    /**
+     *  启动一个5s的定时器刷新同步完成显示，
+     *  填补同步数据错位漏洞，鬼知道同步的最后哪里来了一条同步中信号导致同步显示错误
+     */
+    private Timer timer_5s;
+    private void start5sTimer() {
+        if (timer_5s == null) {
+            timer_5s = new Timer();
+        }
+        timer_5s.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setHintState(AppGlobal.DEVICE_STATE_SYNC_OK);
+                    }
+                });
+            }
+        }, 5000);
     }
 }

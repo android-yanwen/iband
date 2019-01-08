@@ -127,7 +127,12 @@ public class IbandApplication extends MultiDexApplication {
     public void initNotificationService() {
         boolean appOnOff = (boolean) SPUtil.get(this, AppGlobal.DATA_ALERT_APP,false);
         if (appOnOff) {
-            startService(new Intent(this, NotificationCollectorMonitorService.class));
+            Intent intent = new Intent(this, NotificationCollectorMonitorService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {//适配8.0
+                startForegroundService(intent);
+            } else {
+                startService(intent);
+            }
         }
     }
 
