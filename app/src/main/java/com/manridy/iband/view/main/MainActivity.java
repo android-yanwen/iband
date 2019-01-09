@@ -453,7 +453,6 @@ public class MainActivity extends BaseActivity {
 
             updateDeviceList();
             getLocation();
-        Log.e("Don't start application", "initView: ........................................."+number++);
 //        }
 
     }
@@ -655,9 +654,7 @@ public class MainActivity extends BaseActivity {
     static public int number = 0;
     @Override
     protected void initView(Bundle savedInstanceState) {
-        Log.e("Don't start application", "initView: ........................................."+number++);
         setContentView(R.layout.activity_main);
-        Log.e("Don't start application", "initView: ........................................."+number++);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ButterKnife.bind(MainActivity.this);
 
@@ -666,13 +663,11 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initVariables() {
         EventBus.getDefault().register(this);
-        Log.e("Don't start application", "initView: ........................................."+number++);
         ibandApplication = (IbandApplication) getApplication();
         setStatusBar();
         initViewPager();
         initNotification();
         mSimpleView = new SimpleView(mContext.getApplicationContext());
-        Log.e("Don't start application", "initView: ........................................."+number++);
 //        initDeviceUpdate();
     }
 
@@ -1126,9 +1121,11 @@ public class MainActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
-                            ibandApplication.service.watch.closeBluetoothGatt(mac);
-                            connectDevice();
+                            if (ibandApplication.service != null && ibandApplication.service.watch != null) {
+                                setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
+                                ibandApplication.service.watch.closeBluetoothGatt(mac);
+                                connectDevice();
+                            }
                         }
                     });
                 }else{
