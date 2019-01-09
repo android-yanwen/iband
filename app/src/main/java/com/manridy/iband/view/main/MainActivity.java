@@ -1121,9 +1121,11 @@ public class MainActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
-                            ibandApplication.service.watch.closeBluetoothGatt(mac);
-                            connectDevice();
+                            if (ibandApplication.service != null && ibandApplication.service.watch != null) {
+                                setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
+                                ibandApplication.service.watch.closeBluetoothGatt(mac);
+                                connectDevice();
+                            }
                         }
                     });
                 }else{
