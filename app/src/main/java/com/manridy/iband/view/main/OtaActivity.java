@@ -40,6 +40,7 @@ import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
  */
 
 public class OtaActivity extends BaseActionActivity {
+    private static final String TAG = "OtaActivity";
     @BindView(R.id.cv_ota)
     CircularView cvOta;
     @BindView(R.id.iv_ota)
@@ -140,7 +141,7 @@ public class OtaActivity extends BaseActionActivity {
                 HttpService.getInstance().sendOtaData(getApplicationContext(), new OnResultCallBack() {
                     @Override
                     public void onResult(boolean result, Object o) {
-                        LogUtil.d(TAG, "onResult() called with: result = [" + result + "], o = [" + o + "]");
+                        LogUtil.d("OtaActivity", "onResult() called with: result = [" + result + "], o = [" + o + "]");
                     }
                 });
             }

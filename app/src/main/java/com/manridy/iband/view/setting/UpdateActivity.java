@@ -165,6 +165,9 @@ public class UpdateActivity extends BaseActionActivity {
     @Override
     protected void loadData() {
         super.loadData();
+        if (ibandApplication == null || ibandApplication.service == null || ibandApplication.service.watch == null) {
+            return;
+        }
         ibandApplication.service.watch.getFirmwareVersion(new BleCallback() {
             @Override
             public void onSuccess(Object o) {
@@ -190,7 +193,6 @@ public class UpdateActivity extends BaseActionActivity {
     }
 
     private DeviceUpdate deviceUpdate = null;
-    private int INTERVAL_TIME = 2;//固件更新间隔时间
     @OnClick({R.id.hi_update_soft, R.id.hi_update_firm})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -227,49 +229,18 @@ public class UpdateActivity extends BaseActionActivity {
 //                info.append("图片地址：").append(upgradeInfo.imageUrl);
                 break;
             case R.id.hi_update_firm:
-                Calendar c = Calendar.getInstance();
-                int hour_of_day = c.get(Calendar.HOUR_OF_DAY);
-                int minute = c.get(Calendar.MINUTE);
-
-                /*******固件更新时间间隔*******/
-                int updateIntervalHour = (int) SPUtil.get(mContext, AppGlobal.DATA_UPDATE_INTERVAL_HOUR, hour_of_day);
-//                int updateIntervalMinute = (int) SPUtil.get(mContext, AppGlobal.DATA_UPDATE_INTERVAL_MINUTE, minute);
-//                if (hour_of_day >= updateIntervalHour) {
-                if (true) {
-                    updateIntervalHour = hour_of_day+INTERVAL_TIME;
-                    SPUtil.put(mContext, AppGlobal.DATA_UPDATE_INTERVAL_HOUR, updateIntervalHour);
-                    SPUtil.put(mContext, AppGlobal.DATA_UPDATE_INTERVAL_MINUTE, minute);
-                    if (!checkEditBluetoothName()) {//判断蓝牙名称是否修改过，修改名称的不支持ota升级，以免恢复默认
-                        if (deviceUpdate == null) {
-                            deviceUpdate = new DeviceUpdate(mContext);
-                        }
-                        deviceUpdate.getOTAVersion(deviceType,firm,isForce,
-                        new DeviceUpdate.UpdateListener() {
-                            @Override
-                            public void prompt() {
-                                showWarmDialog(getString(R.string.hint_ota_newest));
-                            }
-                        });
-                    }else {
-//                        showToast(getString(R.string.hint_ota_newest));
-                        showWarmDialog(getString(R.string.hint_ota_newest));
+                if (!checkEditBluetoothName()) {//判断蓝牙名称是否修改过，修改名称的不支持ota升级，以免恢复默认
+                    if (deviceUpdate == null) {
+                        deviceUpdate = new DeviceUpdate(mContext);
                     }
-                } else if (updateIntervalHour >= 23+INTERVAL_TIME && hour_of_day == INTERVAL_TIME-1) {
-                    updateIntervalHour = hour_of_day + INTERVAL_TIME;
-                    SPUtil.put(mContext, AppGlobal.DATA_UPDATE_INTERVAL_HOUR, updateIntervalHour);
-                    SPUtil.put(mContext, AppGlobal.DATA_UPDATE_INTERVAL_MINUTE, minute);
-                    if (!checkEditBluetoothName()) {
-                        if (deviceUpdate == null) {
-                            deviceUpdate = new DeviceUpdate(mContext);
+                    deviceUpdate.getOTAVersion(deviceType, firm, isForce, new DeviceUpdate.UpdateListener() {
+                        @Override
+                        public void prompt() {
+                            showWarmDialog(getString(R.string.hint_ota_newest));
                         }
-                        deviceUpdate.getOTAVersion(deviceType, firm, isForce);
-                    } else {
+                    });
+                }else {
 //                        showToast(getString(R.string.hint_ota_newest));
-                        showWarmDialog(getString(R.string.hint_ota_newest));
-                    }
-                } else {
-//                    Toast.makeText(ibandApplication, "请两小时后再试", Toast.LENGTH_SHORT).show();
-//                    int intervalHour = updateIntervalHour >= 23+INTERVAL_TIME ? INTERVAL_TIME-1 : updateIntervalHour;
                     showWarmDialog(getString(R.string.hint_ota_newest));
                 }
                 break;
