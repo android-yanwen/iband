@@ -62,6 +62,7 @@ public class IbandApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         intance = this;
+        obtainPhoneType();
         SPUtil.put(this, AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
         SPUtil.put(this, AppGlobal.STATE_APP_OTA_RUN, false);
 //        startService(new Intent(this, AppNotificationListenerService.class));
@@ -70,8 +71,10 @@ public class IbandApplication extends MultiDexApplication {
 //        List<AppModel> model = db.getAppList();
 
         Fresco.initialize(this);//初始化图片加载
-//        initBleSevrice();//初始化蓝牙服务
-//        initAlertService();//初始化提醒服务
+        if (!"huawei".equalsIgnoreCase(Watch.brand)) {
+            initBleSevrice();//初始化蓝牙服务
+        }
+        initAlertService();//初始化提醒服务
         if(!UpdateActivity.isGoogle) {
             initBugly();//初始化bugly
         }
@@ -80,6 +83,13 @@ public class IbandApplication extends MultiDexApplication {
 //        CrashHandler.getInstance().init(intance);
         MobSDK.init(this);
 
+//        obtainPhoneType();
+    }
+
+    /**
+     * 获取手机机型是否是华为
+     */
+    private void obtainPhoneType() {
         try {
             String brand = android.os.Build.BRAND;
             if("HONOR".equalsIgnoreCase(brand)){
@@ -91,7 +101,6 @@ public class IbandApplication extends MultiDexApplication {
             Log.e(TAG,"fail:getBrand");
         }
     }
-
 
     private void initLangue() {
         int curSelect = (int) SPUtil.get(this, AppGlobal.DATA_APP_LANGUE,0);

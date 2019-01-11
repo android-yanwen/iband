@@ -199,6 +199,9 @@ public class DeviceActivity extends BaseActionActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_qrcode://二维码点击
+                if (ibandApplication.service == null || ibandApplication.service.watch == null)
+                    return;
+
                 ibandApplication.service.watch.startScan(new TimeScanCallback(5000,null) {
                     @Override
                     public void onScanEnd() {
