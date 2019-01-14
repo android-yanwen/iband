@@ -355,7 +355,8 @@ public class MainActivity extends BaseActivity {
             }
         }
     };
-    /*
+
+    /**
      * 判断网络连接是否已开
      * true 已打开  false 未打开
      * */
@@ -440,19 +441,22 @@ public class MainActivity extends BaseActivity {
         super.onResume();
 //        String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
 //        if (bindMac == null || bindMac.isEmpty()) {
-            int connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
-            if (connectState == AppGlobal.DEVICE_STATE_CONNECTED) {
-                long time = (long) SPUtil.get(mContext, AppGlobal.DATA_SYNC_TIME, 0L);
-                if (time != 0 && tbSync != null) {
-                    SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-                    String str = format.format(new Date(time));
-                    tbSync.setText(getString(R.string.hint_sync_last) +" "+str);
-                }
-                Watch.getInstance().sendCmd(BleCmd.setTime());
+        int connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
+        if (connectState == AppGlobal.DEVICE_STATE_CONNECTED) {
+            long time = (long) SPUtil.get(mContext, AppGlobal.DATA_SYNC_TIME, 0L);
+            if (time != 0 && tbSync != null) {
+                SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+                String str = format.format(new Date(time));
+                tbSync.setText(getString(R.string.hint_sync_last) +" "+str);
             }
+            Watch.getInstance().sendCmd(BleCmd.setTime());
+        }
 
-            updateDeviceList();
+        updateDeviceList();
+        boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", true);
+        if (isSupply) {
             getLocation();
+        }
 //        }
 
     }
@@ -1084,7 +1088,10 @@ public class MainActivity extends BaseActivity {
                             SPUtil.put(mContext,AppGlobal.DATA_SYNC_TIME,System.currentTimeMillis());
                             setHintState(AppGlobal.DEVICE_STATE_SYNC_OK);
                             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_ALL));
-                            pushForecastWeatherToWatch();//推送天气信息到手环
+                            boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", true);
+                            if (isSupply) {
+                                pushForecastWeatherToWatch();//推送天气信息到手环
+                            }
                             start5sTimer();//弥补同步显示错误，因为时间关系不得已采取的临时办法，根本解决问题需要优化同步数据那块
                         } else {
                             setHintState(AppGlobal.DEVICE_STATE_SYNC_NO);

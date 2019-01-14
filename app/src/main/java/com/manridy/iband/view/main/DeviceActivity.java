@@ -233,6 +233,18 @@ public class DeviceActivity extends BaseActionActivity {
         }
     }
 
+    private void setIsSupplyWeather() {
+        if (bindName.equals("M01")) {
+            SPUtil.put(mContext, "isSupplyWeather", false);
+        } else {
+            SPUtil.put(mContext, "isSupplyWeather", true);
+        }
+    }
+//    public boolean getIsSupplyWeather() {
+//        boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", true);
+//        return isSupply;
+//    }
+
     //绑定设备
     private void bindDevice(BluetoothDevice device) {
         BluetoothDevice bindDevice = null;//绑定设备蓝牙对象
@@ -279,6 +291,7 @@ public class DeviceActivity extends BaseActionActivity {
                     eventSend(EventGlobal.STATE_DEVICE_BIND);//发送绑定成功广播
                 }
 
+                setIsSupplyWeather();//设置绑定的设备是否支持天气
             }
 
             @Override
@@ -294,7 +307,13 @@ public class DeviceActivity extends BaseActionActivity {
 
     //解绑设备
     private void unBindDevice() {
+        if (ibandApplication.service == null || ibandApplication.service.watch == null) {
+            return;
+        }
         String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
+        if (mac == null || mac == "") {
+            return;
+        }
         ibandApplication.service.watch.disconnect(mac, new BleCallback() {
             @Override
             public void onSuccess(Object o) {
