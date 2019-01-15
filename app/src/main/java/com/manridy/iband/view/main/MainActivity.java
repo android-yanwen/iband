@@ -442,6 +442,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        IbandApplication.recordingLoginNumFunc(0);
 //        String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
 //        if (bindMac == null || bindMac.isEmpty()) {
         int connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
@@ -456,7 +457,7 @@ public class MainActivity extends BaseActivity {
         }
 
         updateDeviceList();
-        boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", false);
+        boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", true);
         if (isSupply) {
             getLocation();
         }
@@ -676,7 +677,6 @@ public class MainActivity extends BaseActivity {
         mSimpleView = new SimpleView(mContext.getApplicationContext());
 //        initDeviceUpdate();
 
-        recordingLoginNumFunc(0);
     }
 
     private void initDeviceUpdate() {
@@ -1490,7 +1490,7 @@ public class MainActivity extends BaseActivity {
 
 
         } else if (event.getWhat() == EventGlobal.DATA_LOAD_WEATHER) {
-            recordingLoginNumFunc(1);//和天气获取一样一天一次
+            ibandApplication.recordingLoginNumFunc(1);//和天气获取一样一天一次
         }
     }
 
@@ -1978,31 +1978,4 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    /**
-     * @Date 19/1/15
-     * @Author yw
-     * @Desc 記錄用戶打開iband的次數並第二天上傳
-     * @Param code  1上傳
-     *              0記錄打開iband次數
-     */
-    private void recordingLoginNumFunc(int code) {
-        if (code == 1) {
-            new IbandLoginBean(getApplicationContext())
-                    .setLoginInfoToThisObj()
-                    .pushLoginNumToServer(new IbandLoginBean.OnPushResultCallback() {
-                        @Override
-                        public void onResult(int result) {
-                            if (result == 1) {
-                                SPUtil.remove(getApplicationContext(), AppGlobal.KEY_RECORDING_LOGIN_NUM);
-                            }
-                        }
-                    });
-        } else {
-            int recordingLoginNum = (int) SPUtil.get(getApplicationContext(), AppGlobal.KEY_RECORDING_LOGIN_NUM, 0);
-            if (recordingLoginNum == 0) {
-                new IbandLoginBean(getApplicationContext()).saveLoginDay();
-            }
-            SPUtil.put(getApplicationContext(), AppGlobal.KEY_RECORDING_LOGIN_NUM, ++recordingLoginNum);
-        }
-    }
 }

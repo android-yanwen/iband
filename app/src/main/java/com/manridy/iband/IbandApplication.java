@@ -209,4 +209,40 @@ public class IbandApplication extends MultiDexApplication {
         super.attachBaseContext(base);
         MultiDex.install(base);
     }
+
+
+    /**
+     * @Date 19/1/15
+     * @Author yw
+     * @Desc 記錄用戶打開iband的次數並第二天上傳
+     * @Param code  1上傳
+     *              0記錄打開iband次數
+     */
+    public static void recordingLoginNumFunc(int code) {
+        int recordingLoginNum = (int) SPUtil.get(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM, 0);
+        if (code == 1 && recordingLoginNum != 0) {
+            new IbandLoginBean(getIntance())
+                    .setLoginInfoToThisObj()
+                    .pushLoginNumToServer(new IbandLoginBean.OnPushResultCallback() {
+                        @Override
+                        public void onResult(int result) {
+                            if (result == 1) {
+                                SPUtil.remove(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM);
+                                new IbandLoginBean(getIntance()).saveLoginDay();
+                                SPUtil.put(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM, 1);
+                            }
+                        }
+                    });
+        } else {
+            if (recordingLoginNum == 0) {
+                new IbandLoginBean(getIntance()).saveLoginDay();
+            }
+            Calendar calendar = Calendar.getInstance();
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int day1 = new IbandLoginBean(getIntance()).obtainLoginDay();
+            if (day == day1) {
+                SPUtil.put(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM, ++recordingLoginNum);
+            }
+        }
+    }
 }
