@@ -94,5 +94,8 @@ public class AppGlobal {
 
 
     public static final String DATA_DATE = "data_date";
+    public static final String KEY_RECORDING_LOGIN_NUM = "key_recording_login_num";
+    public static final String KEY_RECORDING_LOGIN_DAY = "key_recording_login_day";
+    public static final String KEY_RECORDING_LOGIN_YMD = "key_recording_login_ymd";
 
 }

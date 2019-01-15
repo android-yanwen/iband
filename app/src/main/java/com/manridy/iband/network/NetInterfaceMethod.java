@@ -41,4 +41,13 @@ public interface NetInterfaceMethod {
     Call<String> postGetSurveyData(@FieldMap Map<String, Object> map);
 
 
+    /**
+     * iband用户打开app记录上传接口
+     * yw 18/11/13
+     */
+    @FormUrlEncoded
+    @POST("saveLoginData")
+    Call<String> postSaveLoginData(@FieldMap Map<String, Object> map);
+
+
 }

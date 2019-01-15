@@ -50,6 +50,7 @@ import com.manridy.applib.utils.TimeUtil;
 import com.manridy.iband.DeviceListDataSpare;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
+import com.manridy.iband.IbandLoginBean;
 import com.manridy.iband.bean.AddressModel1;
 import com.manridy.iband.bean.WeatherModel;
 import com.manridy.iband.common.OnResultCallBack;
@@ -107,6 +108,8 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 import me.weyye.hipermission.PermissionAdapter;
 import me.weyye.hipermission.PermissionItem;
 import me.weyye.hipermission.PermissionView;
+
+import static com.manridy.iband.common.EventGlobal.DATA_LOAD_WEATHER;
 
 /**
  * 主页
@@ -453,7 +456,7 @@ public class MainActivity extends BaseActivity {
         }
 
         updateDeviceList();
-        boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", true);
+        boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", false);
         if (isSupply) {
             getLocation();
         }
@@ -520,7 +523,7 @@ public class MainActivity extends BaseActivity {
 //                                                pushForecastWeatherToWatch();//推送天气到手环
                                                 /**************************存本地数据库***************************/
                                                 saveForecastWeatherInfoToDatabase(addressModel);
-                                                EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
+                                                EventBus.getDefault().post(new EventMessage(DATA_LOAD_WEATHER));
                                                 SPUtil.put(mContext, AppGlobal.DATA_DATE, date);
                                                 Log.i(TAG, "onLocationChanged: 当天获取天气成功");
                                             } else {
@@ -655,7 +658,6 @@ public class MainActivity extends BaseActivity {
         return false;
     }
 
-    static public int number = 0;
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
@@ -673,6 +675,8 @@ public class MainActivity extends BaseActivity {
         initNotification();
         mSimpleView = new SimpleView(mContext.getApplicationContext());
 //        initDeviceUpdate();
+
+        recordingLoginNumFunc(0);
     }
 
     private void initDeviceUpdate() {
@@ -1156,7 +1160,6 @@ public class MainActivity extends BaseActivity {
                 return true;
             }
         });
-        Log.e("Don't start application", "initView: ........................................."+number++);
     }
 
     @Override
@@ -1486,6 +1489,8 @@ public class MainActivity extends BaseActivity {
         }else  if (event.getWhat() == EventGlobal.ACTION_LOAD_DEVICE_LIST) {
 
 
+        } else if (event.getWhat() == EventGlobal.DATA_LOAD_WEATHER) {
+            recordingLoginNumFunc(1);//和天气获取一样一天一次
         }
     }
 
@@ -1970,5 +1975,34 @@ public class MainActivity extends BaseActivity {
                 });
             }
         }, 5000);
+    }
+
+
+    /**
+     * @Date 19/1/15
+     * @Author yw
+     * @Desc 記錄用戶打開iband的次數並第二天上傳
+     * @Param code  1上傳
+     *              0記錄打開iband次數
+     */
+    private void recordingLoginNumFunc(int code) {
+        if (code == 1) {
+            new IbandLoginBean(getApplicationContext())
+                    .setLoginInfoToThisObj()
+                    .pushLoginNumToServer(new IbandLoginBean.OnPushResultCallback() {
+                        @Override
+                        public void onResult(int result) {
+                            if (result == 1) {
+                                SPUtil.remove(getApplicationContext(), AppGlobal.KEY_RECORDING_LOGIN_NUM);
+                            }
+                        }
+                    });
+        } else {
+            int recordingLoginNum = (int) SPUtil.get(getApplicationContext(), AppGlobal.KEY_RECORDING_LOGIN_NUM, 0);
+            if (recordingLoginNum == 0) {
+                new IbandLoginBean(getApplicationContext()).saveLoginDay();
+            }
+            SPUtil.put(getApplicationContext(), AppGlobal.KEY_RECORDING_LOGIN_NUM, ++recordingLoginNum);
+        }
     }
 }

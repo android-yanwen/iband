@@ -188,7 +188,7 @@ public class StepFragment extends BaseEventFragment {
 
 //        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
 //        WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
-        boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", true);
+        boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", false);
         if (!isSupply) {
             ll_weather.setVisibility(View.GONE);
             return;

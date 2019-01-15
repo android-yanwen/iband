@@ -31,6 +31,7 @@ import com.tencent.bugly.beta.Beta;
 
 import org.litepal.LitePalApplication;
 
+import java.util.Calendar;
 import java.util.List;
 
 import static com.manridy.iband.common.AppGlobal.DEVICE_STATE_UNCONNECT;
@@ -58,6 +59,7 @@ public class IbandApplication extends MultiDexApplication {
     public static double location_latitude;
     public static double location_longitude;
 
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -84,7 +86,9 @@ public class IbandApplication extends MultiDexApplication {
         MobSDK.init(this);
 
 //        obtainPhoneType();
+
     }
+
 
     /**
      * 获取手机机型是否是华为

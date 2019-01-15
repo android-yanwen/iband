@@ -196,10 +196,11 @@ public class FeedbackActivity extends BaseActionActivity {
             return null;
         }
         uploadInfo.userName = curUser.getUserName();
-        WeatherModel weatherModel = DataSupport.findFirst(WeatherModel.class);
-        if (weatherModel != null) {
-//        uploadInfo.liveCity = ibandApplication.city;
-            uploadInfo.liveCity = weatherModel.getCity();
+        if (!DataSupport.isExist(WeatherModel.class)) {
+            WeatherModel weatherModel = DataSupport.findFirst(WeatherModel.class);
+            if (weatherModel != null) {
+                uploadInfo.liveCity = weatherModel.getCity();
+            }
         }
         uploadInfo.userAge = Integer.parseInt(curUser.getUserAge());
         uploadInfo.userSex = curUser.getUserSex();
