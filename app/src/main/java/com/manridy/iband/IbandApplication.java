@@ -218,9 +218,12 @@ public class IbandApplication extends MultiDexApplication {
      * @Param code  1上傳
      *              0記錄打開iband次數
      */
-    public static void recordingLoginNumFunc(int code) {
+    public static void recordingLoginNumFunc() {
         int recordingLoginNum = (int) SPUtil.get(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM, 0);
-        if (code == 1 && recordingLoginNum != 0) {
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int day1 = new IbandLoginBean(getIntance()).obtainLoginDay();
+        if (day != day1 && recordingLoginNum != 0) {
             new IbandLoginBean(getIntance())
                     .setLoginInfoToThisObj()
                     .pushLoginNumToServer(new IbandLoginBean.OnPushResultCallback() {
@@ -228,8 +231,9 @@ public class IbandApplication extends MultiDexApplication {
                         public void onResult(int result) {
                             if (result == 1) {
                                 SPUtil.remove(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM);
+                                int recordingLoginNum = (int) SPUtil.get(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM, 0);
                                 new IbandLoginBean(getIntance()).saveLoginDay();
-                                SPUtil.put(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM, 1);
+                                SPUtil.put(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM, ++recordingLoginNum);
                             }
                         }
                     });
@@ -237,12 +241,7 @@ public class IbandApplication extends MultiDexApplication {
             if (recordingLoginNum == 0) {
                 new IbandLoginBean(getIntance()).saveLoginDay();
             }
-            Calendar calendar = Calendar.getInstance();
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            int day1 = new IbandLoginBean(getIntance()).obtainLoginDay();
-            if (day == day1) {
-                SPUtil.put(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM, ++recordingLoginNum);
-            }
+            SPUtil.put(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM, ++recordingLoginNum);
         }
     }
 }

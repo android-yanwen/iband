@@ -2,6 +2,8 @@ package com.manridy.sdk;
 
 
 import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
 import android.os.Handler;
 import android.util.Log;
 
@@ -29,6 +31,7 @@ import com.manridy.sdk.type.PhoneType;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -265,6 +268,17 @@ public class Watch extends BluetoothLeManager implements WatchApi {
         }
     }
 
+    /**
+     * Created by yw on 19/1/22
+     * SYD8821固件升级蓝牙发送函数
+     * */
+    public void bleDfuSendCmd(byte[] cmd) {
+        if (curBluetoothGatt == null || cmd == null) return;
+        BluetoothGattService bluetoothGattService=curBluetoothGatt.getService(UUID.fromString("f000efe0-0451-4000-0000-00000000b000"));
+        BluetoothGattCharacteristic characteristicWrite = bluetoothGattService.getCharacteristic(UUID.fromString("f000efe1-0451-4000-0000-00000000b000"));
+        characteristicWrite.setValue(cmd);
+        curBluetoothGatt.writeCharacteristic(characteristicWrite);
+    }
     //=============================蓝牙操作=============================
 
 

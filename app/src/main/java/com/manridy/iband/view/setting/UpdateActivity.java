@@ -66,7 +66,8 @@ public class UpdateActivity extends BaseActionActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateFirmView();
+//        updateFirmView();
+        loadWatchInfo();
     }
 
     @Override
@@ -165,6 +166,10 @@ public class UpdateActivity extends BaseActionActivity {
     @Override
     protected void loadData() {
         super.loadData();
+    }
+
+
+    private void loadWatchInfo() {
         if (ibandApplication == null || ibandApplication.service == null || ibandApplication.service.watch == null) {
             return;
         }
@@ -181,6 +186,16 @@ public class UpdateActivity extends BaseActionActivity {
                         updateFirmView();
                     }
                 });
+
+                //查找设备的升级类型
+                String s_mcu_platform = findWatchMcu_platform(deviceType);
+                if (s_mcu_platform.equals("SYD8821")) {
+                    SPUtil.put(mContext, AppGlobal.KEY_FIRMWARE_UPDATE_TYPE, "SYD8821");
+                    return;
+                } else if (s_mcu_platform.equals("NRF52832")) {
+                    //两类手环的不同升级类型
+                    SPUtil.put(mContext, AppGlobal.KEY_FIRMWARE_UPDATE_TYPE, "NRF52832");
+                }
             }
 
             @Override
@@ -188,9 +203,27 @@ public class UpdateActivity extends BaseActionActivity {
 
             }
         });
-
-
     }
+
+    /**
+     * Created by yw on 2019/1/22
+     * @param deviceType
+     * @return mcu_platform属性，通过查询服务器了解
+     */
+    private String findWatchMcu_platform(String deviceType) {
+        String mcu_platform = "";
+        //20180620
+        String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST,"");
+        DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
+        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+            if(resultBean.getDevice_id().trim().equals(deviceType.trim())){
+                mcu_platform = resultBean.getMcu_platform();
+                return mcu_platform;
+            }
+        }
+        return mcu_platform;
+    }
+
 
     private DeviceUpdate deviceUpdate = null;
     @OnClick({R.id.hi_update_soft, R.id.hi_update_firm})
@@ -233,10 +266,15 @@ public class UpdateActivity extends BaseActionActivity {
                     if (deviceUpdate == null) {
                         deviceUpdate = new DeviceUpdate(mContext);
                     }
+                    showProgress("正在检查版本");
                     deviceUpdate.getOTAVersion(deviceType, firm, isForce, new DeviceUpdate.UpdateListener() {
                         @Override
-                        public void prompt() {
-                            showWarmDialog(getString(R.string.hint_ota_newest));
+                        public void prompt(boolean isSuccess) {
+                            isForce = false; //关闭强制升级模式
+                            dismissProgress();
+                            if (!isSuccess) {
+                                showWarmDialog(getString(R.string.hint_ota_newest));
+                            }
                         }
                     });
                 }else {

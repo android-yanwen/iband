@@ -171,12 +171,12 @@ public class HttpService {
                 if (FileUtil.getSdCardPath() == null) {
                     return;
                 }
-                String path = FileUtil.getSdCardPath()+"/ota.zip";
+                String path = FileUtil.getSdCardPath() + "/ota.zip";
                 FileOutputStream fos = new FileOutputStream(new File(path));
                 byte[] buffer = new byte[2048];
                 int len;
                 while ((len = is.read(buffer)) != -1) {
-                    fos.write(buffer,0,len);
+                    fos.write(buffer, 0, len);
                 }
                 fos.flush();
                 if (is != null) {
@@ -185,15 +185,55 @@ public class HttpService {
                 if (fos != null) {
                     fos.close();
                 }
-                onResultCallBack.onResult(true,null);
+                onResultCallBack.onResult(true, null);
             } else {
-                onResultCallBack.onResult(false,null);
+                onResultCallBack.onResult(false, null);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            onResultCallBack.onResult(false,null);
+            onResultCallBack.onResult(false, null);
         } catch (Exception e) {
-            onResultCallBack.onResult(false,null);
+            onResultCallBack.onResult(false, null);
+            e.printStackTrace();
+        }
+    }
+    public void downloadOTAFile(String url, String fileName, OnResultCallBack onResultCallBack) {
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                InputStream is = response.body().byteStream();
+                if (FileUtil.getSdCardPath() == null) {
+                    return;
+                }
+//                String path = FileUtil.getSdCardPath() + "/ota.zip";
+                String path = FileUtil.getSdCardPath() + "/" + fileName;
+                FileOutputStream fos = new FileOutputStream(new File(path));
+                byte[] buffer = new byte[2048];
+                int len;
+                while ((len = is.read(buffer)) != -1) {
+                    fos.write(buffer, 0, len);
+                }
+                fos.flush();
+                if (is != null) {
+                    is.close();
+                }
+                if (fos != null) {
+                    fos.close();
+                }
+                onResultCallBack.onResult(true, null);
+            } else {
+                onResultCallBack.onResult(false, null);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            onResultCallBack.onResult(false, null);
+        } catch (Exception e) {
+            onResultCallBack.onResult(false, null);
             e.printStackTrace();
         }
     }

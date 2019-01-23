@@ -442,7 +442,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        IbandApplication.recordingLoginNumFunc(0);
+        IbandApplication.recordingLoginNumFunc();
 //        String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
 //        if (bindMac == null || bindMac.isEmpty()) {
         int connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
@@ -749,6 +749,8 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
+
 
     private void initNotification() {
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -1490,7 +1492,7 @@ public class MainActivity extends BaseActivity {
 
 
         } else if (event.getWhat() == EventGlobal.DATA_LOAD_WEATHER) {
-            ibandApplication.recordingLoginNumFunc(1);//和天气获取一样一天一次
+//            ibandApplication.recordingLoginNumFunc();//和天气获取一样一天一次
         }
     }
 
