@@ -266,7 +266,7 @@ public class UpdateActivity extends BaseActionActivity {
                     if (deviceUpdate == null) {
                         deviceUpdate = new DeviceUpdate(mContext);
                     }
-                    showProgress("正在检查版本");
+                    showProgress(getString(R.string.hint_check_version));
                     deviceUpdate.getOTAVersion(deviceType, firm, isForce, new DeviceUpdate.UpdateListener() {
                         @Override
                         public void prompt(boolean isSuccess) {

@@ -535,4 +535,5 @@
     <string name="hint_highest_cycle">最高循环</string>
     <string name="hint_microcirculation">微循环</string>
     <string name="hint_blood_pressure_alert">血压报警</string>
+    <string name="hint_load_file">正在加载文件...</string>
 </resources>

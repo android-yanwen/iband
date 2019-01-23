@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
@@ -16,8 +18,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.manridy.applib.utils.FileUtil;
+import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.ToastUtil;
 import com.manridy.iband.R;
+import com.manridy.iband.SyncAlert;
+import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.common.HexUtil;
 import com.manridy.iband.common.OtaDfuInitiator;
@@ -25,6 +30,7 @@ import com.manridy.iband.ui.CircularView;
 import com.manridy.iband.view.base.BaseActionActivity;
 import com.manridy.sdk.BluetoothLeManager;
 import com.manridy.sdk.callback.BleCallback;
+import com.manridy.sdk.callback.BleConnectCallback;
 import com.manridy.sdk.exception.BleException;
 
 import org.greenrobot.eventbus.EventBus;
@@ -52,9 +58,35 @@ public class OtaActivity1 extends BaseActionActivity {
 
     private OtaDfuInitiator otaDfuInitiator;
     private BluetoothLeManager mBluetoothLeService;
+    ProgressDialog progressDialog;
+    int resetTime = 5;
 
     private Context mContext;
+    Handler progressHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                progressDialog = new ProgressDialog(mContext);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.setMessage("设备正在重启中,请稍后("+resetTime+")");
+                progressDialog.show();
+            }else if (msg.what<=resetTime){
+                if (progressDialog != null) {
+                    progressDialog.setMessage("设备正在重启中,请稍后("+(resetTime-msg.what)+")");
+                }
+            }else {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+            }
+            if (msg.what<=resetTime) {
+                progressHandler.sendEmptyMessageDelayed(msg.what+1,1000);
+            }
 
+        }
+    };
 
     private BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
@@ -118,6 +150,19 @@ public class OtaActivity1 extends BaseActionActivity {
 
     @Override
     protected void initVariables() {
+        int battery = (int) SPUtil.get(mContext,AppGlobal.DATA_BATTERY_NUM,0);
+        int connect = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
+
+        if (battery < 30){//检测设备电量
+            showToast(getString(R.string.toast_ota_battery_low));
+            finish();
+            return;
+        }
+        if (connect != AppGlobal.DEVICE_STATE_CONNECTED) {//检测设备连接状态
+            showToast(getString(R.string.hintUnConnect));
+            finish();
+            return;
+        }
         otaDfuInitiator = new OtaDfuInitiator(FileUtil.getSdCardPath()+"/ota.bin");
         initListener();
         start();
@@ -136,11 +181,56 @@ public class OtaActivity1 extends BaseActionActivity {
         tv_ota_ok.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                if (tv_ota_result.getText().toString().equals(getString(R.string.error_ota_fail))) {
+                    finish();
+//                    onBackPressed();
+                }else {
+                    int state = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
+                    if (state == 1) {
+                        showProgress(getString(R.string.hint_sync_data));
+                        SyncAlert.getInstance(mContext).sync();
+                    }else {
+                        showProgress(getString(R.string.hint_connecting));
+                        connect();
+                    }
+                }
+            }
+        });
+
+        //升级完成后同步数据监听
+        SyncAlert.getInstance(mContext).setSyncAlertListener(new SyncAlert.OnSyncAlertListener() {
+            @Override
+            public void onResult(final boolean isSuccess) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissProgress();
+                        showToast(isSuccess?getString(R.string.hint_sync_success):getString(R.string.hint_sync_fail));
+                        finish();
+                    }
+                });
             }
         });
     }
 
+    private void connect() {
+        ibandApplication.service.initConnect(false,new BleConnectCallback() {
+            @Override
+            public void onConnectSuccess() {
+                SyncAlert.getInstance(mContext).sync();
+            }
+
+            @Override
+            public void onConnectFailure(BleException exception) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast(getString(R.string.error_connect_fail));
+                    }
+                });
+            }
+        });
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -182,17 +272,18 @@ public class OtaActivity1 extends BaseActionActivity {
                 float progress = ((float) i_progress / (float) otaDfuInitiator.getOtaFilePackTotalNum()) * 100;
                 cv_ota.setProgress(progress).invaliDate();
                 progress = (float) Math.round(progress * 10) / 10;//保留1位小数
-                tv_ota_progress.setText("已完成" + progress + "%");
+                tv_ota_progress.setText(getString(R.string.hint_ota_completed) + progress + "%");
                 break;
             case EventMessage.MSG_WHAT_UPDATE_SUCCESS:
                 iv_ota.setVisibility(View.GONE);
                 tv_ota_result.setVisibility(View.VISIBLE);
                 tv_ota_ok.setVisibility(View.VISIBLE);
+                progressHandler.sendEmptyMessage(0);
                 break;
             case EventMessage.MSG_WHAT_UPDATE_FAIL:
                 tv_ota_result.setVisibility(View.VISIBLE);
                 tv_ota_result.setTextColor(Color.parseColor("#e64a19"));
-                tv_ota_result.setText(R.string.error_ota_fail);
+                tv_ota_result.setText(getString(R.string.error_ota_fail));
                 break;
             default:
                 break;
@@ -201,7 +292,7 @@ public class OtaActivity1 extends BaseActionActivity {
 
 
     public void start() {
-        showProgress("請勿操作，正在加載文件...");
+        showProgress(getString(R.string.hint_load_file));
         new Thread(new Runnable() {
             @Override
             public void run() {
