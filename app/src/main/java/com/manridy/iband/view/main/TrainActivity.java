@@ -36,6 +36,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -164,11 +165,14 @@ public class TrainActivity extends BaseActionActivity {
             dayFormat = new SimpleDateFormat("yyyy-MM-dd");
 //            trainAdapter = new TrainAdapter(curRunList);
             if(curRunList!=null&&curRunList.size()>0){
-                Date date = TimeUtil.getDate(curRunList.get(0).getStepDate());
+//                Date date = TimeUtil.getDate(curRunList.get(0).getStepDate());
+                Date date = com.manridy.sdk.common.TimeUtil.getDate(curRunList.get(0).getStepDate());
                 if(date!=null) {
                     startTime = hourFormat.format(date);
 //                    tvStart.setText(hourFormat.format(date));
-                    endTime = hourFormat.format(TimeUtil.getDate(curRunList.get(curRunList.size() - 1).getStepDate()).getTime() + curRunList.get(curRunList.size() - 1).getStepTime() * 60 * 1000);
+                    Date date1 = com.manridy.sdk.common.TimeUtil.getDate(curRunList.get(curRunList.size() - 1).getStepDate());
+                    long l_date1 = date1.getTime() + curRunList.get(curRunList.size() - 1).getStepTime() * 60 * 1000;
+                    endTime = hourFormat.format(l_date1);
 //                    tvEnd.setText(endTime);
                     Message message = handler.obtainMessage();
                     message.what = 1;
@@ -327,6 +331,8 @@ public class TrainActivity extends BaseActionActivity {
                 colors[i] = Color.parseColor("#E55F37");
             } else if (sportMode == 5) {
                 colors[i] = Color.parseColor("#7cb342");
+            } else if (sportMode == 6) {
+                colors[i] = Color.parseColor("#ee6f0b");
             }
             set.addEntry(barEntry);
         }

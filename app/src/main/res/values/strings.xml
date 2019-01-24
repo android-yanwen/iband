@@ -566,4 +566,5 @@ Exit iband app（Apple users should ignore the device on Bluetooth.）. At this 
     <string name="hint_microcirculation">Microcirculation</string>
     <string name="hint_blood_pressure_alert">Blood pressure alarm</string>
     <string name="hint_load_file">Loading file...</string>
+    <string name="hint_badminton">Badminton</string>
 </resources>
