@@ -215,6 +215,9 @@ public class DeviceActivity extends BaseActionActivity {
                 });
                 Intent intent = new Intent(DeviceActivity.this, QrActivity.class);
                 startActivityForResult(intent,10000);
+
+                // yw添加
+                ibandApplication.service.watch.stopScan(mTimeScanCallback);
                 break;
             case R.id.iv_refresh://刷新按钮点击
                 scanDevice(true);
@@ -229,6 +232,8 @@ public class DeviceActivity extends BaseActionActivity {
                 } else {
                     unBindDevice();//解绑设备
                 }
+                // yw添加
+                ibandApplication.service.watch.stopScan(mTimeScanCallback);
                 break;
         }
     }
