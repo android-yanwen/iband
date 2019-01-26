@@ -188,6 +188,11 @@ public class StepFragment extends BaseEventFragment {
 
 //        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
 //        WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
+        boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", false);
+        if (!isSupply) {
+            ll_weather.setVisibility(View.GONE);
+            return;
+        }
         boolean isExist = DataSupport.isExist(WeatherModel.class);//必须先执行这条否则部分手机会卡在DataSupport.findFirst这个函数
         if (isExist) {
             WeatherModel weatherModel = DataSupport.findFirst(WeatherModel.class);

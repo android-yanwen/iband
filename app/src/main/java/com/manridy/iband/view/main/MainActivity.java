@@ -50,6 +50,7 @@ import com.manridy.applib.utils.TimeUtil;
 import com.manridy.iband.DeviceListDataSpare;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
+import com.manridy.iband.IbandLoginBean;
 import com.manridy.iband.bean.AddressModel1;
 import com.manridy.iband.bean.WeatherModel;
 import com.manridy.iband.common.OnResultCallBack;
@@ -107,6 +108,8 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 import me.weyye.hipermission.PermissionAdapter;
 import me.weyye.hipermission.PermissionItem;
 import me.weyye.hipermission.PermissionView;
+
+import static com.manridy.iband.common.EventGlobal.DATA_LOAD_WEATHER;
 
 /**
  * 主页
@@ -355,7 +358,8 @@ public class MainActivity extends BaseActivity {
             }
         }
     };
-    /*
+
+    /**
      * 判断网络连接是否已开
      * true 已打开  false 未打开
      * */
@@ -438,21 +442,25 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        IbandApplication.recordingLoginNumFunc();
 //        String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
 //        if (bindMac == null || bindMac.isEmpty()) {
-            int connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
-            if (connectState == AppGlobal.DEVICE_STATE_CONNECTED) {
-                long time = (long) SPUtil.get(mContext, AppGlobal.DATA_SYNC_TIME, 0L);
-                if (time != 0 && tbSync != null) {
-                    SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-                    String str = format.format(new Date(time));
-                    tbSync.setText(getString(R.string.hint_sync_last) +" "+str);
-                }
-                Watch.getInstance().sendCmd(BleCmd.setTime());
+        int connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
+        if (connectState == AppGlobal.DEVICE_STATE_CONNECTED) {
+            long time = (long) SPUtil.get(mContext, AppGlobal.DATA_SYNC_TIME, 0L);
+            if (time != 0 && tbSync != null) {
+                SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+                String str = format.format(new Date(time));
+                tbSync.setText(getString(R.string.hint_sync_last) +" "+str);
             }
+            Watch.getInstance().sendCmd(BleCmd.setTime());
+        }
 
-            updateDeviceList();
+        updateDeviceList();
+        boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", true);
+        if (isSupply) {
             getLocation();
+        }
 //        }
 
     }
@@ -516,7 +524,7 @@ public class MainActivity extends BaseActivity {
 //                                                pushForecastWeatherToWatch();//推送天气到手环
                                                 /**************************存本地数据库***************************/
                                                 saveForecastWeatherInfoToDatabase(addressModel);
-                                                EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
+                                                EventBus.getDefault().post(new EventMessage(DATA_LOAD_WEATHER));
                                                 SPUtil.put(mContext, AppGlobal.DATA_DATE, date);
                                                 Log.i(TAG, "onLocationChanged: 当天获取天气成功");
                                             } else {
@@ -651,7 +659,6 @@ public class MainActivity extends BaseActivity {
         return false;
     }
 
-    static public int number = 0;
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
@@ -669,6 +676,7 @@ public class MainActivity extends BaseActivity {
         initNotification();
         mSimpleView = new SimpleView(mContext.getApplicationContext());
 //        initDeviceUpdate();
+
     }
 
     private void initDeviceUpdate() {
@@ -741,6 +749,8 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
+
 
     private void initNotification() {
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -1084,7 +1094,10 @@ public class MainActivity extends BaseActivity {
                             SPUtil.put(mContext,AppGlobal.DATA_SYNC_TIME,System.currentTimeMillis());
                             setHintState(AppGlobal.DEVICE_STATE_SYNC_OK);
                             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_ALL));
-                            pushForecastWeatherToWatch();//推送天气信息到手环
+                            boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", true);
+                            if (isSupply) {
+                                pushForecastWeatherToWatch();//推送天气信息到手环
+                            }
                             start5sTimer();//弥补同步显示错误，因为时间关系不得已采取的临时办法，根本解决问题需要优化同步数据那块
                         } else {
                             setHintState(AppGlobal.DEVICE_STATE_SYNC_NO);
@@ -1149,7 +1162,6 @@ public class MainActivity extends BaseActivity {
                 return true;
             }
         });
-        Log.e("Don't start application", "initView: ........................................."+number++);
     }
 
     @Override
@@ -1479,6 +1491,8 @@ public class MainActivity extends BaseActivity {
         }else  if (event.getWhat() == EventGlobal.ACTION_LOAD_DEVICE_LIST) {
 
 
+        } else if (event.getWhat() == EventGlobal.DATA_LOAD_WEATHER) {
+//            ibandApplication.recordingLoginNumFunc();//和天气获取一样一天一次
         }
     }
 
@@ -1964,4 +1978,6 @@ public class MainActivity extends BaseActivity {
             }
         }, 5000);
     }
+
+
 }

@@ -8,6 +8,13 @@ package com.manridy.iband.common;
  */
 
 public  class EventMessage {
+    public static final int MSG_WHAT_UPDATE_PROGRESS = 1;
+    public static final int MSG_WHAT_UPDATE_SUCCESS = 4;
+    public static final int MSG_WHAT_UPDATE_FAIL = 0;
+//    public static final int MSG_WHAT_FILE_TOTAL_SIZE = 2;
+    //    public static final int MSG_WHAT_FILE_LOADED = 4;
+//    public static final int MSG_WHAT_FILE_LOAD = 5;
+    public static final int MSG_WHAT_UPDATE_CMD_VIEW = 3;
     private int what;//消息id
     private String msg;//消息内容
     private Object object;//传递数据

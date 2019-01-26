@@ -65,6 +65,8 @@ public class HttpService {
     /*******获取用户反馈信息******/
     public static final String URL_GetSurveyData = "http://112.74.54.235/product/index.php/Api/Survey/";
 
+    public static final String URL_SaveLoginData = "http://112.74.54.235/product/index.php/Api/IbandLogin/";
+
     private HttpService() {
     }
 
@@ -169,12 +171,12 @@ public class HttpService {
                 if (FileUtil.getSdCardPath() == null) {
                     return;
                 }
-                String path = FileUtil.getSdCardPath()+"/ota.zip";
+                String path = FileUtil.getSdCardPath() + "/ota.zip";
                 FileOutputStream fos = new FileOutputStream(new File(path));
                 byte[] buffer = new byte[2048];
                 int len;
                 while ((len = is.read(buffer)) != -1) {
-                    fos.write(buffer,0,len);
+                    fos.write(buffer, 0, len);
                 }
                 fos.flush();
                 if (is != null) {
@@ -183,15 +185,55 @@ public class HttpService {
                 if (fos != null) {
                     fos.close();
                 }
-                onResultCallBack.onResult(true,null);
+                onResultCallBack.onResult(true, null);
             } else {
-                onResultCallBack.onResult(false,null);
+                onResultCallBack.onResult(false, null);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            onResultCallBack.onResult(false,null);
+            onResultCallBack.onResult(false, null);
         } catch (Exception e) {
-            onResultCallBack.onResult(false,null);
+            onResultCallBack.onResult(false, null);
+            e.printStackTrace();
+        }
+    }
+    public void downloadOTAFile(String url, String fileName, OnResultCallBack onResultCallBack) {
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                InputStream is = response.body().byteStream();
+                if (FileUtil.getSdCardPath() == null) {
+                    return;
+                }
+//                String path = FileUtil.getSdCardPath() + "/ota.zip";
+                String path = FileUtil.getSdCardPath() + "/" + fileName;
+                FileOutputStream fos = new FileOutputStream(new File(path));
+                byte[] buffer = new byte[2048];
+                int len;
+                while ((len = is.read(buffer)) != -1) {
+                    fos.write(buffer, 0, len);
+                }
+                fos.flush();
+                if (is != null) {
+                    is.close();
+                }
+                if (fos != null) {
+                    fos.close();
+                }
+                onResultCallBack.onResult(true, null);
+            } else {
+                onResultCallBack.onResult(false, null);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            onResultCallBack.onResult(false, null);
+        } catch (Exception e) {
+            onResultCallBack.onResult(false, null);
             e.printStackTrace();
         }
     }
@@ -403,6 +445,39 @@ public class HttpService {
     }
 
 
+
+    /***
+     * @Name postSaveLoginData
+     * @Func 用户打开Iband次数等信息
+     *        http://112.74.54.235/product/index.php/Api/IbandLogin/saveLoginData
+     * @Author Andy Dufresne
+     * @Data 19.1.14
+     */
+    public void postSaveLoginData(Map<String, Object> map, final OnResultCallBack onResultCallBack) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL_SaveLoginData)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
+        NetInterfaceMethod blogServer = retrofit.create(NetInterfaceMethod.class);
+        retrofit2.Call<String> call = blogServer.postSaveLoginData(map);
+        call.enqueue(new retrofit2.Callback<String>() {
+            @Override
+            public void onResponse(retrofit2.Call<String> call, retrofit2.Response<String> response) {
+                String result = response.body();
+//                Log.d(TAG, "onResponse: "+result);
+                onResultCallBack.onResult(true, result);
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<String> call, Throwable t) {
+//                Log.d(TAG, "发送失败，请确认网络正常.");
+                onResultCallBack.onResult(false, call);
+            }
+        });
+    }
+
+
+
     /**
      *  @Name yanwen
      *  @Date 18/11/24
@@ -467,140 +542,5 @@ public class HttpService {
 
 
 
-
-
-
-
-    private String getJsonCnty(JsonObject jsonObject) {
-        String jsonCnty = "";
-        if (jsonObject != null) {
-            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
-            if (heWeather6 != null) {
-                JsonElement HeWeather6_0 = heWeather6.get(0);
-                if (HeWeather6_0 != null) {
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("basic");
-                    if (basicOb != null) {
-                        jsonCnty = basicOb.get("cnty").getAsString();
-                    }
-                }
-            }
-        }
-        return jsonCnty;
-    }
-
-
-    private String getJsonParent_city(JsonObject jsonObject) {
-        String jsonParent_city = "";
-        if (jsonObject != null) {
-            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
-            if (heWeather6 != null) {
-                JsonElement HeWeather6_0 = heWeather6.get(0);
-                if (HeWeather6_0 != null) {
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("basic");
-                    if (basicOb != null) {
-                        jsonParent_city = basicOb.get("parent_city").getAsString();
-                    }
-                }
-            }
-        }
-        return jsonParent_city;
-    }
-
-
-    private String getJsonCond_code_d(JsonObject jsonObject, int i) {
-//        jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("cond_code_d").getAsString()
-        String jsonCond_code_d = "";
-        if (jsonObject != null) {
-            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
-            if (heWeather6 != null) {
-                JsonElement HeWeather6_0 = heWeather6.get(0);
-                if (HeWeather6_0 != null) {
-//                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject();
-                    if (basicOb != null) {
-                        JsonElement jsonElement = basicOb.get("daily_forecast");
-                        JsonElement jsondaily_forecast = jsonElement.getAsJsonArray().get(i);
-                        if (jsondaily_forecast != null) {
-                            jsonCond_code_d = jsondaily_forecast.getAsJsonObject().get("cond_code_d").getAsString();
-                        }
-                    }
-                }
-            }
-        }
-        return jsonCond_code_d;
-    }
-
-
-    private String getJsonCond_txt_d(JsonObject jsonObject, int i) {
-//        jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("cond_txt_d").getAsString()
-        String jsoncond_txt_d = "";
-        if (jsonObject != null) {
-            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
-            if (heWeather6 != null) {
-                JsonElement HeWeather6_0 = heWeather6.get(0);
-                if (HeWeather6_0 != null) {
-//                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject();
-                    if (basicOb != null) {
-                        JsonElement jsonElement = basicOb.get("daily_forecast");
-                        JsonElement jsondaily_forecast = jsonElement.getAsJsonArray().get(i);
-                        if (jsondaily_forecast != null) {
-                            jsoncond_txt_d = jsondaily_forecast.getAsJsonObject().get("cond_txt_d").getAsString();
-                        }
-                    }
-                }
-            }
-        }
-        return jsoncond_txt_d;
-    }
-
-
-
-
-
-    private String getJsontmp_max(JsonObject jsonObject, int i) {
-//        jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("tmp_max").getAsString()
-        String jsontmp_max = "";
-        if (jsonObject != null) {
-            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
-            if (heWeather6 != null) {
-                JsonElement HeWeather6_0 = heWeather6.get(0);
-                if (HeWeather6_0 != null) {
-//                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject();
-                    if (basicOb != null) {
-                        JsonElement jsonElement = basicOb.get("daily_forecast");
-                        JsonElement jsondaily_forecast = jsonElement.getAsJsonArray().get(i);
-                        if (jsondaily_forecast != null) {
-                            jsontmp_max = jsondaily_forecast.getAsJsonObject().get("tmp_max").getAsString();
-                        }
-                    }
-                }
-            }
-        }
-        return jsontmp_max;
-    }
-    private String getJsontmp_min(JsonObject jsonObject, int i) {
-//        jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("tmp_min").getAsString()
-        String jsontmp_min = "";
-        if (jsonObject != null) {
-            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
-            if (heWeather6 != null) {
-                JsonElement HeWeather6_0 = heWeather6.get(0);
-                if (HeWeather6_0 != null) {
-//                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject();
-                    if (basicOb != null) {
-                        JsonElement jsonElement = basicOb.get("daily_forecast");
-                        JsonElement jsondaily_forecast = jsonElement.getAsJsonArray().get(i);
-                        if (jsondaily_forecast != null) {
-                            jsontmp_min = jsondaily_forecast.getAsJsonObject().get("tmp_min").getAsString();
-                        }
-                    }
-                }
-            }
-        }
-        return jsontmp_min;
-    }
 
 }

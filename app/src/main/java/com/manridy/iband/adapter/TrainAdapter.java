@@ -136,6 +136,10 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.MyViewHolder
                 itemRes = R.mipmap.train_ic_clim;
                 itemText = R.string.hint_mountain_climbing;
                 stepText = "";
+            } else if (soprtMode == 6) {
+                itemRes = R.mipmap.train_ic_badminton;
+                itemText = R.string.hint_badminton;
+                stepText = "";
             }
             itemIcon.setImageResource(itemRes);
 

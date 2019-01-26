@@ -9,8 +9,8 @@ android {
         minSdkVersion 18
         targetSdkVersion 26
         versionCode 116
-        versionName "1.9.43"
-//        versionName "1.9.43(beta4)"
+//        versionName "1.9.43"
+        versionName "1.9.43(beta15)"
 
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

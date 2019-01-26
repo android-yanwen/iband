@@ -148,6 +148,9 @@
         <activity
             android:name=".view.main.OtaActivity"
             android:launchMode="singleTask" />
+        <activity
+            android:name=".view.main.OtaActivity1"
+            android:launchMode="singleTask" />
         <activity android:name=".view.history.HrHistoryActivity" />
         <activity android:name=".view.history.MicroHistoryActivity" />
         <activity

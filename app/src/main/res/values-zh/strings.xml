@@ -525,6 +525,7 @@
     <string name="text_please_input_question_and_opinion">请输入遇到的问题或建议</string>
     <string name="text_do_not_disturb">勿扰模式</string>
     <string name="hint_mountain_climbing">爬山</string>
+    <string name="hint_badminton">羽毛球</string>
     <string name="hint_heart_rate_alert_selection">心率报警选择</string>
     <string name="hint_hear_rate_alert">心率报警</string>
     <string name="hint_blood_pressure_alarm_selection">血压报警选择</string>
@@ -535,4 +536,5 @@
     <string name="hint_highest_cycle">最高循环</string>
     <string name="hint_microcirculation">微循环</string>
     <string name="hint_blood_pressure_alert">血压报警</string>
+    <string name="hint_load_file">正在加载文件...</string>
 </resources>

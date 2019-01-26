@@ -94,7 +94,7 @@ public class BoFragment extends BaseEventFragment {
 
     @Override
     protected void initListener() {
-        if (IbandApplication.getIntance().service.watch != null) {
+        if (IbandApplication.getIntance().service != null && IbandApplication.getIntance().service.watch != null) {
             IbandApplication.getIntance().service.watch.setBoNotifyListener(new BleNotifyListener() {
                 @Override
                 public void onNotify(Object o) {//上报不做保存处理
