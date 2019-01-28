@@ -2,11 +2,7 @@
 <project version="4">
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-<<<<<<< HEAD
     <value-preview-text-wrapping value="true" />
-=======
-    <value-preview-text-wrapping value="false" />
->>>>>>> e82fe12d5eba033525cb211b1418c1673dab76aa
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DataExportManager">
@@ -20,11 +16,7 @@
       <scope value="GLOBAL" />
       <destination value="FILE" />
       <format value="EXCEL" />
-<<<<<<< HEAD
       <charset value="UTF-8" />
-=======
-      <charset value="GBK" />
->>>>>>> e82fe12d5eba033525cb211b1418c1673dab76aa
     </export-instructions>
   </component>
   <component name="DBNavigator.Project.DatabaseBrowserManager">
