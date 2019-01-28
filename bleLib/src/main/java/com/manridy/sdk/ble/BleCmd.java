@@ -339,6 +339,30 @@ public class BleCmd {
         return BleProtocol.cmd(head,type,body);
     }
 
+    /**
+     * 微循环测试
+     * 00 停止, 01 开始
+     * @return
+     */
+    public static byte[] setMcroTest(int onOff){
+        type = 0x32;
+        body= new byte[17];
+        body[0] = (byte) onOff;
+        return BleProtocol.cmd(head,type,body);
+    }
+
+
+    /**
+     * 获取微循环数据
+     * 00 最近一次, 01 历史微循环
+     * @return
+     */
+    public static byte[] getMicroData(int dateType){
+        type = 0x33;
+        body= new byte[17];
+        body[0] = (byte) dateType;
+        return BleProtocol.cmd(head,type,body);
+    }
 
 
     /**
@@ -463,6 +487,23 @@ public class BleCmd {
         return BleProtocol.cmd(head,type,body);
     }
 
+
+    /**
+     * 心率血压报警
+     * @param onOff 开关
+     * @param hv_value 心率报警值
+     *         bh_value 血压报警值
+     * @return
+     */
+    public static byte[] setHeartBloodAlert(int onOff,int hv_value, int bh_value) {
+        type = (byte) 0x30;
+        body= new byte[17];
+        body[0] = (byte) onOff;
+        body[1] = (byte) hv_value;
+        body[2] = (byte) bh_value;
+        return BleProtocol.cmd(head,type,body);
+    }
+
     /**
      * 自动测量心率
      * @param onOff 0 关闭 1 开启
@@ -536,6 +577,19 @@ public class BleCmd {
         return body;
     }
 
+    /**
+     * 获取疲劳状态
+     * */
+    public static byte[] getFatigueCmd() {
+        // FC 31 Ty Fa Hr 00 00 00 00 00 00 00 00 00 00 00 00 00
+        byte[] body = new byte[20];
+        body[0] = head;
+        body[1] = 0x31;
+        for (int i = 2; i < 20; ++i) {
+            body[i] = 0x00;
+        }
+        return body;
+    }
 
 
 
@@ -858,7 +912,11 @@ public class BleCmd {
         type = 0x29;
         body= new byte[17];
 //        body[0] = 0x04;
-        body[0] = 0x03;  //天气推送协议中的en位 0x1表示当天，0x2表示当天和未来1天，0x3表示当天及未来两天，0x4表示当天及未来三天
+        if (data[0] == 0 && data[1] == 0 && data[2] == 0x00) {//天气信息全部为0时en也设置为0
+            body[0] = 0;
+        } else {
+            body[0] = 0x03;  //天气推送协议中的en位 0x1表示当天，0x2表示当天和未来1天，0x3表示当天及未来两天，0x4表示当天及未来三天
+        }
         for(int i=0 ; data.length > i ; i++){
             body[i+1] = data[i];
         }

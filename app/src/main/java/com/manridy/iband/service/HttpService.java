@@ -2,24 +2,21 @@ package com.manridy.iband.service;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.manridy.applib.utils.FileUtil;
 import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
-import com.manridy.iband.bean.AddressModel;
+import com.manridy.iband.bean.AddressModel1;
 import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.bean.Weather;
 import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.DomXmlParse;
 import com.manridy.iband.network.NetInterfaceMethod;
-import com.manridy.iband.view.setting.FeedbackActivity;
 import com.manridy.iband.view.setting.LangueActivity;
 
 import java.io.File;
@@ -68,6 +65,8 @@ public class HttpService {
     /*******获取用户反馈信息******/
     public static final String URL_GetSurveyData = "http://112.74.54.235/product/index.php/Api/Survey/";
 
+    public static final String URL_SaveLoginData = "http://112.74.54.235/product/index.php/Api/IbandLogin/";
+
     private HttpService() {
     }
 
@@ -105,30 +104,30 @@ public class HttpService {
         }
     }
 
-
-    public void getHeWeather_city(String location,String lang ,final OnResultCallBack onResultCallBack){
-        Request request = new Request.Builder().url(heweather_city+location+"&lang="+lang).build();
-        OkHttpClient client = new OkHttpClient();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                onResultCallBack.onResult(false,null);
-//                Log.d(TAG, "onFailure: ......................");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    String result = response.body().string();
-                    Log.d(TAG, "onResponse: " + result);
-                    AddressModel addressModel = new Gson().fromJson(result, AddressModel.class);
-                    onResultCallBack.onResult(true, addressModel);
-                } catch (Exception e) {
-                    onResultCallBack.onResult(false, null);
-                }
-            }
-        });
-    }
+//
+//    public void getHeWeather_city(String location,String lang ,final OnResultCallBack onResultCallBack){
+//        Request request = new Request.Builder().url(heweather_city+location+"&lang="+lang).build();
+//        OkHttpClient client = new OkHttpClient();
+//        client.newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                onResultCallBack.onResult(false,null);
+////                Log.d(TAG, "onFailure: ......................");
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                try {
+//                    String result = response.body().string();
+//                    Log.d(TAG, "onResponse: " + result);
+//                    AddressModel addressModel = new Gson().fromJson(result, AddressModel.class);
+//                    onResultCallBack.onResult(true, addressModel);
+//                } catch (Exception e) {
+//                    onResultCallBack.onResult(false, null);
+//                }
+//            }
+//        });
+//    }
 
     public void getWeather(String city,final OnResultCallBack onResultCallBack){
         Request request = new Request.Builder().url(weather+city).build();
@@ -172,12 +171,12 @@ public class HttpService {
                 if (FileUtil.getSdCardPath() == null) {
                     return;
                 }
-                String path = FileUtil.getSdCardPath()+"/ota.zip";
+                String path = FileUtil.getSdCardPath() + "/ota.zip";
                 FileOutputStream fos = new FileOutputStream(new File(path));
                 byte[] buffer = new byte[2048];
                 int len;
                 while ((len = is.read(buffer)) != -1) {
-                    fos.write(buffer,0,len);
+                    fos.write(buffer, 0, len);
                 }
                 fos.flush();
                 if (is != null) {
@@ -186,15 +185,55 @@ public class HttpService {
                 if (fos != null) {
                     fos.close();
                 }
-                onResultCallBack.onResult(true,null);
+                onResultCallBack.onResult(true, null);
             } else {
-                onResultCallBack.onResult(false,null);
+                onResultCallBack.onResult(false, null);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            onResultCallBack.onResult(false,null);
+            onResultCallBack.onResult(false, null);
         } catch (Exception e) {
-            onResultCallBack.onResult(false,null);
+            onResultCallBack.onResult(false, null);
+            e.printStackTrace();
+        }
+    }
+    public void downloadOTAFile(String url, String fileName, OnResultCallBack onResultCallBack) {
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                InputStream is = response.body().byteStream();
+                if (FileUtil.getSdCardPath() == null) {
+                    return;
+                }
+//                String path = FileUtil.getSdCardPath() + "/ota.zip";
+                String path = FileUtil.getSdCardPath() + "/" + fileName;
+                FileOutputStream fos = new FileOutputStream(new File(path));
+                byte[] buffer = new byte[2048];
+                int len;
+                while ((len = is.read(buffer)) != -1) {
+                    fos.write(buffer, 0, len);
+                }
+                fos.flush();
+                if (is != null) {
+                    is.close();
+                }
+                if (fos != null) {
+                    fos.close();
+                }
+                onResultCallBack.onResult(true, null);
+            } else {
+                onResultCallBack.onResult(false, null);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            onResultCallBack.onResult(false, null);
+        } catch (Exception e) {
+            onResultCallBack.onResult(false, null);
             e.printStackTrace();
         }
     }
@@ -406,6 +445,39 @@ public class HttpService {
     }
 
 
+
+    /***
+     * @Name postSaveLoginData
+     * @Func 用户打开Iband次数等信息
+     *        http://112.74.54.235/product/index.php/Api/IbandLogin/saveLoginData
+     * @Author Andy Dufresne
+     * @Data 19.1.14
+     */
+    public void postSaveLoginData(Map<String, Object> map, final OnResultCallBack onResultCallBack) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL_SaveLoginData)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
+        NetInterfaceMethod blogServer = retrofit.create(NetInterfaceMethod.class);
+        retrofit2.Call<String> call = blogServer.postSaveLoginData(map);
+        call.enqueue(new retrofit2.Callback<String>() {
+            @Override
+            public void onResponse(retrofit2.Call<String> call, retrofit2.Response<String> response) {
+                String result = response.body();
+//                Log.d(TAG, "onResponse: "+result);
+                onResultCallBack.onResult(true, result);
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<String> call, Throwable t) {
+//                Log.d(TAG, "发送失败，请确认网络正常.");
+                onResultCallBack.onResult(false, call);
+            }
+        });
+    }
+
+
+
     /**
      *  @Name yanwen
      *  @Date 18/11/24
@@ -431,6 +503,7 @@ public class HttpService {
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+
                 if (response == null) {
                     onResultCallBack.onResult(false, null);
                     return;
@@ -442,7 +515,7 @@ public class HttpService {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                JsonObject jsonObject = (JsonObject) new JsonParser().parse(result);
+                /*JsonObject jsonObject = (JsonObject) new JsonParser().parse(result);
                 AddressModel addressModel = new AddressModel(3);//json返回未来3天的天气状况
                 addressModel.setCnty(getJsonCnty(jsonObject));
                 addressModel.setParent_city(getJsonParent_city(jsonObject));
@@ -454,7 +527,8 @@ public class HttpService {
                     String tmp_min = getJsontmp_min(jsonObject, i);
                     addressModel.getForecastWeather().get(i).setTmp_min(tmp_min);
                     addressModel.getForecastWeather().get(i).setTmp_now(tmp_max+"°-"+tmp_min);
-                }
+                }*/
+                AddressModel1 addressModel = new Gson().fromJson(result, AddressModel1.class);
                 onResultCallBack.onResult(true, addressModel);
             }
 
@@ -468,132 +542,5 @@ public class HttpService {
 
 
 
-
-
-
-
-    private String getJsonCnty(JsonObject jsonObject) {
-        String jsonCnty = "";
-        if (jsonObject != null) {
-            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
-            if (heWeather6 != null) {
-                JsonElement HeWeather6_0 = heWeather6.get(0);
-                if (HeWeather6_0 != null) {
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("basic");
-                    if (basicOb != null) {
-                        jsonCnty = basicOb.get("cnty").getAsString();
-                    }
-                }
-            }
-        }
-        return jsonCnty;
-    }
-
-
-    private String getJsonParent_city(JsonObject jsonObject) {
-        String jsonParent_city = "";
-        if (jsonObject != null) {
-            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
-            if (heWeather6 != null) {
-                JsonElement HeWeather6_0 = heWeather6.get(0);
-                if (HeWeather6_0 != null) {
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("basic");
-                    if (basicOb != null) {
-                        jsonParent_city = basicOb.get("parent_city").getAsString();
-                    }
-                }
-            }
-        }
-        return jsonParent_city;
-    }
-
-
-    private String getJsonCond_code_d(JsonObject jsonObject, int i) {
-//        jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("cond_code_d").getAsString()
-        String jsonCond_code_d = "";
-        if (jsonObject != null) {
-            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
-            if (heWeather6 != null) {
-                JsonElement HeWeather6_0 = heWeather6.get(0);
-                if (HeWeather6_0 != null) {
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
-                    if (basicOb != null) {
-                        JsonElement jsondaily_forecast = basicOb.getAsJsonArray().get(i);
-                        if (jsondaily_forecast != null) {
-                            jsonCond_code_d = jsondaily_forecast.getAsJsonObject().get("cond_code_d").getAsString();
-                        }
-                    }
-                }
-            }
-        }
-        return jsonCond_code_d;
-    }
-
-
-    private String getJsonCond_txt_d(JsonObject jsonObject, int i) {
-//        jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("cond_txt_d").getAsString()
-        String jsoncond_txt_d = "";
-        if (jsonObject != null) {
-            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
-            if (heWeather6 != null) {
-                JsonElement HeWeather6_0 = heWeather6.get(0);
-                if (HeWeather6_0 != null) {
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
-                    if (basicOb != null) {
-                        JsonElement jsondaily_forecast = basicOb.getAsJsonArray().get(i);
-                        if (jsondaily_forecast != null) {
-                            jsoncond_txt_d = jsondaily_forecast.getAsJsonObject().get("cond_txt_d").getAsString();
-                        }
-                    }
-                }
-            }
-        }
-        return jsoncond_txt_d;
-    }
-
-
-
-
-
-    private String getJsontmp_max(JsonObject jsonObject, int i) {
-//        jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("tmp_max").getAsString()
-        String jsontmp_max = "";
-        if (jsonObject != null) {
-            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
-            if (heWeather6 != null) {
-                JsonElement HeWeather6_0 = heWeather6.get(0);
-                if (HeWeather6_0 != null) {
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
-                    if (basicOb != null) {
-                        JsonElement jsondaily_forecast = basicOb.getAsJsonArray().get(i);
-                        if (jsondaily_forecast != null) {
-                            jsontmp_max = jsondaily_forecast.getAsJsonObject().get("tmp_max").getAsString();
-                        }
-                    }
-                }
-            }
-        }
-        return jsontmp_max;
-    }
-    private String getJsontmp_min(JsonObject jsonObject, int i) {
-//        jsonObject.get("HeWeather6").getAsJsonArray().get(0).getAsJsonObject().get("daily_forecast").getAsJsonArray().get(i).getAsJsonObject().get("tmp_min").getAsString()
-        String jsontmp_min = "";
-        if (jsonObject != null) {
-            JsonArray heWeather6 = jsonObject.get("HeWeather6").getAsJsonArray();
-            if (heWeather6 != null) {
-                JsonElement HeWeather6_0 = heWeather6.get(0);
-                if (HeWeather6_0 != null) {
-                    JsonObject basicOb = HeWeather6_0.getAsJsonObject().getAsJsonObject("daily_forecast");
-                    if (basicOb != null) {
-                        JsonElement jsondaily_forecast = basicOb.getAsJsonArray().get(i);
-                        if (jsondaily_forecast != null) {
-                            jsontmp_min = jsondaily_forecast.getAsJsonObject().get("tmp_min").getAsString();
-                        }
-                    }
-                }
-            }
-        }
-        return jsontmp_min;
-    }
 
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="72dp"
@@ -16,6 +16,32 @@
         android:layout_width="match_parent"
         android:layout_height="288dp"
         android:background="#ef5350">
+        <LinearLayout
+            android:id="@+id/ll_fatugue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:visibility="gone"
+            android:padding="2dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@mipmap/hr_fatigue"
+                android:alpha="0.78"
+                android:textColor="@color/color_white"
+                android:textSize="12sp"
+                android:text=" 疲劳度"/>
+            <TextView
+                android:id="@+id/id_iv_fatigue"
+                android:layout_marginTop="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/color_white"
+                android:textSize="15sp"
+                android:text=""/>
+        </LinearLayout>
         <com.manridy.iband.ui.CircularView
             android:id="@+id/cv_hr"
             android:layout_width="220dp"

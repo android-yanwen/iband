@@ -37,7 +37,7 @@
             android:layout_toLeftOf="@id/tv_num"
             android:layout_marginRight="8dp"
             android:layout_marginTop="60dp"
-            android:src="@mipmap/heart_heartic02"/>
+            android:src="@mipmap/remind_ic_hr"/>
 
         <TextView
             android:id="@+id/tv_unit"

@@ -59,6 +59,9 @@ public class FindActivity extends BaseActionActivity {
 
 
     private void showFindWatchDialog() {
+        if (ibandApplication.service == null || ibandApplication.service.watch == null) {
+            return;
+        }
         AlertDialog.Builder  builder = new AlertDialog.Builder(mContext);
         builder.setTitle(getString(R.string.title_find));
         builder.setMessage(R.string.hint_device_finding);

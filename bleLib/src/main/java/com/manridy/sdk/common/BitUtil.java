@@ -1,8 +1,11 @@
 package com.manridy.sdk.common;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * 字节处理工具类
@@ -385,5 +388,21 @@ public class BitUtil {
     public static int doubleByteToInt(byte b1,byte b2){
         return (b1 & 0xff) << 8 | (b2 & 0xff);
     }
-
+      /**
+       * 时间戳转换成日期格式字符串
+       * @param seconds 精确到秒的字符串
+      * @param
+       * @return
+        */
+              public static String timeStamp2Date(String seconds,String format) {
+                if(seconds == null || seconds.isEmpty() || seconds.equals("null")){
+                     return "";
+                  } if(format == null || format.isEmpty()){
+                         format = "yyyy-MM-dd HH:mm:ss";
+                     }
+                SimpleDateFormat sdf = new SimpleDateFormat(format);
+//                 return sdf.format(new Date(Long.valueOf(seconds+"000")));
+                  Date date = new Date(Long.valueOf(seconds));
+                 return sdf.format(date);
+             }
 }

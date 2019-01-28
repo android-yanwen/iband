@@ -29,12 +29,15 @@ import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.bean.UserModel;
+import com.manridy.iband.bean.WeatherModel;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.network.NetInterfaceMethod;
 import com.manridy.iband.service.HttpService;
 import com.manridy.iband.ui.EditItem;
 import com.manridy.iband.view.base.BaseActionActivity;
+
+import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.util.HashMap;
@@ -104,7 +107,7 @@ public class FeedbackActivity extends BaseActionActivity {
 
                 Map<String, Object> map = new HashMap<>();
                 map.put("mac", uploadInfo.deviceMac);//
-                map.put("app_name", uploadInfo.deviceId);//
+                map.put("app_name", uploadInfo.appName);//
                 map.put("phone_system_version", uploadInfo.phoneSysVersion);//
                 map.put("device_id", uploadInfo.deviceId);//
                 map.put("device_name", uploadInfo.deviceName);//
@@ -180,17 +183,25 @@ public class FeedbackActivity extends BaseActionActivity {
             return null;
         }
         uploadInfo.deviceMac = (String) SPUtil.get(this, AppGlobal.DATA_DEVICE_BIND_MAC, "");
-        uploadInfo.appName = "ibund";
+        uploadInfo.appName = "iband";
         uploadInfo.deviceName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME, "");
-        uploadInfo.deviceVersion = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION, "1.0.0");
+        uploadInfo.deviceVersion = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION, "");
         uploadInfo.softVersion = "v" + VersionUtil.getVersionName(mContext);
-        uploadInfo.deviceId = Integer.parseInt((String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE,"1"));
-        uploadInfo.phoneSysVersion = android.os.Build.VERSION.RELEASE;
+        String sId = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE, "");
+        if (!sId.equals("") && sId != null) {
+            uploadInfo.deviceId = Integer.parseInt(sId);
+        }
+        uploadInfo.phoneSysVersion = /*Build.BRAND + */"Android "+Build.MODEL + " "+android.os.Build.VERSION.RELEASE;
         if (curUser == null) {
             return null;
         }
         uploadInfo.userName = curUser.getUserName();
-        uploadInfo.liveCity = ibandApplication.city;
+        if (!DataSupport.isExist(WeatherModel.class)) {
+            WeatherModel weatherModel = DataSupport.findFirst(WeatherModel.class);
+            if (weatherModel != null) {
+                uploadInfo.liveCity = weatherModel.getCity();
+            }
+        }
         uploadInfo.userAge = Integer.parseInt(curUser.getUserAge());
         uploadInfo.userSex = curUser.getUserSex();
         uploadInfo.userHeight = Integer.parseInt(curUser.getUserHeight());
@@ -212,7 +223,7 @@ public class FeedbackActivity extends BaseActionActivity {
         public String phoneSysVersion;
         public String email;
         public String userName;
-        public String liveCity="";
+        public String liveCity="未知";
         public int userAge;
         public int userSex;
         public int userHeight;

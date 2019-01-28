@@ -14,6 +14,7 @@ public class EventGlobal {
     public static final int DATA_LOAD_BO = 1804;
     public static final int DATA_LOAD_RUN = 1805;
     public static final int DATA_LOAD_ECG = 1807;
+    public static final int DATA_LOAD_MICRO = 1808;
     //加载天气信息
     public static final int DATA_LOAD_WEATHER = 1806;
 
@@ -24,6 +25,7 @@ public class EventGlobal {
     public static final int DATA_LOAD_BP_HISTORY = 1813;
     public static final int DATA_LOAD_BO_HISTORY = 1814;
     public static final int DATA_LOAD_ECG_HISTORY = 1815;
+    public static final int DATA_LOAD_MICRO_HISTORY = 1816;
 
     //运动历史数据同步
     public static final int DATA_SYNC_HISTORY = 1900;
@@ -42,6 +44,10 @@ public class EventGlobal {
     public static final int REFRESH_VIEW_ALL = 2805;
     public static final int REFRESH_VIEW_ECG = 2808;
     public static final int REFRESH_VIEW_ECG_HR = 2809;
+    public static final int REFRESH_VIEW_ECG_FATIGUE = 3809;
+
+    public static final int REFRESH_VIEW_MICRO = 9101;
+
 
     //历史界面刷新
     public static final int REFRESH_VIEW_STEP_HISTORY  = 2810;
@@ -51,6 +57,7 @@ public class EventGlobal {
     public static final int REFRESH_VIEW_BO_HISTORY  = 2814;
     public static final int REFRESH_VIEW_DEVICE  = 2815;
     public static final int REFRESH_VIEW_ECG_HISTORY = 2816;
+    public static final int REFRESH_VIEW_MICRO_HISTORY = 2817;
 
     //设备状态改变
     public static final int STATE_DEVICE_BIND = 2000;
@@ -74,6 +81,8 @@ public class EventGlobal {
     public static final int ACTION_LOAD_DEVICE_LIST = 2222;
 
     public static final int ACTION_HR_TEST = 910;
+    public static final int ACTION_MICRO_TEST = 9100;
+    public static final int ACTION_MICRO_TESTED = 9200;
     public static final int ACTION_BP_TEST = 911;
     public static final int ACTION_BO_TEST = 912;
     public static final int ACTION_HR_TESTED = 920;

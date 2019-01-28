@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+    <com.manridy.iband.ui.MarqueeTextView
+        android:id="@+id/id_tv_menu_name"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/text_content"
+        android:textSize="16sp"
+        android:text="@string/hint_heart_rate_alarm"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"/>
+
+    <LinearLayout
+        android:id="@+id/id_ll_value"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:clickable="true">
+        <TextView
+            android:id="@+id/id_tv_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#de2196f3"
+            android:text="150"/>
+        <TextView
+            android:id="@+id/id_tv_unit"
+            android:layout_marginLeft="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.37"
+            android:text="bmp"/>
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/id_iv_menu_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="4dp"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/ic_on"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="#26000000" />
+</RelativeLayout>

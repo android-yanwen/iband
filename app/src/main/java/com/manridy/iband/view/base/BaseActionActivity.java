@@ -181,17 +181,19 @@ public abstract class BaseActionActivity extends BaseActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setMessage(msg);
-                builder.setTitle(R.string.hint_warm_alert);
-                builder.setCancelable(false);
-                builder.setPositiveButton(getString(R.string.hint_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.create().show();
+                if (mContext != null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setMessage(msg);
+                    builder.setTitle(R.string.hint_warm_alert);
+                    builder.setCancelable(false);
+                    builder.setPositiveButton(getString(R.string.hint_ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
+                }
             }
         });
     }

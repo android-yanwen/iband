@@ -201,8 +201,10 @@ public class SettingActivity extends BaseActionActivity {
 //                        Log.d(TAG, "checkMenuVisibility: " + no_exec);
 
                         menu_do_not_disturb.setVisibility(View.VISIBLE);
+                        SPUtil.get(mContext, AppGlobal.DATA_DO_NOT_DISTURB_IFG, true);
                     } else {
                         menu_do_not_disturb.setVisibility(View.GONE);
+                        SPUtil.get(mContext, AppGlobal.DATA_DO_NOT_DISTURB_IFG, false);
                     }
 
                         return;
@@ -236,17 +238,22 @@ public class SettingActivity extends BaseActionActivity {
 
     @Override
     protected void initListener() {
-        Watch.getInstance().getBatteryInfo(new BleCallback() {
-            @Override
-            public void onSuccess(Object o) {
+//        String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
+//        connectState = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
+//        if (mac != "" && mac != null) {
+        if (connectState == AppGlobal.DEVICE_STATE_CONNECTED) {
+            Watch.getInstance().getBatteryInfo(new BleCallback() {
+                @Override
+                public void onSuccess(Object o) {
 
-            }
+                }
 
-            @Override
-            public void onFailure(BleException exception) {
+                @Override
+                public void onFailure(BleException exception) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     @OnClick({R.id.menu_view, R.id.menu_camera, R.id.menu_find,

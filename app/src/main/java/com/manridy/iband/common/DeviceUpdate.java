@@ -19,6 +19,7 @@ import com.manridy.applib.utils.ToastUtil;
 import com.manridy.iband.R;
 import com.manridy.iband.service.HttpService;
 import com.manridy.iband.view.main.OtaActivity;
+import com.manridy.iband.view.main.OtaActivity1;
 
 import java.util.List;
 import java.util.logging.Handler;
@@ -110,6 +111,7 @@ public class DeviceUpdate {
                                     SPUtil.put(mContext,AppGlobal.DATA_FIRMWARE_VERSION_NEW,image.least);
                                     isShow = true;
                                     final String fileUrl = url+"/"+image.id+"/"+image.file;
+                                    updateListener.prompt(true);
                                     ((Activity)mContext).runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -121,12 +123,12 @@ public class DeviceUpdate {
                         }
                         if (!isShow) {
                             if (updateListener !=null)
-                                updateListener.prompt();
+                                updateListener.prompt(false);
                         }
                     }
                 }else{
                     if (updateListener !=null)
-                        updateListener.prompt();
+                        updateListener.prompt(false);
                 }
                 otaUpdateThread = null;
             }
@@ -136,7 +138,7 @@ public class DeviceUpdate {
      * @Date 18/11/29
      */
     public interface UpdateListener {
-        void prompt();
+        void prompt(boolean isSuccess);
     }
 
 
@@ -221,12 +223,19 @@ public class DeviceUpdate {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                HttpService.getInstance().downloadOTAFile(fileUrl, new OnResultCallBack() {
+                final String s_mcu_platform = (String) SPUtil.get(mContext, AppGlobal.KEY_FIRMWARE_UPDATE_TYPE, "NRF52832");
+                String fileName;
+                if (s_mcu_platform.equals("SYD8821")) {
+                    fileName = "ota.bin";
+                } else {  //"NRF52832"
+                    fileName = "ota.zip";
+                }
+                HttpService.getInstance().downloadOTAFile(fileUrl, fileName, new OnResultCallBack() {
                     @Override
                     public void onResult(boolean result, Object o) {
                         if (result) {
                             showToast(R.string.hint_ota_file_success);
-                            mContext.startActivity(new Intent(mContext,OtaActivity.class));
+                            startOtaActivity(s_mcu_platform);
                         }else{
 //                            showNoNetWorkDlg(mContext);
                             showToast(R.string.hint_ota_file_fail);
@@ -235,6 +244,14 @@ public class DeviceUpdate {
                 });
             }
         }).start();
+    }
+
+    private void startOtaActivity(String platform) {
+        if (platform.equals("SYD8821")) {
+            mContext.startActivity(new Intent(mContext,OtaActivity1.class));
+        } else {  //"NRF52832"
+            mContext.startActivity(new Intent(mContext,OtaActivity.class));
+        }
     }
 
     /**

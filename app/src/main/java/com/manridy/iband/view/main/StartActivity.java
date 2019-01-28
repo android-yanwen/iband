@@ -1,9 +1,11 @@
 package com.manridy.iband.view.main;
 
 import android.Manifest;
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -15,6 +17,7 @@ import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.R;
 import com.manridy.iband.common.AppGlobal;
+import com.manridy.sdk.Watch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +35,10 @@ public class StartActivity extends BaseActivity {
     private boolean isFirstOpen;
     @Override
     protected void initView(Bundle savedInstanceState) {
-        ((IbandApplication)getApplication()).initBleSevrice();//初始化蓝牙服务
-//        ((IbandApplication)getApplication()).initNotificationService();//初始化通知;
+        if ("huawei".equalsIgnoreCase(Watch.brand)) {
+            ((IbandApplication) getApplication()).initBleSevrice();//初始化蓝牙服务
+        }
+
         isFirstOpen = (boolean) SPUtil.get(mContext, AppGlobal.DATA_APP_FIRST,true);
         // 如果是第一次启动，则先进入功能引导页
         if (isFirstOpen) {

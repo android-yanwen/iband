@@ -3,9 +3,7 @@ package com.manridy.iband.service;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +22,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.internal.telephony.ITelephony;
 import com.google.gson.Gson;
@@ -32,15 +29,16 @@ import com.manridy.applib.utils.LogUtil;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.ToastUtil;
 import com.manridy.iband.IbandApplication;
+import com.manridy.iband.R;
 import com.manridy.iband.SyncAlert;
 import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
-import com.manridy.iband.R;
 import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.view.main.MainActivity;
 import com.manridy.sdk.Watch;
+import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleActionListener;
 import com.manridy.sdk.callback.BleConnectCallback;
 import com.manridy.sdk.callback.BleNotifyListener;
@@ -55,7 +53,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.manridy.iband.common.AppGlobal.DEVICE_STATE_CONNECTED;
@@ -73,10 +70,11 @@ import static com.manridy.iband.common.EventGlobal.ACTION_CAMERA_EXIT;
 import static com.manridy.iband.common.EventGlobal.ACTION_FIND_PHONE_START;
 import static com.manridy.iband.common.EventGlobal.ACTION_FIND_PHONE_STOP;
 import static com.manridy.iband.common.EventGlobal.ACTION_FIND_WATCH_STOP;
-import static com.manridy.iband.common.EventGlobal.ACTION_HEALTH_TESTED;
 import static com.manridy.iband.common.EventGlobal.ACTION_HEALTH_TEST;
+import static com.manridy.iband.common.EventGlobal.ACTION_HEALTH_TESTED;
 import static com.manridy.iband.common.EventGlobal.ACTION_HR_TEST;
 import static com.manridy.iband.common.EventGlobal.ACTION_HR_TESTED;
+import static com.manridy.iband.common.EventGlobal.ACTION_MICRO_TESTED;
 import static com.manridy.sdk.BluetoothLeManager.ACTION_DATA_AVAILABLE;
 import static com.manridy.sdk.BluetoothLeManager.ACTION_GATT_CONNECT;
 import static com.manridy.sdk.BluetoothLeManager.ACTION_GATT_DISCONNECTED;
@@ -500,6 +498,12 @@ public class BleService extends Service {
                     if (healths[2]) {
                         EventBus.getDefault().post(new EventMessage(ACTION_BO_TESTED));
                     }
+//                    if (healths[3]) {
+//                        EventBus.getDefault().post(new EventMessage(ACTION_MICRO_TESTED));
+//                        if (IbandApplication.getIntance().service != null && IbandApplication.getIntance().service.watch != null) {
+//                            IbandApplication.getIntance().service.watch.sendCmd(BleCmd.getMicroData(2));
+//                        }
+//                    }
                     EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));
                     break;
                 case ACTION_HEALTH_TEST:
@@ -523,6 +527,12 @@ public class BleService extends Service {
                     break;
                 case ACTION_CALL_RUN:
                     answerRingingCall(BleService.this);
+                    break;
+                case ACTION_MICRO_TESTED:
+                    byte[] data = (byte[]) o;
+                    if (0x03 == data[1]) {  //32 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00微循环测量完成
+                        EventBus.getDefault().post(new EventMessage(ACTION_MICRO_TESTED));
+                    }
                     break;
                 default:
                     break;
@@ -607,15 +617,16 @@ public class BleService extends Service {
     }
 
     private boolean[] getHealthTypes(int healthType){
-        boolean isTestHr,isTestBp,isTestBo;
+        boolean isTestHr,isTestBp,isTestBo,isTestMicro;
         if (healthType == 0) {
-            isTestHr = isTestBp = isTestBo = true;
+            isTestHr = isTestBp = isTestBo = isTestMicro = true;
         }else {
             isTestHr = (healthType & 0x1) == 1;
             isTestBp = (healthType >>1 & 0x1) == 1;
             isTestBo = (healthType >>2 & 0x1) == 1;
+            isTestMicro = (healthType >>3 & 0x1) == 1;
         }
-        return new boolean[]{isTestHr,isTestBp,isTestBo};
+        return new boolean[]{isTestHr,isTestBp,isTestBo,isTestMicro};
     }
 
 //    Handler connectWardHandler = new Handler(){

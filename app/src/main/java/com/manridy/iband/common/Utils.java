@@ -43,16 +43,20 @@ public class Utils {
 
     public static String[] getHeightData(int type){
 //        String[] datas = new String[70];
-        String[] datas = new String[101];
+//        String[] datas = new String[101];
+        String[] datas = new String[151];
         if (type == 0) {
             for (int i = 0; i < datas.length; i++) {
-                datas[i] = (130+i)+"";
+//                datas[i] = (130+i)+"";
+                datas[i] = (80+i)+"";
             }
         }else {
 //            datas = new String[40];
-            datas = new String[41];
+//            datas = new String[41];
+            datas = new String[84];
             for (int i = 0; i < datas.length; i++) {
-                datas[i] = (50+i)+"";
+//                datas[i] = (50+i)+"";
+                datas[i] = (8+i)+"";
             }
         }
         return datas;
@@ -63,13 +67,16 @@ public class Utils {
         String[] datas = new String[131];
         if (type == 0) {
             for (int i = 0; i < datas.length; i++) {
-                datas[i] = (30+i)+"";
+//                datas[i] = (30+i)+"";
+                datas[i] = (20+i)+"";
             }
         }else {
 //            datas = new String[200];
-            datas = new String[291];
+//            datas = new String[291];
+            datas = new String[288];
             for (int i = 0; i < datas.length; i++) {
-                datas[i] = (60+i)+"";
+//                datas[i] = (60+i)+"";
+                datas[i] = (44+i)+"";
             }
         }
 

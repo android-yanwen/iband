@@ -23,7 +23,16 @@ public class AppGlobal {
     public static final String DATA_ALERT_CLOCK = "data_alert_clock";
     public static final String DATA_ALERT_SEDENTARY = "data_alert_sedentary";
     public static final String DATA_ALERT_APP = "data_alert_app";
+    public static final String DATA_ALERT_HEART_BLOOD = "data_alert_heart_blood";
+    public static final String DATA_ALERT_HEART_IFG = "data_alert_heart_ifg";
+    public static final String DATA_ALERT_BLOOD_IFG = "data_alert_blood_ifg";
+    public static final String DATA_ALERT_HEART = "data_alert_heart";
+    public static final String DATA_ALERT_HEART_VALUE = "data_alert_heart_value";
+    public static final String DATA_ALERT_BLOOD = "data_alert_blood";
+    public static final String DATA_ALERT_BLOOD_VALUE = "data_alert_blood_value";
+    public static final String DATA_ALERT_BLOOD_ON_OFF = "data_alert_blood_on_off";
     public static final String DATA_ALERT_WRIST = "data_alert_wrist";
+    public static final String DATA_FATIGUE_LEVEL = "data_fatigue_level";
     public static final String DATA_APP_VERSINO = "data_app_version";
     public static final String DATA_WECHAT_QR = "data_wehcat_qr";
 
@@ -39,10 +48,15 @@ public class AppGlobal {
     public static final String DATA_FIRMWARE_VERSION = "data_setting_firmware";
     public static final String DATA_FIRMWARE_VERSION_NEW = "data_setting_firmware_new";
 
+    //"do_not_disturb"//设备是否支持勿扰模式功能标志记录 true支持，false不支持
+    public static final String DATA_DO_NOT_DISTURB_IFG = "data_do_not_disturb_ifg";
+
+
     public static final String DATA_FIRMWARE_TYPE = "data_firmware_type";
     //
     public static final String DATA_TIMING_HR = "data_timing_hr";
     public static final String DATA_TIMING_HR_SPACE = "data_timing_hr_space";
+    public static final String DATA_DEFAULT_TIME_HR_SPACE_IS_CHANGE = "data_default_time_hr_space_is_change";
     //
     public static final String DATA_BATTERY_NUM = "data_battery_num";
     public static final String DATA_BATTERY_STATE = "data_battery_state";
@@ -76,11 +90,14 @@ public class AppGlobal {
 
 
 
-    public static final String DATA_UPDATE_INTERVAL_HOUR = "updateIntervalHour";
-    public static final String DATA_UPDATE_INTERVAL_MINUTE = "updateIntervalMinute";
 
 
 
     public static final String DATA_DATE = "data_date";
+    public static final String KEY_RECORDING_LOGIN_NUM = "key_recording_login_num";
+    public static final String KEY_RECORDING_LOGIN_DAY = "key_recording_login_day";
+    public static final String KEY_RECORDING_LOGIN_YMD = "key_recording_login_ymd";
+    //固件升级相关
+    public static final String KEY_FIRMWARE_UPDATE_TYPE = "key_firmware_update_type";
 
 }
