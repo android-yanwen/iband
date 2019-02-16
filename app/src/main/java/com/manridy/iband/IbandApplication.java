@@ -129,7 +129,12 @@ public class IbandApplication extends MultiDexApplication {
     }
 
     public void initAlertService() {
-        startService(new Intent(this,AlertService.class));
+        Intent intent = new Intent(this,AlertService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {//适配8.0---yw
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
     }
 
     private void initBugly() {
