@@ -481,10 +481,18 @@ public class MainActivity extends BaseActivity {
                     }
                 }, 2000);
             }
+        } else {
+            dismissAlerDialog();
         }
     }
 
     private Handler alertHandler;
+    private Dialog dialog;
+    private void dismissAlerDialog() {
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
     private void showAlertDialog() {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View v = inflater.inflate(R.layout.dialog_alert, null);
@@ -492,7 +500,7 @@ public class MainActivity extends BaseActivity {
         Button btn_cancel = v.findViewById(R.id.dialog_btn_cancel);
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setCancelable(false);
-        final Dialog dialog = builder.create();
+        dialog = builder.create();
         dialog.show();
         dialog.getWindow().setContentView(v);
         btn_sure.setOnClickListener(new View.OnClickListener() {
