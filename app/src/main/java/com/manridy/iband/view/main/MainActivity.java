@@ -1,5 +1,6 @@
 package com.manridy.iband.view.main;
 
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -26,10 +27,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -483,26 +486,45 @@ public class MainActivity extends BaseActivity {
 
     private Handler alertHandler;
     private void showAlertDialog() {
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View v = inflater.inflate(R.layout.dialog_alert, null);
+        Button btn_sure = v.findViewById(R.id.dialog_btn_sure);
+        Button btn_cancel = v.findViewById(R.id.dialog_btn_cancel);
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage("设备未绑定，前往绑定");
-        builder.setTitle(R.string.hint_warm_alert);
         builder.setCancelable(false);
-        builder.setPositiveButton(getString(R.string.hint_ok), new DialogInterface.OnClickListener() {
+        final Dialog dialog = builder.create();
+        dialog.show();
+        dialog.getWindow().setContentView(v);
+        btn_sure.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
                 dialog.dismiss();
                 startActivity(new Intent(mContext, DeviceActivity.class));
                 alertHandler = null;
             }
         });
-        builder.setNegativeButton(getString(R.string.hint_cancel), new DialogInterface.OnClickListener() {
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
                 dialog.dismiss();
-                alertHandler = null;
             }
         });
-        builder.create().show();
+
+
+//        builder.setMessage("设备未绑定，前往绑定");
+//        builder.setTitle(R.string.hint_warm_alert);
+//        builder.setCancelable(false);
+//        builder.setPositiveButton(getString(R.string.hint_ok), new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//            }
+//        });
+//        builder.setNegativeButton(getString(R.string.hint_cancel), new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//            }
+//        });
+//        builder.create().show();
     }
 
     int last_date;
