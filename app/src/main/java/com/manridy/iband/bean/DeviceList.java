@@ -73,7 +73,17 @@ public class DeviceList {
         private String is_chk_heart_rate;
         private String is_heart_rate_timing_chk;
         private String is_heart_rate_call_police;
+        private String blood_pressure_police;
         private String ecg;
+
+        public String getBlood_pressure_police() {
+            return blood_pressure_police;
+        }
+
+        public void setBlood_pressure_police(String blood_pressure_police) {
+            this.blood_pressure_police = blood_pressure_police;
+        }
+
         private String no_exec;
         private String mcu_platform;
 

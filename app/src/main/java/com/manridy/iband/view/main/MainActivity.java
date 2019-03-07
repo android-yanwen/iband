@@ -51,6 +51,7 @@ import com.manridy.iband.DeviceListDataSpare;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.IbandLoginBean;
+import com.manridy.iband.SyncAlert;
 import com.manridy.iband.bean.AddressModel1;
 import com.manridy.iband.bean.WeatherModel;
 import com.manridy.iband.common.OnResultCallBack;
@@ -301,6 +302,7 @@ public class MainActivity extends BaseActivity {
         }
     };
 
+
     Runnable updatePageRunnable = new Runnable() {
         @Override
         public void run() {
@@ -310,7 +312,8 @@ public class MainActivity extends BaseActivity {
             isShowEcg = (boolean) SPUtil.get(mContext,"isShowEcg",false);
             isShowMicro = (boolean) SPUtil.get(mContext,"isShowMicro",false);
             String strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
-            String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
+            String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE, "");
+
             String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
             Log.i("deviceType",deviceType);
             Log.i("deviceName",deviceName);

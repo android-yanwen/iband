@@ -595,7 +595,9 @@ public class Watch extends BluetoothLeManager implements WatchApi {
         }else if (infoType == InfoType.HISTORY_INFO){
             sendCmd(BleCmd.getHrData(1),bleCallback);
         }else if (infoType == InfoType.HISTORY_NUM){
-            sendCmd(BleCmd.getHrData(2),bleCallback);
+            byte[] bytes = BleCmd.getHrData(2);
+//            String s_hex = BitUtil.parseByte2HexStr(bytes);
+            sendCmd(bytes,bleCallback);
         }
     }
     /**
