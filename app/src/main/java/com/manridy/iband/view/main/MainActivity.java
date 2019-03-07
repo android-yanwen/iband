@@ -466,6 +466,43 @@ public class MainActivity extends BaseActivity {
         }
 //        }
 
+        // 设备是否绑定
+        String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
+        if (bindMac == null || bindMac.isEmpty()) {
+            if (alertHandler == null) {
+                alertHandler = new Handler();
+                alertHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog();
+                    }
+                }, 2000);
+            }
+        }
+    }
+
+    private Handler alertHandler;
+    private void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage("设备未绑定，前往绑定");
+        builder.setTitle(R.string.hint_warm_alert);
+        builder.setCancelable(false);
+        builder.setPositiveButton(getString(R.string.hint_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                startActivity(new Intent(mContext, DeviceActivity.class));
+                alertHandler = null;
+            }
+        });
+        builder.setNegativeButton(getString(R.string.hint_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                alertHandler = null;
+            }
+        });
+        builder.create().show();
     }
 
     int last_date;
@@ -1726,11 +1763,12 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if ("huawei".equalsIgnoreCase(Watch.brand)) {
-            super.onBackPressed();
+//            super.onBackPressed();
 //            BluetoothLeManager.IS_RENECT = false;
-            ibandApplication.stopBleService();
 //            ActivityManager manager = (ActivityManager)mContext.getSystemService(ACTIVITY_SERVICE); //获取应用程序管理器
 //            manager.killBackgroundProcesses(getPackageName()); //强制结束当前应用程序
+//            ibandApplication.stopBleService();
+            moveTaskToBack(true);//Activity活动于后台
         }
         else {
             moveTaskToBack(true);//Activity活动于后台
