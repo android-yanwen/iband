@@ -85,8 +85,8 @@ public class TestDatabaseActivity extends BaseActionActivity {
                 break;
             case 1:
                 List<SleepModel> sleepList = IbandDB.getInstance().getSleepList();
-                for (SleepModel stepModel : sleepList) {
-                    buffer.append(stepModel.toString());
+                for (SleepModel sleepModel : sleepList) {
+                    buffer.append(sleepModel.toString());
                     buffer.append("\n\r");
                 }
                 break;

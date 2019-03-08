@@ -21,6 +21,7 @@ import com.manridy.iband.bean.MicrocirculationModel;
 import com.manridy.iband.bean.SleepModel;
 import com.manridy.iband.bean.StepModel;
 import com.manridy.iband.common.AppGlobal;
+import com.manridy.iband.common.HexUtil;
 import com.manridy.sdk.Watch;
 import com.manridy.sdk.bean.Microcirculation;
 import com.manridy.sdk.ble.BleCmd;
@@ -329,7 +330,7 @@ public class SyncData {
             case 8:
                 if(isH1F1())break;
                 if (stepSum != 0) {
-                    watch.sendCmd(BleCmd.getStepSectionHistroy(),bleCallback);
+                    watch.sendCmd(BleCmd.getStepSectionHistroy(), bleCallback);
                 }else {
                     next();
                 }

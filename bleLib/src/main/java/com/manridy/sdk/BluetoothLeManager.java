@@ -778,6 +778,9 @@ public class BluetoothLeManager {
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicWrite(gatt, characteristic, status);
 //            Log.e(TAG, "onCharacteristicWrite: data = "+characteristic.getValue()+" device= " + gatt.getDevice().getAddress() );
+            byte[] data = characteristic.getValue();
+            String s_data = BitUtil.parseByte2HexStr(data);
+            Log.e(TAG, "onCharacteristicWrite: data = " + s_data);
             broadcastUpdate(ACTION_DATA_WRITE_SUCCESS, characteristic.getValue(), gatt.getDevice().getAddress());
         }
 

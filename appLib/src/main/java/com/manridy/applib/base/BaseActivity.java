@@ -115,8 +115,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements SwipeBa
      * 全局toast
      * @param msg 消息
      */
-    protected void showToast(String msg){
-        ToastUtil.showToast(mContext,msg);
+    protected void showToast(final String msg){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ToastUtil.showToast(mContext,msg);
+            }
+        });
     }
 
     protected void showToastOnMain(final String msg){

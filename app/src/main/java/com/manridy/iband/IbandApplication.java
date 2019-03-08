@@ -73,9 +73,9 @@ public class IbandApplication extends MultiDexApplication {
 //        List<AppModel> model = db.getAppList();
 
         Fresco.initialize(this);//初始化图片加载
-        if (!"huawei".equalsIgnoreCase(Watch.brand)) {
-            initBleSevrice();//初始化蓝牙服务
-        }
+//        if (!"huawei".equalsIgnoreCase(Watch.brand)) {
+//        }
+        initBleSevrice();//初始化蓝牙服务
         initAlertService();//初始化提醒服务
         if(!UpdateActivity.isGoogle) {
             initBugly();//初始化bugly

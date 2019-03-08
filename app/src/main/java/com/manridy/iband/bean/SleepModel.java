@@ -22,6 +22,15 @@ public class SleepModel extends DataSupport {
     private int sleepLight;//浅睡
     private int sleepAwake;//浅睡
     private long updateDate;//数据更新时间
+    private String s_sleep_data;//睡眠原始数据
+
+    public String getS_sleep_data() {
+        return s_sleep_data;
+    }
+
+    public void setS_sleep_data(String s_sleep_data) {
+        this.s_sleep_data = s_sleep_data;
+    }
 
     public SleepModel() {
     }
@@ -149,6 +158,7 @@ public class SleepModel extends DataSupport {
         sb.append(", sleepLight=").append(sleepLight);
         sb.append(", sleepAwake=").append(sleepAwake);
         sb.append(", updateDate=").append(TimeUtil.getNowYMDHMSTime(updateDate));
+        sb.append(", s_sleep_data=").append(s_sleep_data);
         sb.append('}');
         return sb.toString();
     }

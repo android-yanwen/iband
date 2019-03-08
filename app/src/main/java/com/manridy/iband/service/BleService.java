@@ -1,5 +1,6 @@
 package com.manridy.iband.service;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -8,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -35,6 +37,7 @@ import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
+import com.manridy.iband.common.HexUtil;
 import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.view.main.MainActivity;
 import com.manridy.sdk.Watch;
@@ -53,6 +56,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.manridy.iband.common.AppGlobal.DEVICE_STATE_CONNECTED;
@@ -370,6 +374,10 @@ public class BleService extends Service {
                 case ACTION_DATA_AVAILABLE:
                     final byte[] data = intent.getByteArrayExtra("BLUETOOTH_DATA");
 //                    LogUtil.e(TAG,"蓝牙状态----数据:"+ BitUtil.parseByte2HexStr(data));
+                    if (data[0] == 0x0c) {
+                        String s_sleep = HexUtil.bytesToHexString(data);
+                        LogUtil.e(TAG,"睡眠数据:"+ s_sleep);
+                    }
                     break;
 
                 default:

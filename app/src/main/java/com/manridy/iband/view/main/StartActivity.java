@@ -36,7 +36,7 @@ public class StartActivity extends BaseActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
         if ("huawei".equalsIgnoreCase(Watch.brand)) {
-            ((IbandApplication) getApplication()).initBleSevrice();//初始化蓝牙服务
+//            ((IbandApplication) getApplication()).initBleSevrice();//初始化蓝牙服务
         }
 
         isFirstOpen = (boolean) SPUtil.get(mContext, AppGlobal.DATA_APP_FIRST,true);

@@ -489,7 +489,7 @@ public class MainActivity extends BaseActivity {
     private Handler alertHandler;
     private Dialog dialog;
     private void dismissAlerDialog() {
-        if (dialog.isShowing()) {
+        if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
     }
