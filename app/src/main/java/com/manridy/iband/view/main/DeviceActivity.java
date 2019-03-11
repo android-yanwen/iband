@@ -506,8 +506,7 @@ public class DeviceActivity extends BaseActionActivity {
         }else if (event.getWhat() == EventGlobal.REFRESH_VIEW_DEVICE){
             BluetoothDevice device = (BluetoothDevice) event.getObject();
             String deviceName = device.getName();
-            if (deviceName.equals("M05")
-                    || (deviceName != null && checkFilter(deviceName, deviceFilters))
+            if ((deviceName != null && checkFilter(deviceName, deviceFilters))
                     || isDebug
                     || (deviceName != null && deviceName.contains("H1-F1"))) {
                 mDeviceList.add(dataIndex, new DeviceAdapter.DeviceModel(device, deviceName));
