@@ -494,29 +494,30 @@ public class MainActivity extends BaseActivity {
         }
     }
     private void showAlertDialog() {
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        View v = inflater.inflate(R.layout.dialog_alert, null);
-        Button btn_sure = v.findViewById(R.id.dialog_btn_sure);
-        Button btn_cancel = v.findViewById(R.id.dialog_btn_cancel);
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setCancelable(false);
-        dialog = builder.create();
-        dialog.show();
-        dialog.getWindow().setContentView(v);
-        btn_sure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                startActivity(new Intent(mContext, DeviceActivity.class));
-                alertHandler = null;
-            }
-        });
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        if (MainActivity.this != null && !MainActivity.this.isFinishing()) {
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            View v = inflater.inflate(R.layout.dialog_alert, null);
+            Button btn_sure = v.findViewById(R.id.dialog_btn_sure);
+            Button btn_cancel = v.findViewById(R.id.dialog_btn_cancel);
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setCancelable(false);
+            dialog = builder.create();
+            dialog.show();
+            dialog.getWindow().setContentView(v);
+            btn_sure.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    startActivity(new Intent(mContext, DeviceActivity.class));
+                    alertHandler = null;
+                }
+            });
+            btn_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
 
 
 //        builder.setMessage("设备未绑定，前往绑定");
@@ -533,6 +534,7 @@ public class MainActivity extends BaseActivity {
 //            }
 //        });
 //        builder.create().show();
+        }
     }
 
     int last_date;
