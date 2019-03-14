@@ -56,7 +56,7 @@ public class BluetoothLeManager {
     private static final String TAG = BluetoothLeManager.class.getSimpleName();
     private AtomicBoolean isScaning = new AtomicBoolean(false);
 
-    private static final int CONNECT_TIME_OUT = 10000;
+    private static final int CONNECT_TIME_OUT = 50000;
     private static final int DISCONNECT_TIME_OUT = 5000;
 
     public Context mContext;
@@ -346,7 +346,7 @@ public class BluetoothLeManager {
                 Log.i(TAG, "connected2() bluetoothLeDevices.size()==== " + bluetoothLeDevices.size());
                 curBluetoothGatt = gatt;//修改-------------
             }
-            handler.postDelayed(connectTimeoutRunnable, 10000);
+            handler.postDelayed(connectTimeoutRunnable, CONNECT_TIME_OUT);
         }
     }
 //    BleConnectCallback connectCallback;
@@ -482,11 +482,14 @@ public class BluetoothLeManager {
                 gatt.writeDescriptor(gattDescriptor);
             }
             broadcastUpdate(ACTION_NOTIFICATION_ENABLE,null,gatt.getDevice().getAddress());
-            handler.removeCallbacks(connectTimeoutRunnable);
-            if (connectCallback != null) {
-                connectCallback.onConnectSuccess();
-                connectCallback = null;
-            }
+//            handler.removeCallbacks(connectTimeoutRunnable);
+//            if (connectCallback != null) {
+//                connectCallback.onConnectSuccess();
+//                connectCallback = null;
+//            }
+            ///////////////////yw////////////////////
+            removeConnectTimeoutRunnableCallback();
+            ///////////////////////////////////////
         }else{
             if (connectCallback != null) {
                 connectCallback.onConnectFailure(new GattException(3));
@@ -821,6 +824,16 @@ public class BluetoothLeManager {
 
     };
 
+    /**
+     * 移除连接超时信号
+     * */
+    private void removeConnectTimeoutRunnableCallback() {
+        handler.removeCallbacks(connectTimeoutRunnable);
+        if (connectCallback != null) {
+            connectCallback.onConnectSuccess();
+            connectCallback = null;
+        }
+    }
     /********bluetoothLeManager********/
     /**
      * 删除蓝牙BLE设备
