@@ -198,10 +198,11 @@ public class BpFragment extends BaseEventFragment {
 
         YAxis yAxis = chart.getAxisLeft();
 //        yAxis.setAxisMaximum(220f);
-        yAxis.setAxisMinimum(0);//设置y轴最小点
+        yAxis.setAxisMinimum(50);//设置y轴最小点
+        yAxis.setAxisMaximum(200);
         yAxis.setDrawAxisLine(true);//画坐标线
         yAxis.setDrawLabels(true);//画坐标下标
-        yAxis.setDrawGridLines(false);//设置网格线
+        yAxis.setDrawGridLines(true);//设置网格线
         yAxis.setDrawZeroLine(false);
         yAxis.setEnabled(true);//显示Y轴
         chart.getAxisRight().setEnabled(false);//不显示右侧

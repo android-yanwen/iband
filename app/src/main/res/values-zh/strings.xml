@@ -88,10 +88,14 @@
     <string name="hint_init_sleep_target">8小时</string>
     <string name="hint_time_set">时间单位设置</string>
     <string name="hint_time_24">24小时制</string>
+    <string name="hint_time_24h">24h</string>
+    <string name="hint_time_12h">12h</string>
     <string name="hint_time_12">12小时制</string>
     <string name="hint_unit_set">公英制单位设置</string>
     <string name="hint_unit_metric">公制(米/公里/千克)</string>
+    <string name="hint_unit_metric_">公制</string>
     <string name="hint_unit_inch">英制(英寸/英里/英磅)</string>
+    <string name="hint_unit_inch_">英制</string>
     <string name="hint_soft_version">软件版本</string>
     <string name="hint_check_version">检查版本</string>
     <string name="hint_firm_version">固件版本</string>
@@ -107,6 +111,7 @@
     <string name="hint_weight">体重</string>
     <string name="hint_unit_weight">(kg)</string>
     <string name="hint_open">开启</string>
+    <string name="hint_close">关闭</string>
     <string name="hint_alert_wrist_open">开启翻腕亮屏</string>
     <string name="hint_alert_wrist">抬手翻腕时亮屏</string>
     <string name="title_alert">提醒功能</string>

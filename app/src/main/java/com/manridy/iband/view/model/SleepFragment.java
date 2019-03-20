@@ -7,13 +7,11 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.applib.utils.TimeUtil;
-import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.bean.SleepModel;
@@ -76,6 +74,14 @@ public class SleepFragment extends BaseEventFragment {
 
     String curMac = "";
     Unbinder unbinder;
+    @BindView(R.id.chart_no_data_view_1)
+    View chartNoDataView1;
+    @BindView(R.id.chart_no_data_view_2)
+    View chartNoDataView2;
+    @BindView(R.id.chart_no_data_view_3)
+    View chartNoDataView3;
+    @BindView(R.id.chart_no_data_view_4)
+    View chartNoDataView4;
 
     @Override
     public View initView(LayoutInflater inflater, @Nullable ViewGroup container) {
@@ -143,6 +149,10 @@ public class SleepFragment extends BaseEventFragment {
             setCircularView();
             chartSleep.setChartData(colors, selectColors, curSleeps).invaliDate();
             tvEmpty.setVisibility(curSleeps.size() == 0 ? View.VISIBLE : View.GONE);
+            chartNoDataView1.setVisibility(curSleeps.size() == 0 ? View.VISIBLE : View.GONE);
+            chartNoDataView2.setVisibility(curSleeps.size() == 0 ? View.VISIBLE : View.GONE);
+            chartNoDataView3.setVisibility(curSleeps.size() == 0 ? View.VISIBLE : View.GONE);
+            chartNoDataView4.setVisibility(curSleeps.size() == 0 ? View.VISIBLE : View.GONE);
             setDataItem();
         } else if (event.getWhat() == EventGlobal.STATE_DEVICE_UNBIND) {
             EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_SLEEP));

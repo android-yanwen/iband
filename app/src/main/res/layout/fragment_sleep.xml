@@ -86,13 +86,37 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="20dp"
-            android:background="#16000000">
+            android:background="#c9c9c9">
             <com.manridy.iband.ui.ChartView
                 android:id="@+id/chart_sleep"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
+
+            <View
+                android:id="@+id/chart_no_data_view_1"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="#b3b3b3"/>
+            <View
+                android:id="@+id/chart_no_data_view_2"
+                android:layout_marginLeft="100dp"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:background="#b3b3b3"/>
+            <View
+                android:id="@+id/chart_no_data_view_3"
+                android:layout_marginLeft="230dp"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:background="#b3b3b3"/>
+            <View
+                android:id="@+id/chart_no_data_view_4"
+                android:layout_marginLeft="320dp"
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:background="#b3b3b3"/>
         </RelativeLayout>
 
 

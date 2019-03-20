@@ -523,9 +523,12 @@ public class StepFragment extends BaseEventFragment {
         YAxis yAxis = chart.getAxisLeft();
 //        yAxis.setAxisMaximum(220f);
         yAxis.setAxisMinimum(0);//设置y轴最小点
+//        int tag_step = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_TARGET_STEP, 2000);
+        yAxis.setAxisMaximum(100);
         yAxis.setDrawAxisLine(true);//画坐标线
         yAxis.setDrawLabels(true);//画坐标下标
-        yAxis.setDrawGridLines(false);//设置网格线
+        yAxis.setDrawGridLines(true);//设置网格线
+        yAxis.setGridColor(R.color.color_chart_line);
         yAxis.setDrawZeroLine(false);
         yAxis.setEnabled(true);//显示Y轴
 
@@ -566,11 +569,17 @@ public class StepFragment extends BaseEventFragment {
         }
 
         BarData data = new BarData(getInitChartDataSet(barList, Color.parseColor("#8aff9800"), "set1"));
+//        BarData data = new BarData(getInitChartDataSet(barList, Color.parseColor("#808080"), "set1"));
         if (chart.getData() != null) {
             chart.clearValues();
         }
 //        data.setBarWidth(0.35f);
 //        data.groupBars(0,0.4f,0.00f);
+
+        if (size > 0) {
+            YAxis yAxis = chart.getAxisLeft();
+            yAxis.resetAxisMaximum();
+        }
         chart.setData(data);
         //判断数据数量
         chart.notifyDataSetChanged();

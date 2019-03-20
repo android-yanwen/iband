@@ -127,7 +127,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="20dp"
-        android:background="#16000000"/>
+        android:background="#c9c9c9"/>
 
         <TextView
             android:id="@+id/tv_empty"

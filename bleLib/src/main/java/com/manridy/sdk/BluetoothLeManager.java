@@ -56,7 +56,7 @@ public class BluetoothLeManager {
     private static final String TAG = BluetoothLeManager.class.getSimpleName();
     private AtomicBoolean isScaning = new AtomicBoolean(false);
 
-    private static final int CONNECT_TIME_OUT = 50000;
+    private static final int CONNECT_TIME_OUT = 30000;
     private static final int DISCONNECT_TIME_OUT = 5000;
 
     public Context mContext;
@@ -284,7 +284,7 @@ public class BluetoothLeManager {
             curBluetoothGatt = null;
             BluetoothGatt gatt = device.connectGatt(mContext, false, mBluetoothGattCallback);
             //获取到当前GATT
-        curBluetoothGatt = gatt;
+            curBluetoothGatt = gatt;
 
 
 //        int index = -1;
@@ -620,7 +620,8 @@ public class BluetoothLeManager {
                 try{
                     super.onConnectionStateChange(gatt, status, newState);
                     LogUtil.e(TAG, "onConnectionStateChange: device is "+gatt.getDevice().getAddress()+",status is "+status+", new state "+newState );
-                    if (status!=BluetoothGatt.GATT_SUCCESS){
+                    /*if (status!=BluetoothGatt.GATT_SUCCESS){
+                        gatt.discoverServices();
                         if(oldBluetoothGatts.size()>0&&oldBluetoothGatts.contains(gatt)){
                             for(BluetoothGatt bluetoothGatt : oldBluetoothGatts){
                                 if(bluetoothGatt==gatt){
@@ -649,7 +650,7 @@ public class BluetoothLeManager {
                                 reConnect(gatt.getDevice().getAddress());
                             }
                         }
-                    }else {
+                    }*//*else {*/
                         if (newState == BluetoothProfile.STATE_CONNECTED) {
                             isConnected = false;
                             gatt.discoverServices();
@@ -688,7 +689,7 @@ public class BluetoothLeManager {
                             reConnect(gatt.getDevice().getAddress());
                         }
 
-                    }
+//                    }
                 }catch (Exception e){
                     e.printStackTrace();
                 }

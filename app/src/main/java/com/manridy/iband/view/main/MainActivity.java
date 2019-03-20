@@ -1790,6 +1790,11 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        if (ibandApplication != null && ibandApplication.service != null && ibandApplication.service.watch != null) {
+//            ibandApplication.service.watch.closeCurBluetoothGatt();
+            String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
+            ibandApplication.service.watch.closeBluetoothGatt(bindMac);
+        }
     }
 
     @Override
