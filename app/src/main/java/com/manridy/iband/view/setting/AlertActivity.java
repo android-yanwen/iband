@@ -176,22 +176,29 @@ public class AlertActivity extends BaseActionActivity {
                     menuBloodAlert.setAlertState(false);
                     menuBloodAlert.setVisibility(View.GONE);
                 }
+
+                //防丢失提醒隐藏
+                if ("1".equals(resultBean.getIs_hide_prevent_lose())) {
+                    menuLost.setAlertState(false);
+                    menuLost.setVisibility(View.GONE);
+                    menuLostRightline.setVisibility(View.GONE);
+                }
             }
         }
 
-        String deviceIDs[] = {"8077", "8078", "8079", "8080", "8092"};
-        if (deviceType == null || "".equals(deviceType)) {
-            menuLost.setAlertState(false);
-            menuLost.setVisibility(View.GONE);
-            menuLostRightline.setVisibility(View.GONE);
-        }
-        for (int i = 0; i < deviceIDs.length; i++) {
-            if (deviceType != null && deviceIDs[i].equals(deviceType.trim())) {
-                menuLost.setAlertState(false);
-                menuLost.setVisibility(View.GONE);
-                menuLostRightline.setVisibility(View.GONE);
-            }
-        }
+//        String deviceIDs[] = {"8077", "8078", "8079", "8080", "8092"};
+//        if (deviceType == null || "".equals(deviceType)) {
+//            menuLost.setAlertState(false);
+//            menuLost.setVisibility(View.GONE);
+//            menuLostRightline.setVisibility(View.GONE);
+//        }
+//        for (int i = 0; i < deviceIDs.length; i++) {
+//            if (deviceType != null && deviceIDs[i].equals(deviceType.trim())) {
+//                menuLost.setAlertState(false);
+//                menuLost.setVisibility(View.GONE);
+//                menuLostRightline.setVisibility(View.GONE);
+//            }
+//        }
 
 //        // 判断id是否显示心率血压报警选项
 //        if (deviceType != null && "8105".equals(deviceType.trim())) {

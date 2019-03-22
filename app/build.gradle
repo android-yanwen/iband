@@ -10,7 +10,7 @@ android {
         targetSdkVersion 26
         versionCode 120
 //        versionName "1.9.45"
-        versionName "1.9.45(beta13)"
+        versionName "1.9.45(beta14)"
 
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
