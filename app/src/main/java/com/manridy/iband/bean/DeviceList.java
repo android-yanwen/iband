@@ -76,6 +76,15 @@ public class DeviceList {
         private String blood_pressure_police;
         private String ecg;
         private String is_hide_prevent_lose;
+        private String is_show_weather;
+
+        public String getIs_show_weather() {
+            return is_show_weather;
+        }
+
+        public void setIs_show_weather(String is_show_weather) {
+            this.is_show_weather = is_show_weather;
+        }
 
         public String getIs_hide_prevent_lose() {
             return is_hide_prevent_lose;

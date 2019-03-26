@@ -94,6 +94,7 @@ public class BleService extends Service {
     private String TAG = "BleService";
     public Watch watch;
 
+
     public void init(){
         watch = Watch.getInstance();//初始化手表sdk
         watch.init(getApplicationContext());
@@ -797,5 +798,6 @@ public class BleService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        watch.disconnect();
     }
 }

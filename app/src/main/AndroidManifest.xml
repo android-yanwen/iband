@@ -58,7 +58,7 @@
         tools:replace="android:name">
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="767c9359cf8c9189525156908a851cde"></meta-data>
+            android:value="767c9359cf8c9189525156908a851cde"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyACMM6eGEbnLlHQvim0gdyS9MCQcdQtex0" />

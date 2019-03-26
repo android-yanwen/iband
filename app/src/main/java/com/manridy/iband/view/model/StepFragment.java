@@ -134,6 +134,7 @@ public class StepFragment extends BaseEventFragment {
     String cityCode = "";
     String weather = "";
     int weatherImg = 0;
+    private boolean isWeather=false,isVisibility=false;
 
     @Override
     public View initView(LayoutInflater inflater, @Nullable ViewGroup container) {
@@ -182,10 +183,25 @@ public class StepFragment extends BaseEventFragment {
 
     }
 
+
+    public void setWeather(boolean isVisibility){
+        this.isVisibility=isVisibility;
+        if(ll_weather==null){
+            return;
+        }
+        if(isVisibility){
+            if(isWeather){
+                ll_weather.setVisibility(View.VISIBLE);
+            }
+        }else{
+            ll_weather.setVisibility(View.GONE);
+        }
+    }
     @Override
     public void onResume() {
         super.onResume();
 
+        isVisibility= (boolean) SPUtil.get(mContext,"is_show_weather",false);
 //        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
 //        WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
         boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", false);
@@ -199,9 +215,12 @@ public class StepFragment extends BaseEventFragment {
             if(weatherModel!=null){
                 if (weatherModel.getCity() == null || weatherModel.getCity().equals("")) {
                     ll_weather.setVisibility(View.GONE);
+                    isWeather=false;
                     return;
                 }
-                ll_weather.setVisibility(View.VISIBLE);
+                isWeather=true;
+                if(isVisibility){
+                ll_weather.setVisibility(View.VISIBLE);}
                 String cityName = weatherModel.getCity().replace("市", "");
                 tvAddr.setText(weatherModel.getCountry()+"•"+cityName);
                 tvTempetature.setText(weatherModel.getNowTemperature()+"°");

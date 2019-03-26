@@ -361,12 +361,12 @@ public class BluetoothLeManager {
     };
     /**
      * 断开Ble设备连接
-     * @param gatt 蓝牙中央
      */
-    public synchronized void disconnect(BluetoothGatt gatt){
-        if (gatt != null) {
-            refreshDeviceCache(gatt);
-            gatt.close();
+    public synchronized void disconnect(){
+        if (curBluetoothGatt != null) {
+            refreshDeviceCache(curBluetoothGatt);
+            curBluetoothGatt.close();
+            curBluetoothGatt=null;
         }
     }
 

@@ -1,5 +1,6 @@
 package com.manridy.iband.view.main;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -25,6 +26,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -161,6 +163,7 @@ public class MainActivity extends BaseActivity {
 
     private boolean isDeviceIdInService = false;
 
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -177,6 +180,7 @@ public class MainActivity extends BaseActivity {
         }
     };
 
+    @SuppressLint("HandlerLeak")
     private Handler handler2 = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -202,6 +206,10 @@ public class MainActivity extends BaseActivity {
                     boolean isShowBo = (boolean)SPUtil.get(mContext,"isShowBo",false);
                     boolean isShowEcg = (boolean)SPUtil.get(mContext,"isShowEcg",false);
                     boolean isShowMicro = (boolean)SPUtil.get(mContext,"isShowMicro",false);
+                    is_show_weather = (boolean)SPUtil.get(mContext,"is_show_weather",false);
+                    if(stepFragment!=null){
+                        stepFragment.setWeather(is_show_weather);
+                    }
                     try {
                         if (!isShowBp) {
                             viewList.remove(bpFragment);
@@ -314,6 +322,7 @@ public class MainActivity extends BaseActivity {
             isShowBo = (boolean) SPUtil.get(mContext,"isShowBo",false);
             isShowEcg = (boolean) SPUtil.get(mContext,"isShowEcg",false);
             isShowMicro = (boolean) SPUtil.get(mContext,"isShowMicro",false);
+            is_show_weather= (boolean) SPUtil.get(mContext,"is_show_weather",false);
             String strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
             String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE, "");
 
@@ -353,6 +362,13 @@ public class MainActivity extends BaseActivity {
                             isShowMicro = true;
                         }
                         SPUtil.put(mContext,"isShowMicro",isShowMicro);
+
+                        if ("0".equals(resultBean.getIs_show_weather())) {
+                            is_show_weather = false;
+                        }else{
+                            is_show_weather = true;
+                        }
+                        SPUtil.put(mContext,"is_show_weather",is_show_weather);
 
 
                         handler2.sendMessage(handler2.obtainMessage(4));
@@ -445,6 +461,7 @@ public class MainActivity extends BaseActivity {
     private boolean isShowBo;
     private boolean isShowEcg;
     private boolean isShowMicro;
+    private boolean  is_show_weather=false;
     @Override
     protected void onResume() {
         super.onResume();
@@ -1167,7 +1184,10 @@ public class MainActivity extends BaseActivity {
                             setHintState(AppGlobal.DEVICE_STATE_SYNC_OK);
                             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_ALL));
                             boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", true);
-                            if (isSupply) {
+//                            if (isSupply) {
+//                                pushForecastWeatherToWatch();//推送天气信息到手环
+//                            }
+                            if (is_show_weather) {
                                 pushForecastWeatherToWatch();//推送天气信息到手环
                             }
                             start5sTimer();//弥补同步显示错误，因为时间关系不得已采取的临时办法，根本解决问题需要优化同步数据那块
@@ -1202,7 +1222,7 @@ public class MainActivity extends BaseActivity {
                 }
 
                 int state = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
-                if (state != 1) {
+                if (state != AppGlobal.DEVICE_STATE_CONNECTED) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -1242,7 +1262,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private boolean checkBindDevice(String mac) {
-        if (mac == null || mac.isEmpty()) {
+        if (mac == null ) { return true;
+        }else if(mac.isEmpty()){
             return true;
         }
         return false;

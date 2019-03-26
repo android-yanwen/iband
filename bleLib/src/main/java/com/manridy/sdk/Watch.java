@@ -72,7 +72,7 @@ public class Watch extends BluetoothLeManager implements WatchApi {
                 if (!isRun.get()) {//运行状态
                     synchronized (messageList) {
                         Integer integer = messageList.size();
-                        if (integer > 0) {//判断消息队列是否存在消息
+                        if (integer > 0 && messageList.size()>0) {//判断消息队列是否存在消息
                             cmdMessage cmdMessage = messageList.get(0);//拿到消息
                             isRun.set(true);//运行状态改变运行中
 //                        if (sleepIndex-- < 0) {
