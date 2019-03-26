@@ -263,19 +263,20 @@ public class HrFragment extends BaseEventFragment {
         xAxis.setEnabled(true);//显示x轴
         xAxis.setTextColor(Color.BLACK);//x轴文字颜色
         xAxis.setTextSize(12f);//x轴文字大小
-        xAxis.setDrawGridLines(false);//取消网格线
+        xAxis.setDrawGridLines(true);//取消网格线
         xAxis.setDrawAxisLine(true);//取消x轴底线
         xAxis.setDrawLabels(false);
+        xAxis.setAxisMinimum(0);
+        xAxis.setAxisMaximum(24);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//x轴位置
-        xAxis.setAxisMinimum(0);//设置最小点
         xAxis.setGranularity(1f);//设置间隔
         //Y轴坐标
         YAxis yAxis = chart.getAxisLeft();
-//        yAxis.setAxisMinimum(0);//设置y轴最小点
-        yAxis.setAxisMaximum(220f);
+        yAxis.setAxisMinimum(20);//设置y轴最小点
+        yAxis.setAxisMaximum(120f);
         yAxis.setDrawAxisLine(true);//画坐标线
         yAxis.setDrawLabels(true);//画坐标下标
-        yAxis.setDrawGridLines(false);//设置网格线
+        yAxis.setDrawGridLines(true);//设置网格线
         yAxis.setDrawZeroLine(false);
         yAxis.setEnabled(true);//显示Y轴
         chart.getAxisRight().setEnabled(false);//不显示右侧
@@ -308,6 +309,8 @@ public class HrFragment extends BaseEventFragment {
         for (int i = 0; i < heartList.size(); i++) {
             data.addEntry(new Entry(i, heartList.get(i).getHeartRate()), 0);
         }
+        XAxis xAxis = chart.getXAxis();
+        xAxis.resetAxisMaximum();
         chart.setData(data);
         // 像ListView那样的通知数据更新
 //        mvHeart.setHeartList(heartList);

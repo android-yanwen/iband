@@ -60,6 +60,10 @@ public class HearAlertActivity extends BaseActionActivity {
                 }
 
                 final int finalOnOff = onOff;
+                if (onOff == 0) {
+                    strHeartValue = "0";
+                    strBloodValue = "0";
+                }
                 ibandApplication.service.watch.sendCmd(BleCmd.setHeartBloodAlert(onOff, Integer.parseInt(strHeartValue), Integer.parseInt(strBloodValue)), new BleCallback() {
                     @Override
                     public void onSuccess(Object o) {

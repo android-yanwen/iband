@@ -183,19 +183,22 @@ public class BoFragment extends BaseEventFragment {
         xAxis.setEnabled(true);//显示x轴
         xAxis.setTextColor(Color.BLACK);//x轴文字颜色
         xAxis.setTextSize(12f);//x轴文字大小
-        xAxis.setDrawGridLines(false);//取消网格线
-        xAxis.setDrawLabels(true);
+        xAxis.setDrawGridLines(true);//网格线
+        xAxis.setGridLineWidth(0.5f);//网格线宽度
+//        xAxis.setDrawLabels(true);
         xAxis.setDrawLabels(false);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//x轴位置
         xAxis.setAxisMinimum(0);//设置最小点
+        xAxis.setAxisMaximum(24);//
         xAxis.setGranularity(1f);//设置间隔
         //Y轴坐标
         YAxis yAxis = chart.getAxisLeft();
-        yAxis.setAxisMinimum(95);//设置y轴最小点
+        yAxis.setAxisMinimum(90);//设置y轴最小点
         yAxis.setAxisMaximum(100f);
         yAxis.setDrawAxisLine(true);//画坐标线
         yAxis.setDrawLabels(true);//画坐标下标
-        yAxis.setDrawGridLines(false);//设置网格线
+        yAxis.setDrawGridLines(true);//设置网格线
+        yAxis.setGridLineWidth(0.5f);//网格线宽度
         yAxis.setDrawZeroLine(false);
         yAxis.setEnabled(true);//显示Y轴
         chart.getAxisRight().setEnabled(false);//不显示右侧
@@ -229,7 +232,8 @@ public class BoFragment extends BaseEventFragment {
         // 像ListView那样的通知数据更新
 //        mvHeart.setHeartList(heartList);
 //        chart.setMarker(mvHeart);
-
+        XAxis xAxis = chart.getXAxis();
+        xAxis.resetAxisMaximum();
         chart.notifyDataSetChanged();
         chart.setVisibleXRangeMinimum(15);
         chart.setVisibleXRangeMaximum(15);

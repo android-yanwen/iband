@@ -21,6 +21,7 @@ import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.bean.DeviceList;
+import com.manridy.iband.bean.DoNotDisturbModel;
 import com.manridy.iband.bean.UserModel;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
@@ -157,11 +158,33 @@ public class SettingActivity extends BaseActionActivity {
         super.onResume();
         checkMenuVisibility();
 //        menuHrTest.setVisibility(View.VISIBLE);
+
+        //翻腕亮屏状态显示
+        boolean onOff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_ALERT_WRIST, true);
+        menuWrist.setMenuOpenState(onOff, getString(R.string.hint_open), getString(R.string.hint_close));
+        int unit = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_UNIT,0);
+        menuUnit.setMenuOpenState(unit == 0 ? true : false, getString(R.string.hint_unit_metric_), getString(R.string.hint_unit_inch_));
+        int time = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_UNIT_TIME, 0);
+        menuTime.setMenuOpenState(time == 0 ? true : false, getString(R.string.hint_time_24h), getString(R.string.hint_time_12h));
     }
 
     private void checkMenuVisibility() {
         try {
             menuLight.setVisibility(View.VISIBLE);
+            // 亮度调节高/中/低状态显示
+            int light = (int) SPUtil.get(mContext, AppGlobal.DATA_SETTING_LIGHT, 2);
+            switch (light) {
+                case 2:
+                    menuLight.setMenuOpenState(true, getString(R.string.hint_high), "");
+                    break;
+                case 1:
+                    menuLight.setMenuOpenState(true, getString(R.string.hint_centre), "");
+                    break;
+                case 0:
+                    menuLight.setMenuOpenState(true, getString(R.string.hint_low), "");
+                    break;
+            }
+
             String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST, "");
             String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE, "");
             String deviceName = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_NAME, "");
@@ -190,6 +213,10 @@ public class SettingActivity extends BaseActionActivity {
                         }
                     if(isViewMenuHeartrate) {
                         menuHrTest.setVisibility(View.VISIBLE);
+                        //心率状态显示
+                        boolean on_off = (boolean) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR, false);
+                        int space = (int) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR_SPACE, 30);
+                        menuHrTest.setMenuOpenState(on_off, getString(R.string.hint_open) + "/" + space + "min", getString(R.string.hint_close) + "/" + space + "min");
                     }else{
                         menuHrTest.setVisibility(View.GONE);
                     }
@@ -202,6 +229,14 @@ public class SettingActivity extends BaseActionActivity {
 
                         menu_do_not_disturb.setVisibility(View.VISIBLE);
                         SPUtil.get(mContext, AppGlobal.DATA_DO_NOT_DISTURB_IFG, true);
+                        //勿扰模式状态显示
+                        DoNotDisturbModel curDoNotDisturbModel = IbandDB.getInstance().getDoNotDisturbModel();
+                        if (curDoNotDisturbModel != null) {
+                            int on_off = curDoNotDisturbModel.getDoNotDisturbOnOff();
+                            menu_do_not_disturb.setMenuOpenState(on_off == 0 ? false : true, getString(R.string.hint_open), getString(R.string.hint_close));
+                        } else {
+                            menu_do_not_disturb.setMenuOpenState(false, getString(R.string.hint_open), getString(R.string.hint_close));
+                        }
                     } else {
                         menu_do_not_disturb.setVisibility(View.GONE);
                         SPUtil.get(mContext, AppGlobal.DATA_DO_NOT_DISTURB_IFG, false);

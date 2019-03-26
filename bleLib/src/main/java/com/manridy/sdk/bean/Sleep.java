@@ -14,6 +14,15 @@ public class Sleep {
     private int sleepDeep;//深睡
     private int sleepLight;//浅睡
     private int sleepAwake;//浅睡
+    private String s_sleep_data;//睡眠原始数据
+
+    public String getS_sleep_data() {
+        return s_sleep_data;
+    }
+
+    public void setS_sleep_data(String s_sleep_data) {
+        this.s_sleep_data = s_sleep_data;
+    }
 
     public Sleep() {
     }

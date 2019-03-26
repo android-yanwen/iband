@@ -56,7 +56,7 @@ public class BluetoothLeManager {
     private static final String TAG = BluetoothLeManager.class.getSimpleName();
     private AtomicBoolean isScaning = new AtomicBoolean(false);
 
-    private static final int CONNECT_TIME_OUT = 10000;
+    private static final int CONNECT_TIME_OUT = 30000;
     private static final int DISCONNECT_TIME_OUT = 5000;
 
     public Context mContext;
@@ -284,7 +284,7 @@ public class BluetoothLeManager {
             curBluetoothGatt = null;
             BluetoothGatt gatt = device.connectGatt(mContext, false, mBluetoothGattCallback);
             //获取到当前GATT
-        curBluetoothGatt = gatt;
+            curBluetoothGatt = gatt;
 
 
 //        int index = -1;
@@ -346,7 +346,7 @@ public class BluetoothLeManager {
                 Log.i(TAG, "connected2() bluetoothLeDevices.size()==== " + bluetoothLeDevices.size());
                 curBluetoothGatt = gatt;//修改-------------
             }
-            handler.postDelayed(connectTimeoutRunnable, 10000);
+            handler.postDelayed(connectTimeoutRunnable, CONNECT_TIME_OUT);
         }
     }
 //    BleConnectCallback connectCallback;
@@ -361,12 +361,12 @@ public class BluetoothLeManager {
     };
     /**
      * 断开Ble设备连接
-     * @param gatt 蓝牙中央
      */
-    public synchronized void disconnect(BluetoothGatt gatt){
-        if (gatt != null) {
-            refreshDeviceCache(gatt);
-            gatt.close();
+    public synchronized void disconnect(){
+        if (curBluetoothGatt != null) {
+            refreshDeviceCache(curBluetoothGatt);
+            curBluetoothGatt.close();
+            curBluetoothGatt=null;
         }
     }
 
@@ -482,11 +482,14 @@ public class BluetoothLeManager {
                 gatt.writeDescriptor(gattDescriptor);
             }
             broadcastUpdate(ACTION_NOTIFICATION_ENABLE,null,gatt.getDevice().getAddress());
-            handler.removeCallbacks(connectTimeoutRunnable);
-            if (connectCallback != null) {
-                connectCallback.onConnectSuccess();
-                connectCallback = null;
-            }
+//            handler.removeCallbacks(connectTimeoutRunnable);
+//            if (connectCallback != null) {
+//                connectCallback.onConnectSuccess();
+//                connectCallback = null;
+//            }
+            ///////////////////yw////////////////////
+            removeConnectTimeoutRunnableCallback();
+            ///////////////////////////////////////
         }else{
             if (connectCallback != null) {
                 connectCallback.onConnectFailure(new GattException(3));
@@ -617,7 +620,8 @@ public class BluetoothLeManager {
                 try{
                     super.onConnectionStateChange(gatt, status, newState);
                     LogUtil.e(TAG, "onConnectionStateChange: device is "+gatt.getDevice().getAddress()+",status is "+status+", new state "+newState );
-                    if (status!=BluetoothGatt.GATT_SUCCESS){
+                    /*if (status!=BluetoothGatt.GATT_SUCCESS){
+                        gatt.discoverServices();
                         if(oldBluetoothGatts.size()>0&&oldBluetoothGatts.contains(gatt)){
                             for(BluetoothGatt bluetoothGatt : oldBluetoothGatts){
                                 if(bluetoothGatt==gatt){
@@ -646,7 +650,7 @@ public class BluetoothLeManager {
                                 reConnect(gatt.getDevice().getAddress());
                             }
                         }
-                    }else {
+                    }*//*else {*/
                         if (newState == BluetoothProfile.STATE_CONNECTED) {
                             isConnected = false;
                             gatt.discoverServices();
@@ -685,7 +689,7 @@ public class BluetoothLeManager {
                             reConnect(gatt.getDevice().getAddress());
                         }
 
-                    }
+//                    }
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -778,6 +782,9 @@ public class BluetoothLeManager {
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicWrite(gatt, characteristic, status);
 //            Log.e(TAG, "onCharacteristicWrite: data = "+characteristic.getValue()+" device= " + gatt.getDevice().getAddress() );
+            byte[] data = characteristic.getValue();
+            String s_data = BitUtil.parseByte2HexStr(data);
+            Log.e(TAG, "onCharacteristicWrite: data = " + s_data);
             broadcastUpdate(ACTION_DATA_WRITE_SUCCESS, characteristic.getValue(), gatt.getDevice().getAddress());
         }
 
@@ -818,6 +825,16 @@ public class BluetoothLeManager {
 
     };
 
+    /**
+     * 移除连接超时信号
+     * */
+    private void removeConnectTimeoutRunnableCallback() {
+        handler.removeCallbacks(connectTimeoutRunnable);
+        if (connectCallback != null) {
+            connectCallback.onConnectSuccess();
+            connectCallback = null;
+        }
+    }
     /********bluetoothLeManager********/
     /**
      * 删除蓝牙BLE设备

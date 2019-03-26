@@ -73,9 +73,9 @@ public class IbandApplication extends MultiDexApplication {
 //        List<AppModel> model = db.getAppList();
 
         Fresco.initialize(this);//初始化图片加载
-        if (!"huawei".equalsIgnoreCase(Watch.brand)) {
+//        if (!"huawei".equalsIgnoreCase(Watch.brand)) {
             initBleSevrice();//初始化蓝牙服务
-        }
+//        }
         initAlertService();//初始化提醒服务
         if(!UpdateActivity.isGoogle) {
             initBugly();//初始化bugly
@@ -129,7 +129,12 @@ public class IbandApplication extends MultiDexApplication {
     }
 
     public void initAlertService() {
-        startService(new Intent(this,AlertService.class));
+        Intent intent = new Intent(this,AlertService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {//适配8.0---yw
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
     }
 
     private void initBugly() {

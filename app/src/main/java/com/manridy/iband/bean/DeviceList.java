@@ -73,7 +73,35 @@ public class DeviceList {
         private String is_chk_heart_rate;
         private String is_heart_rate_timing_chk;
         private String is_heart_rate_call_police;
+        private String blood_pressure_police;
         private String ecg;
+        private String is_hide_prevent_lose;
+        private String is_show_weather;
+
+        public String getIs_show_weather() {
+            return is_show_weather;
+        }
+
+        public void setIs_show_weather(String is_show_weather) {
+            this.is_show_weather = is_show_weather;
+        }
+
+        public String getIs_hide_prevent_lose() {
+            return is_hide_prevent_lose;
+        }
+
+        public void setIs_hide_prevent_lose(String is_hide_prevent_lose) {
+            this.is_hide_prevent_lose = is_hide_prevent_lose;
+        }
+
+        public String getBlood_pressure_police() {
+            return blood_pressure_police;
+        }
+
+        public void setBlood_pressure_police(String blood_pressure_police) {
+            this.blood_pressure_police = blood_pressure_police;
+        }
+
         private String no_exec;
         private String mcu_platform;
 

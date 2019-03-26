@@ -392,6 +392,9 @@ public class TrainActivity extends BaseActionActivity {
                 } else if (sportModel == 5) {  //5爬山
                     num = stepModel.getStepCalorie() + getString(R.string.hint_unit_ka);
                     mode = getString(R.string.hint_mountain_climbing);
+                } else if (sportModel == 6) {
+                    num = stepModel.getStepCalorie() + getString(R.string.hint_unit_ka);
+                    mode = getString(R.string.hint_badminton);
                 }
                 tvHint.setText(mode + " " + start + "~" + end + " " + num);
             }

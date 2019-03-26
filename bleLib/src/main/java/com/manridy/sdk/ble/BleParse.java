@@ -1,5 +1,6 @@
 package com.manridy.sdk.ble;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -807,7 +808,11 @@ public class BleParse {
             awake = time;
         }
         //数据填充模板
-        Sleep sleep = new Sleep(day,sleepLength,sleepNum, startTime,endTime,dataType,deep,light,awake);
+        Sleep sleep = new Sleep(day, sleepLength, sleepNum, startTime, endTime, dataType, deep, light, awake);
+        //////////////////////////存睡眠原始数据测试用/////////////////////////
+        String s_sleepData = BitUtil.parseByte2HexStr(data);
+        sleep.setS_sleep_data(s_sleepData);
+        //////////////////////////////////////////////////////////////////////
         String result = gson.toJson(sleep);
         if (type == 3){
             if (bleCallback == null) {

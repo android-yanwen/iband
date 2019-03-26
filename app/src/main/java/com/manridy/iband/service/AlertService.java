@@ -1,5 +1,6 @@
 package com.manridy.iband.service;
 
+import android.app.Notification;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.ContactsContract;
@@ -58,6 +60,9 @@ public class AlertService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {//适配8.0
+            startForeground(1, new Notification());
+        }
         ibandApplication = (IbandApplication) getApplication();
         initReceiver();//初始化电话/短信监听/蓝牙状态广播
     }

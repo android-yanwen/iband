@@ -89,6 +89,7 @@
     <string name="title_test">In measurement, please keep the watch and phone connected.</string>
     <string name="hint_ota_success">Successfully updated</string>
     <string name="hint_time_12">12-hour</string>
+    <string name="hint_time_12h">12h</string>
     <string name="hint_set">Settings</string>
     <string name="hint_contacts">Contacts</string>
     <string name="hint_ota_newest">Already the latest version</string>
@@ -126,6 +127,7 @@
     <string name="hint_ota_completed">Done</string>
     <string name="error_update_fail">Access to updating information failed. Please try again</string>
     <string name="hint_time_24">24-hour</string>
+    <string name="hint_time_24h">24h</string>
     <string name="hint_bind_new_device">Bind a new device</string>
     <string name="hint_device_bind">Bind the device</string>
     <string name="hint_title_correct">Heart rate measurements strengthened</string>
@@ -184,6 +186,8 @@
     <string name="hint_menu_target">Goal setting</string>
     <string name="hint_month">month</string>
     <string name="hint_unit_metric">Metric (m/km/kg)</string>
+    <string name="hint_unit_metric_">Metric</string>
+    <string name="hint_unit_inch_">Imperial</string>
     <string name="hint_menu_alert_sms">Message Notifications</string>
     <string name="hint_hr_max">Max </string>
     <string name="hint_ota_file_download">Start downloading OTA files</string>
@@ -567,4 +571,5 @@ Exit iband app（Apple users should ignore the device on Bluetooth.）. At this 
     <string name="hint_blood_pressure_alert">Blood pressure alarm</string>
     <string name="hint_load_file">Loading file...</string>
     <string name="hint_badminton">Badminton</string>
+    <string name="hint_close">Close</string>
 </resources>

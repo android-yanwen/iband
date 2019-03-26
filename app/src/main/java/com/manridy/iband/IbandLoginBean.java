@@ -14,6 +14,8 @@ import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.service.HttpService;
 import com.manridy.iband.view.setting.FeedbackActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
 import java.text.SimpleDateFormat;
@@ -53,9 +55,15 @@ public class IbandLoginBean {
                 if (isSuccess == true) {
                     String s_result = result.toString();
                     if (s_result != null && s_result != "") {
-                        MRDServerRequestBean bean = new Gson().fromJson(s_result, MRDServerRequestBean.class);
-                        if (onPushResultCallback != null) {
-                            onPushResultCallback.onResult(bean.getStatus());
+                        if (isMRDServerRequestBean(s_result)) {
+                            MRDServerRequestBean bean = new Gson().fromJson(s_result, MRDServerRequestBean.class);
+                            if (onPushResultCallback != null) {
+                                onPushResultCallback.onResult(bean.getStatus());
+                            }
+                        } else {
+                            if (onPushResultCallback != null) {
+                                onPushResultCallback.onResult(0);
+                            }
                         }
                     }
                 } else {
@@ -68,6 +76,26 @@ public class IbandLoginBean {
         });
     }
 
+    /**
+     * 判断s_result是否是MRDServerRequestBean格式的json
+     * */
+    private boolean isMRDServerRequestBean(String s_result) {
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(s_result);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+        boolean hasStatus = jsonObject.has("status");
+        boolean hasCode = jsonObject.has("code");
+        boolean hasMsg = jsonObject.has("msg");
+        if (hasStatus && hasCode && hasMsg) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     public interface OnPushResultCallback{
         void onResult(int result);
     }

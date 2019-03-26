@@ -6,8 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.R;
+import com.manridy.iband.bean.DeviceList;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
@@ -151,33 +153,65 @@ public class AlertActivity extends BaseActionActivity {
 
         menuLost.setVisibility(View.VISIBLE);
         menuLostRightline.setVisibility(View.VISIBLE);
+        String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST, "");
         String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE, "");
-        String deviceIDs[] = {"8077", "8078", "8079", "8080", "8092"};
-        if (deviceType == null || "".equals(deviceType)) {
-            menuLost.setAlertState(false);
-            menuLost.setVisibility(View.GONE);
-            menuLostRightline.setVisibility(View.GONE);
+        String deviceFirm = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_VERSION, "1.0.0");
+        if (strDeviceList == null || strDeviceList.isEmpty()) {
+            return;
         }
-        for (int i = 0; i < deviceIDs.length; i++) {
-            if (deviceType != null && deviceIDs[i].equals(deviceType.trim())) {
-                menuLost.setAlertState(false);
-                menuLost.setVisibility(View.GONE);
-                menuLostRightline.setVisibility(View.GONE);
+        DeviceList filterDeviceList = new Gson().fromJson(strDeviceList, DeviceList.class);
+        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+            if (resultBean.getDevice_id().equals(deviceType)) {
+                if (!"0".equals(resultBean.getIs_heart_rate_call_police())
+                        && resultBean.getIs_heart_rate_call_police().compareTo(deviceFirm) <= 0) {
+                    menuHeartAlert.setVisibility(View.VISIBLE);
+                } else {
+                    menuHeartAlert.setAlertState(false);
+                    menuHeartAlert.setVisibility(View.GONE);
+                }
+                if (!"0".equals(resultBean.getBlood_pressure_police())
+                        && resultBean.getBlood_pressure_police().compareTo(deviceFirm) <= 0) {
+                    menuBloodAlert.setVisibility(View.VISIBLE);
+                } else {
+                    menuBloodAlert.setAlertState(false);
+                    menuBloodAlert.setVisibility(View.GONE);
+                }
+
+                //防丢失提醒隐藏
+                if ("1".equals(resultBean.getIs_hide_prevent_lose())) {
+                    menuLost.setAlertState(false);
+                    menuLost.setVisibility(View.GONE);
+                    menuLostRightline.setVisibility(View.GONE);
+                }
             }
         }
 
-        // 判断id是否显示心率血压报警选项
-        if (deviceType != null && "8105".equals(deviceType.trim())) {
-            //隐藏血压心率报警按钮
-            menuHeartAlert.setVisibility(View.VISIBLE);
-            menuBloodAlert.setVisibility(View.VISIBLE);
-        } else {
-            //隐藏血压心率报警按钮
-            menuHeartAlert.setAlertState(false);
-            menuHeartAlert.setVisibility(View.GONE);
-            menuBloodAlert.setAlertState(false);
-            menuBloodAlert.setVisibility(View.GONE);
-        }
+//        String deviceIDs[] = {"8077", "8078", "8079", "8080", "8092"};
+//        if (deviceType == null || "".equals(deviceType)) {
+//            menuLost.setAlertState(false);
+//            menuLost.setVisibility(View.GONE);
+//            menuLostRightline.setVisibility(View.GONE);
+//        }
+//        for (int i = 0; i < deviceIDs.length; i++) {
+//            if (deviceType != null && deviceIDs[i].equals(deviceType.trim())) {
+//                menuLost.setAlertState(false);
+//                menuLost.setVisibility(View.GONE);
+//                menuLostRightline.setVisibility(View.GONE);
+//            }
+//        }
+
+//        // 判断id是否显示心率血压报警选项
+//        if (deviceType != null && "8105".equals(deviceType.trim())) {
+//            //隐藏血压心率报警按钮
+//            menuHeartAlert.setVisibility(View.VISIBLE);
+//            menuBloodAlert.setVisibility(View.VISIBLE);
+//        } else {
+//            //隐藏血压心率报警按钮
+//            menuHeartAlert.setAlertState(false);
+//            menuHeartAlert.setVisibility(View.GONE);
+//            menuBloodAlert.setAlertState(false);
+//            menuBloodAlert.setVisibility(View.GONE);
+//        }
 
     }
 

@@ -1,5 +1,7 @@
 package com.manridy.iband.view.main;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -24,12 +26,15 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -51,6 +56,7 @@ import com.manridy.iband.DeviceListDataSpare;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.IbandLoginBean;
+import com.manridy.iband.SyncAlert;
 import com.manridy.iband.bean.AddressModel1;
 import com.manridy.iband.bean.WeatherModel;
 import com.manridy.iband.common.OnResultCallBack;
@@ -157,6 +163,7 @@ public class MainActivity extends BaseActivity {
 
     private boolean isDeviceIdInService = false;
 
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -173,6 +180,7 @@ public class MainActivity extends BaseActivity {
         }
     };
 
+    @SuppressLint("HandlerLeak")
     private Handler handler2 = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -198,6 +206,10 @@ public class MainActivity extends BaseActivity {
                     boolean isShowBo = (boolean)SPUtil.get(mContext,"isShowBo",false);
                     boolean isShowEcg = (boolean)SPUtil.get(mContext,"isShowEcg",false);
                     boolean isShowMicro = (boolean)SPUtil.get(mContext,"isShowMicro",false);
+                    is_show_weather = (boolean)SPUtil.get(mContext,"is_show_weather",false);
+                    if(stepFragment!=null){
+                        stepFragment.setWeather(is_show_weather);
+                    }
                     try {
                         if (!isShowBp) {
                             viewList.remove(bpFragment);
@@ -301,6 +313,7 @@ public class MainActivity extends BaseActivity {
         }
     };
 
+
     Runnable updatePageRunnable = new Runnable() {
         @Override
         public void run() {
@@ -309,8 +322,10 @@ public class MainActivity extends BaseActivity {
             isShowBo = (boolean) SPUtil.get(mContext,"isShowBo",false);
             isShowEcg = (boolean) SPUtil.get(mContext,"isShowEcg",false);
             isShowMicro = (boolean) SPUtil.get(mContext,"isShowMicro",false);
+            is_show_weather= (boolean) SPUtil.get(mContext,"is_show_weather",false);
             String strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
-            String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
+            String deviceType = (String) SPUtil.get(mContext, AppGlobal.DATA_FIRMWARE_TYPE, "");
+
             String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
             Log.i("deviceType",deviceType);
             Log.i("deviceName",deviceName);
@@ -347,6 +362,13 @@ public class MainActivity extends BaseActivity {
                             isShowMicro = true;
                         }
                         SPUtil.put(mContext,"isShowMicro",isShowMicro);
+
+                        if ("0".equals(resultBean.getIs_show_weather())) {
+                            is_show_weather = false;
+                        }else{
+                            is_show_weather = true;
+                        }
+                        SPUtil.put(mContext,"is_show_weather",is_show_weather);
 
 
                         handler2.sendMessage(handler2.obtainMessage(4));
@@ -439,6 +461,7 @@ public class MainActivity extends BaseActivity {
     private boolean isShowBo;
     private boolean isShowEcg;
     private boolean isShowMicro;
+    private boolean  is_show_weather=false;
     @Override
     protected void onResume() {
         super.onResume();
@@ -463,6 +486,72 @@ public class MainActivity extends BaseActivity {
         }
 //        }
 
+        // 设备是否绑定
+        String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
+        if (bindMac == null || bindMac.isEmpty()) {
+            if (alertHandler == null) {
+                alertHandler = new Handler();
+                alertHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog();
+                    }
+                }, 2000);
+            }
+        } else {
+            dismissAlerDialog();
+        }
+    }
+
+    private Handler alertHandler;
+    private Dialog dialog;
+    private void dismissAlerDialog() {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
+    private void showAlertDialog() {
+        if (MainActivity.this != null && !MainActivity.this.isFinishing()) {
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            View v = inflater.inflate(R.layout.dialog_alert, null);
+            Button btn_sure = v.findViewById(R.id.dialog_btn_sure);
+            Button btn_cancel = v.findViewById(R.id.dialog_btn_cancel);
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setCancelable(false);
+            dialog = builder.create();
+            dialog.show();
+            dialog.getWindow().setContentView(v);
+            btn_sure.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    startActivity(new Intent(mContext, DeviceActivity.class));
+                    alertHandler = null;
+                }
+            });
+            btn_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+
+
+//        builder.setMessage("设备未绑定，前往绑定");
+//        builder.setTitle(R.string.hint_warm_alert);
+//        builder.setCancelable(false);
+//        builder.setPositiveButton(getString(R.string.hint_ok), new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//            }
+//        });
+//        builder.setNegativeButton(getString(R.string.hint_cancel), new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//            }
+//        });
+//        builder.create().show();
+        }
     }
 
     int last_date;
@@ -1095,7 +1184,10 @@ public class MainActivity extends BaseActivity {
                             setHintState(AppGlobal.DEVICE_STATE_SYNC_OK);
                             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_ALL));
                             boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", true);
-                            if (isSupply) {
+//                            if (isSupply) {
+//                                pushForecastWeatherToWatch();//推送天气信息到手环
+//                            }
+                            if (is_show_weather) {
                                 pushForecastWeatherToWatch();//推送天气信息到手环
                             }
                             start5sTimer();//弥补同步显示错误，因为时间关系不得已采取的临时办法，根本解决问题需要优化同步数据那块
@@ -1130,7 +1222,7 @@ public class MainActivity extends BaseActivity {
                 }
 
                 int state = (int) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_CONNECT_STATE, AppGlobal.DEVICE_STATE_UNCONNECT);
-                if (state != 1) {
+                if (state != AppGlobal.DEVICE_STATE_CONNECTED) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -1170,7 +1262,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private boolean checkBindDevice(String mac) {
-        if (mac == null || mac.isEmpty()) {
+        if (mac == null ) { return true;
+        }else if(mac.isEmpty()){
             return true;
         }
         return false;
@@ -1718,16 +1811,22 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        if (ibandApplication != null && ibandApplication.service != null && ibandApplication.service.watch != null) {
+//            ibandApplication.service.watch.closeCurBluetoothGatt();
+            String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
+            ibandApplication.service.watch.closeBluetoothGatt(bindMac);
+        }
     }
 
     @Override
     public void onBackPressed() {
         if ("huawei".equalsIgnoreCase(Watch.brand)) {
-            super.onBackPressed();
+//            super.onBackPressed();
 //            BluetoothLeManager.IS_RENECT = false;
-            ibandApplication.stopBleService();
 //            ActivityManager manager = (ActivityManager)mContext.getSystemService(ACTIVITY_SERVICE); //获取应用程序管理器
 //            manager.killBackgroundProcesses(getPackageName()); //强制结束当前应用程序
+//            ibandApplication.stopBleService();
+            moveTaskToBack(true);//Activity活动于后台
         }
         else {
             moveTaskToBack(true);//Activity活动于后台

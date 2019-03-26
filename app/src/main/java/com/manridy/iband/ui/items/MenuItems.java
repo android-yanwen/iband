@@ -53,9 +53,18 @@ public class MenuItems extends RelativeLayout {
         this.setEnabled(isEnable);
     }
 
-    public void setMenuOpenState(boolean isOpen){
+    public void setMenuOpenState(boolean isOpen, String textOpen, String textClose) {
         menuState.setVisibility(VISIBLE);
-        menuState.setText(isOpen?getContext().getString(R.string.hint_opens):getContext().getString(R.string.hint_unopen));
-        menuState.setTextColor(isOpen? Color.parseColor("#de2196f3"):Color.parseColor("#8a000000"));
+        if (textOpen != null && textClose != null) {
+            menuState.setText(isOpen ? textOpen : textClose);
+        } else {
+            menuState.setText(isOpen ? getContext().getString(R.string.hint_opens) : getContext().getString(R.string.hint_unopen));
+        }
+        menuState.setTextColor(isOpen ? Color.parseColor("#8a000000") : Color.parseColor("#8a000000"));
+    }
+    public void setMenuOpenState(boolean isOpen) {
+        menuState.setVisibility(VISIBLE);
+        menuState.setText(isOpen ? getContext().getString(R.string.hint_opens) : getContext().getString(R.string.hint_unopen));
+        menuState.setTextColor(isOpen ? Color.parseColor("#de2196f3") : Color.parseColor("#8a000000"));
     }
 }

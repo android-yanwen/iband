@@ -1,7 +1,9 @@
 package com.manridy.iband;
 
+import android.annotation.SuppressLint;
 import android.nfc.Tag;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -21,6 +23,7 @@ import com.manridy.iband.bean.MicrocirculationModel;
 import com.manridy.iband.bean.SleepModel;
 import com.manridy.iband.bean.StepModel;
 import com.manridy.iband.common.AppGlobal;
+import com.manridy.iband.common.HexUtil;
 import com.manridy.sdk.Watch;
 import com.manridy.sdk.bean.Microcirculation;
 import com.manridy.sdk.ble.BleCmd;
@@ -33,6 +36,7 @@ import com.manridy.sdk.type.InfoType;
 
 import java.lang.reflect.Type;
 import java.util.Date;
+import java.util.Timer;
 
 /**
  *
@@ -42,7 +46,7 @@ import java.util.Date;
 public class SyncData {
 
     private Watch watch;
-    private int syncIndex;//同步当前
+    private int syncIndex=0;//同步当前
     private int progressIndex;//进度当前
     private int progressSum;//进度总数
     private int errorNum;//错误计数器
@@ -208,6 +212,9 @@ public class SyncData {
     }
 
     private void progress() {
+        if(syncIndex==-1){
+            return;
+        }
         progressIndex++;
         int progress = (int) (((double)progressIndex / progressSum)*100);
         syncAlertListener.onProgress(progress);
@@ -223,6 +230,9 @@ public class SyncData {
     BleCallback bleCallback = new BleCallback() {
         @Override
         public void onSuccess(Object o) {
+            if(syncIndex==-1){
+                return;
+            }
             if (syncAlertListener != null) {
                 if (progressSum == 0) {
                     syncAlertListener.onProgress(0);
@@ -247,13 +257,32 @@ public class SyncData {
         }
     };
 
+    @SuppressLint("HandlerLeak")
+    Handler han=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(syncAlertListener!=null&&msg.what==1){
+                syncIndex=-1;
+                        syncAlertListener.onResult(false);
+                        isRun = false;
+                        LogUtil.d("SyncData", "next() called onResult false");
+//                syncAlertListener.onResult(false);
+//                syncIndex=-1;
+            }
+        }
+    };
     private synchronized void next(){
+        if(syncIndex==-1){
+            return;
+        }
         syncIndex++;
         LogUtil.i("SyncData", "next() called syncIndex == "+syncIndex);
 //        if (syncIndex < 14) {
         if (syncIndex <= 18) {
             send();
         }else {
+            han.removeMessages(1);
             if (syncAlertListener != null) {
                 syncAlertListener.onResult(true);
                 watch.sendCmd(BleCmd.getSleepStats());
@@ -295,6 +324,8 @@ public class SyncData {
     //计步历史条数>>睡眠历史条数>>心率历史条数>>血压历史条数>>血氧历史条数
     //计步当前>>计步历史>>睡眠历史>>心率历史>>血压历史>>血氧历史
     private synchronized void send(){
+        han.removeMessages(1);
+        han.sendEmptyMessageDelayed(1,10000);
         switch (syncIndex) {
             case 0:
                 watch.setTimeToNew(bleCallback);
@@ -329,7 +360,7 @@ public class SyncData {
             case 8:
                 if(isH1F1())break;
                 if (stepSum != 0) {
-                    watch.sendCmd(BleCmd.getStepSectionHistroy(),bleCallback);
+                    watch.sendCmd(BleCmd.getStepSectionHistroy(), bleCallback);
                 }else {
                     next();
                 }
