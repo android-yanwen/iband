@@ -1,15 +1,11 @@
 package com.manridy.iband.view.main;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -17,14 +13,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NotificationCompat;
@@ -40,7 +33,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -58,7 +50,8 @@ import com.manridy.applib.utils.TimeUtil;
 import com.manridy.iband.DeviceListDataSpare;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
-import com.manridy.iband.bean.AddressModel;
+import com.manridy.iband.IbandLoginBean;
+import com.manridy.iband.bean.AddressModel1;
 import com.manridy.iband.bean.WeatherModel;
 import com.manridy.iband.common.OnResultCallBack;
 import com.manridy.iband.R;
@@ -70,17 +63,15 @@ import com.manridy.iband.common.DomXmlParse;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.common.Utils;
-import com.manridy.iband.language.LanguageUtil;
-import com.manridy.iband.service.BleService;
 import com.manridy.iband.service.HttpService;
 import com.manridy.iband.ui.SimpleView;
 import com.manridy.iband.view.model.BoFragment;
 import com.manridy.iband.view.model.BpFragment;
 import com.manridy.iband.view.model.EcgFragment;
 import com.manridy.iband.view.model.HrFragment;
+import com.manridy.iband.view.model.MicrocirculationFragment;
 import com.manridy.iband.view.model.SleepFragment;
 import com.manridy.iband.view.model.StepFragment;
-import com.manridy.sdk.BluetoothLeManager;
 import com.manridy.sdk.Watch;
 import com.manridy.sdk.bean.Weather;
 import com.manridy.sdk.ble.BleCmd;
@@ -92,10 +83,10 @@ import com.rd.PageIndicatorView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -106,18 +97,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
-import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
-import cn.sharesdk.tencent.qq.QQ;
-import cn.sharesdk.wechat.friends.Wechat;
 import me.weyye.hipermission.PermissionAdapter;
 import me.weyye.hipermission.PermissionItem;
 import me.weyye.hipermission.PermissionView;
+
+import static com.manridy.iband.common.EventGlobal.DATA_LOAD_WEATHER;
 
 /**
  * 主页
@@ -205,10 +197,10 @@ public class MainActivity extends BaseActivity {
                     boolean isShowBp = (boolean)SPUtil.get(mContext,"isShowBp",false);
                     boolean isShowBo = (boolean)SPUtil.get(mContext,"isShowBo",false);
                     boolean isShowEcg = (boolean)SPUtil.get(mContext,"isShowEcg",false);
+                    boolean isShowMicro = (boolean)SPUtil.get(mContext,"isShowMicro",false);
                     try {
                         if (!isShowBp) {
                             viewList.remove(bpFragment);
-
                         }
                         if (!isShowBo) {
                             viewList.remove(boFragment);
@@ -216,59 +208,74 @@ public class MainActivity extends BaseActivity {
                         if(!isShowEcg){
                             viewList.remove(ecgFragment);
                         }
-                        if (!isShowBp || !isShowBo||!isShowEcg){
-                        viewAdapter.notifyDataSetChanged();
+                        if (!isShowMicro) {
+                            viewList.remove(microcirculationFragment);
+                        }
+                        if (!isShowBp || !isShowBo || !isShowEcg || !isShowMicro) {
+                            viewAdapter.notifyDataSetChanged();
 //                            handler2.sendMessage(handler2.obtainMessage(4));
                         }
-
                     }catch (Exception e){
                         e.printStackTrace();
                     }
 
                     boolean isnotifyDataSetChanged = false;
 
-                    if(isShowBp||isShowBo||isShowEcg){
+                    if (isShowBp || isShowBo || isShowEcg || isShowMicro) {
                         boolean isHaveBp = false;
                         boolean isHaveBo = false;
                         boolean isHaveEcg = false;
+                        boolean isHaveMicro = false;
                         Iterator it = viewList.iterator();
-                        while (it.hasNext()){
+                        while (it.hasNext()) {
                             Object o = it.next();
-                            if(BpFragment.class.equals(o.getClass())){
+                            if (BpFragment.class.equals(o.getClass())) {
                                 isHaveBp = true;
-                            }else if(BoFragment.class.equals(o.getClass())){
+                            } else if (BoFragment.class.equals(o.getClass())) {
                                 isHaveBo = true;
-                            }else if(EcgFragment.class.equals(o.getClass())){
+                            } else if (EcgFragment.class.equals(o.getClass())) {
                                 isHaveEcg = true;
+                            } else if (MicrocirculationFragment.class.equals(o.getClass())) {
+                                isHaveMicro = true;
                             }
                         }
-                        if(isShowBp&&(!isHaveBp)){
-                            if(bpFragment!=null){
+                        if (isShowBp && (!isHaveBp)) {
+                            if (bpFragment != null) {
                                 viewList.add(bpFragment);
                                 isnotifyDataSetChanged = true;
-                            }else{
+                            } else {
                                 bpFragment = new BpFragment();
                                 viewList.add(bpFragment);
                                 isnotifyDataSetChanged = true;
                             }
                         }
-                        if(isShowBo&&(!isHaveBo)){
-                            if(boFragment!=null){
+                        if (isShowBo && (!isHaveBo)) {
+                            if (boFragment != null) {
                                 viewList.add(boFragment);
                                 isnotifyDataSetChanged = true;
-                            }else{
+                            } else {
                                 boFragment = new BoFragment();
                                 viewList.add(boFragment);
                                 isnotifyDataSetChanged = true;
                             }
                         }
-                        if(isShowEcg&&(!isHaveEcg)){
-                            if(ecgFragment!=null){
+                        if (isShowEcg && (!isHaveEcg)) {
+                            if (ecgFragment != null) {
                                 viewList.add(ecgFragment);
                                 isnotifyDataSetChanged = true;
-                            }else{
+                            } else {
                                 ecgFragment = new EcgFragment();
                                 viewList.add(ecgFragment);
+                                isnotifyDataSetChanged = true;
+                            }
+                        }
+                        if (isShowMicro && (!isHaveMicro)) {
+                            if (microcirculationFragment != null) {
+                                viewList.add(microcirculationFragment);
+                                isnotifyDataSetChanged = true;
+                            } else {
+                                microcirculationFragment = new MicrocirculationFragment();
+                                viewList.add(microcirculationFragment);
                                 isnotifyDataSetChanged = true;
                             }
                         }
@@ -301,6 +308,7 @@ public class MainActivity extends BaseActivity {
             isShowBp = (boolean) SPUtil.get(mContext,"isShowBp",false);
             isShowBo = (boolean) SPUtil.get(mContext,"isShowBo",false);
             isShowEcg = (boolean) SPUtil.get(mContext,"isShowEcg",false);
+            isShowMicro = (boolean) SPUtil.get(mContext,"isShowMicro",false);
             String strDeviceList = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_LIST,"");
             String deviceType = (String) SPUtil.get(mContext,AppGlobal.DATA_FIRMWARE_TYPE,"");
             String deviceName = (String) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_BIND_NAME,"");
@@ -333,6 +341,14 @@ public class MainActivity extends BaseActivity {
                         }
                         SPUtil.put(mContext,"isShowEcg",isShowEcg);
 
+                        if ("0".equals(resultBean.getMicrocirculation())) {
+                            isShowMicro = false;
+                        }else{
+                            isShowMicro = true;
+                        }
+                        SPUtil.put(mContext,"isShowMicro",isShowMicro);
+
+
                         handler2.sendMessage(handler2.obtainMessage(4));
 
                     }
@@ -342,7 +358,8 @@ public class MainActivity extends BaseActivity {
             }
         }
     };
-    /*
+
+    /**
      * 判断网络连接是否已开
      * true 已打开  false 未打开
      * */
@@ -421,10 +438,13 @@ public class MainActivity extends BaseActivity {
     private boolean isShowBp;
     private boolean isShowBo;
     private boolean isShowEcg;
+    private boolean isShowMicro;
     @Override
     protected void onResume() {
         super.onResume();
-
+        IbandApplication.recordingLoginNumFunc();
+//        String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
+//        if (bindMac == null || bindMac.isEmpty()) {
         int connectState = (int) SPUtil.get(mContext,AppGlobal.DATA_DEVICE_CONNECT_STATE,AppGlobal.DEVICE_STATE_UNCONNECT);
         if (connectState == AppGlobal.DEVICE_STATE_CONNECTED) {
             long time = (long) SPUtil.get(mContext, AppGlobal.DATA_SYNC_TIME, 0L);
@@ -437,10 +457,15 @@ public class MainActivity extends BaseActivity {
         }
 
         updateDeviceList();
-        getLocation();
+        boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", true);
+        if (isSupply) {
+            getLocation();
+        }
+//        }
 
     }
 
+    int last_date;
     AMapLocationClient mlocationClient = null;
     AMapLocationListener aMapLocationListener = null;
     private void getLocation(){
@@ -484,8 +509,9 @@ public class MainActivity extends BaseActivity {
 
                         Calendar c = Calendar.getInstance();
                         final int date = c.get(Calendar.DATE);
-                        int last_date = (int) SPUtil.get(mContext, AppGlobal.DATA_DATE, 0);
+                        last_date = (int) SPUtil.get(mContext, AppGlobal.DATA_DATE, 0);
                         if (last_date != date) {
+//                        if (true) {//测试用
                             HttpService.getInstance().getCityWeather(mContext,
                                     "" + amapLocation.getLongitude() + "," + amapLocation.getLatitude(),
 //                                "116.310316,39.956074",
@@ -493,63 +519,17 @@ public class MainActivity extends BaseActivity {
                                         @Override
                                         public void onResult(boolean result, Object o) {
                                             if (result) {
-                                                AddressModel addressModel = (AddressModel) o;
-                                                int max = 0xFF;
-                                                int min = 0xFF;
-                                                int now = 0xFF;
-                                                if (addressModel.getForecastWeather().get(0).getTmp_now() != null) {
-                                                    now = 0xff;
-                                                }
-                                                if (addressModel.getForecastWeather().get(0).getTmp_max() != null) {
-                                                    max = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_max());
-                                                }
-                                                if (addressModel.getForecastWeather().get(0).getTmp_min() != null) {
-                                                    min = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_min());
-                                                }
-                                                LinkedList<Weather> forecastWeathers = new LinkedList<>();
-                                                Weather forecastWeather;
-                                                if (addressModel.getForecastWeather().size() == 3) {
-                                                    for (int i = 1; i < 3; i++) {
-                                                        com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = new com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean();
-                                                        forecastWeatherBean.setWeather_type(addressModel.getForecastWeather().get(i).getWeater_type());
-                                                        forecastWeatherBean.setTmp_max(addressModel.getForecastWeather().get(i).getTmp_max());
-                                                        forecastWeatherBean.setTmp_min(addressModel.getForecastWeather().get(i).getTmp_min());
-                                                        forecastWeather = new Weather(forecastWeatherBean.getWeather_type(), Integer.parseInt(forecastWeatherBean.getTmp_max()), Integer.parseInt(forecastWeatherBean.getTmp_min()), 0xFF, null);
-                                                        forecastWeathers.add(forecastWeather);
-                                                    }
-                                                }
-                                                Weather weatherBean = new Weather(addressModel.getForecastWeather().get(0).getWeater_type(), max, min, now, forecastWeathers);
-                                                IbandApplication.getIntance().weather = weatherBean;
-                                                Watch.getInstance().setWeather(weatherBean, new BleCallback() {
-                                                    @Override
-                                                    public void onSuccess(Object o) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void onFailure(BleException exception) {
-
-                                                    }
-                                                });
-
+                                                AddressModel1 addressModel = (AddressModel1) o;
+//                                                MainActivity.addressModel = addressModel;//保存天气数据
+//                                                pushForecastWeatherToWatch();//推送天气到手环
                                                 /**************************存本地数据库***************************/
-                                                WeatherModel weatherModel = IbandDB.getInstance().getLastWeather();
-                                                if (weatherModel == null) {
-                                                    weatherModel = new WeatherModel();
-                                                }
-                                                weatherModel.setWeatherRegime(Integer.toString(addressModel.getForecastWeather().get(0).getWeater_type()));
-                                                weatherModel.setCountry(addressModel.getCnty());
-                                                weatherModel.setCity(addressModel.getParent_city());
-                                                weatherModel.setNowTemperature(addressModel.getForecastWeather().get(0).getTmp_now());
-                                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-                                                weatherModel.setDay(df.format(new Date()));
-                                                weatherModel.save();
-                                                EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_LOAD_WEATHER));
-
+                                                saveForecastWeatherInfoToDatabase(addressModel);
+                                                EventBus.getDefault().post(new EventMessage(DATA_LOAD_WEATHER));
                                                 SPUtil.put(mContext, AppGlobal.DATA_DATE, date);
                                                 Log.i(TAG, "onLocationChanged: 当天获取天气成功");
                                             } else {
                                                 Log.d(TAG, "获取失败");
+                                                last_date = -1;
                                             }
                                         }
                                     }
@@ -679,17 +659,11 @@ public class MainActivity extends BaseActivity {
         return false;
     }
 
-
-
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        ButterKnife.bind(this);
-
-
-
-
+        ButterKnife.bind(MainActivity.this);
 
     }
 
@@ -702,6 +676,7 @@ public class MainActivity extends BaseActivity {
         initNotification();
         mSimpleView = new SimpleView(mContext.getApplicationContext());
 //        initDeviceUpdate();
+
     }
 
     private void initDeviceUpdate() {
@@ -775,6 +750,8 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+
+
     private void initNotification() {
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -782,39 +759,95 @@ public class MainActivity extends BaseActivity {
         mp.setLooping(true);
     }
 
+    private boolean isViewListHaveFregment(Fragment fragment) {
+        if (viewList.size() > 0) {
+            for (int i = 0; i < viewList.size(); i++) {
+                Fragment fragment1 = viewList.get(i);
+                if (fragment.equals(fragment1)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void removeOtherFragment() {
+
+        int size = viewList.size();
+        vpModel.setCurrentItem(0);
+
+        for (int i = size; i > 3;) {
+            viewList.remove(i-1);//移除list元素建议调用remove(index)
+            i = viewList.size();
+        }
+//        Iterator it = viewList.iterator();
+//        int index=0;
+//        while (it.hasNext()) {
+//            Object o = it.next();
+//            if (StepFragment.class.equals(o.getClass()) || SleepFragment.class.equals(o.getClass()) || HrFragment.class.equals(o.getClass())) {
+//                continue;
+//            } else {
+//                viewList.remove(0);
+//                break;
+//            }
+//        }
+        viewAdapter.notifyDataSetChanged();
+    }
+
+    private StepFragment stepFragment = new StepFragment();
+    private SleepFragment sleepFragment = new SleepFragment();
+    private HrFragment hrFragment = new HrFragment();
     BpFragment bpFragment;
     BoFragment boFragment;
     EcgFragment ecgFragment;
+    private MicrocirculationFragment microcirculationFragment;
     private void initViewPager() {
-        bpFragment = new BpFragment();
-        boFragment = new BoFragment();
-        ecgFragment = new EcgFragment();
+        if (bpFragment == null) {
+            bpFragment = new BpFragment();
+        }
+        if (boFragment == null) {
+            boFragment = new BoFragment();
+        }
+        if (ecgFragment == null) {
+            ecgFragment = new EcgFragment();
+        }
+        if (microcirculationFragment == null) {
+            microcirculationFragment = new MicrocirculationFragment();
+        }
 
-        viewList.add(new StepFragment());
-        viewList.add(new SleepFragment());
-        viewList.add(new HrFragment());
-        viewList.add(bpFragment);
-        viewList.add(boFragment);
-        viewList.add(ecgFragment);
+        if (!isViewListHaveFregment(stepFragment)) {
+            viewList.add(stepFragment);
+        }
+        if (!isViewListHaveFregment(sleepFragment)) {
+            viewList.add(sleepFragment);
+        }
+        if (!isViewListHaveFregment(hrFragment)) {
+            viewList.add(hrFragment);
+        }
+//        viewList.add(bpFragment);
+//        viewList.add(boFragment);
+//        viewList.add(ecgFragment);
+//        viewList.add(microcirculationFragment);
 
+        if (viewAdapter == null) {
+            viewAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+                @Override
+                public Fragment getItem(int position) {
+                    return viewList.get(position);
+                }
 
-        viewAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
-            @Override
-            public Fragment getItem(int position) {
-                return viewList.get(position);
-            }
+                @Override
+                public int getCount() {
+//                    Log.i("MainActivity", "viewList.size():" + viewList.size());
+                    return viewList.size();
+                }
 
-            @Override
-            public int getCount() {
-                Log.i("MainActivity","viewList.size():"+viewList.size());
-                return viewList.size();
-            }
-
-            @Override
-            public void destroyItem(ViewGroup container, int position, Object object) {
+                @Override
+                public void destroyItem(ViewGroup container, int position, Object object) {
                     super.destroyItem(container, position, object);
-            }
-        };
+                }
+            };
+        }
         vpModel.setAdapter(viewAdapter);
         pivDots.setViewPager(vpModel);
         vpModel.setOnTouchListener(new View.OnTouchListener() {
@@ -951,7 +984,7 @@ public class MainActivity extends BaseActivity {
     }
 
 
-
+    private static final String TAG = "MainActivity";
     @Override
     protected void initListener() {
         ivShare.setOnClickListener(new View.OnClickListener(){
@@ -976,7 +1009,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 Log.i("onPageScrolled","position:"+position);
-                if(position>viewList.size()){
+                if (position > viewList.size()) {
                     return;
                 }
                 float alpha;
@@ -988,7 +1021,25 @@ public class MainActivity extends BaseActivity {
                     index++;
                 }
                 rlTitle.setAlpha(alpha);
-                selectTitle(index);
+                if (index >= 0 && index <= 3) {
+                    selectTitle(index);
+                } else {
+                    if (boFragment != null && boFragment.equals(viewList.get(index))) {
+                        tbTitle.setText(getResources().getString(R.string.hint_view_bo));
+                    }
+                    if (bpFragment != null && bpFragment.equals(viewList.get(index))){
+                        tbTitle.setText(getResources().getString(R.string.hint_view_hp));
+                    }
+                    if (ecgFragment != null && ecgFragment.equals(viewList.get(index))) {
+                        tbTitle.setText(getResources().getString(R.string.hint_view_ecg));
+                    }
+                    if (microcirculationFragment != null && microcirculationFragment.equals(viewList.get(index))) {
+                        tbTitle.setText(getResources().getString(R.string.hint_microcirculation));
+//                        view.setBackgroundColor(Color.parseColor("#3949ab"));
+                    }
+                }
+
+
                 Log.i("pagenum",String.valueOf(viewList.size()));
             }
 
@@ -1013,8 +1064,16 @@ public class MainActivity extends BaseActivity {
                         view.setBackgroundColor(Color.parseColor("#ff4081"));
                         break;
                     case 5:
-                        view.setBackgroundColor(Color.parseColor("#00897b"));
+                        if (microcirculationFragment != null && microcirculationFragment.equals(viewList.get(5))) {
+                            tbTitle.setText(getResources().getString(R.string.hint_microcirculation));
+                            view.setBackgroundColor(Color.parseColor("#3949ab"));
+                        } else {
+                            view.setBackgroundColor(Color.parseColor("#00897b"));
+                        }
                         break;
+//                    case 6:
+//                        view.setBackgroundColor(Color.parseColor("#3949ab"));
+//                        break;
                 }
             }
 
@@ -1035,6 +1094,11 @@ public class MainActivity extends BaseActivity {
                             SPUtil.put(mContext,AppGlobal.DATA_SYNC_TIME,System.currentTimeMillis());
                             setHintState(AppGlobal.DEVICE_STATE_SYNC_OK);
                             EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_ALL));
+                            boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", true);
+                            if (isSupply) {
+                                pushForecastWeatherToWatch();//推送天气信息到手环
+                            }
+                            start5sTimer();//弥补同步显示错误，因为时间关系不得已采取的临时办法，根本解决问题需要优化同步数据那块
                         } else {
                             setHintState(AppGlobal.DEVICE_STATE_SYNC_NO);
                         }
@@ -1070,9 +1134,11 @@ public class MainActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
-                            ibandApplication.service.watch.closeBluetoothGatt(mac);
-                            connectDevice();
+                            if (ibandApplication.service != null && ibandApplication.service.watch != null) {
+                                setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
+                                ibandApplication.service.watch.closeBluetoothGatt(mac);
+                                connectDevice();
+                            }
                         }
                     });
                 }else{
@@ -1163,8 +1229,10 @@ public class MainActivity extends BaseActivity {
             showFloatView(getString(R.string.hint_device_unbind), getString(R.string.hint_bind));
         } else if (state == AppGlobal.DEVICE_STATE_UNCONNECT) {
             Log.i(TAG,"AppGlobal.DEVICE_STATE_UNCONNECT");
-            ibandApplication.service.initConnect(false);
-            setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
+            if (ibandApplication.service != null) {
+                ibandApplication.service.initConnect(false);
+                setHintState(AppGlobal.DEVICE_STATE_CONNECTING);
+            }
             return;
         } else if (state == AppGlobal.DEVICE_STATE_CONNECTED) {
             EventBus.getDefault().post(new EventMessage(EventGlobal.DATA_SYNC_HISTORY));
@@ -1258,12 +1326,17 @@ public class MainActivity extends BaseActivity {
             case 5:
                 tbTitle.setText(getResources().getString(R.string.hint_view_ecg));
                 break;
+//            case 6:
+//                tbTitle.setText(getResources().getString(R.string.hint_microcirculation));
+//                break;
         }
     }
 
     private void setHintState(int state){
         String bindMac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
         if (bindMac == null || bindMac.isEmpty()) {
+            removeOtherFragment();
+            SPUtil.remove(mContext,"isShowMicro");
             tbSync.setText(getResources().getString(R.string.hint_un_bind));
             return;
         }else if (!Watch.getInstance().isBluetoothEnable()){
@@ -1302,6 +1375,9 @@ public class MainActivity extends BaseActivity {
             case AppGlobal.DEVICE_STATE_BLUETOOTH_ENABLEING:
                 tbSync.setText(getResources().getString(R.string.hint_bluetooth_opening));
                 break;
+//            case AppGlobal.DEVICE_STATE_UNBIND://取消绑定
+////                initViewPager();
+//                break;
         }
     }
 
@@ -1415,6 +1491,8 @@ public class MainActivity extends BaseActivity {
         }else  if (event.getWhat() == EventGlobal.ACTION_LOAD_DEVICE_LIST) {
 
 
+        } else if (event.getWhat() == EventGlobal.DATA_LOAD_WEATHER) {
+//            ibandApplication.recordingLoginNumFunc();//和天气获取一样一天一次
         }
     }
 
@@ -1616,7 +1694,12 @@ public class MainActivity extends BaseActivity {
                 if (bluetoothDialog != null && bluetoothDialog.isShowing()) {
                     bluetoothDialog.dismiss();
                 }
-                IbandApplication.getIntance().service.watch.BluetoothEnable(AppManage.getInstance().currentActivity());
+                if (IbandApplication.getIntance().service != null){
+                    if (IbandApplication.getIntance().service.watch != null) {
+                        IbandApplication.getIntance().service.watch.BluetoothEnable(AppManage.getInstance().currentActivity());
+                    }
+                }
+
             }
         });
         if (bluetoothDialog != null && bluetoothDialog.isShowing()) {
@@ -1663,5 +1746,238 @@ public class MainActivity extends BaseActivity {
         super.attachBaseContext(LanguageUtil.attachBaseContext(newBase, selectedLanguage));
     }
 */
+
+
+    private void pushForecastWeatherToWatch() {
+        /*if (addressModel == null) {
+            return;
+        }
+        int max = 0xFF;
+        int min = 0xFF;
+        int now = 0xFF;
+        if (addressModel.getForecastWeather().get(0).getTmp_now() != null) {
+            now = 0xff;
+        }
+        if (addressModel.getForecastWeather().get(0).getTmp_max() != null) {
+            max = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_max());
+        }
+        if (addressModel.getForecastWeather().get(0).getTmp_min() != null) {
+            min = Integer.parseInt(addressModel.getForecastWeather().get(0).getTmp_min());
+        }
+        LinkedList<Weather> forecastWeathers = new LinkedList<>();
+        Weather forecastWeather;
+        if (addressModel.getForecastWeather().size() == 3) {
+            for (int i = 1; i < 3; i++) {
+                com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean forecastWeatherBean = new com.manridy.iband.bean.Weather.DataBean.ForecastWeatherBean();
+                forecastWeatherBean.setWeather_type(addressModel.getForecastWeather().get(i).getWeater_type());
+                forecastWeatherBean.setTmp_max(addressModel.getForecastWeather().get(i).getTmp_max());
+                forecastWeatherBean.setTmp_min(addressModel.getForecastWeather().get(i).getTmp_min());
+                forecastWeather = new Weather(forecastWeatherBean.getWeather_type(), Integer.parseInt(forecastWeatherBean.getTmp_max()), Integer.parseInt(forecastWeatherBean.getTmp_min()), 0xFF, null);
+                forecastWeathers.add(forecastWeather);
+            }
+        }*/
+
+        WeatherModel currentDayWeather = DataSupport.findFirst(WeatherModel.class);
+        if (currentDayWeather == null) return;
+        String weatherRegime = currentDayWeather.getWeatherRegime();
+        if (weatherRegime == null || weatherRegime == "") return;
+        int s_tempType = Integer.parseInt(weatherRegime);
+        String s_tempMax = currentDayWeather.getMaxTemperature();
+        if (s_tempMax == null || s_tempMax == "") return;
+        String s_tempMin = currentDayWeather.getMinTemperature();
+        if (s_tempMin == null || s_tempMin == "") return;
+        int max = Integer.parseInt(s_tempMax);
+        int min = Integer.parseInt(s_tempMin);
+        int now = 0xff;
+        LinkedList<Weather> forecastWeathers = new LinkedList<>();
+        List<WeatherModel> weatherModelList = DataSupport.findAll(WeatherModel.class, 2, 3);
+        for (int i = 0; i < weatherModelList.size();i++) {
+            WeatherModel weatherModel = weatherModelList.get(i);
+            String s_type = weatherModel.getWeatherRegime();
+            int i_type = Integer.parseInt(s_type);
+            int i_tempMax = Integer.parseInt(weatherModel.getMaxTemperature());
+            int i_tempMin = Integer.parseInt(weatherModel.getMinTemperature());
+            Weather weather = new Weather(i_type, i_tempMax, i_tempMin, 0xff, null);
+            forecastWeathers.add(weather);
+        }
+        Weather weatherBean = new Weather(s_tempType, max, min, now, forecastWeathers);
+        IbandApplication.getIntance().weather = weatherBean;
+        Watch.getInstance().setWeather(weatherBean, new BleCallback() {
+            @Override
+            public void onSuccess(Object o) {
+                Log.d(TAG, "onSuccess: 推送天气信息成功");
+            }
+
+            @Override
+            public void onFailure(BleException exception) {
+                Log.d(TAG, "onSuccess: 推送天气信息失败");
+            }
+        });
+    }
+
+    private String getWeatherType(AddressModel1 addressModel, int forecastDay) {
+        int weater_type=0;
+        if (addressModel.getHeWeather6().size() == 0) {
+            return "";
+        }
+        AddressModel1.HeWeather6Bean heWeather6Bean;
+        heWeather6Bean = addressModel.getHeWeather6().get(0);
+        AddressModel1.HeWeather6Bean.DailyForecastBean dailyForecastBean;
+        if (forecastDay >= heWeather6Bean.getDaily_forecast().size()) {
+            forecastDay = heWeather6Bean.getDaily_forecast().size() - 1;
+        }
+        dailyForecastBean = heWeather6Bean.getDaily_forecast().get(forecastDay);
+        String cond_code_d = dailyForecastBean.getCond_code_d();
+        int code_d = Integer.parseInt(cond_code_d);
+        if (code_d == 100 || code_d == 900 || code_d == 901 || code_d == 999) { //晴
+            weater_type = 0;
+        } else if ((code_d >= 101 && code_d <= 104) || (code_d >= 200 && code_d <= 213)) {//阴
+            weater_type = 1;
+        } else if ((code_d >= 300 && code_d <= 318) || code_d == 399) { //雨
+            weater_type = 2;
+        } else if ((code_d >= 400 && code_d <= 410) || code_d == 499) { //雪
+            weater_type = 3;
+        } else if ((code_d >= 500 && code_d <= 502) || (code_d >= 509 && code_d <= 515)) {//雾霾
+            weater_type = 4;
+        } else if (code_d == 503 || code_d == 504 || code_d == 507 || code_d == 508) {//沙尘
+            weater_type = 5;
+        }
+        return Integer.toString(weater_type);
+    }
+
+    private String getCountry(AddressModel1 addressModel) {
+        String cnty;
+        if (addressModel.getHeWeather6().size() == 0) {
+            return "";
+        }
+        AddressModel1.HeWeather6Bean heWeather6Bean;
+        heWeather6Bean = addressModel.getHeWeather6().get(0);
+        AddressModel1.HeWeather6Bean.BasicBean basicBean = heWeather6Bean.getBasic();
+        cnty = basicBean.getCnty();
+        return cnty;
+    }
+    private String getCity(AddressModel1 addressModel) {
+        String city;
+        AddressModel1.HeWeather6Bean heWeather6Bean;
+        if (addressModel.getHeWeather6().size() == 0) {
+            return "";
+        }
+        heWeather6Bean = addressModel.getHeWeather6().get(0);
+        AddressModel1.HeWeather6Bean.BasicBean basicBean = heWeather6Bean.getBasic();
+//        city = basicBean.getParent_city();
+        city = basicBean.getLocation();
+        return city;
+    }
+
+    private String getTempNow(AddressModel1 addressModel, int forecastDay) {
+        if (addressModel.getHeWeather6().size() == 0) {
+            return "";
+        }
+        AddressModel1.HeWeather6Bean heWeather6Bean;
+        heWeather6Bean = addressModel.getHeWeather6().get(0);
+        AddressModel1.HeWeather6Bean.DailyForecastBean dailyForecastBean;
+        if (forecastDay >= heWeather6Bean.getDaily_forecast().size()) {
+            forecastDay = heWeather6Bean.getDaily_forecast().size() - 1;
+        }
+        dailyForecastBean = heWeather6Bean.getDaily_forecast().get(forecastDay);
+        String tmp_max = dailyForecastBean.getTmp_max();
+        String tmp_min = dailyForecastBean.getTmp_min();
+        String tmpNow = tmp_max + "°-" + tmp_min;
+        return tmpNow;
+    }
+
+    private String getMaxTemp(AddressModel1 addressModel, int forecastDay) {
+        if (addressModel.getHeWeather6().size() == 0) {
+            return "";
+        }
+        AddressModel1.HeWeather6Bean heWeather6Bean;
+        heWeather6Bean = addressModel.getHeWeather6().get(0);
+        AddressModel1.HeWeather6Bean.DailyForecastBean dailyForecastBean;
+        if (forecastDay >= heWeather6Bean.getDaily_forecast().size()) {
+            forecastDay = heWeather6Bean.getDaily_forecast().size() - 1;
+        }
+        dailyForecastBean = heWeather6Bean.getDaily_forecast().get(forecastDay);
+        String tmp_max = dailyForecastBean.getTmp_max();
+        return tmp_max;
+    }
+    private String getMinTemp(AddressModel1 addressModel, int forecastDay) {
+        if (addressModel.getHeWeather6().size() == 0) {
+            return "";
+        }
+        AddressModel1.HeWeather6Bean heWeather6Bean;
+        heWeather6Bean = addressModel.getHeWeather6().get(0);
+        AddressModel1.HeWeather6Bean.DailyForecastBean dailyForecastBean;
+        if (forecastDay >= heWeather6Bean.getDaily_forecast().size()) {
+            forecastDay = heWeather6Bean.getDaily_forecast().size() - 1;
+        }
+        dailyForecastBean = heWeather6Bean.getDaily_forecast().get(forecastDay);
+        String tmp_min = dailyForecastBean.getTmp_min();
+        return tmp_min;
+    }
+
+
+    private String getDate(AddressModel1 addressModel, int forecastDay) {
+        if (addressModel.getHeWeather6().size() == 0) {
+            return "";
+        }
+        AddressModel1.HeWeather6Bean heWeather6Bean;
+        heWeather6Bean = addressModel.getHeWeather6().get(0);
+        AddressModel1.HeWeather6Bean.DailyForecastBean dailyForecastBean;
+        if (forecastDay >= heWeather6Bean.getDaily_forecast().size()) {
+            forecastDay = heWeather6Bean.getDaily_forecast().size() - 1;
+        }
+        dailyForecastBean = heWeather6Bean.getDaily_forecast().get(forecastDay);
+        String date = dailyForecastBean.getDate();
+        return date;
+    }
+
+    private void saveForecastWeatherInfoToDatabase(AddressModel1 addressModel) {
+        List<WeatherModel> modelList = DataSupport.findAll(WeatherModel.class);
+        if (modelList == null) {
+            modelList = new ArrayList<>();
+        }
+        for (int i = 0; i < 3; i++) {//保存当天和未来3天的天气状况
+            WeatherModel weatherModel = DataSupport.find(WeatherModel.class, i + 1);
+            if (weatherModel == null) {
+                weatherModel = new WeatherModel();
+            }
+            weatherModel.setWeatherRegime(getWeatherType(addressModel,i));
+            weatherModel.setCountry(getCountry(addressModel));
+            weatherModel.setCity(getCity(addressModel));
+            weatherModel.setMinTemperature(getMinTemp(addressModel,i));
+            weatherModel.setMaxTemperature(getMaxTemp(addressModel,i));
+            weatherModel.setNowTemperature(getTempNow(addressModel,i));
+//                                                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+//                                                    weatherModel.setDay(df.format(new Date()));
+            weatherModel.setDay(getDate(addressModel, i));
+            modelList.add(weatherModel);
+//                                                    weatherModel.update(i + 1);
+        }
+//                                                weatherModel.save();
+        DataSupport.saveAll(modelList);
+    }
+
+    /**
+     *  启动一个5s的定时器刷新同步完成显示，
+     *  填补同步数据错位漏洞，鬼知道同步的最后哪里来了一条同步中信号导致同步显示错误
+     */
+    private Timer timer_5s;
+    private void start5sTimer() {
+        if (timer_5s == null) {
+            timer_5s = new Timer();
+        }
+        timer_5s.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setHintState(AppGlobal.DEVICE_STATE_SYNC_OK);
+                    }
+                });
+            }
+        }, 5000);
+    }
+
 
 }

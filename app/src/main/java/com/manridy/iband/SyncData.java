@@ -17,14 +17,17 @@ import com.manridy.iband.bean.BoModel;
 import com.manridy.iband.bean.BpModel;
 import com.manridy.iband.bean.DoNotDisturbModel;
 import com.manridy.iband.bean.HeartModel;
+import com.manridy.iband.bean.MicrocirculationModel;
 import com.manridy.iband.bean.SleepModel;
 import com.manridy.iband.bean.StepModel;
 import com.manridy.iband.common.AppGlobal;
 import com.manridy.sdk.Watch;
+import com.manridy.sdk.bean.Microcirculation;
 import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.ble.BleParse;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleHistoryListener;
+import com.manridy.sdk.callback.BleNotifyListener;
 import com.manridy.sdk.exception.BleException;
 import com.manridy.sdk.type.InfoType;
 
@@ -43,7 +46,7 @@ public class SyncData {
     private int progressIndex;//进度当前
     private int progressSum;//进度总数
     private int errorNum;//错误计数器
-    private int stepSum,runSum,sleepSum,hrSum,bpSum,boSum;//数据记录
+    private int stepSum,runSum,sleepSum,hrSum,bpSum,boSum,microSum;//数据记录
     private OnSyncAlertListener syncAlertListener;
     private static SyncData instance;
     private Gson mGson;
@@ -184,6 +187,23 @@ public class SyncData {
                 }
             }
         });
+
+        BleParse.getInstance().setMicroHistoryListener(new BleHistoryListener() {
+            @Override
+            public void onHistory(Object o) {
+                Log.d(TAG, "onHistory: " + o.toString());
+                MicrocirculationModel microcirculation = mGson.fromJson(o.toString(), MicrocirculationModel.class);
+                if (microcirculation.getMicroLength() != 0 && microcirculation.getDate().compareTo(TimeUtil.getNowYMDHMSTime()) <= 0) {
+                    microcirculation.saveToDate();
+                    timeOutIndex = 0;
+                    progress();
+                }
+                boolean is = microcirculation.getMicroLength() == (microcirculation.getMicroNum()+1);
+                if (is || microcirculation.getMicroLength() == 0) {
+                    next();
+                }
+            }
+        });
         send();
     }
 
@@ -229,8 +249,9 @@ public class SyncData {
 
     private synchronized void next(){
         syncIndex++;
-        LogUtil.d("SyncData", "next() called syncIndex == "+syncIndex);
-        if (syncIndex < 14) {
+        LogUtil.i("SyncData", "next() called syncIndex == "+syncIndex);
+//        if (syncIndex < 14) {
+        if (syncIndex <= 18) {
             send();
         }else {
             if (syncAlertListener != null) {
@@ -251,6 +272,25 @@ public class SyncData {
             return false;
         }
     }
+
+    private boolean isSupportMicroFunction(){
+        boolean isShowMicro = (boolean) SPUtil.get(IbandApplication.getIntance().getApplicationContext(),"isShowMicro",false);
+        if(isShowMicro){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    private boolean isSupportDoNotDisturbFunction(){
+        boolean isSupportDoNotDisturb = (boolean) SPUtil.get(IbandApplication.getIntance().getApplicationContext(),AppGlobal.DATA_DO_NOT_DISTURB_IFG,false);
+        if(isSupportDoNotDisturb){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
 
     //计步历史条数>>睡眠历史条数>>心率历史条数>>血压历史条数>>血氧历史条数
     //计步当前>>计步历史>>睡眠历史>>心率历史>>血压历史>>血氧历史
@@ -340,24 +380,68 @@ public class SyncData {
 //                    next();
 //                }
 //                break;
-            case 14:  //发送勿打扰模式设置
-                if(isH1F1())break;//
-                DoNotDisturbModel curDoNotDisturbModel = IbandDB.getInstance().getDoNotDisturbModel();
-                if (curDoNotDisturbModel == null) {
-                    curDoNotDisturbModel = new DoNotDisturbModel(0,0x19,0x10,0x7,0x30);
+            case 14:
+                if(isH1F1()) break;
+                if (isSupportMicroFunction()) {  //判断是否有微循环功能，有则发送这条命令
+                    watch.getMicroInfo(InfoType.HISTORY_NUM,bleCallback);
+                } else {
+                    next();
                 }
-                watch.sendCmd(BleCmd.setDoNotDisturbCmd(curDoNotDisturbModel.getDoNotDisturbOnOff(),
-                        curDoNotDisturbModel.getStartHour(),
-                        curDoNotDisturbModel.getStartMinute(),
-                        curDoNotDisturbModel.getEndHour(),
-                        curDoNotDisturbModel.getEndMinute())
-                );
                 break;
-
+            case 15:
+                if(isH1F1()) break;
+                if (isSupportMicroFunction()) {  //判断是否有微循环功能，有则发送这条命令
+                    watch.sendCmd(BleCmd.getFatigueCmd(), bleCallback);
+//                    Log.i(TAG, "send: ---------------疲劳度测试命令");
+                } else {
+                    next();
+                }
+                break;
+            case 16:
+                if(isH1F1())break;//发送勿打扰模式设置
+                if (isSupportDoNotDisturbFunction()) { //支持勿扰模式功能才发送命令，否则不发送此命令给设备
+                    DoNotDisturbModel curDoNotDisturbModel = IbandDB.getInstance().getDoNotDisturbModel();
+                    if (curDoNotDisturbModel == null) {
+                        curDoNotDisturbModel = new DoNotDisturbModel(0, 0x19, 0x10, 0x7, 0x30);
+                    }
+                    watch.sendCmd(BleCmd.setDoNotDisturbCmd(curDoNotDisturbModel.getDoNotDisturbOnOff(),
+                            curDoNotDisturbModel.getStartHour(),
+                            curDoNotDisturbModel.getStartMinute(),
+                            curDoNotDisturbModel.getEndHour(),
+                            curDoNotDisturbModel.getEndMinute())
+                            , bleCallback);
+                } else {
+                    next();
+                }
+                break;
+            case 17:
+                if(isH1F1()) break;
+                if (isSupportMicroFunction()) {
+                    if (microSum != 0) {
+                        watch.getMicroInfo(InfoType.HISTORY_INFO, bleCallback);
+                    } else {
+                        next();
+                    }
+                } else {
+                    next();
+                }
+                break;
+            case 18:
+                if(isH1F1())break;//
+                if (isSupportMicroFunction()) {
+                    String strHeartValue = (String) SPUtil.get(IbandApplication.getIntance().getApplicationContext(), AppGlobal.DATA_ALERT_HEART_VALUE, "150");
+                    String strBloodValue = (String) SPUtil.get(IbandApplication.getIntance().getApplicationContext(), AppGlobal.DATA_ALERT_BLOOD_VALUE, "140");
+                    int onOff_ = (int) SPUtil.get(IbandApplication.getIntance().getApplicationContext(), AppGlobal.DATA_ALERT_BLOOD_ON_OFF, 0x00);
+                    watch.sendCmd(BleCmd.setHeartBloodAlert(onOff_, Integer.parseInt(strHeartValue), Integer.parseInt(strBloodValue)), bleCallback);
+                } else {
+                    next();
+                }
+                break;
         }
         timeOutIndex = 0;
     }
 
+    private static final String TAG = "SyncData";
     private synchronized void parse(Object o){
         switch (syncIndex) {
             case 0:
@@ -402,6 +486,30 @@ public class SyncData {
             case 7:
                 StepModel curStep = mGson.fromJson(o.toString(), StepModel.class);
                 saveCurStep(curStep);
+                next();
+                break;
+            case 14://微循环
+                Microcirculation microcirculation = mGson.fromJson(o.toString(), Microcirculation.class);
+                int typeMicro = microcirculation.getType();
+                if (typeMicro == BleParse.CALL_MICRO_INFO) {
+                    microSum = microcirculation.getMicroLength();
+                    progressSum += microSum;
+                    next();
+//                    Log.d(TAG, "微循环接收parse:-------------------------------------------->>>>>>>> " + o.toString());
+//                    Log.i(TAG, "send: 微循环数据条数-------------------->>>>>>>>" + microSum);
+                } else {
+                    send();
+                }
+                break;
+            case 15://疲劳状态
+//                Log.i(TAG, "疲劳状态接收parse:---==============================------- " + o.toString());
+                next();
+                break;
+            case 16:
+                next();
+////                Log.i(TAG, "勿扰模式parse:---==============================------- " + o.toString());
+                break;
+            case 18://心率血压报警
                 next();
                 break;
         }

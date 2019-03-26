@@ -31,6 +31,7 @@ import com.tencent.bugly.beta.Beta;
 
 import org.litepal.LitePalApplication;
 
+import java.util.Calendar;
 import java.util.List;
 
 import static com.manridy.iband.common.AppGlobal.DEVICE_STATE_UNCONNECT;
@@ -58,10 +59,12 @@ public class IbandApplication extends MultiDexApplication {
     public static double location_latitude;
     public static double location_longitude;
 
+
     @Override
     public void onCreate() {
         super.onCreate();
         intance = this;
+        obtainPhoneType();
         SPUtil.put(this, AppGlobal.DATA_DEVICE_CONNECT_STATE, DEVICE_STATE_UNCONNECT);
         SPUtil.put(this, AppGlobal.STATE_APP_OTA_RUN, false);
 //        startService(new Intent(this, AppNotificationListenerService.class));
@@ -70,7 +73,9 @@ public class IbandApplication extends MultiDexApplication {
 //        List<AppModel> model = db.getAppList();
 
         Fresco.initialize(this);//初始化图片加载
-//        initBleSevrice();//初始化蓝牙服务
+        if (!"huawei".equalsIgnoreCase(Watch.brand)) {
+            initBleSevrice();//初始化蓝牙服务
+        }
         initAlertService();//初始化提醒服务
         if(!UpdateActivity.isGoogle) {
             initBugly();//初始化bugly
@@ -80,6 +85,15 @@ public class IbandApplication extends MultiDexApplication {
 //        CrashHandler.getInstance().init(intance);
         MobSDK.init(this);
 
+//        obtainPhoneType();
+
+    }
+
+
+    /**
+     * 获取手机机型是否是华为
+     */
+    private void obtainPhoneType() {
         try {
             String brand = android.os.Build.BRAND;
             if("HONOR".equalsIgnoreCase(brand)){
@@ -91,7 +105,6 @@ public class IbandApplication extends MultiDexApplication {
             Log.e(TAG,"fail:getBrand");
         }
     }
-
 
     private void initLangue() {
         int curSelect = (int) SPUtil.get(this, AppGlobal.DATA_APP_LANGUE,0);
@@ -115,7 +128,7 @@ public class IbandApplication extends MultiDexApplication {
         bindService(bindIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
-    private void initAlertService() {
+    public void initAlertService() {
         startService(new Intent(this,AlertService.class));
     }
 
@@ -127,7 +140,12 @@ public class IbandApplication extends MultiDexApplication {
     public void initNotificationService() {
         boolean appOnOff = (boolean) SPUtil.get(this, AppGlobal.DATA_ALERT_APP,false);
         if (appOnOff) {
-            startService(new Intent(this, NotificationCollectorMonitorService.class));
+            Intent intent = new Intent(this, NotificationCollectorMonitorService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {//适配8.0
+                startForegroundService(intent);
+            } else {
+                startService(intent);
+            }
         }
     }
 
@@ -190,5 +208,40 @@ public class IbandApplication extends MultiDexApplication {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(base);
+    }
+
+
+    /**
+     * @Date 19/1/15
+     * @Author yw
+     * @Desc 記錄用戶打開iband的次數並第二天上傳
+     * @Param code  1上傳
+     *              0記錄打開iband次數
+     */
+    public static void recordingLoginNumFunc() {
+        int recordingLoginNum = (int) SPUtil.get(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM, 0);
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int day1 = new IbandLoginBean(getIntance()).obtainLoginDay();
+        if (day != day1 && recordingLoginNum != 0) {
+            new IbandLoginBean(getIntance())
+                    .setLoginInfoToThisObj()
+                    .pushLoginNumToServer(new IbandLoginBean.OnPushResultCallback() {
+                        @Override
+                        public void onResult(int result) {
+                            if (result == 1) {
+                                SPUtil.remove(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM);
+                                int recordingLoginNum = (int) SPUtil.get(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM, 0);
+                                new IbandLoginBean(getIntance()).saveLoginDay();
+                                SPUtil.put(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM, ++recordingLoginNum);
+                            }
+                        }
+                    });
+        } else {
+            if (recordingLoginNum == 0) {
+                new IbandLoginBean(getIntance()).saveLoginDay();
+            }
+            SPUtil.put(getIntance(), AppGlobal.KEY_RECORDING_LOGIN_NUM, ++recordingLoginNum);
+        }
     }
 }

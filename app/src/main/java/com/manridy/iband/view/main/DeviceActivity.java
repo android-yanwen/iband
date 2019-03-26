@@ -199,6 +199,9 @@ public class DeviceActivity extends BaseActionActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_qrcode://二维码点击
+                if (ibandApplication.service == null || ibandApplication.service.watch == null)
+                    return;
+
                 ibandApplication.service.watch.startScan(new TimeScanCallback(5000,null) {
                     @Override
                     public void onScanEnd() {
@@ -212,6 +215,9 @@ public class DeviceActivity extends BaseActionActivity {
                 });
                 Intent intent = new Intent(DeviceActivity.this, QrActivity.class);
                 startActivityForResult(intent,10000);
+
+                // yw添加
+                ibandApplication.service.watch.stopScan(mTimeScanCallback);
                 break;
             case R.id.iv_refresh://刷新按钮点击
                 scanDevice(true);
@@ -226,9 +232,23 @@ public class DeviceActivity extends BaseActionActivity {
                 } else {
                     unBindDevice();//解绑设备
                 }
+                // yw添加
+                ibandApplication.service.watch.stopScan(mTimeScanCallback);
                 break;
         }
     }
+
+    private void setIsSupplyWeather() {
+        if (bindName.equals("M01")) {
+            SPUtil.put(mContext, "isSupplyWeather", false);
+        } else {
+            SPUtil.put(mContext, "isSupplyWeather", true);
+        }
+    }
+//    public boolean getIsSupplyWeather() {
+//        boolean isSupply = (boolean) SPUtil.get(mContext, "isSupplyWeather", true);
+//        return isSupply;
+//    }
 
     //绑定设备
     private void bindDevice(BluetoothDevice device) {
@@ -276,6 +296,7 @@ public class DeviceActivity extends BaseActionActivity {
                     eventSend(EventGlobal.STATE_DEVICE_BIND);//发送绑定成功广播
                 }
 
+                setIsSupplyWeather();//设置绑定的设备是否支持天气
             }
 
             @Override
@@ -291,7 +312,13 @@ public class DeviceActivity extends BaseActionActivity {
 
     //解绑设备
     private void unBindDevice() {
+        if (ibandApplication.service == null || ibandApplication.service.watch == null) {
+            return;
+        }
         String mac = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_BIND_MAC, "");
+        if (mac == null || mac == "") {
+            return;
+        }
         ibandApplication.service.watch.disconnect(mac, new BleCallback() {
             @Override
             public void onSuccess(Object o) {
@@ -308,11 +335,11 @@ public class DeviceActivity extends BaseActionActivity {
         SPUtil.remove(mContext, AppGlobal.DATA_FIRMWARE_VERSION);
         SPUtil.remove(mContext, AppGlobal.DATA_TIMING_HR);
         SPUtil.remove(mContext, AppGlobal.DATA_TIMING_HR_SPACE);
+        SPUtil.remove(mContext, AppGlobal.DATA_DEFAULT_TIME_HR_SPACE_IS_CHANGE);
 
-        //删除时间间隔
-        SPUtil.remove(mContext, AppGlobal.DATA_UPDATE_INTERVAL_HOUR);
-        SPUtil.remove(mContext, AppGlobal.DATA_UPDATE_INTERVAL_MINUTE);
 
+
+        SPUtil.remove(mContext, AppGlobal.DATA_DATE);
         curPosition = -1;
         bindName = "";
         eventSend(EventGlobal.STATE_DEVICE_UNBIND);
@@ -344,6 +371,12 @@ public class DeviceActivity extends BaseActionActivity {
 
     //扫描设备
     private void scanDevice(boolean isCheckBind) {
+        if (ibandApplication.service == null) {
+            return;
+        }
+        if (ibandApplication.service.watch == null) {
+            return;
+        }
         if (!ibandApplication.service.watch.isBluetoothEnable()) {
             ibandApplication.service.watch.BluetoothEnable(mContext);
             return;

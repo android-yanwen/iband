@@ -3,11 +3,11 @@ package com.manridy.iband.view.model;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -20,17 +20,20 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.gson.Gson;
 import com.manridy.applib.utils.LogUtil;
+import com.manridy.applib.utils.SPUtil;
 import com.manridy.iband.IbandApplication;
 import com.manridy.iband.IbandDB;
 import com.manridy.iband.R;
 import com.manridy.iband.bean.HeartModel;
+import com.manridy.iband.common.AppGlobal;
 import com.manridy.iband.common.EventGlobal;
 import com.manridy.iband.common.EventMessage;
 import com.manridy.iband.ui.CircularView;
 import com.manridy.iband.ui.items.DataItems;
-import com.manridy.iband.view.test.TestHrTimingActivity;
 import com.manridy.iband.view.base.BaseEventFragment;
 import com.manridy.iband.view.history.HrHistoryActivity;
+import com.manridy.iband.view.test.TestHrTimingActivity;
+import com.manridy.sdk.bean.Fatigue;
 import com.manridy.sdk.ble.BleCmd;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleNotifyListener;
@@ -49,6 +52,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 import static com.manridy.applib.base.BaseActivity.isFastDoubleClick;
 
@@ -84,11 +88,36 @@ public class HrFragment extends BaseEventFragment {
     List<HeartModel> curHeartList;
     int avgHr, maxHr, minHr;
     boolean isTestData = true;
+    //疲劳度等级
+    private static final String[] listFatigue = new String[]{
+            "精力充沛",
+            "精力良好",
+            "轻度疲劳",
+            "中度疲劳",
+            "极度疲劳",
+            ""
+    };
+    @BindView(R.id.id_iv_fatigue)
+    TextView idIvFatigue;
+    Unbinder unbinder;
+    @BindView(R.id.ll_fatugue)
+    LinearLayout llFatugue;
+
+    private boolean isShowFatigueLayout() {
+        boolean isShowMicro = (boolean) SPUtil.get(mContext, "isShowMicro", false);
+        return isShowMicro;
+    }
 
     @Override
     public View initView(LayoutInflater inflater, @Nullable ViewGroup container) {
         root = inflater.inflate(R.layout.fragment_hr, container, false);
         ButterKnife.bind(this, root);
+        if (isShowFatigueLayout()) {
+            llFatugue.setVisibility(View.VISIBLE);
+        } else {
+            llFatugue.setVisibility(View.GONE);
+        }
+
         return root;
     }
 
@@ -96,11 +125,15 @@ public class HrFragment extends BaseEventFragment {
     protected void initVariables() {
         initChartView(lcHr);
         initChartAxis(lcHr);
+
+        int i_fatigue = (int) SPUtil.get(mContext, AppGlobal.DATA_FATIGUE_LEVEL, 5);
+        idIvFatigue.setText(listFatigue[i_fatigue]);
     }
 
     @Override
     protected void initListener() {
-        if(IbandApplication.getIntance().service.watch!=null) {
+        if (IbandApplication.getIntance().service == null) return;
+        if (IbandApplication.getIntance().service.watch != null) {
             IbandApplication.getIntance().service.watch.setHrNotifyListener(new BleNotifyListener() {
                 @Override
                 public void onNotify(Object o) {//上报不做保存处理
@@ -115,6 +148,16 @@ public class HrFragment extends BaseEventFragment {
                 }
             });
         }
+        if (IbandApplication.getIntance().service.watch != null) {
+            IbandApplication.getIntance().service.watch.setFatigueNotifyListener(new BleNotifyListener() {
+                @Override
+                public void onNotify(Object o) {//上报不做保存处理
+                    Fatigue fatigue = new Gson().fromJson(o.toString(), Fatigue.class);
+                    EventBus.getDefault().post(new EventMessage(EventGlobal.REFRESH_VIEW_ECG_FATIGUE, fatigue.getTy()));
+                }
+            });
+        }
+
         btTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,7 +208,7 @@ public class HrFragment extends BaseEventFragment {
         if (event.getWhat() == EventGlobal.REFRESH_VIEW_HR) {
             setCircularView();
             updateChartView(lcHr, curHeartList);
-            tvEmpty.setVisibility(curHeartList.size() == 0?View.VISIBLE:View.GONE);
+            tvEmpty.setVisibility(curHeartList.size() == 0 ? View.VISIBLE : View.GONE);
 
             setDataItem();
         } else if (event.getWhat() == EventGlobal.ACTION_HR_TEST) {
@@ -175,6 +218,11 @@ public class HrFragment extends BaseEventFragment {
             btTest.setText(R.string.hint_test);
             cvHr.setTitle(getString(R.string.hint_last_hr)).invaliDate();
             isTestData = true;
+        } else if (event.getWhat() == EventGlobal.REFRESH_VIEW_ECG_FATIGUE) {
+            Integer msg = (Integer) event.getObject();
+            String sFatigue = listFatigue[msg];
+            idIvFatigue.setText(sFatigue);
+            SPUtil.put(mContext, AppGlobal.DATA_FATIGUE_LEVEL, msg);
         }
     }
 
@@ -309,7 +357,7 @@ public class HrFragment extends BaseEventFragment {
     OnChartValueSelectedListener selectedListener = new OnChartValueSelectedListener() {
         @Override
         public void onValueSelected(Entry e, Highlight h) {
-            int x = e.getX() >0 ? (int) e.getX() : 0;
+            int x = e.getX() > 0 ? (int) e.getX() : 0;
             LogUtil.d(TAG, "onValueSelected() called with: e = [" + e.getX() + "], h = [" + x + "]");
             if (curHeartList != null && curHeartList.size() >= x) {
                 HeartModel heartModel = curHeartList.get(x > 0 ? x - 1 : 0);
@@ -322,8 +370,8 @@ public class HrFragment extends BaseEventFragment {
                 } catch (Exception e1) {
 
                 }
-                diData1.setItemData(getString(R.string.hint_time), times,false);
-                diData2.setItemData("","",false);
+                diData1.setItemData(getString(R.string.hint_time), times, false);
+                diData2.setItemData("", "", false);
                 diData3.setItemData(getString(R.string.hint_view_hr), String.valueOf(heartModel.getHeartRate()));
             }
         }
@@ -334,4 +382,17 @@ public class HrFragment extends BaseEventFragment {
         }
     };
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        unbinder = ButterKnife.bind(this, rootView);
+        return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 }

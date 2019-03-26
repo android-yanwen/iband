@@ -12,10 +12,12 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.ArrayMap;
 import android.util.Log;
 
 
@@ -33,7 +35,9 @@ import com.manridy.sdk.scan.TimeScanCallback;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -169,6 +173,7 @@ public class BluetoothLeManager {
     public static final String ACTION_SERVICES_DISCOVERED = "ACTION_SERVICES_DISCOVERED";//蓝牙服务发现
     public static final String ACTION_NOTIFICATION_ENABLE ="ACTION_NOTIFICATION_ENABLE";//蓝牙通知开启
     public static final String ACTION_DATA_AVAILABLE = "ACTION_DATA_AVAILABLE";//收到蓝牙数据
+    public final static String ACTION_DATA_WRITE_SUCCESS = "ACTION_DATA_WRITE_SUCCESS";//数据写成功
 
     public void init(Context mContext){
         this.mContext = mContext.getApplicationContext();
@@ -327,6 +332,7 @@ public class BluetoothLeManager {
                     @Override
                     public void run() {
                         BluetoothGatt gatt = device.connectGatt(mContext, false, mBluetoothGattCallback);
+                        curBluetoothGatt = gatt;//修改--------------
 
                         bluetoothLeDevices.add(new BluetoothLeDevice(gatt, isReConnect));
 //                    connectCallback.setBluetoothGatt(gatt);
@@ -338,6 +344,7 @@ public class BluetoothLeManager {
 //            connectCallback.setBluetoothGatt(gatt);
                 bluetoothLeDevices.add(new BluetoothLeDevice(gatt, isReConnect));
                 Log.i(TAG, "connected2() bluetoothLeDevices.size()==== " + bluetoothLeDevices.size());
+                curBluetoothGatt = gatt;//修改-------------
             }
             handler.postDelayed(connectTimeoutRunnable, 10000);
         }
@@ -771,6 +778,7 @@ public class BluetoothLeManager {
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicWrite(gatt, characteristic, status);
 //            Log.e(TAG, "onCharacteristicWrite: data = "+characteristic.getValue()+" device= " + gatt.getDevice().getAddress() );
+            broadcastUpdate(ACTION_DATA_WRITE_SUCCESS, characteristic.getValue(), gatt.getDevice().getAddress());
         }
 
         @Override
@@ -780,7 +788,7 @@ public class BluetoothLeManager {
             LogUtil.e(TAG,"返回数据; "+ BitUtil.parseByte2HexStr(characteristic.getValue()));
             BleParse.getInstance().setBleParseData(characteristic.getValue(),bleCallback);
             bleCallback = null;
-            broadcastUpdate(ACTION_DATA_AVAILABLE,characteristic.getValue(),gatt.getDevice().getAddress());
+            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic.getValue(), gatt.getDevice().getAddress());
         }
 
         @Override
@@ -945,16 +953,18 @@ public class BluetoothLeManager {
         }
 
     }
+    public final static String EXTRA_DATA = "com.manridy.sdk.EXTRA_DATA";
 
     /*******广播*******/
-    private void broadcastUpdate(String action,byte[] data,String mac) {
+    private void broadcastUpdate(String action, byte[] data, String mac) {
         final Intent intent = new Intent(action);
-        if (data != null){
-            intent.putExtra("BLUETOOTH_DATA",data);
+        if (data != null) {
+            intent.putExtra("BLUETOOTH_DATA", data);
         }
-        if (mac != null){
-            intent.putExtra("BLUETOOTH_MAC",mac);
+        if (mac != null) {
+            intent.putExtra("BLUETOOTH_MAC", mac);
         }
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
+
 }

@@ -83,7 +83,6 @@
     <string name="hint_sleep_end">Waking up</string>
     <string name="error_end_before">End time cannot be earlier than start time.</string>
     <string name="hint_data_export">Data output</string>
-    <string name="activity_feedback">Feedback</string>
     <string name="hint_hr_correct1">Note: Do not modify this data if your device is capable of measuring heart rate normally！</string>
     <string name="hint_alert_lost1">Detect the watch </string>
     <string name="hint_lost_nap">Anti-Lost-Funktion ist ausgeschaltet</string>
@@ -354,14 +353,16 @@
     <string name="button_reseting">Reset</string>
     <string name="hint_not_get_devicelist">Failed to get device list</string>
 
-    <string name="hint_exporting">Exporting data, please wait ...</string>
-    <string name="hint_searched">Search complete</string>
 
     <string name="activity_sending">Sending...</string>
     <string name="activity_send_success">Send success</string>
     <string name="activity_send_fail">Send fail</string>
+
+    <string name="activity_feedback">Feedback</string>
+    <string name="hint_exporting">Exporting data, please wait ...</string>
+    <string name="hint_searched">Search complete</string>
     <string name="heart_rate_instructions">
-        Calibration: Use the calibration function when you find that you cannot measure your heart rate, or if your measurement is prone to failure.\n
+     Calibration: Use the calibration function when you find that you cannot measure your heart rate, or if your measurement is prone to failure.\n
 Reset: Restores the heart rate function to the factory settings.\n
 Operation method:\n\n
 
@@ -524,33 +525,46 @@ Exit iband app（Apple users should ignore the device on Bluetooth.）. At this 
 2. After binding WeRun, you can make iband app and WeRun connected to the device at the same time without interference.
 </item>
     </string-array>
-    <string name="hint_update_delay">一个星期内不重复提醒</string>
-    <string name="hint_view_ecg">心电</string>
-    <string name="title_ecg_history">心电记录</string>
-    <string name="notifyTitle">提示</string>
-    <string name="gpsNotifyMsg">当前应用需要打开定位功能。 请点击设置-定位服务-打开定位功能。</string>
-    <string name="hint_sportpace">配速(min/km)</string>
-    <string name="hint_not_support_google_map">本机不支持Google地图!</string>
-    <string name="hint_pace">配速</string>
-    <string name="hint_sporting">运动中</string>
-    <string name="hint_stopsport">结束本次运动</string>
-    <string name="hint_pausesport">暂停运动</string>
-    <string name="hint_no_gps">当前GPS信号强度弱,无法计算运动数据,请移步至信号较强处运动</string>
-    <string name="hint_no_data">暂无数据</string>
+    <string name="hint_view_ecg">ECG</string>
+    <string name="title_ecg_history">ECG record</string>
+    <string name="notifyTitle">prompt</string>
+    <string name="gpsNotifyMsg">The current app needs to turn on location. Click Settings - Location Services - to turn on location.</string>
+    <string name="hint_sportpace">Speed (min/km)</string>
+    <string name="hint_not_support_google_map">This machine does not support Google Maps!</string>
+    <string name="hint_pace">Speed</string>
+    <string name="hint_sporting">In motion</string>
+    <string name="hint_stopsport">End this campaign</string>
+    <string name="hint_pausesport">Pause movement</string>
+    <string name="hint_no_gps">The current GPS signal strength is weak, and the motion data cannot be calculated. Please move to the strong signal.</string>
+    <string name="hint_no_data">No data</string>
     <string name="hint_unit_pace">(min/km)</string>
-    <string name="hint_indoors_run">室内跑</string>
-    <string name="hint_sportstep">运动步数</string>
-    <string name="hint_sporttime">时间(H/Min/Sec)</string>
-    <string name="calorie">卡路里</string>
-    <string name="hint_outdoors_run">户外跑</string>
-    <string name="hint_only_use_amap">仅使用高德地图</string>
-    <string name="hint_only_use_amap_info">设置运动模式中是否仅使用高德地图</string>
-    <string name="hint_lastRecord">上次记录</string>
-    <string name="activity_input_question">请输入问题描述</string>
-    <string name="activity_input_email">请填写Email地址</string>
-    <string name="text_send">发送</string>
-    <string name="text_contact_address">联系邮箱</string>
-    <string name="text_please_input_infomation">填写方便我们联系你</string>
-    <string name="text_please_input_question_and_opinion">请输入遇到的问题或建议</string>
-    <string name="text_do_not_disturb">勿扰模式</string>
+    <string name="hint_indoors_run">Indoor running</string>
+    <string name="hint_sportstep">Number of steps</string>
+    <string name="hint_sporttime">Time (H/Min/Sec)</string>
+    <string name="calorie">Calorie</string>
+    <string name="hint_outdoors_run">Running outdoors</string>
+    <string name="hint_only_use_amap">Use only Gaudí map</string>
+    <string name="hint_only_use_amap_info">Set whether to use only Gaode map in sports mode</string>
+    <string name="hint_lastRecord">Last record</string>
+    <string name="activity_input_question">Please enter a description of the problem</string>
+    <string name="activity_input_email">Please fill in the email address</string>
+    <string name="text_send">send</string>
+    <string name="text_contact_address">Contact email</string>
+    <string name="text_please_input_infomation">Fill in, we can contact you.</string>
+    <string name="text_please_input_question_and_opinion">Please enter a question or suggestion</string>
+    <string name="text_do_not_disturb">Do not disturb mode</string>
+    <string name="hint_update_delay">Do not repeat reminders within one week</string>
+    <string name="hint_mountain_climbing">Mountain climbing</string>
+    <string name="hint_hear_rate_alert">Heart rate alarm</string>
+    <string name="hint_heart_rate_alert_selection">Heart rate alarm selection</string>
+    <string name="hint_blood_pressure_alarm_selection">Blood pressure alarm selection</string>
+    <string name="hint_heart_rate_alarm">Hear rate alarm</string>
+    <string name="hint_blood_pressure_alarm">Blood pressure alarm</string>
+    <string name="hint_average_cycle">Average cycle</string>
+    <string name="hint_minimum_cycle">Minimum cycle</string>
+    <string name="hint_highest_cycle">Highest_cycle</string>
+    <string name="hint_microcirculation">Microcirculation</string>
+    <string name="hint_blood_pressure_alert">Blood pressure alarm</string>
+    <string name="hint_load_file">Loading file...</string>
+    <string name="hint_badminton">Badminton</string>
 </resources>

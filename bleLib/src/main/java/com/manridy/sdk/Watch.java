@@ -2,6 +2,8 @@ package com.manridy.sdk;
 
 
 import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
 import android.os.Handler;
 import android.util.Log;
 
@@ -16,6 +18,8 @@ import com.manridy.sdk.ble.WatchApi;
 import com.manridy.sdk.callback.BleActionListener;
 import com.manridy.sdk.callback.BleCallback;
 import com.manridy.sdk.callback.BleNotifyListener;
+import com.manridy.sdk.common.BitUtil;
+import com.manridy.sdk.common.LogUtil;
 import com.manridy.sdk.exception.BleException;
 import com.manridy.sdk.exception.OtherException;
 import com.manridy.sdk.exception.TimeOutException;
@@ -27,6 +31,7 @@ import com.manridy.sdk.type.PhoneType;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -195,9 +200,9 @@ public class Watch extends BluetoothLeManager implements WatchApi {
     public synchronized void sendCmd(byte[] data, BleCallback bleCallback){
         String datas = "";
         for (int i = 0;i<data.length;i++){
-            datas+=" ["+i+"]:"+data[i];
+            datas += " " + Integer.toHexString(data[i]&0xff);
         }
-        Log.i("sendCmd","sendCmd:"+datas);
+        Log.i("sendCmd", "data length:" + data.length + " cmd:" + datas);
         messageList.add(new cmdMessage(data, bleCallback));
         if (thread != null) {
             synchronized (thread) {
@@ -263,6 +268,17 @@ public class Watch extends BluetoothLeManager implements WatchApi {
         }
     }
 
+    /**
+     * Created by yw on 19/1/22
+     * SYD8821固件升级蓝牙发送函数
+     * */
+    public void bleDfuSendCmd(byte[] cmd) {
+        if (curBluetoothGatt == null || cmd == null) return;
+        BluetoothGattService bluetoothGattService=curBluetoothGatt.getService(UUID.fromString("f000efe0-0451-4000-0000-00000000b000"));
+        BluetoothGattCharacteristic characteristicWrite = bluetoothGattService.getCharacteristic(UUID.fromString("f000efe1-0451-4000-0000-00000000b000"));
+        characteristicWrite.setValue(cmd);
+        curBluetoothGatt.writeCharacteristic(characteristicWrite);
+    }
     //=============================蓝牙操作=============================
 
 
@@ -582,6 +598,25 @@ public class Watch extends BluetoothLeManager implements WatchApi {
             sendCmd(BleCmd.getHrData(2),bleCallback);
         }
     }
+    /**
+     * 获取微循环
+     * @param infoType CURRENT_INFO 当前数据，HISTORY_INFO 历史数据，HISTORY_NUM 历史数量
+     */
+    public void getMicroInfo(InfoType infoType, BleCallback bleCallback) {
+        if (infoType == null) {
+            throw new IllegalArgumentException("getMicroInfo infoType is null !");
+        }
+        if (infoType == InfoType.CURRENT_INFO) {
+//            sendCmd(BleCmd.getHrData(0),bleCallback);
+        }else if (infoType == InfoType.HISTORY_INFO){
+            sendCmd(BleCmd.getMicroData(1),bleCallback);
+        }else if (infoType == InfoType.HISTORY_NUM){
+            sendCmd(BleCmd.getMicroData(2),bleCallback);
+//            byte[] bytes = BleCmd.getMicroData(2);
+//            String s_bytes = BitUtil.parseByte2HexStr(bytes);
+//            LogUtil.d("Watch","微循环发送获取条数协议 "+s_bytes);
+        }
+    }
 
     /**
      * 获取睡眠
@@ -723,7 +758,21 @@ public class Watch extends BluetoothLeManager implements WatchApi {
     public void setHrNotifyListener(BleNotifyListener hrNotifyListener) {
         BleParse.getInstance().setHrNotifyListener(hrNotifyListener);
     }
+    /**
+     * 微循环上报数据监听
+     * @param microNotifyListener
+     */
+    public void setMicroNotifyListener(BleNotifyListener microNotifyListener) {
+        BleParse.getInstance().setMicroNotifyListener(microNotifyListener);
+    }
 
+    /**
+     * 疲劳度上报数据监听
+     * @param fatigueNotifyListener
+     */
+    public void setFatigueNotifyListener(BleNotifyListener fatigueNotifyListener) {
+        BleParse.getInstance().setFatigueNotifyListener(fatigueNotifyListener);
+    }
     /**
      * ecg心率上报数据监听
      * @param hrNotifyListener

@@ -75,6 +75,18 @@ public class DeviceList {
         private String is_heart_rate_call_police;
         private String ecg;
         private String no_exec;
+        private String mcu_platform;
+
+        public String getMcu_platform() {
+            return mcu_platform;
+        }
+
+        private String microcirculation;
+
+        public String getMicrocirculation() {
+            return microcirculation;
+        }
+
 
         public void setNo_exec(String no_exec) {
             this.no_exec = no_exec;

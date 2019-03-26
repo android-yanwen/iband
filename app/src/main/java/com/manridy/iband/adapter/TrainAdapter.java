@@ -99,7 +99,8 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.MyViewHolder
         public void bindData(StepModel step) {
             int itemRes = R.mipmap.train_run;
             int itemText = R.string.hint_run;
-            String stepText = step.getStepNum()+(itemMin.getContext().getResources().getString(R.string.hint_unit_step));
+            String stepText = step.getStepNum() + (itemMin.getContext().getResources().getString(R.string.hint_unit_step));
+            int soprtMode = step.getSportMode();
             if (step.getSportMode() == 1) {
                 itemRes =  R.mipmap.train_ic_bicycle;
                 itemText = R.string.hint_cycling;
@@ -131,10 +132,19 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.MyViewHolder
                 itemText = R.string.hint_cycling;
                 DecimalFormat df = new DecimalFormat("0.00");
                 stepText = df.format((float) step.getStepMileage() / 1000)+(itemMin.getContext().getResources().getString(R.string.hint_unit_mi));
+            } else if (soprtMode == 5) {
+                itemRes = R.mipmap.train_ic_clim;
+                itemText = R.string.hint_mountain_climbing;
+                stepText = "";
+            } else if (soprtMode == 6) {
+                itemRes = R.mipmap.train_ic_badminton;
+                itemText = R.string.hint_badminton;
+                stepText = "";
             }
             itemIcon.setImageResource(itemRes);
 
-            Date date = TimeUtil.getDate(step.getStepDate());
+            String stepDate = step.getStepDate();
+            Date date = TimeUtil.getDate(stepDate);
             if(date==null){
                 date = new Date();
             }

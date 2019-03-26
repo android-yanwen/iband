@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="#3949ab"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="288dp"
+        android:background="#3949ab">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:visibility="visible"
+            android:padding="2dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@mipmap/cycle_ic_range"
+                android:alpha="0.78"
+                android:textColor="@color/color_white"
+                android:textSize="12sp"
+                android:text=" 正常值范围"/>
+            <TextView
+                android:layout_marginTop="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/color_white"
+                android:textSize="15sp"
+                android:text="0.055-0.115"/>
+        </LinearLayout>
+
+        <com.manridy.iband.ui.CircularView
+            android:id="@+id/cv_microcirculation"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            app:cv_background_color="#26ffffff"
+            app:cv_progressbar_color="#deffffff"
+            app:cv_title="@string/hint_last_hr"
+            app:cv_text="--"
+            app:cv_state=""
+            app:cv_unit="1/s"
+            app:cv_progress="0.5"
+            app:cv_icon="@mipmap/cycle_ic"/>
+
+        <Button
+            android:id="@+id/bt_microcirculation_test"
+            android:layout_width="92dp"
+            android:layout_height="36dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="180dp"
+            android:textSize="14sp"
+            android:textColor="@color/color_white"
+            android:text="@string/hint_test"
+            android:background="@drawable/shape_button_hr"/>
+
+        <ImageView
+            android:id="@+id/iv_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/all_history"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="13dp"
+            android:paddingRight="16dp"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+
+        <com.manridy.iband.ui.items.DataItems
+            android:id="@+id/di_data1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:data_type="left"
+            app:data_hint="@string/hint_average_cycle"
+            app:data_unit="1/s"
+            app:data="--"/>
+
+        <com.manridy.iband.ui.items.DataItems
+            android:id="@+id/di_data2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:data_type="center"
+            app:data_hint="@string/hint_minimum_cycle"
+            app:data_unit="1/s"
+            app:data="--"/>
+
+        <com.manridy.iband.ui.items.DataItems
+            android:id="@+id/di_data3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:data_type="right"
+            app:data_hint="@string/hint_highest_cycle"
+            app:data_unit="1/s"
+            app:data="--"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lc_microcirculation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="20dp"
+            android:background="#16000000"/>
+
+        <TextView
+            android:id="@+id/tv_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:drawableLeft="@mipmap/all_note"
+            android:text="@string/hint_empty_data"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tv_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="3dp"
+            android:textColor="#8a000000"
+            android:textSize="10sp"
+            android:text="00:00"/>
+        <TextView
+            android:id="@+id/tv_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="3dp"
+            android:textColor="#8a000000"
+            android:textSize="10sp"
+            android:text="23:59"/>
+    </RelativeLayout>
+</LinearLayout>

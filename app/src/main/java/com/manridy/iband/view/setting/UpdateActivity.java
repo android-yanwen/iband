@@ -66,7 +66,8 @@ public class UpdateActivity extends BaseActionActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateFirmView();
+//        updateFirmView();
+        loadWatchInfo();
     }
 
     @Override
@@ -110,7 +111,14 @@ public class UpdateActivity extends BaseActionActivity {
                     }
                 }else if("1".equals(resultBean.getNeed_update())){
                     isViewBtUpdate = true;
+                } else if ("1.0.0".compareTo(resultBean.getNeed_update()) <= 0) {
+                    isViewBtUpdate = true;
                 }
+//                String need_update = resultBean.getNeed_update();
+//                int a = "1.0.1".compareTo(need_update);
+//                int b = "1.0.0".compareTo(need_update);
+//                int c = "1.0".compareTo(need_update);
+
             }
         }
 
@@ -158,6 +166,13 @@ public class UpdateActivity extends BaseActionActivity {
     @Override
     protected void loadData() {
         super.loadData();
+    }
+
+
+    private void loadWatchInfo() {
+        if (ibandApplication == null || ibandApplication.service == null || ibandApplication.service.watch == null) {
+            return;
+        }
         ibandApplication.service.watch.getFirmwareVersion(new BleCallback() {
             @Override
             public void onSuccess(Object o) {
@@ -171,6 +186,16 @@ public class UpdateActivity extends BaseActionActivity {
                         updateFirmView();
                     }
                 });
+
+                //查找设备的升级类型
+                String s_mcu_platform = findWatchMcu_platform(deviceType);
+                if (s_mcu_platform.equals("SYD8821")) {
+                    SPUtil.put(mContext, AppGlobal.KEY_FIRMWARE_UPDATE_TYPE, "SYD8821");
+                    return;
+                } else if (s_mcu_platform.equals("NRF52832")) {
+                    //两类手环的不同升级类型
+                    SPUtil.put(mContext, AppGlobal.KEY_FIRMWARE_UPDATE_TYPE, "NRF52832");
+                }
             }
 
             @Override
@@ -178,12 +203,29 @@ public class UpdateActivity extends BaseActionActivity {
 
             }
         });
-
-
     }
 
+    /**
+     * Created by yw on 2019/1/22
+     * @param deviceType
+     * @return mcu_platform属性，通过查询服务器了解
+     */
+    private String findWatchMcu_platform(String deviceType) {
+        String mcu_platform = "";
+        //20180620
+        String strDeviceList = (String) SPUtil.get(mContext, AppGlobal.DATA_DEVICE_LIST,"");
+        DeviceList filterDeviceList = new Gson().fromJson(strDeviceList,DeviceList.class);
+        for (DeviceList.ResultBean resultBean : filterDeviceList.getResult()) {
+            if(resultBean.getDevice_id().trim().equals(deviceType.trim())){
+                mcu_platform = resultBean.getMcu_platform();
+                return mcu_platform;
+            }
+        }
+        return mcu_platform;
+    }
+
+
     private DeviceUpdate deviceUpdate = null;
-    private int INTERVAL_TIME = 2;//固件更新间隔时间
     @OnClick({R.id.hi_update_soft, R.id.hi_update_firm})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -220,48 +262,23 @@ public class UpdateActivity extends BaseActionActivity {
 //                info.append("图片地址：").append(upgradeInfo.imageUrl);
                 break;
             case R.id.hi_update_firm:
-                Calendar c = Calendar.getInstance();
-                int hour_of_day = c.get(Calendar.HOUR_OF_DAY);
-                int minute = c.get(Calendar.MINUTE);
-
-                /*******固件更新时间间隔*******/
-                int updateIntervalHour = (int) SPUtil.get(mContext, AppGlobal.DATA_UPDATE_INTERVAL_HOUR, hour_of_day);
-                int updateIntervalMinute = (int) SPUtil.get(mContext, AppGlobal.DATA_UPDATE_INTERVAL_MINUTE, minute);
-                if (hour_of_day >= updateIntervalHour) {
-                    updateIntervalHour = hour_of_day+INTERVAL_TIME;
-                    SPUtil.put(mContext, AppGlobal.DATA_UPDATE_INTERVAL_HOUR, updateIntervalHour);
-                    SPUtil.put(mContext, AppGlobal.DATA_UPDATE_INTERVAL_MINUTE, minute);
-                    if (!checkEditBluetoothName()) {//判断蓝牙名称是否修改过，修改名称的不支持ota升级，以免恢复默认
-                        if (deviceUpdate == null) {
-                            deviceUpdate = new DeviceUpdate(mContext);
-                        }
-                        deviceUpdate.getOTAVersion(deviceType,firm,isForce,
-                        new DeviceUpdate.UpdateListener() {
-                            @Override
-                            public void prompt() {
+                if (!checkEditBluetoothName()) {//判断蓝牙名称是否修改过，修改名称的不支持ota升级，以免恢复默认
+                    if (deviceUpdate == null) {
+                        deviceUpdate = new DeviceUpdate(mContext);
+                    }
+                    showProgress(getString(R.string.hint_check_version));
+                    deviceUpdate.getOTAVersion(deviceType, firm, isForce, new DeviceUpdate.UpdateListener() {
+                        @Override
+                        public void prompt(boolean isSuccess) {
+                            isForce = false; //关闭强制升级模式
+                            dismissProgress();
+                            if (!isSuccess) {
                                 showWarmDialog(getString(R.string.hint_ota_newest));
                             }
-                        });
-                    }else {
-//                        showToast(getString(R.string.hint_ota_newest));
-                        showWarmDialog(getString(R.string.hint_ota_newest));
-                    }
-                } else if (updateIntervalHour >= 23+INTERVAL_TIME && hour_of_day == INTERVAL_TIME-1) {
-                    updateIntervalHour = hour_of_day + INTERVAL_TIME;
-                    SPUtil.put(mContext, AppGlobal.DATA_UPDATE_INTERVAL_HOUR, updateIntervalHour);
-                    SPUtil.put(mContext, AppGlobal.DATA_UPDATE_INTERVAL_MINUTE, minute);
-                    if (!checkEditBluetoothName()) {
-                        if (deviceUpdate == null) {
-                            deviceUpdate = new DeviceUpdate(mContext);
                         }
-                        deviceUpdate.getOTAVersion(deviceType, firm, isForce);
-                    } else {
+                    });
+                }else {
 //                        showToast(getString(R.string.hint_ota_newest));
-                        showWarmDialog(getString(R.string.hint_ota_newest));
-                    }
-                } else {
-//                    Toast.makeText(ibandApplication, "请两小时后再试", Toast.LENGTH_SHORT).show();
-//                    int intervalHour = updateIntervalHour >= 23+INTERVAL_TIME ? INTERVAL_TIME-1 : updateIntervalHour;
                     showWarmDialog(getString(R.string.hint_ota_newest));
                 }
                 break;

@@ -10,8 +10,10 @@ import com.manridy.sdk.bean.BloodOxygen;
 import com.manridy.sdk.bean.BloodPressure;
 import com.manridy.sdk.bean.Clock;
 import com.manridy.sdk.bean.Ecg;
+import com.manridy.sdk.bean.Fatigue;
 import com.manridy.sdk.bean.Gps;
 import com.manridy.sdk.bean.Heart;
+import com.manridy.sdk.bean.Microcirculation;
 import com.manridy.sdk.bean.Sleep;
 import com.manridy.sdk.bean.Sport;
 import com.manridy.sdk.bean.User;
@@ -23,14 +25,19 @@ import com.manridy.sdk.callback.BleNotifyListener;
 import com.manridy.sdk.common.BitUtil;
 import com.manridy.sdk.common.LogUtil;
 import com.manridy.sdk.common.TimeUtil;
+import com.manridy.sdk.type.InfoType;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.TypeInfo;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 
@@ -63,6 +70,9 @@ public class BleParse {
     private final byte CALL_ECG_HEART_RATE = 0x41;
 
     private final byte CALL_DO_NOT_DISTURB = 0x2e; //免打扰消息命令
+    private final byte CALL_FATIGUE = 0x31; //疲劳度
+    private final byte CALL_MICRO_TEST = 0x32; //微循环测量
+    public static final byte CALL_MICRO_INFO = 0x33; //微循环信息
 
     private static BleParse instance;
     private byte[] data;//蓝牙数据
@@ -75,6 +85,8 @@ public class BleParse {
     private BleNotifyListener sportNotifyListener;
     private BleNotifyListener sleepNotifyListener;
     private BleNotifyListener hrNotifyListener;
+    private BleNotifyListener microNotifyListener;
+    private BleNotifyListener fatigueNotifyListener;
     private BleNotifyListener ecgHrNotifyListener;
     private BleNotifyListener bpNotifyListener;
     private BleNotifyListener boNotifyListener;
@@ -88,6 +100,7 @@ public class BleParse {
     private BleHistoryListener stepHistoryListener;
     private BleHistoryListener sleepHistoryListener;
     private BleHistoryListener hrHistoryListener;
+    private BleHistoryListener microHistoryListener;
     private BleHistoryListener bpHistoryListener;
     private BleHistoryListener boHistoryListener;
     private BleHistoryListener runHistoryListener;
@@ -229,7 +242,7 @@ public class BleParse {
                 case 0x1A://分段计步
                     result = parseStepSection(body);
                     break;
-                case 0x1B:
+                case 0x1B://训练模式协议头
                     result = parseSport();
                     break;
                 case 0x23:
@@ -260,6 +273,18 @@ public class BleParse {
                     break;
                 case CALL_DO_NOT_DISTURB:  //免打扰
                     result = BitUtil.parseByte2HexStr(data);
+                    break;
+                case CALL_FATIGUE:  //疲劳度
+                    result = parseFatigue();
+                    break;
+                case CALL_MICRO_TEST:
+                    result = parseMicroTest(data);
+                    if (actionListener != null) {
+                        actionListener.onAction(9200,data); //ACTION_MICRO_TESTED=9200
+                    }
+                    break;
+                case CALL_MICRO_INFO:
+                    result = parseMicro();
                     break;
             }
             if (bleCallback == null) {
@@ -398,7 +423,7 @@ public class BleParse {
                     }
                 }
                 break;
-            case 9:
+            case 9:  //心率定时测量完成fc 09 00
                 int ss = data[3];//测试类型
                 if (data[2] == 0) {
                     if (actionListener != null) {
@@ -409,6 +434,7 @@ public class BleParse {
                         actionListener.onAction(902,ss);
                     }
                 }
+//                Log.d(TAG, "parseOther: --------------------------------------------------->>>>>>>>>"+BitUtil.parseByte2HexStr(data));
                 break;
             case 8:
                 if (data[2] == 3 && data[3] == 0) {
@@ -635,6 +661,95 @@ public class BleParse {
         LogUtil.i(TAG,"心率数据："+ result);
         return result;
     }
+
+    /**
+     * 解析微循环
+     * */
+    private String parseMicro() {
+        String result;
+        int ty = body[0];//
+        byte[] microLen = new byte[2];
+        System.arraycopy(body, 1, microLen, 0, microLen.length);//取出微循环数据条数
+        byte[] microNum = new byte[2];
+        System.arraycopy(body, 3, microNum, 0, microNum.length);//取出微循环数据编号
+        byte[] bsDate = new byte[4];
+        System.arraycopy(body, 5, bsDate, 0, bsDate.length);//取出时间戳4个字节
+        byte[] microData = new byte[4];
+        System.arraycopy(body, 9, microData, 0, microData.length);//取出微循环数据4个字节
+        int i_micro = ((0xff000000 & (microData[3] << 24)) | (0x00ff0000 & (microData[2] << 16)) |
+                (0x0000ff00 & (microData[1] << 8)) | (microData[0] & 0x000000ff));
+        float f_micro = Float.intBitsToFloat(i_micro);
+        float micro = (float) Math.round(f_micro * 10000) / 10000;//保留4位小数
+//        Log.d(TAG, "parseMicro: " + micro);
+        long date = BitUtil.bytesToLong(bsDate)*1000;//转换为毫秒
+        date -= TimeZone.getDefault().getRawOffset();//减去时区
+        Microcirculation microcirculation = new Microcirculation();
+        String data = TimeUtil.stampToDate(date, "yyyy-MM-dd HH:mm:ss");
+//        String day = TimeUtil.stampToDate(date, "HH:mm:ss");
+        String day = TimeUtil.stampToDate(date, "yyyy-MM-dd");
+//        Log.i(TAG, "parseMicro data: " + data);
+        microcirculation.setType(CALL_MICRO_INFO);
+        microcirculation.setTr(ty);
+        microcirculation.setDate(data);
+        microcirculation.setDay(day);
+        microcirculation.setMicro(micro);
+        int i_microLen = BitUtil.byte3ToInt(microLen);
+        microcirculation.setMicroLength(i_microLen);
+        int i_microNum = BitUtil.byte3ToInt(microNum);//得到包编号
+        microcirculation.setMicroNum(i_microNum);
+        result = gson.toJson(microcirculation);
+        if (ty == 0){
+            if (bleCallback == null) {
+                if (microNotifyListener != null) {
+                    microNotifyListener.onNotify(result);
+                }
+            }
+        } else if (1 == ty) {
+            if (microHistoryListener != null) {
+                microHistoryListener.onHistory(result);
+            }
+        } else if (2 == ty) {
+//            Log.d(TAG, "parseMicro: ty=========================================" + ty);
+        }
+        LogUtil.i(TAG,"微循环数据："+ result);
+        return result;
+    }
+
+    /**
+     * 解析微循环测量
+     * 获取微循环测量状态
+     * ty: 00 不能正常开始测量
+     *     01 设备正常进入微循环测试模式
+     *     03 测量结束
+     * */
+    private String parseMicroTest(byte[] data) {
+        String result="";
+//        int ty = body[0];//
+        result = BitUtil.parseByte2HexStr(data);
+        return result;
+    }
+    /**
+     * 解析疲劳度
+     * */
+    private String parseFatigue() {
+        String result;
+        int ty = body[0];//获取疲劳状态
+        int fa = body[1];//疲劳状态
+        Fatigue fatigue = new Fatigue();
+        fatigue.setFa(fa);
+        fatigue.setTy(ty);
+        result = gson.toJson(fatigue);
+
+//        if (bleCallback == null) {
+            if (fatigueNotifyListener != null) {
+                fatigueNotifyListener.onNotify(result);
+            }
+//        }
+
+        LogUtil.i(TAG,"疲劳度数据："+ result);
+        return result;
+    }
+
 
     private String parseStatsSleep(){
         String result = "";
@@ -965,9 +1080,11 @@ public class BleParse {
         int mi = Integer.parseInt(dd.substring(39,56),2);
 
         byte[] bsDate = new byte[4];
-        System.arraycopy(body,12,bsDate,0,bsDate.length);
+        System.arraycopy(body, 12, bsDate, 0, bsDate.length);
         long date = BitUtil.bytesToLong(bsDate)*1000;
         date -= TimeZone.getDefault().getRawOffset();//减去时区
+        String date2 = BitUtil.timeStamp2Date(String.valueOf(date),"");
+//        Log.i(TAG, "parseSport: " + date2);
 
         byte[] bsTime = new byte[2];
         System.arraycopy(body,16,bsTime,0,bsTime.length);
@@ -980,8 +1097,10 @@ public class BleParse {
             stepModel.setStepCalorie(ka);
             stepModel.setHisLength(packageLength);
             stepModel.setHisCount(packageNum);
-            stepModel.setStepDate(new Date(date));
-            stepModel.setStepDay(TimeUtil.getYMD(new Date(date)));
+            Date date1 = new Date(date);
+            stepModel.setStepDate(date1);
+            String s_date1 = TimeUtil.getYMD(date1);
+            stepModel.setStepDay(s_date1);
             stepModel.setStepTime(time);
             stepModel.setStepType(ss+2);//0代表当前 1代表分段计步
             stepModel.setSportMode(mode);
@@ -1022,6 +1141,13 @@ public class BleParse {
     public void setHrNotifyListener(BleNotifyListener hrNotifyListener) {
         this.hrNotifyListener = hrNotifyListener;
     }
+    public void setMicroNotifyListener(BleNotifyListener microNotifyListener) {
+        this.microNotifyListener = microNotifyListener;
+    }
+
+    public void setFatigueNotifyListener(BleNotifyListener fatigueNotifyListener) {
+        this.fatigueNotifyListener = fatigueNotifyListener;
+    }
 
     public void setEcgHrNotifyListener(BleNotifyListener ecgHrNotifyListener) {
         this.ecgHrNotifyListener = ecgHrNotifyListener;
@@ -1053,6 +1179,10 @@ public class BleParse {
 
     public void setHrHistoryListener(BleHistoryListener hrHistoryListener) {
         this.hrHistoryListener = hrHistoryListener;
+    }
+
+    public void setMicroHistoryListener(BleHistoryListener microHistoryListener) {
+        this.microHistoryListener = microHistoryListener;
     }
 
     public void setBpHistoryListener(BleHistoryListener bpHistoryListener) {

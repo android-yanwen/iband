@@ -26,7 +26,7 @@ public class BleProtocol {
     public static byte[] cmd(byte head, byte type, byte[] body){
         byte[] cmd = new byte[20];
         cmd[cmd.length-1] = getCrc(head, type, body);
-        System.arraycopy(data,0,cmd,0,data.length);
+        System.arraycopy(data, 0, cmd, 0, data.length);
 //        String datas = "";
 //        for (int i = 0;i<cmd.length;i++){
 //            datas+="["+i+"]:"+Integer.parseInt(""+cmd[i], 10);;

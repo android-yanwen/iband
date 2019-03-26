@@ -47,7 +47,7 @@ public class TestHrTimingActivity extends BaseActionActivity {
     @BindView(R.id.ai_hr_correcting_baseline)
     TextView aiHrCorrectingBaseline;
     private static boolean curOnoff;
-    private static int curSpace;
+    private static int curSpace = 0;//默认定时间隔
 
 
 
@@ -120,7 +120,7 @@ public class TestHrTimingActivity extends BaseActionActivity {
         aiAlert.setIvMenuCenterIsView(false);
         curOnoff = (boolean) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
         aiAlert.setAlertCheck(curOnoff);
-        curSpace = (int) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
+        curSpace = (int) SPUtil.get(mContext, AppGlobal.DATA_TIMING_HR_SPACE, curSpace);
         aiAlert.setAlertCenterContent(curSpace+getString(R.string.unit_min));
         tvSpace.setText(curSpace+getString(R.string.unit_min));
         checkMenuVisibility();
@@ -154,6 +154,16 @@ public class TestHrTimingActivity extends BaseActionActivity {
                     }else{
                         aiAlert.setIvMenuCenterIsView(false);
                         curSpace = 30;
+                    }
+                    //heartrate_interval
+                    String heart_rate_interval = resultBean.getHeartrate_interval();
+                    if (!"0".equals(heart_rate_interval)) {
+                        boolean isDefaultTimeSpace = (boolean) SPUtil.get(mContext, AppGlobal.DATA_DEFAULT_TIME_HR_SPACE_IS_CHANGE, true);
+                        if (isDefaultTimeSpace) {
+                            aiAlert.setAlertCenterContent(heart_rate_interval+"分钟");
+                            int defaultSpace = Integer.parseInt(heart_rate_interval);
+                            curSpace = defaultSpace;
+                        }
                     }
                 }
             }
@@ -234,6 +244,7 @@ public class TestHrTimingActivity extends BaseActionActivity {
                     public void onSuccess(Object o) {
                         SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR,curOnoff);
                         SPUtil.put(mContext, AppGlobal.DATA_TIMING_HR_SPACE,curSpace);
+                        SPUtil.put(mContext, AppGlobal.DATA_DEFAULT_TIME_HR_SPACE_IS_CHANGE,false);
                         dismissProgress();
                         runOnUiThread(new Runnable() {
                             @Override
@@ -260,7 +271,7 @@ public class TestHrTimingActivity extends BaseActionActivity {
     }
 
     private String[] getSpaces() {
-        return new String[]{"5","15","30","60","90","120"};
+        return new String[]{"5", "10", "15","30", "60", "90", "120"};
 //        return new String[]{"30"};
     }
 
